@@ -26,7 +26,7 @@ jobs:
     # PostgreSQL service for integration tests
     services:
       postgres:
-        image: postgres:17.7
+        image: postgres:18.3
         env:
           POSTGRES_DB: testDb
           POSTGRES_USER: tester
