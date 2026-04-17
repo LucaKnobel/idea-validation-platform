@@ -1,0 +1,69 @@
+name: CD Deploy
+
+# Trigger: Auto-deploy on push to dev (staging) and main (production)
+on:
+  push:
+    branches:
+      - "main"
+      - "dev"
+
+jobs:
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+
+    # Select environment dynamically based on branch
+    # main  -> production
+    # dev   -> staging
+    environment: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+
+    permissions:
+      contents: read # Read repository source code
+      packages: write # Push Docker image to GitHub Container Registry
+
+    steps:
+      # Clone repository at the commit that triggered the workflow
+      - uses: actions/checkout@v6
+
+      # Authenticate with GitHub Container Registry using GITHUB_TOKEN
+      # Recommended approach for GHCR authentication :contentReference[oaicite:0]{index=0}
+      - name: Login to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # Generate image name with immutable SHA tag
+      # Lowercase is required for Docker registry naming rules
+      - name: Set image name (lowercase)
+        run: |
+          echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA}" >> $GITHUB_ENV
+
+      # Build Docker image with both SHA tag (immutable) and latest (mutable pointer)
+      - name: Build image
+        run: |
+          docker build \
+            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            -t "${IMAGE}" \
+            -t "ghcr.io/${GITHUB_REPOSITORY,,}:latest" .
+
+      # Push both tags to registry
+      # SHA enables rollback, latest is used for deployment trigger
+      - name: Push images
+        run: |
+          docker push "${IMAGE}"
+          docker push "ghcr.io/${GITHUB_REPOSITORY,,}:latest"
+
+      # Apply database migrations using the built image
+      # Uses environment-specific DATABASE_URL from GitHub Environment
+      - name: Apply Prisma Migrations
+        run: |
+          docker run --rm --user root \
+            -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            "${IMAGE}" \
+            npx prisma migrate deploy
+
+      # Trigger deployment on Jelastic platform
+      # Pulls latest image and redeploys container
+      - name: Redeploy on Jelastic
+        run: |
+          curl -X POST \
+            "https://${{ secrets.JELASTIC_HOST }}/1.0/environment/control/rest/redeploycontainerbyid?envName=${{ secrets.JELASTIC_ENV }}&session=${{ secrets.JELASTIC_SESSION }}&nodeId=${{ secrets.JELASTIC_NODE_ID }}&tag=latest&useExistingVolumes=true"
