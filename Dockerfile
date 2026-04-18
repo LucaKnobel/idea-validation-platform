@@ -65,4 +65,4 @@ USER appuser
 EXPOSE 3000
 
 # Run the app
-CMD ["node", ".output/server/index.mjs"]
+CMD ["npm", "run", "start:prod"]
