@@ -29,10 +29,16 @@ npm create nuxt@latest -- -t ui
 
 ## Setup
 
-Make sure to install the dependencies:
+Create a local `.env` from `.env.example`, then install the dependencies:
 
 ```bash
-pnpm install
+npm install
+```
+
+Start the local database container:
+
+```bash
+podman compose up -d db
 ```
 
 ## Development Server
@@ -40,21 +46,32 @@ pnpm install
 Start the development server on `http://localhost:3000`:
 
 ```bash
-pnpm dev
+npm run dev
 ```
+
+If you use the Dev Container, reopen the workspace in the container and run the
+same command there. The Dev Container attaches to the `workspace` service in
+[compose.yml](compose.yml), so Prisma and the app can reach the database through
+the internal `db` hostname.
+
+If `npx prisma migrate dev` fails with `P1001` inside the Dev Container, the
+`db` service is not reachable from the compose network. Rebuild or reopen the
+Dev Container so VS Code recreates the compose stack, or start the database on
+the host first with `podman compose up -d db` or `docker compose up -d db` and
+then reopen the container.
 
 ## Production
 
 Build the application for production:
 
 ```bash
-pnpm build
+npm run build
 ```
 
 Locally preview production build:
 
 ```bash
-pnpm preview
+npm run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
