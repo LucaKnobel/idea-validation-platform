@@ -5,9 +5,6 @@ FROM node:24-slim AS builder
 
 WORKDIR /app
 
-# Build argument for DATABASE_URL (used by prisma generate)
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
 
 # Prisma needs openssl
 RUN apt-get update -y \
@@ -65,4 +62,4 @@ USER appuser
 EXPOSE 3000
 
 # Run the app
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:migrate"]

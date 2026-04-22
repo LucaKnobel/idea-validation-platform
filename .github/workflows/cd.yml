@@ -41,7 +41,6 @@ jobs:
       - name: Build image
         run: |
           docker build \
-            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
             -t "${IMAGE}" \
             -t "ghcr.io/${GITHUB_REPOSITORY,,}:latest" .
 
@@ -52,18 +51,42 @@ jobs:
           docker push "${IMAGE}"
           docker push "ghcr.io/${GITHUB_REPOSITORY,,}:latest"
 
-      # Apply database migrations using the built image
-      # Uses environment-specific DATABASE_URL from GitHub Environment
-      - name: Apply Prisma Migrations
+        # Group-based rolling redeploy on Jelastic/Infomaniak
+      - name: Redeploy on Jelastic (group)
+        env:
+          API_HOST: https://${{ secrets.JELASTIC_HOST }}
+          ENV_NAME: ${{ secrets.JELASTIC_ENV }}
+          SESSION: ${{ secrets.JELASTIC_SESSION }}
+          NODE_GROUP: ${{ secrets.JELASTIC_NODE_GROUP }}
+          TAG: latest
+          IS_SEQUENTIAL: "true"
+          DELAY: "5"
+          USE_EXISTING_VOLUMES: "true"
+          MANAGE_DNS_STATE: "true"
         run: |
-          docker run --rm --user root \
-            -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-            "${IMAGE}" \
-            npx prisma migrate deploy
+          set -euo pipefail
 
-      # Trigger deployment on Jelastic platform
-      # Pulls latest image and redeploys container
-      - name: Redeploy on Jelastic
-        run: |
-          curl -X POST \
-            "https://${{ secrets.JELASTIC_HOST }}/1.0/environment/control/rest/redeploycontainerbyid?envName=${{ secrets.JELASTIC_ENV }}&session=${{ secrets.JELASTIC_SESSION }}&nodeId=${{ secrets.JELASTIC_NODE_ID }}&tag=latest&useExistingVolumes=true"
+          URL="${API_HOST}/1.0/environment/control/rest/redeploycontainersbygroup"
+
+          echo "Deploying ${ENV_NAME} (group: ${NODE_GROUP})..."
+
+          RESPONSE=$(curl --fail-with-body -sS -X POST "$URL" \
+            --data-urlencode "envName=${ENV_NAME}" \
+            --data-urlencode "session=${SESSION}" \
+            --data-urlencode "nodeGroup=${NODE_GROUP}" \
+            --data-urlencode "tag=${TAG}" \
+            --data-urlencode "isSequential=${IS_SEQUENTIAL}" \
+            --data-urlencode "delay=${DELAY}" \
+            --data-urlencode "useExistingVolumes=${USE_EXISTING_VOLUMES}" \
+            --data-urlencode "manageDNSState=${MANAGE_DNS_STATE}" \
+            -H "Content-Type: application/x-www-form-urlencoded")
+
+          echo "$RESPONSE" | jq
+
+          RESULT=$(echo "$RESPONSE" | jq -r ".result")
+          if [ "$RESULT" != "0" ]; then
+            echo "Redeploy failed"
+            exit 1
+          fi
+
+          echo "Redeploy successful"
