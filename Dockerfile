@@ -5,6 +5,8 @@ FROM node:24-slim AS builder
 
 WORKDIR /app
 
+ARG DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV DATABASE_URL=${DATABASE_URL}
 
 # Prisma needs openssl
 RUN apt-get update -y \
@@ -17,6 +19,7 @@ RUN npm ci
 
 # Copy app source
 COPY . .
+
 
 # Generate Prisma Client (requires DATABASE_URL)
 RUN npx prisma generate
