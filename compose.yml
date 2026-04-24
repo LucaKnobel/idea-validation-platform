@@ -23,9 +23,10 @@ services:
     image: mcr.microsoft.com/devcontainers/javascript-node:24-bookworm
     working_dir: /workspace
     command: sleep infinity
+    userns_mode: keep-id
     volumes:
-      - .:/workspace:cached
-   
+      - .:/workspace:Z
+
     environment:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
       LOG_LEVEL: ${LOG_LEVEL}

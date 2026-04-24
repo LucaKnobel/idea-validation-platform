@@ -3,12 +3,17 @@
 
   "dockerComposeFile": ["../compose.yml"],
   "service": "workspace",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Nuxt Dev Server",
+      "onAutoForward": "openBrowser"
+      }
+    },
   "runServices": ["db", "workspace"],
   "workspaceFolder": "/workspace",
-  "forwardPorts": [3000, 5432],
   "shutdownAction": "stopCompose",
   "postCreateCommand": "npm install",
-  "remoteUser": "node",
   "customizations": {
     "vscode": {
       "extensions": [
