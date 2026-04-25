@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "start:prod": "node .output/server/index.mjs",
+    "start:migrate": "npx prisma migrate deploy && npm run start:prod",
     "build": "nuxt build",
     "dev": "nuxt dev",
     "preview": "nuxt preview",
@@ -19,15 +21,14 @@
     "dotenv": "^17.4.2",
     "nuxt": "^4.4.2",
     "pg": "^8.20.0",
+    "prisma": "^7.7.0",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.15.2",
     "@types/pg": "^8.20.0",
     "eslint": "^10.2.0",
-    "prisma": "^7.7.0",
     "typescript": "^6.0.2",
     "vue-tsc": "^3.2.6"
-  },
-  "packageManager": "pnpm@10.33.0"
+  }
 }

@@ -5,8 +5,7 @@ FROM node:24-slim AS builder
 
 WORKDIR /app
 
-# Build argument for DATABASE_URL (used by prisma generate)
-ARG DATABASE_URL
+ARG DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 ENV DATABASE_URL=${DATABASE_URL}
 
 # Prisma needs openssl
@@ -20,6 +19,7 @@ RUN npm ci
 
 # Copy app source
 COPY . .
+
 
 # Generate Prisma Client (requires DATABASE_URL)
 RUN npx prisma generate
@@ -65,4 +65,4 @@ USER appuser
 EXPOSE 3000
 
 # Run the app
-CMD ["node", ".output/server/index.mjs"]
+CMD ["npm", "run", "start:migrate"]

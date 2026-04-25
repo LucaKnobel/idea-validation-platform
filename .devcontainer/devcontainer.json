@@ -1,14 +1,19 @@
 {
   "name": "idea-validation-platform",
 
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:24-bookworm",
-
+  "dockerComposeFile": ["../compose.yml"],
+  "service": "workspace",
   "forwardPorts": [3000],
-
+  "portsAttributes": {
+    "3000": {
+      "label": "Nuxt Dev Server",
+      "onAutoForward": "openBrowser"
+      }
+    },
+  "runServices": ["db", "workspace"],
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
   "postCreateCommand": "npm install",
-
-  "remoteUser": "node",
-
   "customizations": {
     "vscode": {
       "extensions": [

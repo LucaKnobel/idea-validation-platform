@@ -1,0 +1,123 @@
+name: Pull Request CI Checks
+
+# Trigger: Run quality checks, security scans, and tests on PRs to main or dev
+# Ensures code meets standards before merging
+on:
+  pull_request:
+    branches:
+      - "main"
+      - "dev"
+
+# Give read access to repository contents for jobs
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    env:
+      DATABASE_URL: postgresql://tester:test@localhost:5432/testDb
+
+    # Skip for Dependabot: Its PRs are dependency updates, already security-checked
+    if: github.actor != 'dependabot[bot]'
+
+    # PostgreSQL service for integration tests
+    services:
+      postgres:
+        image: postgres:18.3
+        env:
+          POSTGRES_DB: testDb
+          POSTGRES_USER: tester
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      # Clone repository at PR commit
+      - uses: actions/checkout@v6
+
+      # Install Node.js 24 for build tooling
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      # Install dependencies from lock file (ensures reproducible builds)
+      - run: npm ci
+
+      # Generate Prisma Client and run migrations
+      - name: Setup database
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
+
+      # Check dependencies for known vulnerabilities (fail on critical severity)
+      - run: npm audit --omit=dev --audit-level=critical
+
+      # Verify code style and catch common errors
+      - run: npm run lint
+
+      # Validate TypeScript types to prevent runtime errors
+      - run: npm run typecheck
+
+      # Run tests
+      - name: Run tests
+        run: npm run test
+
+  semgrep:
+    name: Semgrep Security Scan
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    # Skip for Dependabot: Semgrep analyzes first-party code, not dependencies
+    if: github.actor != 'dependabot[bot]'
+
+    # Run in official Semgrep container for consistent environment
+    container:
+      image: semgrep/semgrep
+
+    # Authenticate with Semgrep Cloud for rule updates and findings sync
+    env:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+    steps:
+      # Clone code for static analysis
+      - uses: actions/checkout@v6
+
+      # Scan for security vulnerabilities and code quality issues
+      - run: semgrep ci
+
+  trivy:
+    name: Trivy Security Scan
+    runs-on: ubuntu-latest
+
+    # Skip for Dependabot: Separate dependency scanning already covered
+    if: github.actor != 'dependabot[bot]'
+
+    steps:
+      # Clone repository for comprehensive security scan
+      - uses: actions/checkout@v6
+
+      # Install Trivy scanner from official source
+      - name: Install Trivy
+        run: curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+
+      # Scan for vulnerabilities, leaked secrets, and IaC misconfigurations
+      # Fails CI on medium+ severity findings to enforce security standards
+      - name: Run Trivy scan
+        run: |
+          trivy fs \
+            --scanners vuln,secret,misconfig \
+            --severity CRITICAL,HIGH \
+            --ignore-unfixed \
+            --exit-code 1 \
+            --no-progress \
+            .
