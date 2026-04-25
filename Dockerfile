@@ -57,7 +57,7 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/generated ./generated
 
-# Make sure the appuser owns everything
+# Make sure the appuser owns everything<
 RUN chown -R appuser:appuser /app
 USER appuser
 
