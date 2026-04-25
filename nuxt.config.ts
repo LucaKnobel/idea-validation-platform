@@ -8,11 +8,6 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
-  alias: {
-    '@server': fileURLToPath(new URL('./server', import.meta.url)),
-    '@generated': fileURLToPath(new URL('./generated', import.meta.url))
-  },
-
   routeRules: {
     '/': { prerender: true }
   },
@@ -25,7 +20,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-01-15',
 
   typescript: {
-    typeCheck: true
+    strict: true,
+    tsConfig: {
+      compilerOptions: {
+        noUncheckedIndexedAccess: true
+      }
+    }
   },
 
   eslint: {

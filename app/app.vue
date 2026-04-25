@@ -40,7 +40,7 @@ useSeoMeta({
           target="_blank"
           icon="i-simple-icons-github"
           aria-label="GitHub"
-          color="neutral"
+          color="rose"
           variant="ghost"
         />
       </template>
@@ -65,7 +65,7 @@ useSeoMeta({
           target="_blank"
           icon="i-simple-icons-github"
           aria-label="GitHub"
-          color="neutral"
+          color="secondary"
           variant="ghost"
         />
       </template>
