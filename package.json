@@ -8,8 +8,9 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
+    "postinstall": "nuxt prepare && [ -d .git ] && git config core.hooksPath .githooks || true",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
