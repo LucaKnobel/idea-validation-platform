@@ -1,110 +1,125 @@
+---
+description: Global instructions applied to all coding, architecture, and security-related tasks in the repository
+applyTo: "**"
+---
+
 # Copilot Instructions
 
 ## Role
 
-You are an expert in:
+You are a senior software engineer and security-focused architect specialized in:
 
-- Nuxt 4 (latest stable)
-- TypeScript (strict, modern patterns)
+- Nuxt 4
+- TypeScript (strict mode)
 - Prisma ORM + PostgreSQL
-- Tailwind CSS
-- Nuxt UI
-- Secure web application architecture (OWASP best practices)
-
-You produce production-grade, maintainable, and secure code.
+- Nuxt UI and Tailwind CSS
+- Secure clean web application architecture (OWASP)
 
 ---
 
-## General Principles
+## Core Principles
 
-- Always use **modern, non-deprecated APIs**
-- Prefer **official documentation and standards**
-- Do not use outdated patterns or libraries
-- Do not hallucinate APIs, functions, or behavior
-- If uncertain: **use MCP tools to fetch accurate information**
-
----
-
-## MCP Tool Usage
-
-- Use MCP servers for accurate and up-to-date information:
-  - Nuxt → framework patterns and APIs
-  - Nuxt UI → components and usage
-  - Prisma → schema, queries, and database behavior
-
-- Prefer MCP over guessing
-- Never invent APIs or syntax
+- Always use modern, non-deprecated APIs
+- Never invent APIs or framework behavior
+- Always prefer official modern documentation via MCP tools
+- Prioritize correctness over assumptions
 
 ---
 
 ## Architecture
 
-- Follow Clean Architecture principles
-- Separate:
-  - UI / Presentation
-  - Application logic
-  - Domain logic
-  - Infrastructure (DB, APIs)
+Follow a **3-layer Clean Architecture variant**:
 
-- No business logic in controllers or UI components
-- Prefer small, testable, composable units
+1. Application Business Rules
+2. Interface Adapters
+3. Frameworks & Drivers
 
-See:
+### Rules
 
-- [Architecture Documentation](../docs/architecture.md)
+- Business logic lives only in `server/application/services/`
+- Core models live in `server/application/models/`
+- Interfaces live in `server/application/interfaces/`
+- API handlers (in `server/api/`) are controllers only
+- Infrastructure (Prisma, external services) lives in `server/infrastructure/`
+
+### Strict Constraints
+
+- No business logic in API handlers
+- No Prisma usage in application layer
+- No Nuxt imports in application layer
+- No direct DB access outside repositories
+
+### Request Handling Pipeline
+
+```txt
+API Handler → Rate Limit → Validation → Mapper → Service → Interface → Repository → Prisma
+```
+
+- Rate limiting must be applied at the beginning of API handlers
+- Validation must occur before entering application logic
+- Mapping between DTOs and internal models is required
+
+### See:
+
+- [Architecture Documentation](/docs/architecture.md)
 
 ---
 
-## Backend (Prisma)
+## Backend
 
-- Use Prisma as the only database access layer
-- Avoid raw SQL unless strictly necessary
-- Always validate input on the server
-- Use type-safe queries
+- API handlers are thin controllers (file-based routing)
+- Always validate input using schemas
+- Always map DTOs ↔ internal models
+- Never expose internal models directly
+- Use services for all business workflows
 
-- Never expose internal database structures directly
+### Rate Limiting
+
+- Must be implemented in `server/api/rate-limit/`
+- Applied per endpoint inside API handlers
+- Uses:
+  - user ID if authenticated
+  - IP address if unauthenticated
 
 ---
 
-## Frontend (Nuxt)
+## Frontend
 
 - Use Nuxt 4 conventions
-- Prefer Composition API
-- Use Nuxt UI components where appropriate
-- Keep components small and focused
+- Composition API only
+- No business logic in components
+- Use composables or services for data access
 
 ---
 
 ## TypeScript
 
-- Always use strict typing
-- Avoid `any`
-- Use explicit types for public APIs
-- Prefer inference only when safe and clear
+- Strict mode required
+- No `any`
+- Explicit types for public APIs
+- Prefer clear and predictable typing
 
 ---
 
 ## Styling
 
-- Use Tailwind CSS
-- Avoid inline styles
-- Prefer utility-first approach
-- Keep styling consistent and reusable
+- Tailwind CSS only
+- No inline styles
+- Follow consistent design patterns
 
 ---
 
 ## Security
 
-- Follow OWASP Top 10 principles
-- Validate all inputs server-side
-- Escape and encode outputs (XSS protection)
-- Use parameterized queries (Prisma handles this)
+- Validate all input server-side
+- Encode output (prevent XSS)
+- Enforce authentication and authorization
+- Apply rate limiting on API endpoints
+- Never trust client data
 
-- Never trust client input
+### See:
 
-See:
-
-- [Security Documentation](../docs/security.md)
+- [Security Documentation](/docs/security.md)
 
 ---
 
@@ -113,20 +128,21 @@ See:
 - Prefer clarity over cleverness
 - Avoid duplication
 - Use meaningful naming
-- Write self-explanatory code
+- Keep functions small and focused
+- Follow consistent patterns
 
 ---
 
 ## Error Handling
 
-- Handle errors explicitly
-- Do not swallow errors
-- Return safe and consistent error responses
+- Never expose internal errors
+- Return safe and consistent responses
+- Use structured error handling
 
 ---
 
 ## Documentation Awareness
 
-- Use project documentation when relevant
-- Prefer internal docs over assumptions
-- Combine docs + MCP for best accuracy
+- Always check internal docs first
+- Follow architecture and security documentation strictly
+- Use MCP tools for accurate, up-to-date information
