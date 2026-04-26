@@ -117,10 +117,16 @@
   },
   "landing": {
     "hero": {
-      "title": "Better decisions. Made systematically.",
-      "description": "Dezizio supports structured decision-making through transparent value analysis - traceable, reproducible and clearly documented.",
+      "title": "Stop building products nobody wants.",
+      "description": "Validate your digital business ideas with real data before you invest time and money. Evidara helps you test what actually works - before you build it.",
       "ctaPrimary": "Get started",
       "ctaSecondary": "Learn more"
+    }
+  },
+  "content": {
+    "notFound": {
+      "title": "Content not found",
+      "text": "The requested content does not exist or is currently unavailable."
     }
   },
   "legal": {

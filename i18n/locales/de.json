@@ -117,10 +117,16 @@
   },
   "landing": {
     "hero": {
-      "title": "Bessere Entscheidungen. Systematisch getroffen.",
-      "description": "Dezizio unterstützt strukturierte Entscheidungsprozesse durch transparente Nutzwertanalysen - nachvollziehbar, reproduzierbar und klar dokumentiert.",
+      "title": "Entwickle Produkte, die wirklich gefragt sind.",
+      "description": "Validiere deine digitalen Geschäftsideen mit echten Daten, bevor du Zeit und Geld investierst. Evidara hilft dir zu erkennen, was funktioniert, bevor du es umsetzt.",
       "ctaPrimary": "Loslegen",
       "ctaSecondary": "Mehr erfahren"
+    }
+  },
+  "content": {
+    "notFound": {
+      "title": "Inhalt nicht gefunden",
+      "text": "Der angeforderte Inhalt existiert nicht oder ist derzeit nicht verfugbar."
     }
   },
   "legal": {
