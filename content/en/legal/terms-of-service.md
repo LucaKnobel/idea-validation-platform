@@ -1,24 +1,25 @@
 ---
+
 title: Terms of Service
-description: Terms of Service for the Decision Analysis App.
+description: Terms of service for the SaaS application for validating digital business ideas.
 locale: en
-updatedAt: 2026-02-14
+updatedAt: 2026-04-26
 version: "1"
 ---
 
 # Terms of Service
 
-**Decision Analysis App (Dezizio)**  
+**SaaS Application for Validating Digital Business Ideas**  
 Version 1  
-Effective Date: 14 February 2026
+Last updated: April 26, 2026  
 
 ---
 
 ## 1. Scope
 
-These Terms of Service govern the contractual relationship between the operator of the web-based Software-as-a-Service application “Decision Analysis App” (hereinafter “Platform”) and registered users.
+These Terms of Service govern the contractual relationship between the operator of the web-based Software-as-a-Service application (hereinafter “Platform”) and registered users.
 
-By registering and using the Platform, the user accepts these Terms of Service.
+By registering and using the Platform, the user agrees to these Terms of Service.
 
 ---
 
@@ -30,133 +31,173 @@ Luca Knobel
 Mühlerain 14  
 3210 Kerzers  
 Switzerland  
-Email: knobel.luca@gmail.com
+Email: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)
 
 ---
 
-## 3. Subject Matter of the Contract
+## 3. Subject Matter
 
-The Platform enables users to conduct and store weighted decision analyses, including the definition of criteria, weights, alternatives, and ratings.
+The Platform provides tools for the structured creation, management, and analysis of digital business ideas, including validation processes (e.g. hypotheses, metrics, evaluations).
 
-The Platform provides a technical tool only. It does not constitute legal, financial, business, or professional advice of any kind.
+The Platform is provided solely as a technical tool.
 
-No entitlement exists to specific features, future developments, or functional extensions.
+It does not constitute:
+
+* legal advice
+* financial advice
+* business advice
+* a basis for strategic decision-making
+
+No entitlement exists to specific features, future developments, or enhancements.
 
 ---
 
-## 4. Registration and User Account
+## 4. Development Status (Beta Phase)
+
+The Platform is, in whole or in part, in a development and testing phase.
+
+The user acknowledges that:
+
+* features may be incomplete, unstable, or contain errors
+* functionality may change at any time
+* data loss cannot be excluded
+* the Platform is operated for testing and development purposes
+
+Use of the Platform is at the user’s own risk.
+
+---
+
+## 5. Registration and Account
 
 Registration is required to use the Platform.
 
 The user agrees to:
 
-- provide accurate and current information  
-- keep login credentials confidential  
-- not grant third parties access to the account  
+* provide accurate and up-to-date information
+* keep login credentials confidential
+* not share the account with third parties
 
-The user is responsible for all activities conducted under their account.
+The user is responsible for all activities carried out under their account.
 
 ---
 
-## 5. User Obligations
+## 6. User Obligations
 
 The user is prohibited from:
 
-- storing unlawful, offensive, or otherwise impermissible content  
-- using the Platform for abusive or unauthorized purposes  
-- attempting to bypass security mechanisms  
-- performing automated access without explicit permission  
-- manipulating, disrupting, or interfering with the Platform  
+* storing unlawful, offensive, or otherwise inappropriate content
+* using the Platform for unintended or abusive purposes
+* bypassing or testing security mechanisms
+* performing automated access (e.g. bots, scraping) without permission
+* interfering with or manipulating the Platform
 
-The operator reserves the right to suspend or permanently delete user accounts without prior notice in case of violations.
-
----
-
-## 6. Availability
-
-The Platform is provided as a free online service.
-
-There is no entitlement to:
-
-- uninterrupted use  
-- permanent availability  
-- specific response times  
-- retention of data for a defined period  
-
-Maintenance, updates, or technical issues may result in temporary limitations or interruptions.
+The operator may suspend or delete accounts without prior notice in case of violations.
 
 ---
 
-## 7. Liability
+## 7. Availability
+
+The Platform is provided as an online service.
+
+There is no guarantee of:
+
+* uninterrupted access
+* continuous availability
+* specific response times
+* data retention for any specific period
+
+Maintenance, updates, deployments, or technical issues may lead to interruptions.
+
+---
+
+## 8. Data Backup and User Responsibility
+
+The user is solely responsible for backing up their data.
+
+Users are strongly advised to regularly create external backups of important data.
+
+The operator assumes no responsibility for data loss, regardless of cause.
+
+---
+
+## 9. Liability
 
 Use of the Platform is at the user’s own risk.
 
-The Platform is provided without express or implied warranties regarding availability, error-free operation, or fitness for a particular purpose.
+The Platform is provided “as is” without any express or implied warranties.
 
-The operator assumes no responsibility for:
+In particular, the operator does not guarantee:
 
-- the accuracy or completeness of user-entered or calculated data,  
-- the suitability of the Platform for business, financial, or strategic decisions,  
-- prevention of data loss,  
-- uninterrupted or continuous availability of the Platform.
+* availability or reliability of the Platform
+* accuracy or completeness of results
+* suitability for business or strategic decisions
+* permanent data storage
 
-Any decisions made based on results generated by the Platform are the sole responsibility of the user.
+The Platform is not intended for use in business-critical, financial, or legally relevant decision-making.
 
-The Platform does not provide legal, financial, business, or other professional advice.
+All decisions based on the Platform are made solely at the user’s responsibility.
 
-To the extent permitted by law, the operator’s liability is limited to damages caused intentionally or through gross negligence.
+To the extent permitted by law, the operator’s liability is limited to direct damages caused by intentional or grossly negligent conduct.
 
 Liability for:
 
-- slight negligence,  
-- indirect or consequential damages,  
-- loss of profit,  
-- data loss,  
-- business interruption,  
-- third-party claims  
+* slight negligence
+* indirect or consequential damages
+* loss of profit
+* data loss
+* business interruption
+* third-party claims
 
 is excluded.
 
-To the extent permitted by law, liability shall be limited in amount to the total fees paid by the user for use of the Platform during the twelve (12) months preceding the event giving rise to the claim.
+To the extent permitted by law, total liability is limited to the amount paid by the user for the use of the Platform in the twelve months preceding the event.
 
-The user is solely responsible for maintaining backups of their data.
-
----
-
-## 8. Data Protection
-
-Information regarding the processing of personal data is set out in the separate Privacy Policy.
+If the Platform is used free of charge (in particular during the beta phase), no liability for damages exists.
 
 ---
 
-## 9. Termination and Account Deletion
+## 10. Intellectual Property
+
+The Platform, including its software, structure, and content (excluding user-generated content), is protected by intellectual property rights.
+
+The user is granted a non-exclusive, non-transferable right to use the Platform in accordance with these Terms.
+
+---
+
+## 11. Privacy
+
+Information on the processing of personal data is set out in the separate Privacy Policy.
+
+---
+
+## 12. Termination
 
 Users may delete their account at any time.
 
-Upon deletion, all associated data will be permanently removed.
+Upon deletion, all associated data will be permanently removed, unless legal retention obligations apply.
 
-The operator reserves the right to suspend or delete user accounts in cases of misuse or violation of these Terms of Service.
-
----
-
-## 10. Amendments
-
-The operator may amend these Terms of Service at any time.
-
-The version published on the Platform shall be authoritative.
+The operator may suspend or delete accounts at any time in case of misuse or violations of these Terms.
 
 ---
 
-## 11. Governing Law and Jurisdiction
+## 13. Changes
 
-These Terms of Service are governed exclusively by Swiss law.
+The operator may update these Terms of Service at any time.
 
-The place of jurisdiction shall be the registered seat of the operator, unless mandatory statutory provisions provide otherwise.
+The version published on the Platform shall apply.
 
 ---
 
-## 12. Language Version
+## 14. Governing Law and Jurisdiction
 
-These Terms of Service are provided in German and English.
+These Terms are governed exclusively by Swiss law.
 
-In the event of discrepancies or differences in interpretation between the language versions, the German version shall prevail.
+The place of jurisdiction is the registered office of the operator, unless mandatory legal provisions provide otherwise.
+
+---
+
+## 15. Language
+
+These Terms of Service may be provided in multiple languages.
+
+In case of discrepancies, the German version shall prevail.
