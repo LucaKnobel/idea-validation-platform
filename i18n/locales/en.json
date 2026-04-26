@@ -1,0 +1,162 @@
+{
+  "common": {
+    "language": "Language",
+    "noData": "No data available",
+    "loading": "Loading...",
+    "backToHome": "Back to Home",
+    "copyright": "Copyright"
+  },
+  "actions": {
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "add": "Add",
+    "remove": "Remove",
+    "filter": "Filter",
+    "create": "Create",
+    "save": "Save"
+  },
+  "form": {
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter your password",
+      "confirm": {
+        "label": "Confirm password",
+        "placeholder": "Confirm your password"
+      }
+    }
+  },
+  "validation": {
+    "email": {
+      "required": "Email is required",
+      "invalid": "Invalid email address"
+    },
+    "password": {
+      "required": "Password is required",
+      "min": "Password must be at least 12 characters",
+      "max": "Password must not exceed 256 characters",
+      "uppercase": "Must contain at least one uppercase letter",
+      "lowercase": "Must contain at least one lowercase letter",
+      "number": "Must contain at least one number",
+      "special": "Must contain at least one special character",
+      "confirmMismatch": "Passwords must match"
+    }
+  },
+  "error": {
+    "auth": {
+      "registration": {
+        "title": "Registration not possible",
+        "message": "The registration could not be completed. Please check your inputs or try again later."
+      },
+      "login": {
+        "title": "Login not possible",
+        "message": "Login could not be completed. Please check your inputs."
+      }
+    },
+    "network": {
+      "title": "Connection unavailable",
+      "message": "The connection to the server could not be established. Please check your internet connection and try again."
+    },
+    "serviceUnavailable": {
+      "title": "Service unavailable",
+      "message": "The service is currently unavailable. Please try again later."
+    },
+    "page": {
+      "404": {
+        "title": "Page not found",
+        "message": "The page you are looking for does not exist or has been moved."
+      },
+      "500": {
+        "title": "Server error",
+        "message": "An unexpected error occurred. Please try again later."
+      },
+      "default": {
+        "title": "Something went wrong",
+        "message": "An error occurred while processing your request. Please try again."
+      }
+    }
+  },
+  "navigation": {
+    "howItWorks": "How it works",
+    "features": "Features",
+    "pricing": "Pricing",
+    "login": "Sign in",
+    "logout": "Sign out",
+    "register": "Sign up"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back!",
+      "dontHaveAccount": "Don't have an account?",
+      "forgotPassword": "Forgot password?",
+      "submit": "Login",
+      "termsHint": "By signing in, you agree to our Terms of Service.",
+      "success": {
+        "title": "Success!",
+        "message": "You are now logged in."
+      }
+    },
+    "register": {
+      "title": "Create an account",
+      "alreadyHaveAccount": "Already have an account?",
+      "forgotPassword": "Forgot password?",
+      "submit": "Create account",
+      "termsHint": "By signing up, you agree to our Terms of Service.",
+      "success": {
+        "title": "Account successfully created!",
+        "message": "You can now sign in."
+      }
+    }
+  },
+  "landing": {
+    "hero": {
+      "title": "Stop building products nobody wants.",
+      "description": "Validate your digital business ideas with real data before you invest time and money. Evidara helps you test what actually works - before you build it.",
+      "ctaPrimary": "Get started",
+      "ctaSecondary": "Learn more"
+    }
+  },
+  "content": {
+    "notFound": {
+      "title": "Content not found",
+      "text": "The requested content does not exist or is currently unavailable."
+    }
+  },
+  "legal": {
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "imprint": "Imprint",
+    "privacyMeta": {
+      "version": "Version",
+      "updatedAt": "Last updated"
+    },
+    "imprintDetails": {
+      "title": "Imprint",
+      "responsible": "Responsible",
+      "name": "Luca Knobel",
+      "street": "Mühlerain 14",
+      "postal": "3210 Kerzers",
+      "country": "Switzerland",
+      "email": "knobel.luca(at)gmail.com"
+    }
+  },
+  "account": {
+    "delete": {
+      "action": "Delete account",
+      "title": "Delete account",
+      "description": "This will permanently delete your account and all ideas. This action cannot be undone.",
+      "confirm": "Delete account",
+      "success": {
+        "title": "Account deleted",
+        "message": "Your account has been permanently removed."
+      }
+    }
+  }
+}

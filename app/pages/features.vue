@@ -1,5 +1,5 @@
 <template>
   <div>
-    <LandingCTA />
+    WIP: features page coming soon!
   </div>
 </template>

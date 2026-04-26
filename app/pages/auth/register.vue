@@ -1,5 +1,5 @@
 <template>
   <div>
-    <LandingCTA />
+    WiP: Register page coming soon!
   </div>
 </template>

@@ -1,0 +1,162 @@
+{
+  "common": {
+    "language": "Sprache",
+    "noData": "Keine Daten verfügbar",
+    "loading": "Wird geladen...",
+    "backToHome": "Zurück zur Startseite",
+    "copyright": "Copyright"
+  },
+  "actions": {
+    "view": "Ansehen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "search": "Suche",
+    "cancel": "Abbrechen",
+    "continue": "Weiter",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "filter": "Filtern",
+    "create": "Erstellen",
+    "save": "Speichern"
+  },
+  "form": {
+    "email": {
+      "label": "E-Mail",
+      "placeholder": "Geben Sie Ihre E-Mail-Adresse ein"
+    },
+    "password": {
+      "label": "Passwort",
+      "placeholder": "Geben Sie Ihr Passwort ein",
+      "confirm": {
+        "label": "Passwort bestätigen",
+        "placeholder": "Bestätigen Sie Ihr Passwort"
+      }
+    }
+  },
+  "validation": {
+    "email": {
+      "required": "E-Mail ist erforderlich",
+      "invalid": "Ungültige E-Mail-Adresse"
+    },
+    "password": {
+      "required": "Passwort ist erforderlich",
+      "min": "Passwort muss mindestens 12 Zeichen lang sein",
+      "max": "Passwort darf maximal 256 Zeichen lang sein",
+      "uppercase": "Muss mindestens einen Großbuchstaben enthalten",
+      "lowercase": "Muss mindestens einen Kleinbuchstaben enthalten",
+      "number": "Muss mindestens eine Zahl enthalten",
+      "special": "Muss mindestens ein Sonderzeichen enthalten",
+      "confirmMismatch": "Passwörter müssen übereinstimmen"
+    }
+  },
+  "error": {
+    "auth": {
+      "registration": {
+        "title": "Registrierung nicht möglich",
+        "message": "Die Registrierung konnte nicht abgeschlossen werden. Bitte Eingaben prüfen oder später erneut versuchen."
+      },
+      "login": {
+        "title": "Anmeldung nicht möglich",
+        "message": "Die Anmeldung konnte nicht durchgeführt werden. Bitte prüfen Sie Ihre Eingaben."
+      }
+    },
+    "network": {
+      "title": "Verbindung nicht möglich",
+      "message": "Es konnte keine Verbindung zum Server hergestellt werden. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut."
+    },
+    "serviceUnavailable": {
+      "title": "Dienst nicht verfügbar",
+      "message": "Der Dienst ist momentan nicht erreichbar. Bitte versuchen Sie es später erneut."
+    },
+    "page": {
+      "404": {
+        "title": "Seite nicht gefunden",
+        "message": "Die gesuchte Seite existiert nicht oder wurde verschoben."
+      },
+      "500": {
+        "title": "Serverfehler",
+        "message": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
+      },
+      "default": {
+        "title": "Etwas ist schiefgelaufen",
+        "message": "Bei der Verarbeitung Ihrer Anfrage ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+      }
+    }
+  },
+  "navigation": {
+    "howItWorks": "So funktioniert's",
+    "features": "Funktionen",
+    "pricing": "Preise",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "register": "Registrieren"
+  },
+  "auth": {
+    "login": {
+      "title": "Willkommen zurück!",
+      "dontHaveAccount": "Haben Sie noch kein Konto?",
+      "forgotPassword": "Passwort vergessen?",
+      "submit": "Anmelden",
+      "termsHint": "Mit der Anmeldung stimmen Sie unseren Nutzungsbedingungen zu.",
+      "success": {
+        "title": "Erfolg!",
+        "message": "Sie sind jetzt eingeloggt."
+      }
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
+      "forgotPassword": "Passwort vergessen?",
+      "submit": "Konto erstellen",
+      "termsHint": "Mit der Registrierung stimmen Sie unseren Nutzungsbedingungen zu.",
+      "success": {
+        "title": "Konto erfolgreich erstellt!",
+        "message": "Sie können sich jetzt anmelden."
+      }
+    }
+  },
+  "landing": {
+    "hero": {
+      "title": "Entwickle Produkte, die wirklich gefragt sind.",
+      "description": "Validiere deine digitalen Geschäftsideen mit echten Daten, bevor du Zeit und Geld investierst. Evidara hilft dir zu erkennen, was funktioniert, bevor du es umsetzt.",
+      "ctaPrimary": "Loslegen",
+      "ctaSecondary": "Mehr erfahren"
+    }
+  },
+  "content": {
+    "notFound": {
+      "title": "Inhalt nicht gefunden",
+      "text": "Der angeforderte Inhalt existiert nicht oder ist derzeit nicht verfugbar."
+    }
+  },
+  "legal": {
+    "privacyPolicy": "Datenschutzerklärung",
+    "termsOfService": "Nutzungsbedingungen",
+    "imprint": "Impressum",
+    "privacyMeta": {
+      "version": "Version",
+      "updatedAt": "Stand"
+    },
+    "imprintDetails": {
+      "title": "Impressum",
+      "responsible": "Verantwortlich",
+      "name": "Luca Knobel",
+      "street": "Mühlerain 14",
+      "postal": "3210 Kerzers",
+      "country": "Schweiz",
+      "email": "knobel.luca(at)gmail.com"
+    }
+  },
+  "account": {
+    "delete": {
+      "action": "Konto löschen",
+      "title": "Konto löschen",
+      "description": "Ihr Konto und alle Ideen werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "confirm": "Konto löschen",
+      "success": {
+        "title": "Konto gelöscht",
+        "message": "Ihr Konto wurde dauerhaft entfernt."
+      }
+    }
+  }
+}
