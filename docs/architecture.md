@@ -1,148 +1,252 @@
----
-description: Global instructions applied to all coding, architecture, and security-related tasks in the repository
-applyTo: "**"
----
+# Architecture Overview
 
-# Copilot Instructions
+## Purpose
 
-## Role
-
-You are a senior software engineer and security-focused architect specialized in:
-
-- Nuxt 4
-- TypeScript (strict mode)
-- Prisma ORM + PostgreSQL
-- Nuxt UI and Tailwind CSS
-- Secure clean web application architecture (OWASP)
+This document describes the **logical architecture** and the **project structure** of the system.  
+It serves as a reference for developers and defines how the system must be structured and implemented.
 
 ---
 
-## Core Principles
+## Architectural Style
 
-- Always use modern, non-deprecated APIs
-- Never invent APIs or framework behavior
-- Always prefer official modern documentation via MCP tools
-- Prioritize correctness over assumptions
+The system follows a **3-layer Clean Architecture variant**:
+
+1. **Application Business Rules** (core logic)  
+2. **Interface Adapters** (API layer)  
+3. **Frameworks & Drivers** (infrastructure)  
 
 ---
 
-## Architecture
+## Dependency Rule
 
-Follow a **3-layer Clean Architecture variant**:
-
-1. Application Business Rules
-2. Interface Adapters
-3. Frameworks & Drivers
-
-### Rules
-
-- Business logic lives only in `server/application/services/`
-- Core models live in `server/application/models/`
-- Interfaces live in `server/application/interfaces/`
-- API handlers (in `server/api/`) are controllers only
-- Infrastructure (Prisma, external services) lives in `server/infrastructure/`
-
-### Strict Constraints
-
-- No business logic in API handlers
-- No Prisma usage in application layer
-- No Nuxt imports in application layer
-- No direct DB access outside repositories
-
-### Request Handling Pipeline
+All dependencies must point **inward**:
 
 ```txt
-API Handler → Rate Limit → Validation → Mapper → Service → Interface → Repository → Prisma
+Infrastructure → API → Application
 ```
 
-- Rate limiting must be applied at the beginning of API handlers
-- Validation must occur before entering application logic
-- Mapping between DTOs and internal models is required
+Forbidden:
 
-### See:
-
-- [Architecture Documentation](../docs/architecture.md)
+- Application importing Prisma or infrastructure code  
+- Application importing Nuxt or runtime APIs  
+- Business logic inside API handlers  
 
 ---
 
-## Backend
+## Logical Architecture
 
-- API handlers are thin controllers (file-based routing)
-- Always validate input using schemas
-- Always map DTOs ↔ internal models
-- Never expose internal models directly
-- Use services for all business workflows
+### 1) Application Business Rules
 
-### Rate Limiting
+Core of the system containing all business logic.
 
-- Must be implemented in `server/api/rate-limit/`
-- Applied per endpoint inside API handlers
-- Uses:
-  - user ID if authenticated
-  - IP address if unauthenticated
+Includes:
 
----
+- domain models  
+- use case services  
+- interfaces (abstractions)  
 
-## Frontend
+Rules:
 
-- Use Nuxt 4 conventions
-- Composition API only
-- No business logic in components
-- Use composables or services for data access
+- no HTTP logic  
+- no database access  
+- no framework usage  
 
 ---
 
-## TypeScript
+### 2) Interface Adapters
 
-- Strict mode required
-- No `any`
-- Explicit types for public APIs
-- Prefer clear and predictable typing
+Handles communication between external systems and core logic.
 
----
+Includes:
 
-## Styling
+- API handlers (file-based routing)  
+- validation schemas  
+- DTO mapping  
+- request protection (rate limiting)  
 
-- Tailwind CSS only
-- No inline styles
-- Follow consistent design patterns
+Responsibilities:
 
----
-
-## Security
-
-- Validate all input server-side
-- Encode output (prevent XSS)
-- Enforce authentication and authorization
-- Apply rate limiting on API endpoints
-- Never trust client data
-
-### See:
-
-- [Security Documentation](../docs/security.md)
+- validate input  
+- map request → internal model  
+- call services  
+- map response → DTO  
 
 ---
 
-## Code Quality
+### 3) Frameworks & Drivers
 
-- Prefer clarity over cleverness
-- Avoid duplication
-- Use meaningful naming
-- Keep functions small and focused
-- Follow consistent patterns
+Technical implementation layer.
+
+Includes:
+
+- database access (Prisma)  
+- repositories  
+- logging  
+- authentication  
+- external services  
+
+Responsibilities:
+
+- implement interfaces  
+- handle infrastructure concerns  
 
 ---
 
-## Error Handling
+## Project Structure
 
-- Never expose internal errors
-- Return safe and consistent responses
-- Use structured error handling
+```txt
+server/
+  api/
+    rate-limit/             # request protection (rate limiting)
+      policies.ts
+      rateLimit.ts
+
+    schemas/                # validation schemas (Zod)
+    mappers/                # DTO ↔ internal model mapping
+
+    *.ts                    # API handlers (file-based routing)
+
+  application/
+    models/                 # domain models
+    services/               # use cases / business logic
+    interfaces/             # abstractions (repositories, services)
+
+  infrastructure/
+    prisma/                 # Prisma client & setup
+    repositories/           # DB implementations
+    services/               # external integrations (mail, logging, auth)
+
+shared/
+  types/                    # DTOs (client ↔ server)
+
+middleware/                 # optional global logic
+plugins/                    # Nuxt runtime integration
+```
 
 ---
 
-## Documentation Awareness
+## Folder Responsibilities
 
-- Always check internal docs first
-- Follow architecture and security documentation strictly
-- Use MCP tools for accurate, up-to-date information
+### `server/application/`
+
+- contains all business logic  
+- independent of frameworks and infrastructure  
+
+#### models/
+- domain entities  
+- no external dependencies  
+
+#### services/
+- use cases  
+- orchestrate workflows  
+
+#### interfaces/
+- define required capabilities  
+- no implementation  
+
+---
+
+### `server/api/`
+
+- handles HTTP requests  
+- acts as controller layer  
+
+#### schemas/
+- input validation  
+
+#### mappers/
+- DTO ↔ internal model conversion  
+
+#### rate-limit/
+- request protection  
+- applied before validation  
+
+---
+
+### `server/infrastructure/`
+
+- technical implementations  
+
+#### prisma/
+- database client  
+
+#### repositories/
+- persistence layer  
+- implements interfaces  
+
+#### services/
+- external integrations  
+
+---
+
+### `shared/`
+
+- shared DTO definitions  
+- used by frontend and backend  
+
+Rules:
+
+- no business logic  
+- no framework dependencies  
+
+---
+
+### `middleware/`
+
+- cross-cutting concerns  
+- optional  
+
+Examples:
+
+- authentication checks  
+- global request handling  
+
+---
+
+### `plugins/`
+
+- Nuxt runtime integration  
+
+Examples:
+
+- dependency injection  
+- global setup  
+
+---
+
+## Request Flow
+
+```txt
+API Handler
+ → Rate Limit
+ → Validation
+ → Mapping
+ → Service (Use Case)
+ → Interface
+ → Repository
+ → Prisma
+```
+
+---
+
+## Key Principles
+
+- strict separation of concerns  
+- business logic only in application layer  
+- API layer is thin  
+- infrastructure is replaceable  
+- validation and mapping are mandatory  
+- no direct exposure of internal models  
+
+---
+
+## Stateless Design
+
+- no shared server state  
+- each request is independent  
+
+Ensures:
+
+- scalability  
+- reliability  
+- predictable behavior  

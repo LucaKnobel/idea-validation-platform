@@ -9,11 +9,6 @@ export interface UseErrorHandlerComposable {
   resetError: () => void
   handleRegistrationError: (error: unknown) => { titleKey: string, textKey: string }
   handleLoginError: (error: unknown) => { titleKey: string, textKey: string }
-  handleAnalysisError: (error: unknown) => { titleKey: string, textKey: string }
-  handleCriteriaError: (error: unknown) => { titleKey: string, textKey: string }
-  handleAlternativesError: (error: unknown) => { titleKey: string, textKey: string }
-  handleRatingsError: (error: unknown) => { titleKey: string, textKey: string }
-  handleResultsError: (error: unknown) => { titleKey: string, textKey: string }
   handleAccountDeleteError: (error: unknown) => { titleKey: string, textKey: string }
 }
 
@@ -82,78 +77,6 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     return { titleKey, textKey }
   }
 
-  const handleAnalysisError = (error: unknown): { titleKey: string, textKey: string } => {
-    const statusCode = getStatusCode(error)
-    const commonError = handleCommonErrors(statusCode)
-    if (commonError) {
-      return commonError
-    }
-    const titleKey = 'error.analysis.title'
-    const textKey = 'error.analysis.text'
-    setError(titleKey, textKey)
-    return { titleKey, textKey }
-  }
-
-  const handleCriteriaError = (error: unknown): { titleKey: string, textKey: string } => {
-    const statusCode = getStatusCode(error)
-    const commonError = handleCommonErrors(statusCode)
-    if (commonError) {
-      return commonError
-    }
-    const titleKey = 'error.criteria.title'
-    const textKey = 'error.criteria.text'
-    setError(titleKey, textKey)
-    return { titleKey, textKey }
-  }
-
-  const handleAlternativesError = (error: unknown): { titleKey: string, textKey: string } => {
-    const statusCode = getStatusCode(error)
-    const commonError = handleCommonErrors(statusCode)
-    if (commonError) {
-      return commonError
-    }
-    const titleKey = 'error.alternatives.title'
-    const textKey = 'error.alternatives.text'
-    setError(titleKey, textKey)
-    return { titleKey, textKey }
-  }
-
-  const handleRatingsError = (error: unknown): { titleKey: string, textKey: string } => {
-    const statusCode = getStatusCode(error)
-    const commonError = handleCommonErrors(statusCode)
-    if (commonError) {
-      return commonError
-    }
-    const titleKey = 'error.ratings.title'
-    const textKey = 'error.ratings.text'
-    setError(titleKey, textKey)
-    return { titleKey, textKey }
-  }
-
-  const handleResultsError = (error: unknown): { titleKey: string, textKey: string } => {
-    const statusCode = getStatusCode(error)
-    if (statusCode === 422) {
-      const titleKey = 'error.results.weightSum.title'
-      const textKey = 'error.results.weightSum.text'
-      setError(titleKey, textKey)
-      return { titleKey, textKey }
-    }
-    if (statusCode === 409) {
-      const titleKey = 'error.results.missingRatings.title'
-      const textKey = 'error.results.missingRatings.text'
-      setError(titleKey, textKey)
-      return { titleKey, textKey }
-    }
-    const commonError = handleCommonErrors(statusCode)
-    if (commonError) {
-      return commonError
-    }
-    const titleKey = 'error.results.title'
-    const textKey = 'error.results.text'
-    setError(titleKey, textKey)
-    return { titleKey, textKey }
-  }
-
   const handleAccountDeleteError = (error: unknown): { titleKey: string, textKey: string } => {
     const statusCode = getStatusCode(error)
     const commonError = handleCommonErrors(statusCode)
@@ -173,11 +96,6 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     resetError,
     handleRegistrationError,
     handleLoginError,
-    handleAnalysisError,
-    handleCriteriaError,
-    handleAlternativesError,
-    handleRatingsError,
-    handleResultsError,
     handleAccountDeleteError
   }
 }

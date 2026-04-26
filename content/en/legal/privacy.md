@@ -1,30 +1,36 @@
 ---
+
 title: Privacy Policy
-description: Privacy Policy for the Decision Analysis App.
+description: Privacy policy for the SaaS application for validating digital business ideas.
 locale: en
-updatedAt: 2026-02-14
+updatedAt: 2026-04-26
 version: "1"
 ---
+
 # Privacy Policy
 
 **Version:** 1  
-**Effective Date:** 14 February 2026
+**Last updated:** April 26, 2026  
 
 ## 1. Controller
 
-The controller responsible for data processing within the meaning of the revised Swiss Federal Act on Data Protection (revDSG) is:
+The controller responsible for data processing within the meaning of the revised Swiss Federal Act on Data Protection (FADP) is:
 
 Luca Knobel  
 Mühlerain 14  
 3210 Kerzers  
 Switzerland  
-Email: knobel.luca@gmail.com
+Email: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)
 
-## 2. Scope of Application
+---
 
-This Privacy Policy provides information on the nature, scope, and purpose of the processing of personal data in connection with the use of the web-based Software-as-a-Service application Decision Analysis App (Dezizio.com).
+## 2. Scope
 
-Data processing is carried out exclusively in accordance with the provisions of the revised Swiss Federal Act on Data Protection (revDSG).
+This Privacy Policy provides information about the nature, scope, and purpose of the processing of personal data in connection with the use of the web-based Software-as-a-Service (SaaS) application for validating digital business ideas.
+
+Data processing is carried out exclusively in accordance with the provisions of the revised Swiss Federal Act on Data Protection (FADP).
+
+---
 
 ## 3. Hosting and Infrastructure
 
@@ -34,9 +40,19 @@ Infomaniak Network SA
 
 All personal data is stored in data centers located in Switzerland.
 
-A data processing agreement in accordance with Art. 9 revDSG has been concluded with the hosting provider.
+A data processing agreement in accordance with Art. 9 FADP is in place with the hosting provider.
 
-No systematic transfer of personal data to countries outside Switzerland or the European Union takes place.
+No systematic transfer of personal data to countries outside Switzerland or the EU takes place.
+
+Additional technical service providers may be used in the operation of the platform, in particular for:
+
+* email delivery (SMTP services)
+* payment processing
+* infrastructure components
+
+These providers are engaged strictly as data processors in accordance with applicable legal requirements.
+
+---
 
 ## 4. Categories of Personal Data Processed
 
@@ -44,117 +60,188 @@ No systematic transfer of personal data to countries outside Switzerland or the 
 
 When registering and using a user account, the following data is processed:
 
-- Email address  
-- Password hash  
-- User ID (UUID)  
-- Registration timestamp  
+* email address
+* password hash
+* user ID (UUID)
+* registration timestamp
 
-Passwords are not stored in plain text.
+Passwords are never stored in plain text.
+
+---
 
 ### 4.2 Application and Content Data
 
-When using the platform, the following user-related content is stored:
+During use of the platform, the following user-related data is processed:
 
-- Analyses (title, description)  
-- Criteria (name, weight)  
-- Alternatives  
-- Rating values  
-- Modification timestamps (createdAt, updatedAt)  
+* business ideas (title, description)
+* hypotheses and validation data
+* metrics and thresholds
+* analyses and evaluations
+* timestamps (createdAt, updatedAt)
 
-This data is processed exclusively to provide the functionality of the platform.
+This data is used exclusively to provide the functionality of the platform.
+
+---
 
 ### 4.3 Authentication and Session Data
 
-Secure, encrypted, and signed session cookies are used for authentication:
+Secure login is implemented using encrypted and signed session cookies:
 
-- HTTP-only  
-- Secure (HTTPS only)  
-- Cryptographically sealed  
-- No storage of sensitive data in plain text  
+* HTTP-only
+* Secure (HTTPS only)
+* cryptographically signed
+* no storage of sensitive plaintext data
 
-These cookies are technically necessary and do not contain tracking or marketing functionalities.
+These cookies are strictly necessary and do not contain tracking or marketing functions.
+
+---
 
 ### 4.4 Server Log Data
 
 When accessing the platform, the following data is automatically processed:
 
-- IP address  
-- Date and time of access  
-- Accessed resources  
-- Browser type and operating system  
+* IP address
+* date and time of access
+* requested resources
+* browser type and operating system
 
-This processing is carried out to ensure system security, stability, and prevention of misuse.
+This processing is necessary to ensure system security, stability, and to prevent abuse.
+
+---
+
+### 4.5 Cookies
+
+The application uses only technically necessary cookies.
+
+These are used for:
+
+* authentication
+* session management
+* secure operation of the platform
+
+No:
+
+* tracking cookies
+* analytics cookies
+* marketing cookies
+
+are used.
+
+---
 
 ## 5. Purpose of Data Processing
 
 Personal data is processed for the following purposes:
 
-- Provision of the web application  
-- Authentication and access control  
-- Storage and management of user-related analyses  
-- Ensuring IT security  
-- Error analysis and system monitoring  
-- Compliance with legal obligations  
+* providing the web application
+* authentication and access control
+* storing and managing user data
+* performing validation analyses
+* ensuring IT security
+* error analysis and system monitoring
+* communication with users
+* compliance with legal obligations
+
+---
 
 ## 6. Legal Basis
 
 Data processing is based on:
 
-- Performance of a contract (provision of the platform)  
-- Legitimate interests (system security, prevention of misuse)  
-- Legal obligations  
+* performance of a contract (provision of the platform)
+* legitimate interests (security, system operation, abuse prevention)
+* legal obligations
+
+---
 
 ## 7. Data Security
 
-Appropriate organizational and technical measures in accordance with Art. 8 revDSG are implemented, including:
+Appropriate technical and organizational measures are implemented in accordance with Art. 8 FADP, including:
 
-- TLS/HTTPS encryption  
-- Password hashing  
-- Use of secure, sealed session cookies  
-- Security headers (e.g., Content Security Policy)  
-- Server-side input validation  
-- Database access restrictions  
-- Relational data structure with referential integrity  
+* TLS/HTTPS encryption
+* secure password hashing
+* use of signed session cookies
+* security headers (e.g. Content Security Policy)
+* server-side input validation
+* database access restrictions
+* logging of security-relevant events
+* separation of application and database layers
 
-## 8. Retention and Deletion
+---
+
+## 8. Data Retention and Deletion
 
 Personal data is stored:
 
-- As long as a user account exists  
-- Until deletion by the user  
-- As long as statutory retention obligations apply  
+* as long as a user account exists
+* until deletion by the user
+* as long as required by legal retention obligations
 
-The database is structured relationally. Upon deletion of a user account, all associated analyses, criteria, alternatives, and ratings are automatically and permanently deleted (cascade deletion mechanism).
+The database is relational. When a user account is deleted, all associated data is automatically removed (cascade deletion).
 
-### 8.1 Access by Administrator
+### 8.1 Access by Operator
 
-The operator has technical access to the database. Access is strictly limited to cases where it is necessary for system maintenance and error resolution.
+The operator has technical access to the database. Access is limited strictly to what is necessary for maintenance, troubleshooting, or ensuring system operation.
 
-## 9. Data Disclosure
+---
 
-Personal data is not sold or disclosed to third parties.
+## 9. Data Sharing
 
-Data is disclosed only:
+No personal data is sold or shared with third parties.
 
-- To the hosting provider within the framework of data processing  
-- If legally required  
+Data is only shared:
 
-## 10. Rights of Data Subjects
+* with the hosting provider (Infomaniak) as part of data processing
+* with email service providers (SMTP) for system-related communication
+* with payment service providers for payment processing
+* if required by law
 
-Under revDSG, data subjects have the following rights:
+---
 
-- Right to access personal data  
-- Right to rectification of inaccurate data  
-- Right to deletion of data  
-- Right to restriction of processing  
-- Right to data release or transfer  
+## 10. Payment Providers
 
-Requests must be submitted in writing to the contact address listed above.
+External payment providers may be used for paid services, such as:
 
-## 11. No Automated Decision-Making
+* Payrexx
+* Datatrans
+* or comparable providers
 
-No automated decision-making or profiling within the meaning of revDSG takes place.
+Payments are processed exclusively through these providers. Personal data (e.g. payment details) may be processed directly by them.
 
-## 12. Amendments
+Their respective privacy policies apply.
 
-This Privacy Policy may be amended at any time. The version published on the website shall be authoritative.
+---
+
+## 11. Rights of Data Subjects
+
+Under the FADP, data subjects have the following rights:
+
+* right of access
+* right to rectification
+* right to deletion
+* right to restriction of processing
+* right to data portability
+
+Where processing is based on consent, it may be withdrawn at any time.
+
+Data subjects also have the right to lodge a complaint with the Swiss Federal Data Protection and Information Commissioner (FDPIC).
+
+Requests must be submitted in writing to the contact details above.
+
+---
+
+## 12. No Automated Decision-Making
+
+No automated decision-making or profiling within the meaning of the FADP takes place.
+
+---
+
+## 13. Communication and Support
+
+When contacting us (e.g. via email or platform support features), the transmitted data is processed solely for the purpose of handling the request.
+
+---
+
+## 14. Changes
+
+This Privacy Policy may be updated at any time. The version published on the platform is authoritative.
