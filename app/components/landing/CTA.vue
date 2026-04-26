@@ -6,11 +6,11 @@ const { t } = useI18n()
 
 const links: ButtonProps[] = [
   {
-    label: t('pages.index.getStarted'),
+    label: t('landing.hero.ctaPrimary'),
     to: localePath('/auth/register')
   },
   {
-    label: t('pages.index.learnMore'),
+    label: t('landing.hero.ctaSecondary'),
     to: localePath('/demo'),
     color: 'neutral',
     variant: 'outline',
@@ -22,8 +22,8 @@ const links: ButtonProps[] = [
 <template>
   <div>
     <UPageHero
-      :title="$t('pages.index.title')"
-      :description="$t('pages.index.description')"
+      :title="$t('landing.hero.title')"
+      :description="$t('landing.hero.description')"
       :links="links"
     />
   </div>

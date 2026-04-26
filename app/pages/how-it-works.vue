@@ -1,5 +1,5 @@
 <template>
   <div>
-    WiP: Register page coming soon!
+    WIP: How it works page coming soon!
   </div>
 </template>

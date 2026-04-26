@@ -42,15 +42,15 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
 
   const handleCommonErrors = (statusCode: number | undefined): { titleKey: string, textKey: string } | null => {
     if (!statusCode) {
-      const titleKey = 'errors.network.title'
-      const textKey = 'errors.network.text'
+      const titleKey = 'error.network.title'
+      const textKey = 'error.network.text'
       setError(titleKey, textKey)
       return { titleKey, textKey }
     }
 
     if (statusCode >= 500) {
-      const titleKey = 'errors.serviceUnavailable.title'
-      const textKey = 'errors.serviceUnavailable.text'
+      const titleKey = 'error.serviceUnavailable.title'
+      const textKey = 'error.serviceUnavailable.text'
       setError(titleKey, textKey)
       return { titleKey, textKey }
     }
@@ -64,8 +64,8 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     if (commonError) {
       return commonError
     }
-    const titleKey = 'errors.registration.title'
-    const textKey = 'errors.registration.text'
+    const titleKey = 'error.auth.registration.title'
+    const textKey = 'error.auth.registration.text'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
@@ -76,8 +76,8 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     if (commonError) {
       return commonError
     }
-    const titleKey = 'errors.login.title'
-    const textKey = 'errors.login.text'
+    const titleKey = 'error.auth.login.title'
+    const textKey = 'error.auth.login.text'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
@@ -88,8 +88,8 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     if (commonError) {
       return commonError
     }
-    const titleKey = 'errors.analysis.title'
-    const textKey = 'errors.analysis.text'
+    const titleKey = 'error.analysis.title'
+    const textKey = 'error.analysis.text'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
@@ -100,8 +100,8 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     if (commonError) {
       return commonError
     }
-    const titleKey = 'errors.criteria.title'
-    const textKey = 'errors.criteria.text'
+    const titleKey = 'error.criteria.title'
+    const textKey = 'error.criteria.text'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
@@ -112,8 +112,8 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     if (commonError) {
       return commonError
     }
-    const titleKey = 'errors.alternatives.title'
-    const textKey = 'errors.alternatives.text'
+    const titleKey = 'error.alternatives.title'
+    const textKey = 'error.alternatives.text'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
@@ -124,8 +124,8 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     if (commonError) {
       return commonError
     }
-    const titleKey = 'errors.ratings.title'
-    const textKey = 'errors.ratings.text'
+    const titleKey = 'error.ratings.title'
+    const textKey = 'error.ratings.text'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
@@ -133,14 +133,14 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
   const handleResultsError = (error: unknown): { titleKey: string, textKey: string } => {
     const statusCode = getStatusCode(error)
     if (statusCode === 422) {
-      const titleKey = 'errors.results.weightSum.title'
-      const textKey = 'errors.results.weightSum.text'
+      const titleKey = 'error.results.weightSum.title'
+      const textKey = 'error.results.weightSum.text'
       setError(titleKey, textKey)
       return { titleKey, textKey }
     }
     if (statusCode === 409) {
-      const titleKey = 'errors.results.missingRatings.title'
-      const textKey = 'errors.results.missingRatings.text'
+      const titleKey = 'error.results.missingRatings.title'
+      const textKey = 'error.results.missingRatings.text'
       setError(titleKey, textKey)
       return { titleKey, textKey }
     }
@@ -148,8 +148,8 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     if (commonError) {
       return commonError
     }
-    const titleKey = 'errors.results.title'
-    const textKey = 'errors.results.text'
+    const titleKey = 'error.results.title'
+    const textKey = 'error.results.text'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
@@ -160,8 +160,8 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     if (commonError) {
       return commonError
     }
-    const titleKey = 'errors.account.delete.title'
-    const textKey = 'errors.account.delete.text'
+    const titleKey = 'error.account.delete.title'
+    const textKey = 'error.account.delete.text'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
