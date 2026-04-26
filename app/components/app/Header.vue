@@ -5,7 +5,7 @@ const localePath = useLocalePath()
 <template>
   <UHeader>
     <template #left>
-      <AppLogo />
+      <AppLogo size="md" />
     </template>
 
     <template #right>
