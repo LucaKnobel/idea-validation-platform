@@ -33,7 +33,7 @@ const handleError = async () => {
           {{ $t(`error.page.${errorKey}.title`) }}
         </h1>
         <p class="text-gray-600 dark:text-gray-400">
-          {{ $t(`error.page.${errorKey}.description`) }}
+          {{ $t(`error.page.${errorKey}.message`) }}
         </p>
       </div>
       <UButton

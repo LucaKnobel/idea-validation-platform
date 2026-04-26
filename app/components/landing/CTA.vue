@@ -20,11 +20,16 @@ const links: ButtonProps[] = [
 </script>
 
 <template>
-  <div>
+  <section class="relative overflow-hidden">
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-linear-to-b from-primary/30 via-primary/10 to-transparent"
+    />
     <UPageHero
+      class="relative z-10"
       :title="$t('landing.hero.title')"
       :description="$t('landing.hero.description')"
       :links="links"
     />
-  </div>
+  </section>
 </template>
