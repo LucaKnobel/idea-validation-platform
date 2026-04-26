@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "nuxt typecheck",
+    "test": "nuxt test",
     "test:unit": "vitest --project unit"
   },
   "dependencies": {
