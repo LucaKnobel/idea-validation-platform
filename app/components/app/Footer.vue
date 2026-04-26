@@ -25,7 +25,7 @@ const footerItems = computed(() => [{
   <UFooter>
     <template #left>
       <p class="text-muted text-sm">
-        {{ $t('footer.copyright') }} {{ new Date().getFullYear() }}
+        {{ $t('common.copyright') }} {{ new Date().getFullYear() }}
       </p>
     </template>
     <UNavigationMenu :items="footerItems" />

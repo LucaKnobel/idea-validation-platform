@@ -1,5 +1,5 @@
 <template>
   <div>
-    login
+    WiP: Login page coming soon!
   </div>
 </template>
