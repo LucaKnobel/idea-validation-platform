@@ -1,0 +1,61 @@
+openapi: '3.0.3'
+
+info:
+  title: idea-validation-platform-api
+  version: '1.0'
+
+servers:
+  - url: http://localhost:3000/api
+
+paths:
+  /content/{contentPath}:
+    get:
+      summary: Get content by path
+      description: |
+        Returns localized content for the full path after /content/.
+        Falls back to English if the requested locale has no matching entry.
+
+        Example frontend request:
+        /api/content/legal/privacy?locale=de
+      tags:
+        - Content
+
+      parameters:
+        - name: contentPath
+          in: path
+          required: true
+          allowReserved: true
+          description: Full content path after /content/, e.g. privacy or legal/privacy
+          schema:
+            type: string
+          example: legal/privacy
+
+        - name: locale
+          in: query
+          required: false
+          description: Locale, defaults to en
+          schema:
+            type: string
+            enum: [en, de]
+            default: en
+
+      responses:
+        '200':
+          description: Content found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              example:
+                id: content_de/legal/privacy.md
+                title: Datenschutzerklaerung
+                path: /legal/privacy
+                locale: de
+                description: Datenschutzerklaerung fuer die SaaS-Applikation
+
+        '400':
+          description: Invalid request parameters
+
+        '404':
+          description: Content not found

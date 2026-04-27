@@ -1,0 +1,125 @@
+info:
+  name: Get content by path
+  type: http
+  seq: 1
+  tags:
+    - Content
+
+http:
+  method: GET
+  url: "{{baseUrl}}/content/:contentPath"
+  params:
+    - name: contentPath
+      value: legal/privacy
+      type: path
+      description: Full content path after /content/, e.g. privacy or legal/privacy
+    - name: locale
+      value: en
+      type: query
+      description: Locale, defaults to en
+    - name: locale
+      value: de
+      type: query
+      description: Locale, defaults to en
+      disabled: true
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 Response
+    description: Content found
+    request:
+      url: "{{baseUrl}}/content/:contentPath"
+      method: GET
+      params:
+        - name: contentPath
+          value: legal/privacy
+          type: path
+          description: Full content path after /content/, e.g. privacy or legal/privacy
+        - name: locale
+          value: en
+          type: query
+          description: Locale, defaults to en
+        - name: locale
+          value: de
+          type: query
+          description: Locale, defaults to en
+          disabled: true
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "id": "content_de/legal/privacy.md",
+            "title": "Datenschutzerklaerung",
+            "path": "/legal/privacy",
+            "locale": "de",
+            "description": "Datenschutzerklaerung fuer die SaaS-Applikation"
+          }
+  - name: 400 Response
+    description: Invalid request parameters
+    request:
+      url: "{{baseUrl}}/content/:contentPath"
+      method: GET
+      params:
+        - name: contentPath
+          value: legal/privacy
+          type: path
+          description: Full content path after /content/, e.g. privacy or legal/privacy
+        - name: locale
+          value: en
+          type: query
+          description: Locale, defaults to en
+        - name: locale
+          value: de
+          type: query
+          description: Locale, defaults to en
+          disabled: true
+    response:
+      status: 400
+      statusText: Bad Request
+      body:
+        type: text
+        data: ""
+  - name: 404 Response
+    description: Content not found
+    request:
+      url: "{{baseUrl}}/content/:contentPath"
+      method: GET
+      params:
+        - name: contentPath
+          value: legal/privacy
+          type: path
+          description: Full content path after /content/, e.g. privacy or legal/privacy
+        - name: locale
+          value: en
+          type: query
+          description: Locale, defaults to en
+        - name: locale
+          value: de
+          type: query
+          description: Locale, defaults to en
+          disabled: true
+    response:
+      status: 404
+      statusText: Not Found
+      body:
+        type: text
+        data: ""
+
+docs: |
+  Returns localized content for the full path after /content/.
+  Falls back to English if the requested locale has no matching entry.
+
+  Example frontend request:
+  /api/content/legal/privacy?locale=de

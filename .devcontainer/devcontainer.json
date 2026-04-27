@@ -21,7 +21,9 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "prisma.prisma",
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+        "42crunch.vscode-openapi",
+        "arjun.swagger-viewer"
       ],
       "settings": {
         "editor.formatOnSave": true,
