@@ -12,15 +12,15 @@ http:
     - name: contentPath
       value: legal/privacy
       type: path
-      description: Full content path after /content/, e.g. privacy or legal/privacy
+      description: Full content path (e.g. legal/privacy)
     - name: locale
       value: en
       type: query
-      description: Locale, defaults to en
+      description: Language of the content
     - name: locale
       value: de
       type: query
-      description: Locale, defaults to en
+      description: Language of the content
       disabled: true
   auth: inherit
 
@@ -38,17 +38,17 @@ examples:
       method: GET
       params:
         - name: contentPath
-          value: legal/privacy
+          value: ""
           type: path
-          description: Full content path after /content/, e.g. privacy or legal/privacy
+          description: Full content path (e.g. legal/privacy)
         - name: locale
           value: en
           type: query
-          description: Locale, defaults to en
+          description: Language of the content
         - name: locale
           value: de
           type: query
-          description: Locale, defaults to en
+          description: Language of the content
           disabled: true
     response:
       status: 200
@@ -60,30 +60,30 @@ examples:
         type: json
         data: |-
           {
-            "id": "content_de/legal/privacy.md",
-            "title": "Datenschutzerklaerung",
-            "path": "/legal/privacy",
-            "locale": "de",
-            "description": "Datenschutzerklaerung fuer die SaaS-Applikation"
+            "id": "",
+            "title": "",
+            "path": "",
+            "locale": "en",
+            "description": ""
           }
   - name: 400 Response
-    description: Invalid request parameters
+    description: Invalid request
     request:
       url: "{{baseUrl}}/content/:contentPath"
       method: GET
       params:
         - name: contentPath
-          value: legal/privacy
+          value: ""
           type: path
-          description: Full content path after /content/, e.g. privacy or legal/privacy
+          description: Full content path (e.g. legal/privacy)
         - name: locale
           value: en
           type: query
-          description: Locale, defaults to en
+          description: Language of the content
         - name: locale
           value: de
           type: query
-          description: Locale, defaults to en
+          description: Language of the content
           disabled: true
     response:
       status: 400
@@ -98,17 +98,17 @@ examples:
       method: GET
       params:
         - name: contentPath
-          value: legal/privacy
+          value: ""
           type: path
-          description: Full content path after /content/, e.g. privacy or legal/privacy
+          description: Full content path (e.g. legal/privacy)
         - name: locale
           value: en
           type: query
-          description: Locale, defaults to en
+          description: Language of the content
         - name: locale
           value: de
           type: query
-          description: Locale, defaults to en
+          description: Language of the content
           disabled: true
     response:
       status: 404
@@ -118,8 +118,5 @@ examples:
         data: ""
 
 docs: |
-  Returns localized content for the full path after /content/.
-  Falls back to English if the requested locale has no matching entry.
-
-  Example frontend request:
-  /api/content/legal/privacy?locale=de
+  Returns localized content by path.
+  Falls back to English if not found.

@@ -1,43 +1,42 @@
 openapi: '3.0.3'
-
 info:
-  title: idea-validation-platform-api
+  title: Idea Validation Platform API
   version: '1.0'
+  description: API specification for Idea Validation Platform API
 
 servers:
   - url: http://localhost:3000/api
 
+tags:
+  - name: Content
+    description: Content endpoints
+
 paths:
   /content/{contentPath}:
     get:
+      operationId: getContent
       summary: Get content by path
       description: |
-        Returns localized content for the full path after /content/.
-        Falls back to English if the requested locale has no matching entry.
-
-        Example frontend request:
-        /api/content/legal/privacy?locale=de
+        Returns localized content by path.
+        Falls back to English if not found.
       tags:
         - Content
-
       parameters:
         - name: contentPath
           in: path
           required: true
-          allowReserved: true
-          description: Full content path after /content/, e.g. privacy or legal/privacy
           schema:
             type: string
-          example: legal/privacy
+          description: Full content path (e.g. legal/privacy)
 
         - name: locale
           in: query
           required: false
-          description: Locale, defaults to en
           schema:
             type: string
             enum: [en, de]
             default: en
+          description: Language of the content
 
       responses:
         '200':
@@ -45,17 +44,32 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
-              example:
-                id: content_de/legal/privacy.md
-                title: Datenschutzerklaerung
-                path: /legal/privacy
-                locale: de
-                description: Datenschutzerklaerung fuer die SaaS-Applikation
+                $ref: '#/components/schemas/Content'
 
         '400':
-          description: Invalid request parameters
+          description: Invalid request
 
         '404':
           description: Content not found
+
+components:
+  schemas:
+    Content:
+      type: object
+      required:
+        - id
+        - title
+        - path
+        - locale
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        path:
+          type: string
+        locale:
+          type: string
+          enum: [en, de]
+        description:
+          type: string
