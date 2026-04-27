@@ -22,8 +22,8 @@
         "esbenp.prettier-vscode",
         "prisma.prisma",
         "bradlc.vscode-tailwindcss",
-        "42crunch.vscode-openapi",
-        "arjun.swagger-viewer"
+        "bruno-api-client.bruno"
+        
       ],
       "settings": {
         "editor.formatOnSave": true,
