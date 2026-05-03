@@ -18,6 +18,7 @@ export default defineNuxtConfig({
   alias: {
     '@server': fileURLToPath(new URL('./server', import.meta.url)),
     '@interfaces': fileURLToPath(new URL('./server/application/interfaces', import.meta.url)),
+    '@infrastructure': fileURLToPath(new URL('./server/infrastructure', import.meta.url)),
     '@generated': fileURLToPath(new URL('./generated', import.meta.url))
   },
 
