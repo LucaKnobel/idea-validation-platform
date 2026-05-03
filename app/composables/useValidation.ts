@@ -10,7 +10,7 @@ export const useValidation = () => {
       .toLowerCase()
       .pipe(z.email({ error: t('validation.email.invalid') })),
     password: z.string({ error: t('validation.password.required') })
-      .min(12, { error: t('validation.password.min') })
+      .min(15, { error: t('validation.password.min') })
       .max(256, { error: t('validation.password.max') })
       .regex(/[A-Z]/, { error: t('validation.password.uppercase') })
       .regex(/[a-z]/, { error: t('validation.password.lowercase') })
