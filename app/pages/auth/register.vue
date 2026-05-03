@@ -36,8 +36,14 @@ const fields: AuthFormField[] = [{
 
 const onSubmit = async (event: FormSubmitEvent<RegisterForm>): Promise<void> => {
   isSubmitting.value = true
-  await register(event.data.email, event.data.password, event.data.email)
-  isSubmitting.value = false
+  try {
+    const ok = await register(event.data.email, event.data.password, '')
+    if (ok) {
+      await navigateTo(localePath('/auth/login'))
+    }
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 

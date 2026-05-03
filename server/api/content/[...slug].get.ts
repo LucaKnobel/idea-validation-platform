@@ -1,5 +1,5 @@
 import { withLeadingSlash } from 'ufo'
-import { GetContentParamsSchema, GetContentQuerySchema } from '@server/api/schemas/content.schema'
+import { GetContentParamsSchema, GetContentQuerySchema } from '@server/api/schemas/content-schemas'
 import { queryCollection } from '@nuxt/content/server'
 
 export default defineEventHandler(async (event) => {
