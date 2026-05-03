@@ -116,6 +116,11 @@
         "title": "Konto erfolgreich erstellt!",
         "message": "Sie können sich jetzt anmelden."
       }
+    },
+    "verifyEmail": {
+      "title": "E-Mail-Postfach prüfen!",
+      "message": "Wir haben Ihnen eine Bestätigungs-E-Mail gesendet. Bitte klicken Sie auf den Link in der E-Mail, um Ihr Konto zu aktivieren.",
+      "backToLogin": "Zurück zur Anmeldung"
     }
   },
   "landing": {

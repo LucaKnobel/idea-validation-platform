@@ -116,6 +116,11 @@
         "title": "Account successfully created!",
         "message": "You can now sign in."
       }
+    },
+    "verifyEmail": {
+      "title": "Check your inbox!",
+      "message": "We have sent you a verification email. Please click the link in the email to activate your account.",
+      "backToLogin": "Back to login"
     }
   },
   "landing": {

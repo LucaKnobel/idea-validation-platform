@@ -11,7 +11,6 @@ export interface UseAuthComposable {
 export const useAuth = (): UseAuthComposable => {
   const client = createAuthClient()
   const { hasError, errorTitle, errorText, handleRegistrationError } = useErrorHandler()
-  const { showSuccess } = useToastNotification()
 
   const register = async (email: string, password: string, name: string): Promise<boolean> => {
     const { error } = await client.signUp.email({
@@ -26,7 +25,6 @@ export const useAuth = (): UseAuthComposable => {
       return false
     }
 
-    showSuccess('auth.register.success.title', 'auth.register.success.message')
     return true
   }
 
