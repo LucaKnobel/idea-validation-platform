@@ -40,13 +40,15 @@
     },
     "password": {
       "required": "Passwort ist erforderlich",
-      "min": "Passwort muss mindestens 12 Zeichen lang sein",
+      "min": "Passwort muss mindestens 15 Zeichen lang sein",
       "max": "Passwort darf maximal 256 Zeichen lang sein",
       "uppercase": "Muss mindestens einen Großbuchstaben enthalten",
       "lowercase": "Muss mindestens einen Kleinbuchstaben enthalten",
       "number": "Muss mindestens eine Zahl enthalten",
       "special": "Muss mindestens ein Sonderzeichen enthalten",
-      "confirmMismatch": "Passwörter müssen übereinstimmen"
+      "confirmMismatch": "Passwörter müssen übereinstimmen",
+      "hint": "Mind. 15 Zeichen mit Groß- und Kleinbuchstaben, einer Zahl und einem Sonderzeichen.",
+      "requirements": "Passwortanforderungen"
     }
   },
   "error": {
@@ -105,6 +107,7 @@
     },
     "register": {
       "title": "Konto erstellen",
+      "createAccount": "Konto erstellen",
       "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
       "forgotPassword": "Passwort vergessen?",
       "submit": "Konto erstellen",
