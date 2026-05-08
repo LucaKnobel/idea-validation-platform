@@ -62,6 +62,12 @@
         "message": "Login could not be completed. Please check your inputs."
       }
     },
+    "account": {
+      "delete": {
+        "title": "Account deletion failed",
+        "message": "Your account could not be deleted. Please try again later."
+      }
+    },
     "network": {
       "title": "Connection unavailable",
       "message": "The connection to the server could not be established. Please check your internet connection and try again."

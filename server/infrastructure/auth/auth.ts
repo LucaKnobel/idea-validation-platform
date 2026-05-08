@@ -2,25 +2,10 @@ import { betterAuth } from 'better-auth'
 import { APIError, createAuthMiddleware } from 'better-auth/api'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { prisma } from '@infrastructure/db/prisma'
-import { LoginUserBodySchema, RegisterUserBodySchema, SendVerificationEmailBodySchema } from '@infrastructure/auth/auth-schemas'
+import { validateAuthRequestBody } from '@infrastructure/auth/auth-body-validator'
 import { sendVerificationMail } from '@infrastructure/mail/send-verification-mail'
 import { resolveLocaleFromRequest } from '@infrastructure/http/locale-resolver'
 import { logger } from '@infrastructure/logging/logger'
-
-const hasRequestBody = (body: unknown): boolean => typeof body !== 'undefined'
-
-const getSchemaForPath = (path: string) => {
-  switch (path) {
-    case '/sign-up/email':
-      return RegisterUserBodySchema
-    case '/sign-in/email':
-      return LoginUserBodySchema
-    case '/send-verification-email':
-      return SendVerificationEmailBodySchema
-    default:
-      return null
-  }
-}
 
 const createInvalidRequestBodyError = () => new APIError('BAD_REQUEST', {
   message: 'Invalid request body',
@@ -72,39 +57,29 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
-      if (!hasRequestBody(ctx.body)) {
-        return
-      }
+      const validation = validateAuthRequestBody(ctx.path, ctx.body)
 
-      const schema = getSchemaForPath(ctx.path)
-
-      if (!schema) {
-        logger.warn('Auth request body without schema', {
-          path: ctx.path
-        })
-
-        throw createUnsupportedRequestBodyError()
-      }
-
-      const parsedBody = schema.safeParse(ctx.body)
-
-      if (!parsedBody.success) {
-        logger.warn('Invalid auth payload', {
-          path: ctx.path,
-          issues: parsedBody.error.issues.map(issue => ({
-            path: issue.path.join('.'),
-            code: issue.code
-          }))
-        })
-
-        throw createInvalidRequestBodyError()
-      }
-
-      return {
-        context: {
-          ...ctx,
-          body: parsedBody.data
-        }
+      switch (validation.kind) {
+        case 'skip':
+          return
+        case 'unsupported-path':
+          logger.warn('Auth request body without schema', {
+            path: ctx.path
+          })
+          throw createUnsupportedRequestBodyError()
+        case 'invalid':
+          logger.warn('Invalid auth payload', {
+            path: ctx.path,
+            issues: validation.issues
+          })
+          throw createInvalidRequestBodyError()
+        case 'valid':
+          return {
+            context: {
+              ...ctx,
+              body: validation.data
+            }
+          }
       }
     })
   }
