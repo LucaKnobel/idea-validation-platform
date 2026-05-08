@@ -2,11 +2,37 @@ import { betterAuth } from 'better-auth'
 import { APIError, createAuthMiddleware } from 'better-auth/api'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { prisma } from '@infrastructure/db/prisma'
-import { RegisterUserBodySchema } from '@infrastructure/auth/auth-schemas'
+import { LoginUserBodySchema, RegisterUserBodySchema, SendVerificationEmailBodySchema } from '@infrastructure/auth/auth-schemas'
 import { sendVerificationMail } from '@infrastructure/mail/send-verification-mail'
 import { resolveLocaleFromRequest } from '@infrastructure/http/locale-resolver'
 import { logger } from '@infrastructure/logging/logger'
 
+const hasRequestBody = (body: unknown): boolean => typeof body !== 'undefined'
+
+const getSchemaForPath = (path: string) => {
+  switch (path) {
+    case '/sign-up/email':
+      return RegisterUserBodySchema
+    case '/sign-in/email':
+      return LoginUserBodySchema
+    case '/send-verification-email':
+      return SendVerificationEmailBodySchema
+    default:
+      return null
+  }
+}
+
+const createInvalidRequestBodyError = () => new APIError('BAD_REQUEST', {
+  message: 'Invalid request body',
+  code: 'INVALID_REQUEST_BODY'
+})
+
+const createUnsupportedRequestBodyError = () => new APIError('BAD_REQUEST', {
+  message: 'Unsupported auth request body',
+  code: 'UNSUPPORTED_AUTH_REQUEST_BODY'
+})
+
+/* Better-Auth configuration */
 export const auth = betterAuth({
 
   database: prismaAdapter(prisma, {
@@ -46,21 +72,39 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
-      if (ctx.path !== '/sign-up/email') {
+      if (!hasRequestBody(ctx.body)) {
         return
       }
 
-      const parsedBody = RegisterUserBodySchema.safeParse(ctx.body)
+      const schema = getSchemaForPath(ctx.path)
 
-      if (!parsedBody.success) {
-        logger.warn('Invalid sign-up payload', {
+      if (!schema) {
+        logger.warn('Auth request body without schema', {
           path: ctx.path
         })
 
-        throw new APIError('BAD_REQUEST', {
-          message: 'Invalid request body',
-          code: 'INVALID_REQUEST_BODY'
+        throw createUnsupportedRequestBodyError()
+      }
+
+      const parsedBody = schema.safeParse(ctx.body)
+
+      if (!parsedBody.success) {
+        logger.warn('Invalid auth payload', {
+          path: ctx.path,
+          issues: parsedBody.error.issues.map(issue => ({
+            path: issue.path.join('.'),
+            code: issue.code
+          }))
         })
+
+        throw createInvalidRequestBodyError()
+      }
+
+      return {
+        context: {
+          ...ctx,
+          body: parsedBody.data
+        }
       }
     })
   }
