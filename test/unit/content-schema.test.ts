@@ -17,4 +17,10 @@ describe('GetContentParamsSchema', () => {
 
     expect(result.success).toBe(false)
   })
+
+  it('rejects missing slug field', () => {
+    const result = GetContentParamsSchema.safeParse({})
+
+    expect(result.success).toBe(false)
+  })
 })
