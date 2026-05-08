@@ -119,7 +119,8 @@
     },
     "verifyEmail": {
       "title": "Check your inbox!",
-      "message": "We have sent you a verification email. Please click the link in the email to activate your account.",
+      "message": "If an unverified account exists for this email address, a verification email has been sent. Please check your inbox.",
+      "alreadyVerifiedHint": "If your account is already verified, you can sign in directly.",
       "backToLogin": "Back to login",
       "resend": {
         "action": "Resend verification email",

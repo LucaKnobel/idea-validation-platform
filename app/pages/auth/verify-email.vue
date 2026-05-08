@@ -47,6 +47,9 @@ const onResend = async (event: FormSubmitEvent<VerifyEmailForm>): Promise<void> 
       <p class="text-muted text-sm max-w-sm">
         {{ $t('auth.verifyEmail.message') }}
       </p>
+      <p class="text-muted text-xs max-w-sm">
+        {{ $t('auth.verifyEmail.alreadyVerifiedHint') }}
+      </p>
     </div>
 
     <UForm
