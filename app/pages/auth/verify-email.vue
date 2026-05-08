@@ -1,30 +1,23 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
-import { z } from 'zod'
+import type { VerifyEmailForm } from '~/composables/useValidation'
 
 definePageMeta({
   layout: 'auth'
 })
 
-interface VerifyEmailResendForm {
-  email: string
-}
-
-const route = useRoute()
-const { t } = useI18n()
 const { resendVerificationEmail, hasError, errorTitle, errorText, resetError } = useAuth()
+const { createVerifyEmailSchema } = useValidation()
 const { showSuccess } = useToastNotification()
 
+const pendingEmail = useState('pendingVerifyEmail', () => '')
 const isResending = ref(false)
-const formState = reactive<VerifyEmailResendForm>({
-  email: typeof route.query.email === 'string' ? route.query.email : ''
+const schema = createVerifyEmailSchema()
+const formState = reactive<VerifyEmailForm>({
+  email: pendingEmail.value
 })
 
-const schema = z.object({
-  email: z.string().trim().toLowerCase().email(t('validation.email.invalid'))
-})
-
-const onResend = async (event: FormSubmitEvent<VerifyEmailResendForm>): Promise<void> => {
+const onResend = async (event: FormSubmitEvent<VerifyEmailForm>): Promise<void> => {
   isResending.value = true
   resetError()
 
@@ -32,6 +25,7 @@ const onResend = async (event: FormSubmitEvent<VerifyEmailResendForm>): Promise<
     const ok = await resendVerificationEmail(event.data.email)
     if (ok) {
       formState.email = event.data.email
+      pendingEmail.value = '' // Clear after successful resend
       showSuccess('auth.verifyEmail.resend.success.title', 'auth.verifyEmail.resend.success.message')
     }
   } finally {
