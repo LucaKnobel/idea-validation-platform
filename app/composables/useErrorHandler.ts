@@ -72,7 +72,7 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
       return commonError
     }
     const titleKey = 'error.auth.login.title'
-    const textKey = 'error.auth.login.text'
+    const textKey = 'error.auth.login.message'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
@@ -84,7 +84,7 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
       return commonError
     }
     const titleKey = 'error.account.delete.title'
-    const textKey = 'error.account.delete.text'
+    const textKey = 'error.account.delete.message'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
