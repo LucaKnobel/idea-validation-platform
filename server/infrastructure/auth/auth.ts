@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth'
 import { APIError, createAuthMiddleware } from 'better-auth/api'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { prisma } from '@infrastructure/db/prisma'
-import { validateAuthRequestBody } from '@infrastructure/auth/auth-body-validator'
+import { InvalidAuthRequestBodyError, UnsupportedAuthRequestBodyError, validateAuthRequestBody } from '@infrastructure/auth/auth-body-validator'
 import { sendVerificationMail } from '@infrastructure/mail/send-verification-mail'
 import { resolveLocaleFromRequest } from '@infrastructure/http/locale-resolver'
 import { logger } from '@infrastructure/logging/logger'
@@ -57,29 +57,36 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
-      const validation = validateAuthRequestBody(ctx.path, ctx.body)
+      try {
+        const validatedBody = validateAuthRequestBody(ctx.path, ctx.body)
 
-      switch (validation.kind) {
-        case 'skip':
+        if (!validatedBody) {
           return
-        case 'unsupported-path':
+        }
+
+        return {
+          context: {
+            ...ctx,
+            body: validatedBody
+          }
+        }
+      } catch (error: unknown) {
+        if (error instanceof UnsupportedAuthRequestBodyError) {
           logger.warn('Auth request body without schema', {
             path: ctx.path
           })
           throw createUnsupportedRequestBodyError()
-        case 'invalid':
+        }
+
+        if (error instanceof InvalidAuthRequestBodyError) {
           logger.warn('Invalid auth payload', {
             path: ctx.path,
-            issues: validation.issues
+            issues: error.issues
           })
           throw createInvalidRequestBodyError()
-        case 'valid':
-          return {
-            context: {
-              ...ctx,
-              body: validation.data
-            }
-          }
+        }
+
+        throw error
       }
     })
   }

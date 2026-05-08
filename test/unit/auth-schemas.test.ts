@@ -52,6 +52,36 @@ describe('LoginUserBodySchema', () => {
 
     expect(result.success).toBe(false)
   })
+
+  it('rejects protocol-relative callbackURL', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: 'VeryStrongPassword1!',
+      callbackURL: '//dashboard'
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects callbackURL that exceeds max length', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: 'VeryStrongPassword1!',
+      callbackURL: `/${'a'.repeat(2048)}`
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects non-boolean rememberMe', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: 'VeryStrongPassword1!',
+      rememberMe: 'false'
+    })
+
+    expect(result.success).toBe(false)
+  })
 })
 
 describe('RegisterUserBodySchema', () => {
