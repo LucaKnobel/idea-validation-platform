@@ -111,10 +111,12 @@ server/
     services/               # use cases / business logic
     interfaces/             # abstractions (repositories, services)
 
-  infrastructure/
-    prisma/                 # Prisma client & setup
-    repositories/           # DB implementations
-    services/               # external integrations (mail, logging, auth)
+  infrastructure/ 
+    auth/                   # Auth config & services
+    db/                     # DB implementations & Repos
+    logging/                # logger
+    mail/                   # Mail config & services
+    ...
 
 shared/
   types/                    # DTOs (client ↔ server)
