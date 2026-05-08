@@ -31,7 +31,7 @@ const getCookieLocale = (request?: Request): AppLocale | null => {
   return null
 }
 
-export const resolveMailLocaleFromRequest = (request?: Request | null): AppLocale => {
+export const resolveLocaleFromRequest = (request?: Request | null): AppLocale => {
   const cookieLocale = getCookieLocale(request ?? undefined)
 
   if (cookieLocale) {

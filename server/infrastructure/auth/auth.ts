@@ -1,10 +1,10 @@
 import { betterAuth } from 'better-auth'
-import { createAuthMiddleware } from 'better-auth/api'
+import { APIError, createAuthMiddleware } from 'better-auth/api'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { prisma } from '@infrastructure/db/prisma'
 import { RegisterUserBodySchema } from '@infrastructure/auth/auth-schemas'
 import { sendVerificationMail } from '@infrastructure/mail/send-verification-mail'
-import { resolveMailLocaleFromRequest } from '@infrastructure/http/locale-resolver'
+import { resolveLocaleFromRequest } from '@infrastructure/http/locale-resolver'
 import { logger } from '@infrastructure/logging/logger'
 
 export const auth = betterAuth({
@@ -26,13 +26,21 @@ export const auth = betterAuth({
     autoSignInAfterVerification: false,
     expiresIn: 3600,
     sendVerificationEmail: async ({ user, url }, request) => {
-      const locale = resolveMailLocaleFromRequest(request)
+      const locale = resolveLocaleFromRequest(request)
       void sendVerificationMail({
         to: user.email,
         verifyUrl: url,
         locale
+      }).then(() => {
+        logger.info('Verification email queued', {
+          userId: user.id,
+          locale
+        })
       }).catch((error: unknown) => {
-        logger.error('Failed to send verification email', { email: user.email }, error)
+        logger.error('Failed to send verification email', {
+          userId: user.id,
+          locale
+        }, error)
       })
     }
   },
@@ -42,7 +50,18 @@ export const auth = betterAuth({
         return
       }
 
-      RegisterUserBodySchema.parse(ctx.body)
+      const parsedBody = RegisterUserBodySchema.safeParse(ctx.body)
+
+      if (!parsedBody.success) {
+        logger.warn('Invalid sign-up payload', {
+          path: ctx.path
+        })
+
+        throw new APIError('BAD_REQUEST', {
+          message: 'Invalid request body',
+          code: 'INVALID_REQUEST_BODY'
+        })
+      }
     })
   }
 })
