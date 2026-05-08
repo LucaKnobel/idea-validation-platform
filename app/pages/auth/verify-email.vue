@@ -18,6 +18,7 @@ const formState = reactive<VerifyEmailForm>({
 })
 
 const onResend = async (event: FormSubmitEvent<VerifyEmailForm>): Promise<void> => {
+  if (isResending.value) return
   isResending.value = true
   resetError()
 

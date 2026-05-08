@@ -35,7 +35,9 @@ const fields: AuthFormField[] = [{
 }]
 
 const onSubmit = async (event: FormSubmitEvent<RegisterForm>): Promise<void> => {
+  if (isSubmitting.value) return
   isSubmitting.value = true
+
   try {
     const ok = await register(event.data.email, event.data.password, '')
     if (ok) {

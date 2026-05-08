@@ -3,6 +3,7 @@ import { useLocalePath } from '#imports'
 import type { Ref } from 'vue'
 
 export interface UseAuthComposable {
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<boolean>
   register: (email: string, password: string, name: string) => Promise<boolean>
   resendVerificationEmail: (email: string) => Promise<boolean>
   resetError: () => void
@@ -14,7 +15,30 @@ export interface UseAuthComposable {
 export const useAuth = (): UseAuthComposable => {
   const localePath = useLocalePath()
   const client = createAuthClient()
-  const { hasError, errorTitle, errorText, resetError, handleRegistrationError } = useErrorHandler()
+  const { hasError, errorTitle, errorText, resetError, handleRegistrationError, handleLoginError } = useErrorHandler()
+
+  const login = async (email: string, password: string, rememberMe = true): Promise<boolean> => {
+    resetError()
+
+    try {
+      const { error } = await client.signIn.email({
+        email,
+        password,
+        rememberMe,
+        callbackURL: localePath('/dashboard')
+      })
+
+      if (error) {
+        handleLoginError(error)
+        return false
+      }
+
+      return true
+    } catch (error: unknown) {
+      handleLoginError(error)
+      return false
+    }
+  }
 
   const register = async (email: string, password: string, name: string): Promise<boolean> => {
     resetError()
@@ -60,5 +84,5 @@ export const useAuth = (): UseAuthComposable => {
     }
   }
 
-  return { register, resendVerificationEmail, resetError, hasError, errorTitle, errorText }
+  return { login, register, resendVerificationEmail, resetError, hasError, errorTitle, errorText }
 }
