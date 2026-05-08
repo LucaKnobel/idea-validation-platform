@@ -1,10 +1,11 @@
 import { betterAuth } from 'better-auth'
 import { createAuthMiddleware } from 'better-auth/api'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
-import { prisma } from '@infrastructure/services/prisma'
-import { RegisterUserBodySchema } from '@infrastructure/services/auth-schemas'
-import { resolveMailLocaleFromRequest, sendVerificationMail } from '@infrastructure/services/mail'
-import { logger } from '@infrastructure/services/logger'
+import { prisma } from '@infrastructure/db/prisma'
+import { RegisterUserBodySchema } from '@infrastructure/auth/auth-schemas'
+import { sendVerificationMail } from '@infrastructure/mail/send-verification-mail'
+import { resolveMailLocaleFromRequest } from '@infrastructure/http/locale-resolver'
+import { logger } from '@infrastructure/logging/logger'
 
 export const auth = betterAuth({
 
@@ -23,6 +24,7 @@ export const auth = betterAuth({
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: false,
+    expiresIn: 3600,
     sendVerificationEmail: async ({ user, url }, request) => {
       const locale = resolveMailLocaleFromRequest(request)
       void sendVerificationMail({

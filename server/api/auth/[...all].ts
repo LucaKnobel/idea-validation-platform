@@ -1,4 +1,4 @@
-import { auth } from '@infrastructure/services/auth'
+import { auth } from '@infrastructure/auth/auth'
 
 export default defineEventHandler((event) => {
   return auth.handler(toWebRequest(event))

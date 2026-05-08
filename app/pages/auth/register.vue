@@ -39,7 +39,12 @@ const onSubmit = async (event: FormSubmitEvent<RegisterForm>): Promise<void> => 
   try {
     const ok = await register(event.data.email, event.data.password, '')
     if (ok) {
-      await navigateTo(localePath('/auth/verify-email'))
+      await navigateTo({
+        path: localePath('/auth/verify-email'),
+        query: {
+          email: event.data.email
+        }
+      })
     }
   } finally {
     isSubmitting.value = false

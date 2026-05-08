@@ -120,7 +120,14 @@
     "verifyEmail": {
       "title": "E-Mail-Postfach prüfen!",
       "message": "Wir haben Ihnen eine Bestätigungs-E-Mail gesendet. Bitte klicken Sie auf den Link in der E-Mail, um Ihr Konto zu aktivieren.",
-      "backToLogin": "Zurück zur Anmeldung"
+      "backToLogin": "Zurück zur Anmeldung",
+      "resend": {
+        "action": "Bestätigungs-E-Mail erneut senden",
+        "success": {
+          "title": "Bestätigungs-E-Mail versendet",
+          "message": "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde eine neue Bestätigungs-E-Mail gesendet."
+        }
+      }
     }
   },
   "landing": {

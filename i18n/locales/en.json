@@ -120,7 +120,14 @@
     "verifyEmail": {
       "title": "Check your inbox!",
       "message": "We have sent you a verification email. Please click the link in the email to activate your account.",
-      "backToLogin": "Back to login"
+      "backToLogin": "Back to login",
+      "resend": {
+        "action": "Resend verification email",
+        "success": {
+          "title": "Verification email sent",
+          "message": "If an account exists for this email, a new verification email has been sent."
+        }
+      }
     }
   },
   "landing": {
