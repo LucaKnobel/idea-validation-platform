@@ -19,9 +19,7 @@ const { data: page } = await useAsyncData(
   () => `page-${locale.value}-${slug.value}`,
   async () => {
     try {
-      return await $fetch(contentPath.value, {
-        params: { locale: locale.value }
-      })
+      return await $fetch(contentPath.value)
     } catch {
       return null
     }

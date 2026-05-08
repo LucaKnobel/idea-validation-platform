@@ -10,13 +10,32 @@ export default defineNuxtConfig({
   ],
 
   devtools: {
-    enabled: true
+    enabled: false
   },
 
   css: ['~/assets/css/main.css'],
 
+  runtimeConfig: {
+    smtpHost: '',
+    smtpPort: '',
+    smtpSecure: '',
+    smtpUser: '',
+    smtpPass: '',
+    smtpFrom: '',
+    public: {
+      appVersion: 'dev',
+      appCommit: 'local',
+      appChannel: 'local',
+      appDeployedAt: 'unknown',
+      appImageTag: 'unknown'
+    }
+  },
+
   alias: {
     '@server': fileURLToPath(new URL('./server', import.meta.url)),
+    '@interfaces': fileURLToPath(new URL('./server/application/interfaces', import.meta.url)),
+    '@infrastructure': fileURLToPath(new URL('./server/infrastructure', import.meta.url)),
+    '@shared': fileURLToPath(new URL('./shared', import.meta.url)),
     '@generated': fileURLToPath(new URL('./generated', import.meta.url))
   },
 

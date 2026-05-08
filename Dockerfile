@@ -35,10 +35,21 @@ FROM node:24-slim
 
 WORKDIR /app
 
+ARG APP_VERSION=dev
+ARG APP_COMMIT=local
+ARG APP_CHANNEL=local
+ARG APP_DEPLOYED_AT=unknown
+ARG APP_IMAGE_TAG=unknown
+
 # Set runtime environment variables
 ENV NODE_ENV=production
 ENV NITRO_HOST=0.0.0.0
 ENV PORT=3000
+ENV NUXT_PUBLIC_APP_VERSION=${APP_VERSION}
+ENV NUXT_PUBLIC_APP_COMMIT=${APP_COMMIT}
+ENV NUXT_PUBLIC_APP_CHANNEL=${APP_CHANNEL}
+ENV NUXT_PUBLIC_APP_DEPLOYED_AT=${APP_DEPLOYED_AT}
+ENV NUXT_PUBLIC_APP_IMAGE_TAG=${APP_IMAGE_TAG}
 
 # Create non-root user for security
 RUN groupadd -r appuser && useradd -r -g appuser appuser

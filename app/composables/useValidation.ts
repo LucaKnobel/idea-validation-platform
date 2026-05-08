@@ -10,7 +10,7 @@ export const useValidation = () => {
       .toLowerCase()
       .pipe(z.email({ error: t('validation.email.invalid') })),
     password: z.string({ error: t('validation.password.required') })
-      .min(12, { error: t('validation.password.min') })
+      .min(15, { error: t('validation.password.min') })
       .max(256, { error: t('validation.password.max') })
       .regex(/[A-Z]/, { error: t('validation.password.uppercase') })
       .regex(/[a-z]/, { error: t('validation.password.lowercase') })
@@ -31,11 +31,20 @@ export const useValidation = () => {
       .max(256, { error: t('validation.password.max') })
   })
 
+  const createVerifyEmailSchema = () => z.object({
+    email: z.string({ error: t('validation.email.required') })
+      .trim()
+      .toLowerCase()
+      .pipe(z.email({ error: t('validation.email.invalid') }))
+  })
+
   return {
     createRegisterFormSchema,
-    createLoginFormSchema
+    createLoginFormSchema,
+    createVerifyEmailSchema
   }
 }
 
 export type RegisterForm = z.infer<ReturnType<ReturnType<typeof useValidation>['createRegisterFormSchema']>>
 export type LoginForm = z.infer<ReturnType<ReturnType<typeof useValidation>['createLoginFormSchema']>>
+export type VerifyEmailForm = z.infer<ReturnType<ReturnType<typeof useValidation>['createVerifyEmailSchema']>>

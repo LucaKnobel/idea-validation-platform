@@ -21,7 +21,9 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "prisma.prisma",
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+        "bruno-api-client.bruno"
+        
       ],
       "settings": {
         "editor.formatOnSave": true,

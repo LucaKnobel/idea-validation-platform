@@ -40,13 +40,15 @@
     },
     "password": {
       "required": "Passwort ist erforderlich",
-      "min": "Passwort muss mindestens 12 Zeichen lang sein",
+      "min": "Passwort muss mindestens 15 Zeichen lang sein",
       "max": "Passwort darf maximal 256 Zeichen lang sein",
       "uppercase": "Muss mindestens einen Großbuchstaben enthalten",
       "lowercase": "Muss mindestens einen Kleinbuchstaben enthalten",
       "number": "Muss mindestens eine Zahl enthalten",
       "special": "Muss mindestens ein Sonderzeichen enthalten",
-      "confirmMismatch": "Passwörter müssen übereinstimmen"
+      "confirmMismatch": "Passwörter müssen übereinstimmen",
+      "hint": "Mind. 15 Zeichen mit Groß- und Kleinbuchstaben, einer Zahl und einem Sonderzeichen.",
+      "requirements": "Passwortanforderungen"
     }
   },
   "error": {
@@ -105,6 +107,7 @@
     },
     "register": {
       "title": "Konto erstellen",
+      "createAccount": "Konto erstellen",
       "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
       "forgotPassword": "Passwort vergessen?",
       "submit": "Konto erstellen",
@@ -112,6 +115,19 @@
       "success": {
         "title": "Konto erfolgreich erstellt!",
         "message": "Sie können sich jetzt anmelden."
+      }
+    },
+    "verifyEmail": {
+      "title": "E-Mail-Postfach prüfen!",
+      "message": "Falls ein unverifiziertes Konto mit dieser E-Mail-Adresse existiert, wurde eine Bestätigungs-E-Mail gesendet. Bitte prüfen Sie Ihr Postfach.",
+      "alreadyVerifiedHint": "Falls Ihr Konto bereits bestätigt ist, können Sie sich direkt anmelden.",
+      "backToLogin": "Zurück zur Anmeldung",
+      "resend": {
+        "action": "Bestätigungs-E-Mail erneut senden",
+        "success": {
+          "title": "Bestätigungs-E-Mail versendet",
+          "message": "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde eine neue Bestätigungs-E-Mail gesendet."
+        }
       }
     }
   },
@@ -157,6 +173,19 @@
         "title": "Konto gelöscht",
         "message": "Ihr Konto wurde dauerhaft entfernt."
       }
+    }
+  },
+  "systemInfo": {
+    "linkLabel": "Systeminfos",
+    "title": "Systeminformationen",
+    "description": "Hier sehen Sie den aktuell deployten Stand dieser Umgebung.",
+    "currentRelease": "Aktueller Release",
+    "fields": {
+      "version": "Version",
+      "channel": "Kanal",
+      "commit": "Commit",
+      "imageTag": "Image-Tag",
+      "deployedAt": "Deploy-Zeit"
     }
   }
 }

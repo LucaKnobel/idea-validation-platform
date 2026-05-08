@@ -38,14 +38,14 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
   const handleCommonErrors = (statusCode: number | undefined): { titleKey: string, textKey: string } | null => {
     if (!statusCode) {
       const titleKey = 'error.network.title'
-      const textKey = 'error.network.text'
+      const textKey = 'error.network.message'
       setError(titleKey, textKey)
       return { titleKey, textKey }
     }
 
     if (statusCode >= 500) {
       const titleKey = 'error.serviceUnavailable.title'
-      const textKey = 'error.serviceUnavailable.text'
+      const textKey = 'error.serviceUnavailable.message'
       setError(titleKey, textKey)
       return { titleKey, textKey }
     }
@@ -60,7 +60,7 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
       return commonError
     }
     const titleKey = 'error.auth.registration.title'
-    const textKey = 'error.auth.registration.text'
+    const textKey = 'error.auth.registration.message'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }

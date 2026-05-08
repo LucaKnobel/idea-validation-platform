@@ -6,7 +6,7 @@ export const LoginUserBodySchema = z.object({
     .toLowerCase()
     .pipe(z.email('Invalid email address')),
   password: z.string()
-    .min(12, 'Password must be at least 12 characters')
+    .min(15, 'Password must be at least 15 characters')
     .max(256, 'Password must not exceed 256 characters')
 })
 
@@ -16,7 +16,7 @@ export const RegisterUserBodySchema = z.object({
     .toLowerCase()
     .pipe(z.email('Invalid email address')),
   password: z.string()
-    .min(12, 'Password must be at least 12 characters')
+    .min(15, 'Password must be at least 15 characters')
     .max(256, 'Password must not exceed 256 characters')
     .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
     .regex(/[a-z]/, 'Password must contain at least one lowercase letter')

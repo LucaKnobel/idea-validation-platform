@@ -1,0 +1,75 @@
+openapi: '3.0.3'
+info:
+  title: Idea Validation Platform API
+  version: '1.0'
+  description: API specification for Idea Validation Platform API
+
+servers:
+  - url: http://localhost:3000/api
+
+tags:
+  - name: Content
+    description: Content endpoints
+
+paths:
+  /content/{contentPath}:
+    get:
+      operationId: getContent
+      summary: Get content by path
+      description: |
+        Returns localized content by path.
+        Falls back to English if not found.
+      tags:
+        - Content
+      parameters:
+        - name: contentPath
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Full content path (e.g. legal/privacy)
+
+        - name: locale
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [en, de]
+            default: en
+          description: Language of the content
+
+      responses:
+        '200':
+          description: Content found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Content'
+
+        '400':
+          description: Invalid request
+
+        '404':
+          description: Content not found
+
+components:
+  schemas:
+    Content:
+      type: object
+      required:
+        - id
+        - title
+        - path
+        - locale
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        path:
+          type: string
+        locale:
+          type: string
+          enum: [en, de]
+        description:
+          type: string

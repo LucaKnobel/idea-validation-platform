@@ -40,13 +40,15 @@
     },
     "password": {
       "required": "Password is required",
-      "min": "Password must be at least 12 characters",
+      "min": "Password must be at least 15 characters",
       "max": "Password must not exceed 256 characters",
       "uppercase": "Must contain at least one uppercase letter",
       "lowercase": "Must contain at least one lowercase letter",
       "number": "Must contain at least one number",
       "special": "Must contain at least one special character",
-      "confirmMismatch": "Passwords must match"
+      "confirmMismatch": "Passwords must match",
+      "hint": "At least 15 characters including uppercase, lowercase, a number and a special character.",
+      "requirements": "Password requirements"
     }
   },
   "error": {
@@ -105,6 +107,7 @@
     },
     "register": {
       "title": "Create an account",
+      "createAccount": "Create account",
       "alreadyHaveAccount": "Already have an account?",
       "forgotPassword": "Forgot password?",
       "submit": "Create account",
@@ -112,6 +115,19 @@
       "success": {
         "title": "Account successfully created!",
         "message": "You can now sign in."
+      }
+    },
+    "verifyEmail": {
+      "title": "Check your inbox!",
+      "message": "If an unverified account exists for this email address, a verification email has been sent. Please check your inbox.",
+      "alreadyVerifiedHint": "If your account is already verified, you can sign in directly.",
+      "backToLogin": "Back to login",
+      "resend": {
+        "action": "Resend verification email",
+        "success": {
+          "title": "Verification email sent",
+          "message": "If an account exists for this email, a new verification email has been sent."
+        }
       }
     }
   },
@@ -157,6 +173,19 @@
         "title": "Account deleted",
         "message": "Your account has been permanently removed."
       }
+    }
+  },
+  "systemInfo": {
+    "linkLabel": "System info",
+    "title": "System information",
+    "description": "This page shows the exact deployed build in this environment.",
+    "currentRelease": "Current release",
+    "fields": {
+      "version": "Version",
+      "channel": "Channel",
+      "commit": "Commit",
+      "imageTag": "Image tag",
+      "deployedAt": "Deploy time"
     }
   }
 }
