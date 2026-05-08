@@ -17,33 +17,47 @@ export const useAuth = (): UseAuthComposable => {
   const { hasError, errorTitle, errorText, resetError, handleRegistrationError } = useErrorHandler()
 
   const register = async (email: string, password: string, name: string): Promise<boolean> => {
-    const { error } = await client.signUp.email({
-      email,
-      password,
-      name,
-      callbackURL: localePath('/auth/login')
-    })
+    resetError()
 
-    if (error) {
+    try {
+      const { error } = await client.signUp.email({
+        email,
+        password,
+        name,
+        callbackURL: localePath('/auth/login')
+      })
+
+      if (error) {
+        handleRegistrationError(error)
+        return false
+      }
+
+      return true
+    } catch (error: unknown) {
       handleRegistrationError(error)
       return false
     }
-
-    return true
   }
 
   const resendVerificationEmail = async (email: string): Promise<boolean> => {
-    const { error } = await client.sendVerificationEmail({
-      email,
-      callbackURL: localePath('/auth/login')
-    })
+    resetError()
 
-    if (error) {
+    try {
+      const { error } = await client.sendVerificationEmail({
+        email,
+        callbackURL: localePath('/auth/login')
+      })
+
+      if (error) {
+        handleRegistrationError(error)
+        return false
+      }
+
+      return true
+    } catch (error: unknown) {
       handleRegistrationError(error)
       return false
     }
-
-    return true
   }
 
   return { register, resendVerificationEmail, resetError, hasError, errorTitle, errorText }
