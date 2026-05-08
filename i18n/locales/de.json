@@ -119,7 +119,8 @@
     },
     "verifyEmail": {
       "title": "E-Mail-Postfach prüfen!",
-      "message": "Wir haben Ihnen eine Bestätigungs-E-Mail gesendet. Bitte klicken Sie auf den Link in der E-Mail, um Ihr Konto zu aktivieren.",
+      "message": "Falls ein unverifiziertes Konto mit dieser E-Mail-Adresse existiert, wurde eine Bestätigungs-E-Mail gesendet. Bitte prüfen Sie Ihr Postfach.",
+      "alreadyVerifiedHint": "Falls Ihr Konto bereits bestätigt ist, können Sie sich direkt anmelden.",
       "backToLogin": "Zurück zur Anmeldung",
       "resend": {
         "action": "Bestätigungs-E-Mail erneut senden",
