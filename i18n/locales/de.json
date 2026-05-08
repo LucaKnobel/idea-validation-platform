@@ -174,5 +174,18 @@
         "message": "Ihr Konto wurde dauerhaft entfernt."
       }
     }
+  },
+  "systemInfo": {
+    "linkLabel": "Systeminfos",
+    "title": "Systeminformationen",
+    "description": "Hier sehen Sie den aktuell deployten Stand dieser Umgebung.",
+    "currentRelease": "Aktueller Release",
+    "fields": {
+      "version": "Version",
+      "channel": "Kanal",
+      "commit": "Commit",
+      "imageTag": "Image-Tag",
+      "deployedAt": "Deploy-Zeit"
+    }
   }
 }

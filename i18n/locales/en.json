@@ -174,5 +174,18 @@
         "message": "Your account has been permanently removed."
       }
     }
+  },
+  "systemInfo": {
+    "linkLabel": "System info",
+    "title": "System information",
+    "description": "This page shows the exact deployed build in this environment.",
+    "currentRelease": "Current release",
+    "fields": {
+      "version": "Version",
+      "channel": "Channel",
+      "commit": "Commit",
+      "imageTag": "Image tag",
+      "deployedAt": "Deploy time"
+    }
   }
 }

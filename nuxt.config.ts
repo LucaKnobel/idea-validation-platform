@@ -21,7 +21,14 @@ export default defineNuxtConfig({
     smtpSecure: '',
     smtpUser: '',
     smtpPass: '',
-    smtpFrom: ''
+    smtpFrom: '',
+    public: {
+      appVersion: 'dev',
+      appCommit: 'local',
+      appChannel: 'local',
+      appDeployedAt: 'unknown',
+      appImageTag: 'unknown'
+    }
   },
 
   alias: {

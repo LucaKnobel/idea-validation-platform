@@ -25,31 +25,73 @@ jobs:
       # Clone repository at the commit that triggered the workflow
       - uses: actions/checkout@v6
 
+      # Compute release metadata and tags
+      # - APP_VERSION is used for app and image metadata
+      # - IMAGE_POINTER is environment-specific (latest-staging/latest-prod)
+      - name: Compute release metadata
+        run: |
+          set -euo pipefail
+
+          DATE_BASE="$(date -u +%Y.%-m.%-d)"
+          DEPLOYED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            CHANNEL="prod"
+            POINTER_TAG="latest-prod"
+          else
+            CHANNEL="staging"
+            POINTER_TAG="latest-staging"
+          fi
+
+          APP_VERSION="${DATE_BASE}-${CHANNEL}.${GITHUB_RUN_NUMBER}"
+          IMAGE_BASE="ghcr.io/${GITHUB_REPOSITORY,,}"
+          IMAGE_IMMUTABLE="${IMAGE_BASE}:${APP_VERSION}"
+          IMAGE_SHA="${IMAGE_BASE}:${GITHUB_SHA}"
+          IMAGE_POINTER="${IMAGE_BASE}:${POINTER_TAG}"
+
+          echo "APP_VERSION=${APP_VERSION}" >> "$GITHUB_ENV"
+          echo "APP_CHANNEL=${CHANNEL}" >> "$GITHUB_ENV"
+          echo "APP_DEPLOYED_AT=${DEPLOYED_AT}" >> "$GITHUB_ENV"
+          echo "APP_COMMIT=${GITHUB_SHA}" >> "$GITHUB_ENV"
+          echo "APP_IMAGE_TAG=${IMAGE_IMMUTABLE}" >> "$GITHUB_ENV"
+          echo "DEPLOY_TAG=${POINTER_TAG}" >> "$GITHUB_ENV"
+          echo "IMAGE_IMMUTABLE=${IMAGE_IMMUTABLE}" >> "$GITHUB_ENV"
+          echo "IMAGE_SHA=${IMAGE_SHA}" >> "$GITHUB_ENV"
+          echo "IMAGE_POINTER=${IMAGE_POINTER}" >> "$GITHUB_ENV"
+
       # Authenticate with GitHub Container Registry using GITHUB_TOKEN
       # Recommended approach for GHCR authentication :contentReference[oaicite:0]{index=0}
       - name: Login to GHCR
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      # Generate image name with immutable SHA tag
-      # Lowercase is required for Docker registry naming rules
-      - name: Set image name (lowercase)
-        run: |
-          echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA}" >> $GITHUB_ENV
-
-      # Build Docker image with both SHA tag (immutable) and latest (mutable pointer)
+      # Build Docker image with immutable and pointer tags
       - name: Build image
         run: |
           docker build \
-            -t "${IMAGE}" \
-            -t "ghcr.io/${GITHUB_REPOSITORY,,}:latest" .
+            --build-arg APP_VERSION="${APP_VERSION}" \
+            --build-arg APP_COMMIT="${APP_COMMIT}" \
+            --build-arg APP_CHANNEL="${APP_CHANNEL}" \
+            --build-arg APP_DEPLOYED_AT="${APP_DEPLOYED_AT}" \
+            --build-arg APP_IMAGE_TAG="${APP_IMAGE_TAG}" \
+            -t "${IMAGE_IMMUTABLE}" \
+            -t "${IMAGE_SHA}" \
+            -t "${IMAGE_POINTER}" .
 
-      # Push both tags to registry
-      # SHA enables rollback, latest is used for deployment trigger
+      # Push immutable + SHA + environment pointer tags
       - name: Push images
         run: |
-          docker push "${IMAGE}"
-          docker push "ghcr.io/${GITHUB_REPOSITORY,,}:latest"
+          docker push "${IMAGE_IMMUTABLE}"
+          docker push "${IMAGE_SHA}"
+          docker push "${IMAGE_POINTER}"
+
+      - name: Deployment summary
+        run: |
+          echo "Version: ${APP_VERSION}"
+          echo "Channel: ${APP_CHANNEL}"
+          echo "Commit: ${APP_COMMIT}"
+          echo "Image: ${APP_IMAGE_TAG}"
+          echo "Pointer tag: ${DEPLOY_TAG}"
 
         # Group-based rolling redeploy on Jelastic/Infomaniak
       - name: Redeploy on Jelastic (group)
@@ -58,7 +100,7 @@ jobs:
           ENV_NAME: ${{ secrets.JELASTIC_ENV }}
           SESSION: ${{ secrets.JELASTIC_SESSION }}
           NODE_GROUP: ${{ secrets.JELASTIC_NODE_GROUP }}
-          TAG: latest
+          TAG: ${{ env.DEPLOY_TAG }}
           IS_SEQUENTIAL: "true"
           DELAY: "5"
           USE_EXISTING_VOLUMES: "true"
