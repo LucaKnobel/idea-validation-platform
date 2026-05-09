@@ -6,7 +6,10 @@ const localePath = useLocalePath()
   <div class="min-h-screen bg-default">
     <UHeader :toggle="false">
       <template #left>
-        <AppLogo size="md" />
+        <AppLogo
+          size="md"
+          :to="'/dashboard'"
+        />
       </template>
 
       <template #right>

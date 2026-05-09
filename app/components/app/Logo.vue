@@ -1,8 +1,10 @@
 <script setup lang="ts">
 withDefaults(defineProps<{
   size?: 'sm' | 'md' | 'lg'
+  to?: string
 }>(), {
-  size: 'md'
+  size: 'md',
+  to: '/'
 })
 
 const sizeClasses = {
@@ -32,7 +34,7 @@ const sizeClasses = {
 
 <template>
   <NuxtLinkLocale
-    to="/"
+    :to="to"
     :class="[
       'inline-flex items-center font-semibold tracking-tight transition-opacity hover:opacity-80',
       sizeClasses[size].container
