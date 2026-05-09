@@ -59,7 +59,7 @@
       },
       "login": {
         "title": "Anmeldung nicht möglich",
-        "message": "Die Anmeldung konnte nicht durchgeführt werden. Bitte prüfen Sie Ihre Eingaben."
+        "message": "Anmeldung nicht möglich. Bitte prüfen Sie Ihre Eingaben. Falls ein Konto besteht, bestätigen Sie ggf. Ihre E-Mail-Adresse oder fordern Sie einen neuen Bestätigungslink an."
       }
     },
     "account": {
