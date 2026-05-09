@@ -60,6 +60,10 @@
       "login": {
         "title": "Login not possible",
         "message": "Sign in failed. Please check your input. If an account exists, you may need to verify your email or request a new verification link."
+      },
+      "logout": {
+        "title": "Logout failed",
+        "message": "You could not be signed out. Please try again later."
       }
     },
     "account": {
@@ -100,6 +104,19 @@
     "register": "Sign up"
   },
   "auth": {
+    "logout": {
+      "title": "Sign out",
+      "description": "You are about to end your current session on this device.",
+      "warning": {
+        "title": "This will end your session",
+        "description": "You will be redirected to the login page after signing out."
+      },
+      "confirm": "Sign out",
+      "success": {
+        "title": "Signed out",
+        "message": "You have been signed out successfully."
+      }
+    },
     "login": {
       "title": "Welcome back!",
       "dontHaveAccount": "Don't have an account?",

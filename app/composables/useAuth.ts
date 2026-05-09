@@ -2,6 +2,7 @@ export interface UseAuthComposable {
   login: (email: string, password: string, rememberMe?: boolean) => Promise<boolean>
   register: (email: string, password: string, name: string) => Promise<boolean>
   resendVerificationEmail: (email: string) => Promise<boolean>
+  logout: () => Promise<boolean>
   resetError: () => void
   hasError: Ref<boolean>
   errorTitle: Ref<string | undefined>
@@ -10,7 +11,7 @@ export interface UseAuthComposable {
 
 export const useAuth = (): UseAuthComposable => {
   const localePath = useLocalePath()
-  const { hasError, errorTitle, errorText, resetError, handleRegistrationError, handleLoginError } = useErrorHandler()
+  const { hasError, errorTitle, errorText, resetError, handleRegistrationError, handleLoginError, handleLogoutError } = useErrorHandler()
 
   const login = async (email: string, password: string, rememberMe = true): Promise<boolean> => {
     resetError()
@@ -88,5 +89,17 @@ export const useAuth = (): UseAuthComposable => {
     }
   }
 
-  return { login, register, resendVerificationEmail, resetError, hasError, errorTitle, errorText }
+  const logout = async (): Promise<boolean> => {
+    resetError()
+
+    try {
+      await authClient.signOut()
+      return true
+    } catch (error: unknown) {
+      handleLogoutError(error)
+      return false
+    }
+  }
+
+  return { login, register, resendVerificationEmail, logout, resetError, hasError, errorTitle, errorText }
 }
