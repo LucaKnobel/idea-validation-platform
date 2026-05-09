@@ -60,6 +60,10 @@
       "login": {
         "title": "Anmeldung nicht möglich",
         "message": "Anmeldung nicht möglich. Bitte prüfen Sie Ihre Eingaben. Falls ein Konto besteht, bestätigen Sie ggf. Ihre E-Mail-Adresse oder fordern Sie einen neuen Bestätigungslink an."
+      },
+      "logout": {
+        "title": "Abmeldung fehlgeschlagen",
+        "message": "Sie konnten nicht abgemeldet werden. Bitte versuchen Sie es später erneut."
       }
     },
     "account": {
@@ -100,6 +104,19 @@
     "register": "Registrieren"
   },
   "auth": {
+    "logout": {
+      "title": "Abmelden",
+      "description": "Sie beenden damit Ihre aktuelle Sitzung auf diesem Gerät.",
+      "warning": {
+        "title": "Ihre Sitzung wird beendet",
+        "description": "Nach der Abmeldung werden Sie zur Anmeldeseite weitergeleitet."
+      },
+      "confirm": "Abmelden",
+      "success": {
+        "title": "Abgemeldet",
+        "message": "Sie wurden erfolgreich abgemeldet."
+      }
+    },
     "login": {
       "title": "Willkommen zurück!",
       "dontHaveAccount": "Haben Sie noch kein Konto?",

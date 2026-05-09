@@ -5,6 +5,7 @@ export interface UseErrorHandlerComposable {
   resetError: () => void
   handleRegistrationError: (error: unknown) => { titleKey: string, textKey: string }
   handleLoginError: (error: unknown) => { titleKey: string, textKey: string }
+  handleLogoutError: (error: unknown) => { titleKey: string, textKey: string }
   handleAccountDeleteError: (error: unknown) => { titleKey: string, textKey: string }
 }
 
@@ -68,6 +69,19 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     return { titleKey, textKey }
   }
 
+  const handleLogoutError = (error: unknown): { titleKey: string, textKey: string } => {
+    const statusCode = extractStatusCode(error)
+    const commonError = handleCommonErrors(statusCode)
+    if (commonError) {
+      return commonError
+    }
+
+    const titleKey = 'error.auth.logout.title'
+    const textKey = 'error.auth.logout.message'
+    setError(titleKey, textKey)
+    return { titleKey, textKey }
+  }
+
   const handleAccountDeleteError = (error: unknown): { titleKey: string, textKey: string } => {
     const statusCode = extractStatusCode(error)
     const commonError = handleCommonErrors(statusCode)
@@ -87,6 +101,7 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     resetError,
     handleRegistrationError,
     handleLoginError,
+    handleLogoutError,
     handleAccountDeleteError
   }
 }

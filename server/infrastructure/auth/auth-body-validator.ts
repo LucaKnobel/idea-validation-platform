@@ -31,8 +31,16 @@ const SCHEMA_BY_PATH = {
   '/send-verification-email': SendVerificationEmailBodySchema
 } as const
 
+const NO_BODY_PATHS = new Set<string>([
+  '/sign-out'
+])
+
 export const validateAuthRequestBody = (path: string, body: unknown): ParsedAuthBody | undefined => {
   if (typeof body === 'undefined') {
+    return undefined
+  }
+
+  if (NO_BODY_PATHS.has(path)) {
     return undefined
   }
 
