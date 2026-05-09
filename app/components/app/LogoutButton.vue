@@ -21,9 +21,12 @@ const {
       color="error"
       variant="ghost"
       icon="i-lucide-log-out"
+      :aria-label="$t('navigation.logout')"
       @click="openDialog"
     >
-      {{ $t('navigation.logout') }}
+      <span class="hidden md:inline">
+        {{ $t('navigation.logout') }}
+      </span>
     </UButton>
 
     <template #body>
