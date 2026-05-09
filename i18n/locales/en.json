@@ -211,5 +211,30 @@
       "imageTag": "Image tag",
       "deployedAt": "Deploy time"
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Adjust your app preferences.",
+    "general": "General",
+    "theme": "Theme",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "account": {
+      "title": "Account",
+      "placeholder": "Account details and profile settings will be added here."
+    },
+    "security": {
+      "title": "Security",
+      "placeholder": "Password change and related security actions will be added here."
+    },
+    "subscription": {
+      "title": "Subscription",
+      "placeholder": "Plan status and billing management will be added here."
+    },
+    "dangerZone": {
+      "title": "Danger zone",
+      "placeholder": "Account deletion and destructive actions will be added here."
+    }
   }
 }

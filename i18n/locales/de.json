@@ -211,5 +211,30 @@
       "imageTag": "Image-Tag",
       "deployedAt": "Deploy-Zeit"
     }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "description": "Passe deine App-Einstellungen an.",
+    "general": "Allgemein",
+    "theme": "Theme",
+    "themeSystem": "System",
+    "themeLight": "Hell",
+    "themeDark": "Dunkel",
+    "account": {
+      "title": "Konto",
+      "placeholder": "Kontodetails und Profileinstellungen werden hier ergänzt."
+    },
+    "security": {
+      "title": "Sicherheit",
+      "placeholder": "Passwortänderung und weitere Sicherheitsaktionen werden hier ergänzt."
+    },
+    "subscription": {
+      "title": "Abonnement",
+      "placeholder": "Planstatus und Billing-Verwaltung werden hier ergänzt."
+    },
+    "dangerZone": {
+      "title": "Gefährlicher Bereich",
+      "placeholder": "Kontolöschung und weitere kritische Aktionen werden hier ergänzt."
+    }
   }
 }
