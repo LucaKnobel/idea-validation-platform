@@ -3,7 +3,8 @@ import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
 import type { RegisterForm } from '~/composables/useValidation'
 
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: ['guest-middleware']
 })
 
 const { register, hasError, errorTitle, errorText } = useAuth()

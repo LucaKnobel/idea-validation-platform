@@ -3,7 +3,8 @@ import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
 import type { LoginForm } from '~/composables/useValidation'
 
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: ['guest-middleware']
 })
 
 const { createLoginFormSchema } = useValidation()
@@ -37,7 +38,7 @@ const onSubmit = async (event: FormSubmitEvent<LoginForm>): Promise<void> => {
     const success = await login(event.data.email, event.data.password)
 
     if (success) {
-      showSuccess(t('auth.login.success.title'), t('auth.login.success.message'))
+      showSuccess('auth.login.success.title', 'auth.login.success.message')
       await navigateTo(localePath('/dashboard'))
     }
   } finally {
