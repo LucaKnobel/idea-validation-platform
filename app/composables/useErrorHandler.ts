@@ -31,12 +31,36 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
   }
 
   const getStatusCode = (error: unknown): number | undefined => {
-    const statusCode = (error as { statusCode?: number } | null)?.statusCode
-    return typeof statusCode === 'number' ? statusCode : undefined
+    if (!error || typeof error !== 'object') {
+      return undefined
+    }
+
+    const maybeError = error as {
+      statusCode?: unknown
+      status?: unknown
+      response?: { status?: unknown }
+      error?: { statusCode?: unknown, status?: unknown }
+    }
+
+    const candidates = [
+      maybeError.statusCode,
+      maybeError.status,
+      maybeError.response?.status,
+      maybeError.error?.statusCode,
+      maybeError.error?.status
+    ]
+
+    for (const value of candidates) {
+      if (typeof value === 'number') {
+        return value
+      }
+    }
+
+    return undefined
   }
 
   const handleCommonErrors = (statusCode: number | undefined): { titleKey: string, textKey: string } | null => {
-    if (!statusCode) {
+    if (typeof statusCode === 'undefined') {
       const titleKey = 'error.network.title'
       const textKey = 'error.network.message'
       setError(titleKey, textKey)

@@ -59,7 +59,7 @@
       },
       "login": {
         "title": "Login not possible",
-        "message": "Login could not be completed. Please check your inputs."
+        "message": "Sign in failed. Please check your input. If an account exists, you may need to verify your email or request a new verification link."
       }
     },
     "account": {
