@@ -59,7 +59,17 @@
       },
       "login": {
         "title": "Login not possible",
-        "message": "Login could not be completed. Please check your inputs."
+        "message": "Sign in failed. Please check your input. If an account exists, you may need to verify your email or request a new verification link."
+      },
+      "logout": {
+        "title": "Logout failed",
+        "message": "You could not be signed out. Please try again later."
+      }
+    },
+    "account": {
+      "delete": {
+        "title": "Account deletion failed",
+        "message": "Your account could not be deleted. Please try again later."
       }
     },
     "network": {
@@ -89,11 +99,25 @@
     "howItWorks": "How it works",
     "features": "Features",
     "pricing": "Pricing",
+    "settings": "Settings",
     "login": "Sign in",
     "logout": "Sign out",
     "register": "Sign up"
   },
   "auth": {
+    "logout": {
+      "title": "Sign out",
+      "description": "You are about to end your current session on this device.",
+      "warning": {
+        "title": "This will end your session",
+        "description": "You will be redirected to the login page after signing out."
+      },
+      "confirm": "Sign out",
+      "success": {
+        "title": "Signed out",
+        "message": "You have been signed out successfully."
+      }
+    },
     "login": {
       "title": "Welcome back!",
       "dontHaveAccount": "Don't have an account?",
@@ -186,6 +210,31 @@
       "commit": "Commit",
       "imageTag": "Image tag",
       "deployedAt": "Deploy time"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Adjust your app preferences.",
+    "general": "General",
+    "theme": "Theme",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "account": {
+      "title": "Account",
+      "placeholder": "Account details and profile settings will be added here."
+    },
+    "security": {
+      "title": "Security",
+      "placeholder": "Password change and related security actions will be added here."
+    },
+    "subscription": {
+      "title": "Subscription",
+      "placeholder": "Plan status and billing management will be added here."
+    },
+    "dangerZone": {
+      "title": "Danger zone",
+      "placeholder": "Account deletion and destructive actions will be added here."
     }
   }
 }

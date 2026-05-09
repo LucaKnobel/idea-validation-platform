@@ -1,12 +1,12 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['auth-middleware'],
-  layout: 'app'
+  layout: 'auth',
+  middleware: ['guest-middleware']
 })
 </script>
 
 <template>
   <div>
-    WIP: dashboard page coming soon!
+    WIP: forgot password page coming soon!
   </div>
 </template>

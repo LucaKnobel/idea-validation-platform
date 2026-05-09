@@ -1,7 +1,3 @@
-import { ref } from 'vue'
-import type { Ref } from 'vue'
-import { useI18n } from '#imports'
-
 export interface UseErrorHandlerComposable {
   hasError: Ref<boolean>
   errorTitle: Ref<string | undefined>
@@ -9,6 +5,7 @@ export interface UseErrorHandlerComposable {
   resetError: () => void
   handleRegistrationError: (error: unknown) => { titleKey: string, textKey: string }
   handleLoginError: (error: unknown) => { titleKey: string, textKey: string }
+  handleLogoutError: (error: unknown) => { titleKey: string, textKey: string }
   handleAccountDeleteError: (error: unknown) => { titleKey: string, textKey: string }
 }
 
@@ -30,13 +27,8 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     hasError.value = false
   }
 
-  const getStatusCode = (error: unknown): number | undefined => {
-    const statusCode = (error as { statusCode?: number } | null)?.statusCode
-    return typeof statusCode === 'number' ? statusCode : undefined
-  }
-
   const handleCommonErrors = (statusCode: number | undefined): { titleKey: string, textKey: string } | null => {
-    if (!statusCode) {
+    if (typeof statusCode === 'undefined') {
       const titleKey = 'error.network.title'
       const textKey = 'error.network.message'
       setError(titleKey, textKey)
@@ -54,7 +46,7 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
   }
 
   const handleRegistrationError = (error: unknown): { titleKey: string, textKey: string } => {
-    const statusCode = getStatusCode(error)
+    const statusCode = extractStatusCode(error)
     const commonError = handleCommonErrors(statusCode)
     if (commonError) {
       return commonError
@@ -66,25 +58,38 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
   }
 
   const handleLoginError = (error: unknown): { titleKey: string, textKey: string } => {
-    const statusCode = getStatusCode(error)
+    const statusCode = extractStatusCode(error)
     const commonError = handleCommonErrors(statusCode)
     if (commonError) {
       return commonError
     }
     const titleKey = 'error.auth.login.title'
-    const textKey = 'error.auth.login.text'
+    const textKey = 'error.auth.login.message'
+    setError(titleKey, textKey)
+    return { titleKey, textKey }
+  }
+
+  const handleLogoutError = (error: unknown): { titleKey: string, textKey: string } => {
+    const statusCode = extractStatusCode(error)
+    const commonError = handleCommonErrors(statusCode)
+    if (commonError) {
+      return commonError
+    }
+
+    const titleKey = 'error.auth.logout.title'
+    const textKey = 'error.auth.logout.message'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
 
   const handleAccountDeleteError = (error: unknown): { titleKey: string, textKey: string } => {
-    const statusCode = getStatusCode(error)
+    const statusCode = extractStatusCode(error)
     const commonError = handleCommonErrors(statusCode)
     if (commonError) {
       return commonError
     }
     const titleKey = 'error.account.delete.title'
-    const textKey = 'error.account.delete.text'
+    const textKey = 'error.account.delete.message'
     setError(titleKey, textKey)
     return { titleKey, textKey }
   }
@@ -96,6 +101,7 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     resetError,
     handleRegistrationError,
     handleLoginError,
+    handleLogoutError,
     handleAccountDeleteError
   }
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { LoginUserBodySchema, RegisterUserBodySchema } from '../../server/infrastructure/auth/auth-schemas'
+import { LoginUserBodySchema, RegisterUserBodySchema, SendVerificationEmailBodySchema } from '../../server/infrastructure/auth/auth-schemas'
 
 describe('LoginUserBodySchema', () => {
   it('accepts valid input and normalizes email', () => {
@@ -23,10 +23,70 @@ describe('LoginUserBodySchema', () => {
     expect(result.success).toBe(false)
   })
 
-  it('rejects password shorter than 15 characters', () => {
+  it('accepts password shorter than 15 characters (no policy check at login)', () => {
     const result = LoginUserBodySchema.safeParse({
       email: 'user@example.com',
       password: 'Short1!'
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects empty password', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: ''
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts rememberMe and relative callbackURL', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: 'VeryStrongPassword1!',
+      rememberMe: false,
+      callbackURL: '/dashboard'
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects non-relative callbackURL', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: 'VeryStrongPassword1!',
+      callbackURL: 'https://example.com/callback'
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects protocol-relative callbackURL', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: 'VeryStrongPassword1!',
+      callbackURL: '//dashboard'
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects callbackURL that exceeds max length', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: 'VeryStrongPassword1!',
+      callbackURL: `/${'a'.repeat(2048)}`
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects non-boolean rememberMe', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: 'VeryStrongPassword1!',
+      rememberMe: 'false'
     })
 
     expect(result.success).toBe(false)
@@ -86,6 +146,57 @@ describe('RegisterUserBodySchema', () => {
     const result = RegisterUserBodySchema.safeParse({
       email: 'user@example.com',
       password: 'Short1!'
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts relative callbackURL', () => {
+    const result = RegisterUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: 'VeryStrongPassword1!',
+      callbackURL: '/auth/login'
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects non-relative callbackURL', () => {
+    const result = RegisterUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: 'VeryStrongPassword1!',
+      callbackURL: 'https://example.com/callback'
+    })
+
+    expect(result.success).toBe(false)
+  })
+})
+
+describe('SendVerificationEmailBodySchema', () => {
+  it('accepts valid payload and normalizes email', () => {
+    const result = SendVerificationEmailBodySchema.safeParse({
+      email: '  User@Example.COM  ',
+      callbackURL: '/auth/login'
+    })
+
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.email).toBe('user@example.com')
+    }
+  })
+
+  it('rejects invalid email', () => {
+    const result = SendVerificationEmailBodySchema.safeParse({
+      email: 'invalid-email'
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects non-relative callbackURL', () => {
+    const result = SendVerificationEmailBodySchema.safeParse({
+      email: 'user@example.com',
+      callbackURL: 'https://example.com/callback'
     })
 
     expect(result.success).toBe(false)

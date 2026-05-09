@@ -1,10 +1,8 @@
-import { createAuthClient } from 'better-auth/vue'
-import { useLocalePath } from '#imports'
-import type { Ref } from 'vue'
-
 export interface UseAuthComposable {
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<boolean>
   register: (email: string, password: string, name: string) => Promise<boolean>
   resendVerificationEmail: (email: string) => Promise<boolean>
+  logout: () => Promise<boolean>
   resetError: () => void
   hasError: Ref<boolean>
   errorTitle: Ref<string | undefined>
@@ -13,18 +11,38 @@ export interface UseAuthComposable {
 
 export const useAuth = (): UseAuthComposable => {
   const localePath = useLocalePath()
-  const client = createAuthClient()
-  const { hasError, errorTitle, errorText, resetError, handleRegistrationError } = useErrorHandler()
+  const { hasError, errorTitle, errorText, resetError, handleRegistrationError, handleLoginError, handleLogoutError } = useErrorHandler()
+
+  const login = async (email: string, password: string, rememberMe = true): Promise<boolean> => {
+    resetError()
+
+    try {
+      const { error } = await authClient.signIn.email({
+        email,
+        password,
+        rememberMe
+      })
+
+      if (error) {
+        handleLoginError(error)
+        return false
+      }
+
+      return true
+    } catch (error: unknown) {
+      handleLoginError(error)
+      return false
+    }
+  }
 
   const register = async (email: string, password: string, name: string): Promise<boolean> => {
     resetError()
 
     try {
-      const { error } = await client.signUp.email({
+      const { error } = await authClient.signUp.email({
         email,
         password,
-        name,
-        callbackURL: localePath('/auth/login')
+        name
       })
 
       if (error) {
@@ -43,22 +61,43 @@ export const useAuth = (): UseAuthComposable => {
     resetError()
 
     try {
-      const { error } = await client.sendVerificationEmail({
+      const { error } = await authClient.sendVerificationEmail({
         email,
         callbackURL: localePath('/auth/login')
       })
 
       if (error) {
+        // Return neutral success on 400 to avoid account-state disclosure.
+        if (extractStatusCode(error) === 400) {
+          return true
+        }
+
         handleRegistrationError(error)
         return false
       }
 
       return true
     } catch (error: unknown) {
+      if (extractStatusCode(error) === 400) {
+        return true
+      }
+
       handleRegistrationError(error)
       return false
     }
   }
 
-  return { register, resendVerificationEmail, resetError, hasError, errorTitle, errorText }
+  const logout = async (): Promise<boolean> => {
+    resetError()
+
+    try {
+      await authClient.signOut()
+      return true
+    } catch (error: unknown) {
+      handleLogoutError(error)
+      return false
+    }
+  }
+
+  return { login, register, resendVerificationEmail, logout, resetError, hasError, errorTitle, errorText }
 }
