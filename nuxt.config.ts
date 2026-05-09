@@ -2,12 +2,7 @@ import { fileURLToPath } from 'node:url'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: [
-    '@nuxt/eslint',
-    '@nuxt/ui',
-    '@nuxtjs/i18n',
-    '@nuxt/content'
-  ],
+  modules: ['@nuxt/eslint', '@nuxt/ui', '@nuxtjs/i18n', '@nuxt/content', 'nuxt-security'],
 
   devtools: {
     enabled: false
@@ -81,5 +76,15 @@ export default defineNuxtConfig({
       { code: 'en', name: 'English', file: 'en.json' },
       { code: 'de', name: 'Deutsch', file: 'de.json' }
     ]
+  },
+
+  security: {
+    corsHandler: {
+      // Only allow explicit origins
+      origin: process.env.NODE_ENV === 'production'
+        ? [process.env.CORS_ORIGIN, process.env.CORS_ORIGIN_WWW].filter((origin): origin is string => Boolean(origin))
+        : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+      credentials: true
+    }
   }
 })
