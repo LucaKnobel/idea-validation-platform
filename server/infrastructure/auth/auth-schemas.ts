@@ -17,7 +17,9 @@ const CallbackURLSchema = z.string()
 
 export const LoginUserBodySchema = z.object({
   email: EmailSchema,
-  password: PasswordSchema,
+  // At login, we only verify the password field is present and non-empty.
+  // Password policy (min length, complexity) is enforced at registration only.
+  password: z.string().min(1, 'Password is required').max(256, 'Password must not exceed 256 characters'),
   rememberMe: z.boolean().optional(),
   callbackURL: CallbackURLSchema.optional()
 })

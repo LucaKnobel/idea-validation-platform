@@ -23,10 +23,19 @@ describe('LoginUserBodySchema', () => {
     expect(result.success).toBe(false)
   })
 
-  it('rejects password shorter than 15 characters', () => {
+  it('accepts password shorter than 15 characters (no policy check at login)', () => {
     const result = LoginUserBodySchema.safeParse({
       email: 'user@example.com',
       password: 'Short1!'
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects empty password', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: 'user@example.com',
+      password: ''
     })
 
     expect(result.success).toBe(false)
