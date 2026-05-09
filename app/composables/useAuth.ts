@@ -1,6 +1,3 @@
-import { useLocalePath } from '#imports'
-import type { Ref } from 'vue'
-
 export interface UseAuthComposable {
   login: (email: string, password: string, rememberMe?: boolean) => Promise<boolean>
   register: (email: string, password: string, name: string) => Promise<boolean>
