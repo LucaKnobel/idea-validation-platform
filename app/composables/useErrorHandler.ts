@@ -30,35 +30,6 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     hasError.value = false
   }
 
-  const getStatusCode = (error: unknown): number | undefined => {
-    if (!error || typeof error !== 'object') {
-      return undefined
-    }
-
-    const maybeError = error as {
-      statusCode?: unknown
-      status?: unknown
-      response?: { status?: unknown }
-      error?: { statusCode?: unknown, status?: unknown }
-    }
-
-    const candidates = [
-      maybeError.statusCode,
-      maybeError.status,
-      maybeError.response?.status,
-      maybeError.error?.statusCode,
-      maybeError.error?.status
-    ]
-
-    for (const value of candidates) {
-      if (typeof value === 'number') {
-        return value
-      }
-    }
-
-    return undefined
-  }
-
   const handleCommonErrors = (statusCode: number | undefined): { titleKey: string, textKey: string } | null => {
     if (typeof statusCode === 'undefined') {
       const titleKey = 'error.network.title'
@@ -78,7 +49,7 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
   }
 
   const handleRegistrationError = (error: unknown): { titleKey: string, textKey: string } => {
-    const statusCode = getStatusCode(error)
+    const statusCode = extractStatusCode(error)
     const commonError = handleCommonErrors(statusCode)
     if (commonError) {
       return commonError
@@ -90,7 +61,7 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
   }
 
   const handleLoginError = (error: unknown): { titleKey: string, textKey: string } => {
-    const statusCode = getStatusCode(error)
+    const statusCode = extractStatusCode(error)
     const commonError = handleCommonErrors(statusCode)
     if (commonError) {
       return commonError
@@ -102,7 +73,7 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
   }
 
   const handleAccountDeleteError = (error: unknown): { titleKey: string, textKey: string } => {
-    const statusCode = getStatusCode(error)
+    const statusCode = extractStatusCode(error)
     const commonError = handleCommonErrors(statusCode)
     if (commonError) {
       return commonError
