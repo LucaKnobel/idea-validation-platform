@@ -16,6 +16,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   runtimeConfig: {
+    logLevel: '',
     smtpHost: '',
     smtpPort: '',
     smtpSecure: '',

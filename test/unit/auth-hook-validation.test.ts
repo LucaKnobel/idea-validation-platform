@@ -20,7 +20,9 @@ const testState = vi.hoisted(() => {
 
   return {
     config: null as unknown,
+    info: vi.fn(),
     warn: vi.fn(),
+    error: vi.fn(),
     validateAuthRequestBody: vi.fn(),
     MockAPIError
   }
@@ -46,6 +48,12 @@ vi.mock('@infrastructure/db/prisma', () => ({
   prisma: {}
 }))
 
+vi.mock('#imports', () => ({
+  useRuntimeConfig: () => ({
+    logLevel: 'info'
+  })
+}))
+
 vi.mock('@infrastructure/auth/auth-body-validator', () => ({
   UnsupportedAuthRequestBodyError,
   InvalidAuthRequestBodyError,
@@ -62,9 +70,9 @@ vi.mock('@infrastructure/http/locale-resolver', () => ({
 
 vi.mock('@infrastructure/logging/logger', () => ({
   logger: {
-    info: vi.fn(),
+    info: testState.info,
     warn: testState.warn,
-    error: vi.fn()
+    error: testState.error
   }
 }))
 
@@ -78,13 +86,25 @@ const getBeforeHook = () => {
   return config.hooks?.before
 }
 
+const getAfterHook = () => {
+  const config = testState.config as {
+    hooks?: {
+      after?: (ctx: { path: string, context: unknown }) => Promise<unknown>
+    }
+  }
+
+  return config.hooks?.after
+}
+
 describe('auth before-hook body validation', () => {
   beforeAll(async () => {
     await import('../../server/infrastructure/auth/auth')
   })
 
   beforeEach(() => {
+    testState.info.mockClear()
     testState.warn.mockClear()
+    testState.error.mockClear()
     testState.validateAuthRequestBody.mockReset()
   })
 
@@ -136,6 +156,53 @@ describe('auth before-hook body validation', () => {
       expect.objectContaining({
         path: '/sign-in/email',
         issues: [{ path: 'email', code: 'invalid_format' }]
+      })
+    )
+  })
+
+  it('logs sign-in as failure when returned is an APIError', async () => {
+    const afterHook = getAfterHook()
+
+    expect(afterHook).toBeTypeOf('function')
+    await afterHook?.({
+      path: '/sign-in/email',
+      context: {
+        returned: new testState.MockAPIError('UNAUTHORIZED', { message: 'Invalid password' })
+      }
+    })
+
+    expect(testState.warn).toHaveBeenCalledWith(
+      'Auth sign in failed',
+      expect.objectContaining({
+        source: 'auth-event',
+        event: 'auth.sign_in',
+        path: '/sign-in/email'
+      })
+    )
+  })
+
+  it('logs sign-in as success when session user id exists', async () => {
+    const afterHook = getAfterHook()
+
+    expect(afterHook).toBeTypeOf('function')
+    await afterHook?.({
+      path: '/sign-in/email',
+      context: {
+        newSession: {
+          user: {
+            id: 'user-123'
+          }
+        }
+      }
+    })
+
+    expect(testState.info).toHaveBeenCalledWith(
+      'Auth sign in succeeded',
+      expect.objectContaining({
+        source: 'auth-event',
+        event: 'auth.sign_in',
+        path: '/sign-in/email',
+        userId: 'user-123'
       })
     )
   })
