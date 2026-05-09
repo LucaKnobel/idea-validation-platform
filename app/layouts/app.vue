@@ -18,8 +18,11 @@ const localePath = useLocalePath()
           icon="i-lucide-settings"
           color="neutral"
           variant="ghost"
+          :aria-label="$t('navigation.settings')"
         >
-          {{ $t('navigation.settings') }}
+          <span class="hidden md:inline">
+            {{ $t('navigation.settings') }}
+          </span>
         </UButton>
         <AppLogoutButton />
       </template>
