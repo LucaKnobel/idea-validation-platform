@@ -20,8 +20,7 @@ export const useAuth = (): UseAuthComposable => {
       const { error } = await authClient.signIn.email({
         email,
         password,
-        rememberMe,
-        callbackURL: localePath('/dashboard')
+        rememberMe
       })
 
       if (error) {
@@ -43,8 +42,7 @@ export const useAuth = (): UseAuthComposable => {
       const { error } = await authClient.signUp.email({
         email,
         password,
-        name,
-        callbackURL: localePath('/auth/login')
+        name
       })
 
       if (error) {
