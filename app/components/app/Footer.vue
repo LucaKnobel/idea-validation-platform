@@ -28,9 +28,26 @@ const footerItems = computed(() => [{
         {{ $t('common.copyright') }} {{ new Date().getFullYear() }}
       </p>
     </template>
-    <UNavigationMenu :items="footerItems" />
+
+    <div class="w-full">
+      <UNavigationMenu
+        :items="footerItems"
+        variant="link"
+        class="hidden w-full justify-center md:flex"
+      />
+
+      <UNavigationMenu
+        :items="footerItems"
+        variant="link"
+        orientation="vertical"
+        class="md:hidden"
+      />
+    </div>
+
     <template #right>
-      <AppLocaleSelect />
+      <div class="flex w-full justify-start md:w-auto md:justify-end">
+        <AppLocaleSelect />
+      </div>
     </template>
   </UFooter>
 </template>
