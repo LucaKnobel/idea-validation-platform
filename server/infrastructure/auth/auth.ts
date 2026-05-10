@@ -5,6 +5,7 @@ import { useRuntimeConfig } from '#imports'
 import { prisma } from '@infrastructure/db/prisma'
 import { InvalidAuthRequestBodyError, UnsupportedAuthRequestBodyError, validateAuthRequestBody } from '@infrastructure/auth/auth-body-validator'
 import { sendVerificationMail } from '@infrastructure/mail/send-verification-mail'
+import { sendResetPasswordMail } from '@infrastructure/mail/send-reset-password-mail'
 import { resolveLocaleFromRequest } from '@infrastructure/http/locale-resolver'
 import { logger } from '@infrastructure/logging/logger'
 
@@ -25,7 +26,9 @@ const authEventByPath = {
   '/sign-in/email': { event: 'auth.sign_in', action: 'sign in' },
   '/sign-out': { event: 'auth.sign_out', action: 'sign out' },
   '/send-verification-email': { event: 'auth.send_verification_email', action: 'send verification email' },
-  '/verify-email': { event: 'auth.verify_email', action: 'verify email' }
+  '/verify-email': { event: 'auth.verify_email', action: 'verify email' },
+  '/request-password-reset': { event: 'auth.request_password_reset', action: 'request password reset' },
+  '/reset-password': { event: 'auth.reset_password', action: 'reset password' }
 } as const
 
 // Request body error factories
@@ -54,7 +57,21 @@ export const auth = betterAuth({
     requireEmailVerification: true,
     autoSignIn: false,
     minPasswordLength: 15,
-    maxPasswordLength: 256
+    maxPasswordLength: 256,
+    revokeSessionsOnPasswordReset: true,
+    sendResetPassword: async ({ user, url }, request) => {
+      const locale = resolveLocaleFromRequest(request)
+      void sendResetPasswordMail({ to: user.email, resetUrl: url, locale })
+        .then(() => {
+          logger.info('Password reset email sent', { userId: user.id, locale })
+        })
+        .catch((error: unknown) => {
+          logger.error('Failed to send password reset email', { userId: user.id, locale }, error)
+        })
+    },
+    onPasswordReset: async ({ user }, _request) => {
+      logger.info('Password reset completed', { userId: user.id })
+    }
   },
 
   emailVerification: {

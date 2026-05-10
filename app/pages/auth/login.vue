@@ -12,6 +12,8 @@ const { login, hasError, errorTitle, errorText } = useAuth()
 const localePath = useLocalePath()
 const { showSuccess } = useToastNotification()
 const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
 const schema = createLoginFormSchema()
 const isSubmitting = ref(false)
@@ -45,6 +47,17 @@ const onSubmit = async (event: FormSubmitEvent<LoginForm>): Promise<void> => {
     isSubmitting.value = false
   }
 }
+
+onMounted(async () => {
+  if (route.query.reset === 'success') {
+    showSuccess('auth.resetPassword.success.title', 'auth.resetPassword.success.message')
+
+    await router.replace({
+      path: route.path,
+      query: {}
+    })
+  }
+})
 </script>
 
 <template>
