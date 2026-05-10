@@ -11,13 +11,13 @@ const verificationMailCopy: Record<AppLocale, MailCopy> = {
   de: {
     htmlLang: 'de',
     title: 'E-Mail-Bestätigung',
-    footer: 'Du hast diese E-Mail erhalten, weil du dich registriert hast. Falls du kein Konto erstellt hast, kannst du diese E-Mail ignorieren.',
-    subject: 'Bitte bestätige deine E-Mail-Adresse',
-    text: 'Willkommen bei der Evidara!\n\nBitte bestätige deine E-Mail-Adresse mit folgendem Link:\n{{verifyUrl}}\n\nDer Link ist 1 Stunde gültig.\n\nFalls du kein Konto erstellt hast, kannst du diese E-Mail ignorieren.',
+    footer: 'Sie haben diese E-Mail erhalten, weil Sie sich registriert haben. Falls Sie kein Konto erstellt haben, können Sie diese E-Mail ignorieren.',
+    subject: 'Bitte bestätigen Sie Ihre E-Mail-Adresse',
+    text: 'Willkommen bei Evidara!\n\nBitte bestätigen Sie Ihre E-Mail-Adresse mit folgendem Link:\n{{verifyUrl}}\n\nDer Link ist 1 Stunde gültig.\n\nFalls Sie kein Konto erstellt haben, können Sie diese E-Mail ignorieren.',
     heading: 'E-Mail-Adresse bestätigen',
-    intro: 'Willkommen! Um dein Konto zu aktivieren, klicke bitte auf den Button unten.',
+    intro: 'Willkommen! Um Ihr Konto zu aktivieren, klicken Sie bitte auf den Button unten.',
     cta: 'E-Mail bestätigen',
-    linkLabel: 'Oder kopiere diesen Link in deinen Browser:',
+    linkLabel: 'Oder kopieren Sie diesen Link in Ihren Browser:',
     validity: 'Der Link ist <strong>1 Stunde</strong> gültig.'
   },
   en: {
