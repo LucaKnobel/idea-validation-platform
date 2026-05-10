@@ -185,8 +185,8 @@
   },
   "landing": {
     "hero": {
-      "title": "Entwickle Produkte, die wirklich gefragt sind.",
-      "description": "Validiere deine digitalen Geschäftsideen mit echten Daten, bevor du Zeit und Geld investierst. Evidara hilft dir zu erkennen, was funktioniert, bevor du es umsetzt.",
+      "title": "Entwickeln Sie Produkte, die wirklich gefragt sind.",
+      "description": "Validieren Sie Ihre digitalen Geschäftsideen mit echten Daten, bevor Sie Zeit und Geld investieren. Evidara hilft Ihnen zu erkennen, was funktioniert, bevor Sie es umsetzen.",
       "ctaPrimary": "Loslegen",
       "ctaSecondary": "Mehr erfahren"
     }
@@ -242,7 +242,7 @@
   },
   "settings": {
     "title": "Einstellungen",
-    "description": "Passe deine App-Einstellungen an.",
+    "description": "Passen Sie Ihre App-Einstellungen an.",
     "general": "Allgemein",
     "theme": "Theme",
     "themeSystem": "System",

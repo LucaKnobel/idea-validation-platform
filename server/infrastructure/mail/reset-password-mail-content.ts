@@ -11,13 +11,13 @@ const resetPasswordMailCopy: Record<AppLocale, MailCopy> = {
   de: {
     htmlLang: 'de',
     title: 'Passwort zurücksetzen',
-    footer: 'Du hast diese E-Mail erhalten, weil du ein neues Passwort angefordert hast. Falls das nicht von dir war, kannst du diese E-Mail ignorieren.',
-    subject: 'Setze dein Passwort zurück',
-    text: 'Du kannst dein Passwort mit folgendem Link zurücksetzen:\n{{resetUrl}}\n\nDer Link ist 1 Stunde gültig.\n\nFalls du diese Anfrage nicht gestellt hast, kannst du diese E-Mail ignorieren.',
+    footer: 'Sie haben diese E-Mail erhalten, weil ein neues Passwort für Ihr Konto angefordert wurde. Falls dies nicht von Ihnen war, können Sie diese E-Mail ignorieren.',
+    subject: 'Setzen Sie Ihr Passwort zurück',
+    text: 'Sie können Ihr Passwort mit folgendem Link zurücksetzen:\n{{resetUrl}}\n\nDer Link ist 1 Stunde gültig.\n\nFalls Sie diese Anfrage nicht gestellt haben, können Sie diese E-Mail ignorieren.',
     heading: 'Passwort zurücksetzen',
-    intro: 'Klicke auf den Button unten, um ein neues Passwort für dein Konto zu vergeben.',
+    intro: 'Klicken Sie auf den Button unten, um ein neues Passwort für Ihr Konto zu vergeben.',
     cta: 'Passwort zurücksetzen',
-    linkLabel: 'Oder kopiere diesen Link in deinen Browser:',
+    linkLabel: 'Oder kopieren Sie diesen Link in Ihren Browser:',
     validity: 'Der Link ist <strong>1 Stunde</strong> gültig.'
   },
   en: {
