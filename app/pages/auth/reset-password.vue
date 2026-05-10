@@ -18,8 +18,10 @@ const isValidToken = computed(() => !!token.value)
 const schema = createPasswordSchema()
 const isSubmitting = ref(false)
 const showPassword = ref(false)
+const showPasswordConfirm = ref(false)
 const formState = reactive<PasswordForm>({
-  password: ''
+  password: '',
+  passwordConfirm: ''
 })
 
 const onSubmit = async (event: FormSubmitEvent<PasswordForm>): Promise<void> => {
@@ -102,6 +104,35 @@ onMounted(() => {
                 :aria-pressed="showPassword"
                 aria-controls="reset-password"
                 @click="showPassword = !showPassword"
+              />
+            </template>
+          </UInput>
+        </UFormField>
+
+        <UFormField
+          name="passwordConfirm"
+          :label="$t('form.password.confirm.label')"
+        >
+          <UInput
+            id="reset-password-confirm"
+            v-model="formState.passwordConfirm"
+            :type="showPasswordConfirm ? 'text' : 'password'"
+            :placeholder="$t('form.password.confirm.placeholder')"
+            :ui="{ trailing: 'pe-1' }"
+            required
+            class="w-full"
+          >
+            <template #trailing>
+              <UButton
+                type="button"
+                color="neutral"
+                variant="link"
+                size="sm"
+                :icon="showPasswordConfirm ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                :aria-label="showPasswordConfirm ? $t('form.password.hide') : $t('form.password.show')"
+                :aria-pressed="showPasswordConfirm"
+                aria-controls="reset-password-confirm"
+                @click="showPasswordConfirm = !showPasswordConfirm"
               />
             </template>
           </UInput>

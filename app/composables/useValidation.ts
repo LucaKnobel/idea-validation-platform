@@ -17,6 +17,7 @@ export type VerifyEmailForm = {
 
 export type PasswordForm = {
   password: string
+  passwordConfirm: string
 }
 
 export const useValidation = () => {
@@ -55,7 +56,11 @@ export const useValidation = () => {
   })
 
   const createPasswordSchema = () => z.object({
-    password: createStrongPasswordFieldSchema()
+    password: createStrongPasswordFieldSchema(),
+    passwordConfirm: z.string({ error: t('validation.password.required') })
+  }).refine(data => data.password === data.passwordConfirm, {
+    error: t('validation.password.confirmMismatch'),
+    path: ['passwordConfirm']
   })
 
   return {
