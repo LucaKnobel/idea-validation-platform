@@ -64,6 +64,10 @@ vi.mock('@infrastructure/mail/send-verification-mail', () => ({
   sendVerificationMail: vi.fn(() => Promise.resolve())
 }))
 
+vi.mock('@infrastructure/mail/send-reset-password-mail', () => ({
+  sendResetPasswordMail: vi.fn(() => Promise.resolve())
+}))
+
 vi.mock('@infrastructure/http/locale-resolver', () => ({
   resolveLocaleFromRequest: vi.fn(() => 'en')
 }))

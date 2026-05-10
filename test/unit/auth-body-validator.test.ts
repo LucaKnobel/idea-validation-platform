@@ -13,7 +13,7 @@ describe('validateAuthRequestBody', () => {
   })
 
   it('throws UnsupportedAuthRequestBodyError for unknown auth endpoint with body', () => {
-    expect(() => validateAuthRequestBody('/reset-password', { email: 'user@example.com' })).toThrow(UnsupportedAuthRequestBodyError)
+    expect(() => validateAuthRequestBody('/unknown-endpoint', { email: 'user@example.com' })).toThrow(UnsupportedAuthRequestBodyError)
   })
 
   it('throws InvalidAuthRequestBodyError with issues for malformed sign-in payload', () => {

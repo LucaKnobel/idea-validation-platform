@@ -2,6 +2,8 @@ export interface UseAuthComposable {
   login: (email: string, password: string, rememberMe?: boolean) => Promise<boolean>
   register: (email: string, password: string, name: string) => Promise<boolean>
   resendVerificationEmail: (email: string) => Promise<boolean>
+  requestPasswordReset: (email: string) => Promise<boolean>
+  resetPassword: (newPassword: string, token: string) => Promise<boolean>
   logout: () => Promise<boolean>
   resetError: () => void
   hasError: Ref<boolean>
@@ -11,7 +13,17 @@ export interface UseAuthComposable {
 
 export const useAuth = (): UseAuthComposable => {
   const localePath = useLocalePath()
-  const { hasError, errorTitle, errorText, resetError, handleRegistrationError, handleLoginError, handleLogoutError } = useErrorHandler()
+  const {
+    hasError,
+    errorTitle,
+    errorText,
+    resetError,
+    handleRegistrationError,
+    handleLoginError,
+    handlePasswordResetRequestError,
+    handlePasswordResetError,
+    handleLogoutError
+  } = useErrorHandler()
 
   const login = async (email: string, password: string, rememberMe = true): Promise<boolean> => {
     resetError()
@@ -87,6 +99,57 @@ export const useAuth = (): UseAuthComposable => {
     }
   }
 
+  const requestPasswordReset = async (email: string): Promise<boolean> => {
+    resetError()
+
+    try {
+      const { error } = await authClient.requestPasswordReset({
+        email,
+        redirectTo: `${window.location.origin}${localePath('/auth/reset-password')}`
+      })
+
+      if (error) {
+        // Return neutral success on 400 to avoid account-state disclosure.
+        if (extractStatusCode(error) === 400) {
+          return true
+        }
+
+        handlePasswordResetRequestError(error)
+        return false
+      }
+
+      return true
+    } catch (error: unknown) {
+      if (extractStatusCode(error) === 400) {
+        return true
+      }
+
+      handlePasswordResetRequestError(error)
+      return false
+    }
+  }
+
+  const resetPassword = async (newPassword: string, token: string): Promise<boolean> => {
+    resetError()
+
+    try {
+      const { error } = await authClient.resetPassword({
+        newPassword,
+        token
+      })
+
+      if (error) {
+        handlePasswordResetError(error)
+        return false
+      }
+
+      return true
+    } catch (error: unknown) {
+      handlePasswordResetError(error)
+      return false
+    }
+  }
+
   const logout = async (): Promise<boolean> => {
     resetError()
 
@@ -99,5 +162,5 @@ export const useAuth = (): UseAuthComposable => {
     }
   }
 
-  return { login, register, resendVerificationEmail, logout, resetError, hasError, errorTitle, errorText }
+  return { login, register, resendVerificationEmail, requestPasswordReset, resetPassword, logout, resetError, hasError, errorTitle, errorText }
 }

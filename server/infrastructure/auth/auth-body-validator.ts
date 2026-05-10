@@ -1,7 +1,23 @@
-import { LoginUserBodySchema, RegisterUserBodySchema, SendVerificationEmailBodySchema } from './auth-schemas'
-import type { LoginUserBodyDto, RegisterUserBodyDto, SendVerificationEmailBodyDto } from './auth-schemas'
+import {
+  LoginUserBodySchema,
+  RegisterUserBodySchema,
+  ResetPasswordBodySchema,
+  RequestPasswordResetBodySchema,
+  SendVerificationEmailBodySchema
+} from './auth-schemas'
+import type {
+  LoginUserBodyDto,
+  RegisterUserBodyDto,
+  ResetPasswordBodyDto,
+  RequestPasswordResetBodyDto,
+  SendVerificationEmailBodyDto
+} from './auth-schemas'
 
-type ParsedAuthBody = LoginUserBodyDto | RegisterUserBodyDto | SendVerificationEmailBodyDto
+type ParsedAuthBody = LoginUserBodyDto
+  | RegisterUserBodyDto
+  | SendVerificationEmailBodyDto
+  | RequestPasswordResetBodyDto
+  | ResetPasswordBodyDto
 
 export interface ValidationIssue {
   path: string
@@ -28,7 +44,9 @@ export class InvalidAuthRequestBodyError extends Error {
 const SCHEMA_BY_PATH = {
   '/sign-up/email': RegisterUserBodySchema,
   '/sign-in/email': LoginUserBodySchema,
-  '/send-verification-email': SendVerificationEmailBodySchema
+  '/send-verification-email': SendVerificationEmailBodySchema,
+  '/request-password-reset': RequestPasswordResetBodySchema,
+  '/reset-password': ResetPasswordBodySchema
 } as const
 
 const NO_BODY_PATHS = new Set<string>([
