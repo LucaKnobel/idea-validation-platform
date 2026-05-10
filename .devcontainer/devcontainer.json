@@ -22,7 +22,9 @@
         "esbenp.prettier-vscode",
         "prisma.prisma",
         "bradlc.vscode-tailwindcss",
-        "bruno-api-client.bruno"
+        "bruno-api-client.bruno",
+        "snyk-security.snyk-vulnerability-scanner",
+        "aquasecurityofficial.trivy-vulnerability-scanner"
         
       ],
       "settings": {
