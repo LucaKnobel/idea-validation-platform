@@ -43,6 +43,16 @@ const unsupportedRequestBodyError = () => new APIError('BAD_REQUEST', {
   code: 'UNSUPPORTED_AUTH_REQUEST_BODY'
 })
 
+const isRateLimitError = (error: APIError): boolean => {
+  const status = (error as { status?: number }).status
+  if (status === 429) return true
+
+  const code = (error as { body?: { code?: string } }).body?.code
+  if (code === 'TOO_MANY_REQUESTS') return true
+
+  return false
+}
+
 // Better-Auth Configuration
 
 const { logLevel } = useRuntimeConfig()
@@ -51,6 +61,40 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql'
   }),
+
+  advanced: {
+    ipAddress: {
+      // Managed NGINX forwards the client IP via these headers.
+      ipAddressHeaders: ['x-forwarded-for', 'x-real-ip'],
+      // Rate-limit IPv6 by /64 to reduce bypass via address rotation.
+      ipv6Subnet: 64
+    }
+  },
+
+  rateLimit: {
+    storage: 'database',
+    modelName: 'rateLimit',
+    enabled: true,
+    // Default: 50 requests per 10 seconds for all auth endpoints
+    window: 10,
+    max: 50,
+    customRules: {
+      // Credential-based sign-in: very strict to slow brute-force
+      '/sign-in/email': { window: 60, max: 5 },
+      // Registration: tight to prevent account spam
+      '/sign-up/email': { window: 60, max: 5 },
+      // Password reset request: strict to prevent email flooding
+      '/request-password-reset': { window: 300, max: 3 },
+      // Password reset confirmation: strict, link is single-use anyway
+      '/reset-password': { window: 300, max: 5 },
+      // Verification email resend: prevent mail bombing
+      '/send-verification-email': { window: 300, max: 3 },
+      // Email verification click: lenient, user may retry from link
+      '/verify-email': { window: 60, max: 10 },
+      // Session check: read-only, high frequency expected
+      '/get-session': false
+    }
+  },
 
   emailAndPassword: {
     enabled: true,
@@ -120,6 +164,15 @@ export const auth = betterAuth({
       const userId = (ctx.context as { newSession?: { user?: { id?: string } } }).newSession?.user?.id
 
       if (failure) {
+        if (isRateLimitError(returned)) {
+          logger.warn('Auth request rate limited', {
+            source: 'auth-event',
+            event: 'auth.rate_limit',
+            path: ctx.path
+          })
+          return
+        }
+
         logger.warn(`Auth ${action} failed`, { source: 'auth-event', event, path: ctx.path })
         return
       }
