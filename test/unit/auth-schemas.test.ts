@@ -5,7 +5,7 @@ import {
   RequestPasswordResetBodySchema,
   ResetPasswordBodySchema,
   SendVerificationEmailBodySchema
-} from '../../server/infrastructure/auth/auth-schemas'
+} from '@infrastructure/auth/auth-schemas'
 
 // Shared valid values
 const VALID_EMAIL = 'user@example.com'
@@ -155,6 +155,26 @@ describe('LoginUserBodySchema', () => {
 
     expect(result.success).toBe(false)
   })
+
+  it('rejects whitespace-only callbackURL', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: VALID_EMAIL,
+      password: VALID_PASSWORD,
+      callbackURL: '   '
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts callbackURL of single slash', () => {
+    const result = LoginUserBodySchema.safeParse({
+      email: VALID_EMAIL,
+      password: VALID_PASSWORD,
+      callbackURL: '/'
+    })
+
+    expect(result.success).toBe(true)
+  })
 })
 
 describe('RegisterUserBodySchema', () => {
@@ -299,6 +319,25 @@ describe('RegisterUserBodySchema', () => {
 
     expect(result.success).toBe(false)
   })
+
+  it('rejects whitespace-only callbackURL', () => {
+    const result = RegisterUserBodySchema.safeParse({
+      email: VALID_EMAIL,
+      password: VALID_PASSWORD,
+      callbackURL: '   '
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts password at minimum length (15 characters)', () => {
+    const result = RegisterUserBodySchema.safeParse({
+      email: VALID_EMAIL,
+      password: 'Abcdefghijkl1!x'
+    })
+
+    expect(result.success).toBe(true)
+  })
 })
 
 describe('SendVerificationEmailBodySchema', () => {
@@ -377,6 +416,15 @@ describe('SendVerificationEmailBodySchema', () => {
     const result = SendVerificationEmailBodySchema.safeParse({
       email: VALID_EMAIL,
       callbackURL: `/${'a'.repeat(2048)}`
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects whitespace-only callbackURL', () => {
+    const result = SendVerificationEmailBodySchema.safeParse({
+      email: VALID_EMAIL,
+      callbackURL: '   '
     })
 
     expect(result.success).toBe(false)
@@ -477,6 +525,15 @@ describe('RequestPasswordResetBodySchema', () => {
     const result = RequestPasswordResetBodySchema.safeParse({
       email: VALID_EMAIL,
       redirectTo: `https://example.com/${'a'.repeat(2040)}`
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects empty redirectTo string', () => {
+    const result = RequestPasswordResetBodySchema.safeParse({
+      email: VALID_EMAIL,
+      redirectTo: ''
     })
 
     expect(result.success).toBe(false)
@@ -591,5 +648,32 @@ describe('ResetPasswordBodySchema', () => {
     })
 
     expect(result.success).toBe(false)
+  })
+
+  it('rejects whitespace-only token', () => {
+    const result = ResetPasswordBodySchema.safeParse({
+      newPassword: VALID_PASSWORD,
+      token: '   '
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts token at maximum length (512 characters)', () => {
+    const result = ResetPasswordBodySchema.safeParse({
+      newPassword: VALID_PASSWORD,
+      token: 'a'.repeat(512)
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts newPassword at minimum length (15 characters)', () => {
+    const result = ResetPasswordBodySchema.safeParse({
+      newPassword: 'Abcdefghijkl1!x',
+      token: 'some-valid-reset-token'
+    })
+
+    expect(result.success).toBe(true)
   })
 })

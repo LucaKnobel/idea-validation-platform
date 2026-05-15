@@ -1,6 +1,15 @@
 import { defineConfig } from 'vitest/config'
 import { defineVitestProject } from '@nuxt/test-utils/config'
 import { loadEnv } from 'vite'
+import { fileURLToPath } from 'node:url'
+
+const alias = {
+  '@server': fileURLToPath(new URL('./server', import.meta.url)),
+  '@interfaces': fileURLToPath(new URL('./server/application/interfaces', import.meta.url)),
+  '@infrastructure': fileURLToPath(new URL('./server/infrastructure', import.meta.url)),
+  '@shared': fileURLToPath(new URL('./shared', import.meta.url)),
+  '@generated': fileURLToPath(new URL('./generated', import.meta.url))
+}
 
 export default defineConfig({
   test: {
@@ -12,6 +21,7 @@ export default defineConfig({
     isolate: false,
     projects: [
       {
+        resolve: { alias },
         test: {
           name: 'unit',
           include: ['test/unit/*.{test,spec}.ts'],
