@@ -8,11 +8,8 @@ export default defineConfig({
     fileParallelism: false,
     watch: false,
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true
-      }
-    },
+    maxWorkers: 1,
+    isolate: false,
     projects: [
       {
         test: {

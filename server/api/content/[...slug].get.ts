@@ -5,11 +5,21 @@ import { queryCollection } from '@nuxt/content/server'
 import type { AppLocale } from '@shared/types/locale'
 import { enforceRateLimit } from '@server/api/rate-limit/enforce-rate-limit'
 
+const parseRateLimitNumber = (value: unknown, fallback: number): number => {
+  const parsed = typeof value === 'number' ? value : Number.parseInt(String(value), 10)
+  if (!Number.isFinite(parsed) || parsed < 1) return fallback
+  return parsed
+}
+
 export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig(event)
+  const maxRequests = parseRateLimitNumber(config.contentReadRateLimitMax, 100)
+  const windowSeconds = parseRateLimitNumber(config.contentReadRateLimitWindowSeconds, 60)
+
   await enforceRateLimit(event, {
     name: 'content.read',
-    maxRequests: 100,
-    windowSeconds: 60,
+    maxRequests,
+    windowSeconds,
     scope: 'ip'
   })
 
