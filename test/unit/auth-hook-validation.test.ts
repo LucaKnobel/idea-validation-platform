@@ -3,7 +3,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   InvalidAuthRequestBodyError,
   UnsupportedAuthRequestBodyError
-} from '../../server/infrastructure/auth/auth-body-validator'
+} from '@infrastructure/auth/auth-body-validator'
 
 const testState = vi.hoisted(() => {
   class MockAPIError extends Error {
@@ -54,11 +54,14 @@ vi.mock('#imports', () => ({
   })
 }))
 
-vi.mock('@infrastructure/auth/auth-body-validator', () => ({
-  UnsupportedAuthRequestBodyError,
-  InvalidAuthRequestBodyError,
-  validateAuthRequestBody: testState.validateAuthRequestBody
-}))
+vi.mock('@infrastructure/auth/auth-body-validator', async () => {
+  const { UnsupportedAuthRequestBodyError, InvalidAuthRequestBodyError } = await import('@infrastructure/auth/auth-body-validator')
+  return {
+    UnsupportedAuthRequestBodyError,
+    InvalidAuthRequestBodyError,
+    validateAuthRequestBody: testState.validateAuthRequestBody
+  }
+})
 
 vi.mock('@infrastructure/mail/send-verification-mail', () => ({
   sendVerificationMail: vi.fn(() => Promise.resolve())
@@ -112,7 +115,7 @@ const getLogger = () => {
 
 describe('auth before-hook body validation', () => {
   beforeAll(async () => {
-    await import('../../server/infrastructure/auth/auth')
+    await import('@infrastructure/auth/auth')
   })
 
   beforeEach(() => {

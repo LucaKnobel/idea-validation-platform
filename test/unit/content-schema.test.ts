@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { GetContentParamsSchema } from '../../server/api/schemas/content-schemas'
+import { GetContentParamsSchema } from '@server/api/schemas/content-schemas'
 
 describe('GetContentParamsSchema', () => {
   it('accepts a valid slug', () => {
@@ -22,5 +22,17 @@ describe('GetContentParamsSchema', () => {
     const result = GetContentParamsSchema.safeParse({})
 
     expect(result.success).toBe(false)
+  })
+
+  it('rejects null slug', () => {
+    const result = GetContentParamsSchema.safeParse({ slug: null })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts slug with nested path', () => {
+    const result = GetContentParamsSchema.safeParse({ slug: 'legal/privacy' })
+
+    expect(result.success).toBe(true)
   })
 })

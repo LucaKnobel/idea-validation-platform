@@ -41,7 +41,7 @@ describe('PostgresRateLimitStore', () => {
     testState.upsert.mockResolvedValue(undefined)
     testState.transaction.mockImplementation(async (handler: (tx: ReturnType<typeof buildTx>) => Promise<unknown>) => handler(buildTx()))
 
-    const { PostgresRateLimitStore } = await import('../../server/infrastructure/rate-limit/rate-limit-store')
+    const { PostgresRateLimitStore } = await import('@infrastructure/rate-limit/rate-limit-store')
     const store = new PostgresRateLimitStore()
 
     const result = await store.consume('content.read:GET:ip:203.0.113.10', 5, 60)
@@ -69,7 +69,7 @@ describe('PostgresRateLimitStore', () => {
     })
     testState.transaction.mockImplementation(async (handler: (tx: ReturnType<typeof buildTx>) => Promise<unknown>) => handler(buildTx()))
 
-    const { PostgresRateLimitStore } = await import('../../server/infrastructure/rate-limit/rate-limit-store')
+    const { PostgresRateLimitStore } = await import('@infrastructure/rate-limit/rate-limit-store')
     const store = new PostgresRateLimitStore()
 
     const result = await store.consume('content.read:GET:ip:203.0.113.10', 5, 60)
@@ -97,7 +97,7 @@ describe('PostgresRateLimitStore', () => {
     })
     testState.transaction.mockImplementation(async (handler: (tx: ReturnType<typeof buildTx>) => Promise<unknown>) => handler(buildTx()))
 
-    const { PostgresRateLimitStore } = await import('../../server/infrastructure/rate-limit/rate-limit-store')
+    const { PostgresRateLimitStore } = await import('@infrastructure/rate-limit/rate-limit-store')
     const store = new PostgresRateLimitStore()
 
     const result = await store.consume('content.read:GET:ip:203.0.113.10', 2, 60)
@@ -110,7 +110,7 @@ describe('PostgresRateLimitStore', () => {
   it('fails open when database transaction throws', async () => {
     testState.transaction.mockRejectedValue(new Error('db offline'))
 
-    const { PostgresRateLimitStore } = await import('../../server/infrastructure/rate-limit/rate-limit-store')
+    const { PostgresRateLimitStore } = await import('@infrastructure/rate-limit/rate-limit-store')
     const store = new PostgresRateLimitStore()
 
     const result = await store.consume('content.read:GET:ip:203.0.113.10', 5, 60)

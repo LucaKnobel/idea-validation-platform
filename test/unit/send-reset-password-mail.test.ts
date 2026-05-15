@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { sendVerificationMail } from '@infrastructure/mail/send-verification-mail'
+import { sendResetPasswordMail } from '@infrastructure/mail/send-reset-password-mail'
 
-const { sendMailMock, buildVerificationMailContentMock } = vi.hoisted(() => ({
+const { sendMailMock, buildResetPasswordMailContentMock } = vi.hoisted(() => ({
   sendMailMock: vi.fn(),
-  buildVerificationMailContentMock: vi.fn()
+  buildResetPasswordMailContentMock: vi.fn()
 }))
 
 vi.mock('@infrastructure/mail/mail-transporter', () => ({
@@ -16,18 +16,18 @@ vi.mock('@infrastructure/mail/mail-transporter', () => ({
   }))
 }))
 
-vi.mock('@infrastructure/mail/verification-mail-content', () => ({
-  buildVerificationMailContent: buildVerificationMailContentMock
+vi.mock('@infrastructure/mail/reset-password-mail-content', () => ({
+  buildResetPasswordMailContent: buildResetPasswordMailContentMock
 }))
 
-describe('sendVerificationMail', () => {
-  const verifyUrl = 'https://example.com/verify?token=abc'
+describe('sendResetPasswordMail', () => {
+  const resetUrl = 'https://example.com/reset-password?token=abc'
 
   beforeEach(() => {
     vi.clearAllMocks()
     sendMailMock.mockResolvedValue(undefined)
-    buildVerificationMailContentMock.mockReturnValue({
-      subject: 'Verify your email',
+    buildResetPasswordMailContentMock.mockReturnValue({
+      subject: 'Reset your password',
       text: 'Plain text email',
       html: '<p>HTML email</p>'
     })
@@ -38,7 +38,7 @@ describe('sendVerificationMail', () => {
       title: 'uses english as default locale when no locale is provided',
       payload: {
         to: 'user@example.com',
-        verifyUrl
+        resetUrl
       },
       expectedLocale: 'en'
     },
@@ -46,19 +46,19 @@ describe('sendVerificationMail', () => {
       title: 'uses provided locale for content generation',
       payload: {
         to: 'user@example.com',
-        verifyUrl,
+        resetUrl,
         locale: 'de' as const
       },
       expectedLocale: 'de'
     }
   ])('$title', async ({ payload, expectedLocale }) => {
-    await sendVerificationMail(payload)
+    await sendResetPasswordMail(payload)
 
-    expect(buildVerificationMailContentMock).toHaveBeenCalledWith(verifyUrl, expectedLocale)
+    expect(buildResetPasswordMailContentMock).toHaveBeenCalledWith(resetUrl, expectedLocale)
     expect(sendMailMock).toHaveBeenCalledWith({
       from: 'no-reply@example.com',
       to: 'user@example.com',
-      subject: 'Verify your email',
+      subject: 'Reset your password',
       text: 'Plain text email',
       html: '<p>HTML email</p>'
     })
@@ -67,9 +67,9 @@ describe('sendVerificationMail', () => {
   it('propagates transporter errors', async () => {
     sendMailMock.mockRejectedValueOnce(new Error('SMTP unavailable'))
 
-    await expect(sendVerificationMail({
+    await expect(sendResetPasswordMail({
       to: 'user@example.com',
-      verifyUrl,
+      resetUrl,
       locale: 'en'
     })).rejects.toThrow('SMTP unavailable')
   })
