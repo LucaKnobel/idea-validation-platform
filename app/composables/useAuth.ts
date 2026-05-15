@@ -54,7 +54,8 @@ export const useAuth = (): UseAuthComposable => {
       const { error } = await authClient.signUp.email({
         email,
         password,
-        name
+        name,
+        callbackURL: localePath('/auth/login')
       })
 
       if (error) {

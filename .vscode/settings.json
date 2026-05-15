@@ -1,6 +1,5 @@
 {
   "snyk.advanced.autoSelectOrganization": true,
-  "snyk.advanced.organization": "37a5d848-3890-4758-bcf8-51ae0613b75f",
   "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"

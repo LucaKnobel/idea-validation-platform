@@ -100,6 +100,16 @@ const getAfterHook = () => {
   return config.hooks?.after
 }
 
+const getLogger = () => {
+  const config = testState.config as {
+    logger?: {
+      log?: (level: string, message: string, ...args: unknown[]) => void
+    }
+  }
+
+  return config.logger
+}
+
 describe('auth before-hook body validation', () => {
   beforeAll(async () => {
     await import('../../server/infrastructure/auth/auth')
@@ -209,5 +219,35 @@ describe('auth before-hook body validation', () => {
         userId: 'user-123'
       })
     )
+  })
+
+  it('logs sign-up as accepted to reflect neutral duplicate handling', async () => {
+    const afterHook = getAfterHook()
+
+    expect(afterHook).toBeTypeOf('function')
+    await afterHook?.({
+      path: '/sign-up/email',
+      context: {}
+    })
+
+    expect(testState.info).toHaveBeenCalledWith(
+      'Auth sign up accepted',
+      expect.objectContaining({
+        source: 'auth-event',
+        event: 'auth.sign_up',
+        path: '/sign-up/email'
+      })
+    )
+  })
+
+  it('redacts email addresses from Better Auth duplicate signup logs', () => {
+    const authLogger = getLogger()
+
+    expect(authLogger?.log).toBeTypeOf('function')
+    authLogger?.log?.('info', 'Sign-up attempt for existing email: user@example.com')
+
+    expect(testState.info).toHaveBeenCalledWith('Sign-up attempt for existing email', {
+      source: 'better-auth'
+    })
   })
 })
