@@ -31,6 +31,19 @@ const authEventByPath = {
   '/reset-password': { event: 'auth.reset_password', action: 'reset password' }
 } as const
 
+const neutralAuthEventPaths = new Set<string>([
+  '/sign-up/email',
+  '/send-verification-email'
+])
+
+const redactBetterAuthMessage = (message: string): string => {
+  if (message.startsWith('Sign-up attempt for existing email:')) {
+    return 'Sign-up attempt for existing email'
+  }
+
+  return message
+}
+
 // Request body error factories
 
 const invalidRequestBodyError = () => new APIError('BAD_REQUEST', {
@@ -103,6 +116,7 @@ export const auth = betterAuth({
     minPasswordLength: 15,
     maxPasswordLength: 256,
     revokeSessionsOnPasswordReset: true,
+    resetPasswordTokenExpiresIn: 3600,
     sendResetPassword: async ({ user, url }, request) => {
       const locale = resolveLocaleFromRequest(request)
       void sendResetPasswordMail({ to: user.email, resetUrl: url, locale })
@@ -177,7 +191,9 @@ export const auth = betterAuth({
         return
       }
 
-      logger.info(`Auth ${action} succeeded`, {
+      const outcome = neutralAuthEventPaths.has(ctx.path) ? 'accepted' : 'succeeded'
+
+      logger.info(`Auth ${action} ${outcome}`, {
         source: 'auth-event',
         event,
         path: ctx.path,
@@ -196,13 +212,14 @@ export const auth = betterAuth({
         return
       }
 
+      const safeMessage = redactBetterAuthMessage(message)
       const meta = { source: 'better-auth' }
       const errorArg = args.find(arg => arg instanceof Error)
 
-      if (level === 'debug') logger.debug(message, meta)
-      else if (level === 'info') logger.info(message, meta)
-      else if (level === 'warn') logger.warn(message, meta)
-      else logger.error(message, meta, errorArg)
+      if (level === 'debug') logger.debug(safeMessage, meta)
+      else if (level === 'info') logger.info(safeMessage, meta)
+      else if (level === 'warn') logger.warn(safeMessage, meta)
+      else logger.error(safeMessage, meta, errorArg)
     }
   }
 })
