@@ -5,41 +5,21 @@ import { prisma } from '@infrastructure/db/prisma'
 
 import {
   clearAuthTables,
+  createRegisteredAuthUser,
   getE2ESetupOptions,
-  password,
-  postRegister,
   postRequestPasswordReset
 } from './auth-test-helpers'
 
 beforeEach(clearAuthTables)
 
-const createRegisteredUser = async () => {
-  const email = `forgot-password-${randomUUID()}@example.com`
-
-  const response = await postRegister({
-    email,
-    password,
-    name: 'Forgot Password Test User',
-    callbackURL: '/auth/login'
-  })
-
-  expect(response.status).toBe(200)
-
-  const user = await prisma.user.findUnique({
-    where: { email },
-    select: { id: true, email: true }
-  })
-
-  expect(user).not.toBeNull()
-
-  return user!
-}
-
 describe('Forgot password flow', async () => {
   await setup(getE2ESetupOptions())
 
   it('accepts a password reset request for an existing user', async () => {
-    const user = await createRegisteredUser()
+    const user = await createRegisteredAuthUser({
+      emailPrefix: 'forgot-password',
+      name: 'Forgot Password Test User'
+    })
 
     const response = await postRequestPasswordReset({
       email: user.email,
@@ -54,7 +34,10 @@ describe('Forgot password flow', async () => {
   })
 
   it('generates and persists a reset token for an existing user', async () => {
-    const user = await createRegisteredUser()
+    const user = await createRegisteredAuthUser({
+      emailPrefix: 'forgot-password',
+      name: 'Forgot Password Test User'
+    })
 
     const response = await postRequestPasswordReset({
       email: user.email,
@@ -80,7 +63,10 @@ describe('Forgot password flow', async () => {
   })
 
   it('returns the same generic response for an unknown email', async () => {
-    const knownUser = await createRegisteredUser()
+    const knownUser = await createRegisteredAuthUser({
+      emailPrefix: 'forgot-password',
+      name: 'Forgot Password Test User'
+    })
 
     const knownResponse = await postRequestPasswordReset({
       email: knownUser.email,
@@ -103,7 +89,10 @@ describe('Forgot password flow', async () => {
   })
 
   it('does not leak user enumeration via password reset responses', async () => {
-    const knownUser = await createRegisteredUser()
+    const knownUser = await createRegisteredAuthUser({
+      emailPrefix: 'forgot-password',
+      name: 'Forgot Password Test User'
+    })
 
     const knownResponse = await postRequestPasswordReset({
       email: knownUser.email,

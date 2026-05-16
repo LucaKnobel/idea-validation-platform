@@ -28,6 +28,12 @@ export type RegisterPayload = {
   callbackURL: string
 }
 
+export type CreateAuthUserOptions = {
+  emailPrefix?: string
+  name?: string
+  verified?: boolean
+}
+
 export type SignInPayload = {
   email: string
   password: string
@@ -91,12 +97,93 @@ export const postRegister = (payload: RegisterPayload, options?: AuthRequestOpti
   })
 }
 
+/**
+ * Creates a user via sign-up and optionally marks the account as verified.
+ * Returns the persisted user id/email from the database.
+ */
+export const createRegisteredAuthUser = async (options?: CreateAuthUserOptions) => {
+  const emailPrefix = options?.emailPrefix ?? 'auth-e2e-user'
+  const name = options?.name ?? 'Auth E2E Test User'
+  const verified = options?.verified ?? false
+  const email = `${emailPrefix}-${randomInt(1_000_000, 9_999_999)}@example.com`
+
+  const signUpResponse = await postRegister({
+    email,
+    password,
+    name,
+    callbackURL: '/auth/login'
+  })
+
+  expect(signUpResponse.status).toBe(200)
+
+  if (verified) {
+    await prisma.user.update({
+      where: { email },
+      data: { emailVerified: true }
+    })
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: { id: true, email: true }
+  })
+
+  expect(user).not.toBeNull()
+
+  return user!
+}
+
 export const postSignIn = (payload: SignInPayload, options?: AuthRequestOptions) => {
   return fetch(createApiUrl('/api/auth/sign-in/email'), {
     method: 'POST',
     headers: createAuthHeaders(options),
     body: JSON.stringify(payload)
   })
+}
+
+/**
+ * Extracts the auth session cookie from a Set-Cookie header.
+ * Falls back to the first cookie segment when the named cookie is missing.
+ */
+export const extractAuthSessionCookieHeader = (setCookie: string): string | null => {
+  const authCookieMatch = setCookie.match(/better-auth\.session_token=[^;,\s]+/)
+  if (authCookieMatch?.[0]) {
+    return authCookieMatch[0]
+  }
+
+  const firstCookie = setCookie.split(',')[0]?.split(';')[0]?.trim()
+  return firstCookie || null
+}
+
+/**
+ * Creates a verified user and returns a valid authenticated cookie session.
+ */
+export const createAuthenticatedSession = async (options?: Omit<CreateAuthUserOptions, 'verified'>) => {
+  const user = await createRegisteredAuthUser({
+    emailPrefix: options?.emailPrefix,
+    name: options?.name,
+    verified: true
+  })
+
+  const signInResponse = await postSignIn({
+    email: user.email,
+    password,
+    rememberMe: true
+  })
+
+  expect(signInResponse.status).toBe(200)
+
+  const setCookie = signInResponse.headers.get('set-cookie')
+  expect(setCookie).toBeTruthy()
+
+  const cookieHeader = setCookie ? extractAuthSessionCookieHeader(setCookie) : null
+  expect(cookieHeader).toBeTruthy()
+
+  return {
+    id: user.id,
+    email: user.email,
+    cookieHeader: cookieHeader ?? ''
+  }
 }
 
 export const postRequestPasswordReset = (payload: RequestPasswordResetPayload, options?: AuthRequestOptions) => {
@@ -113,6 +200,34 @@ export const postRequestPasswordReset = (payload: RequestPasswordResetPayload, o
       ...(redirectTo ? { redirectTo } : {})
     })
   })
+}
+
+/**
+ * Requests a password reset and returns the generated token persisted in the verification table.
+ */
+export const requestPasswordResetAndGetToken = async (email: string, userId: string, redirectTo = '/auth/reset-password') => {
+  const response = await postRequestPasswordReset({ email, redirectTo })
+  expect(response.status).toBe(200)
+
+  const verification = await prisma.verification.findFirst({
+    where: {
+      identifier: {
+        startsWith: 'reset-password:'
+      },
+      value: userId
+    }
+  })
+
+  expect(verification).not.toBeNull()
+
+  const token = verification?.identifier.slice('reset-password:'.length) ?? ''
+  expect(token).toBeTruthy()
+
+  return {
+    response,
+    token,
+    verification: verification!
+  }
 }
 
 export const postResetPassword = (payload: ResetPasswordPayload, options?: AuthRequestOptions) => {

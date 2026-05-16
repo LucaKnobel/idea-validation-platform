@@ -5,77 +5,28 @@ import { prisma } from '@infrastructure/db/prisma'
 
 import {
   clearAuthTables,
+  createRegisteredAuthUser,
   getE2ESetupOptions,
   password,
-  postRegister,
-  postRequestPasswordReset,
   postResetPassword,
-  postSignIn
+  postSignIn,
+  requestPasswordResetAndGetToken
 } from './auth-test-helpers'
 
 beforeEach(clearAuthTables)
-
-const createVerifiedUser = async () => {
-  const email = `reset-password-${randomUUID()}@example.com`
-
-  const registerResponse = await postRegister({
-    email,
-    password,
-    name: 'Reset Password Test User',
-    callbackURL: '/auth/login'
-  })
-
-  expect(registerResponse.status).toBe(200)
-
-  await prisma.user.update({
-    where: { email },
-    data: { emailVerified: true }
-  })
-
-  const user = await prisma.user.findUnique({
-    where: { email },
-    select: { id: true, email: true }
-  })
-
-  expect(user).not.toBeNull()
-  return user!
-}
-
-const requestResetToken = async (email: string, userId: string) => {
-  const response = await postRequestPasswordReset({
-    email,
-    redirectTo: '/auth/reset-password'
-  })
-
-  expect(response.status).toBe(200)
-
-  const verification = await prisma.verification.findFirst({
-    where: {
-      identifier: {
-        startsWith: 'reset-password:'
-      },
-      value: userId
-    }
-  })
-
-  expect(verification).not.toBeNull()
-  const token = verification?.identifier.slice('reset-password:'.length) ?? ''
-  expect(token).toBeTruthy()
-
-  return {
-    response,
-    token
-  }
-}
 
 describe('Reset password flow', async () => {
   await setup(getE2ESetupOptions())
 
   it('resets the password with a valid token', async () => {
-    const user = await createVerifiedUser()
+    const user = await createRegisteredAuthUser({
+      emailPrefix: 'reset-password',
+      name: 'Reset Password Test User',
+      verified: true
+    })
     const newPassword = 'NewStrongPassword1!'
 
-    const { token } = await requestResetToken(user.email, user.id)
+    const { token } = await requestPasswordResetAndGetToken(user.email, user.id)
     const resetResponse = await postResetPassword({
       newPassword,
       token
@@ -93,7 +44,11 @@ describe('Reset password flow', async () => {
   })
 
   it('rejects an invalid token', async () => {
-    const user = await createVerifiedUser()
+    const user = await createRegisteredAuthUser({
+      emailPrefix: 'reset-password',
+      name: 'Reset Password Test User',
+      verified: true
+    })
 
     const response = await postResetPassword({
       newPassword: 'NewStrongPassword1!',
@@ -115,7 +70,11 @@ describe('Reset password flow', async () => {
   })
 
   it('rejects an expired token', async () => {
-    const user = await createVerifiedUser()
+    const user = await createRegisteredAuthUser({
+      emailPrefix: 'reset-password',
+      name: 'Reset Password Test User',
+      verified: true
+    })
     const expiredToken = `expired-${randomUUID()}`
 
     await prisma.verification.create({
@@ -139,9 +98,13 @@ describe('Reset password flow', async () => {
   })
 
   it('allows a reset token to be used only once', async () => {
-    const user = await createVerifiedUser()
+    const user = await createRegisteredAuthUser({
+      emailPrefix: 'reset-password',
+      name: 'Reset Password Test User',
+      verified: true
+    })
     const newPassword = 'NewStrongPassword1!'
-    const { token } = await requestResetToken(user.email, user.id)
+    const { token } = await requestPasswordResetAndGetToken(user.email, user.id)
 
     const firstResetResponse = await postResetPassword({
       newPassword,
@@ -162,9 +125,13 @@ describe('Reset password flow', async () => {
   })
 
   it('disables the old password and accepts the new password after reset', async () => {
-    const user = await createVerifiedUser()
+    const user = await createRegisteredAuthUser({
+      emailPrefix: 'reset-password',
+      name: 'Reset Password Test User',
+      verified: true
+    })
     const newPassword = 'NewStrongPassword1!'
-    const { token } = await requestResetToken(user.email, user.id)
+    const { token } = await requestPasswordResetAndGetToken(user.email, user.id)
 
     const resetResponse = await postResetPassword({
       newPassword,

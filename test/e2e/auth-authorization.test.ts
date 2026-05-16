@@ -1,66 +1,15 @@
-import { randomUUID } from 'node:crypto'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { setup } from '@nuxt/test-utils/e2e'
-import { prisma } from '@infrastructure/db/prisma'
 
 import {
   clearAuthTables,
+  createAuthenticatedSession,
   getE2ESetupOptions,
   getPageWithCookie,
-  getSession,
-  password,
-  postRegister,
-  postSignIn
+  getSession
 } from './auth-test-helpers'
 
 beforeEach(clearAuthTables)
-
-const extractAuthCookieHeader = (setCookie: string): string | null => {
-  const authCookieMatch = setCookie.match(/better-auth\.session_token=[^;,\s]+/)
-  if (authCookieMatch?.[0]) {
-    return authCookieMatch[0]
-  }
-
-  const firstCookie = setCookie.split(',')[0]?.split(';')[0]?.trim()
-  return firstCookie || null
-}
-
-const createAuthenticatedSession = async (prefix: string) => {
-  const email = `${prefix}-${randomUUID()}@example.com`
-
-  const signUpResponse = await postRegister({
-    email,
-    password,
-    name: `${prefix} User`,
-    callbackURL: '/auth/login'
-  })
-
-  expect(signUpResponse.status).toBe(200)
-
-  await prisma.user.update({
-    where: { email },
-    data: { emailVerified: true }
-  })
-
-  const signInResponse = await postSignIn({
-    email,
-    password,
-    rememberMe: true
-  })
-
-  expect(signInResponse.status).toBe(200)
-
-  const setCookie = signInResponse.headers.get('set-cookie')
-  expect(setCookie).toBeTruthy()
-
-  const cookieHeader = setCookie ? extractAuthCookieHeader(setCookie) : null
-  expect(cookieHeader).toBeTruthy()
-
-  return {
-    email,
-    cookieHeader: cookieHeader ?? ''
-  }
-}
 
 describe('Authorization flow', async () => {
   await setup(getE2ESetupOptions())
@@ -74,7 +23,10 @@ describe('Authorization flow', async () => {
   })
 
   it('allows authenticated users to access /en/dashboard', async () => {
-    const { cookieHeader } = await createAuthenticatedSession('authz-dashboard')
+    const { cookieHeader } = await createAuthenticatedSession({
+      emailPrefix: 'authz-dashboard',
+      name: 'AuthZ Dashboard User'
+    })
 
     const response = await getPageWithCookie('/en/dashboard', cookieHeader)
 
@@ -82,8 +34,14 @@ describe('Authorization flow', async () => {
   })
 
   it('prevents user A from accessing user B session resource', async () => {
-    const userA = await createAuthenticatedSession('authz-user-a')
-    const userB = await createAuthenticatedSession('authz-user-b')
+    const userA = await createAuthenticatedSession({
+      emailPrefix: 'authz-user-a',
+      name: 'AuthZ User A'
+    })
+    const userB = await createAuthenticatedSession({
+      emailPrefix: 'authz-user-b',
+      name: 'AuthZ User B'
+    })
 
     const userASessionResponse = await getSession(userA.cookieHeader)
     const userBSessionResponse = await getSession(userB.cookieHeader)
