@@ -35,10 +35,6 @@ export default defineNuxtConfig({
     '@generated': fileURLToPath(new URL('./generated', import.meta.url))
   },
 
-  routeRules: {
-    '/': { prerender: true }
-  },
-
   devServer: {
     host: '0.0.0.0',
     port: 3000
