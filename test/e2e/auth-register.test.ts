@@ -1,90 +1,71 @@
-import { randomInt, randomUUID } from 'node:crypto'
-import { afterAll, beforeEach, describe, expect, it } from 'vitest'
-import { fetch, setup } from '@nuxt/test-utils/e2e'
+import { randomUUID } from 'node:crypto'
+
+import { beforeEach, describe, expect, it } from 'vitest'
+import { setup } from '@nuxt/test-utils/e2e'
 
 import { prisma } from '@infrastructure/db/prisma'
 
-await setup({
-  rootDir: process.cwd(),
-  server: true,
-  browser: false
-})
+import {
+  createAuthE2ESetupOptions,
+  clearAuthTables,
+  password,
+  postRegister
+} from './auth-test-helpers'
 
-describe('Backend registration flow', () => {
-  const password = 'VeryStrongPassword1!'
-  type RegisterPayload = {
-    email: string
-    password: string
-    name: string
-    callbackURL: string
-  }
+beforeEach(clearAuthTables)
 
-  const createPayload = (): RegisterPayload => {
+describe('Auth registration flow', async () => {
+  await setup(createAuthE2ESetupOptions())
+
+  it('accepts a valid sign-up request and returns HTTP 200', async () => {
     const email = `register-flow-${randomUUID()}@example.com`
-    return {
+
+    const response = await postRegister({
       email,
       password,
       name: 'Register Flow Test User',
       callbackURL: '/auth/login'
-    }
-  }
-
-  const createClientIp = (): string => `203.0.113.${randomInt(10, 240)}`
-
-  const postRegister = (payload: RegisterPayload) => {
-    return fetch('/api/auth/sign-up/email', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-forwarded-for': createClientIp()
-      },
-      body: JSON.stringify(payload)
     })
-  }
-
-  beforeEach(async () => {
-    // Keep state isolated across tests.
-    await prisma.user.deleteMany({})
-    await prisma.verification.deleteMany({})
-  })
-
-  afterAll(async () => {
-    await prisma.$disconnect()
-  })
-
-  it('accepts a valid sign-up request and returns HTTP 200', async () => {
-    const payload = createPayload()
-    const response = await postRegister(payload)
 
     expect(response.status).toBe(200)
   })
 
   it('creates an unverified user profile after sign-up', async () => {
-    const payload = createPayload()
-    const response = await postRegister(payload)
+    const email = `register-flow-${randomUUID()}@example.com`
+
+    const response = await postRegister({
+      email,
+      password,
+      name: 'Register Flow Test User',
+      callbackURL: '/auth/login'
+    })
+
     expect(response.status).toBe(200)
 
     const storedUser = await prisma.user.findUnique({
-      where: {
-        email: payload.email
-      }
+      where: { email }
     })
 
     expect(storedUser).not.toBeNull()
-    expect(storedUser?.email).toBe(payload.email)
+    expect(storedUser?.email).toBe(email)
     expect(storedUser?.name).toBe('Register Flow Test User')
     expect(storedUser?.emailVerified).toBe(false)
   })
 
   it('stores a non-plain-text password hash in the account record', async () => {
-    const payload = createPayload()
-    const response = await postRegister(payload)
+    const email = `register-flow-${randomUUID()}@example.com`
+
+    const response = await postRegister({
+      email,
+      password,
+      name: 'Register Flow Test User',
+      callbackURL: '/auth/login'
+    })
+
     expect(response.status).toBe(200)
 
     const storedUser = await prisma.user.findUnique({
-      where: {
-        email: payload.email
-      }
+      where: { email }
     })
 
     expect(storedUser).not.toBeNull()
@@ -111,12 +92,10 @@ describe('Backend registration flow', () => {
       callbackURL: 'https://example.com/auth/login'
     })
 
-    expect([400, 422]).toContain(response.status)
+    expect([400, 403, 422]).toContain(response.status)
 
     const storedUser = await prisma.user.findUnique({
-      where: {
-        email
-      }
+      where: { email }
     })
 
     expect(storedUser).toBeNull()
@@ -124,6 +103,7 @@ describe('Backend registration flow', () => {
 
   it('rejects weak sign-up passwords and does not persist a user', async () => {
     const email = `weak-password-${randomUUID()}@example.com`
+
     const response = await postRegister({
       email,
       password: 'weak',
@@ -134,9 +114,7 @@ describe('Backend registration flow', () => {
     expect([400, 422]).toContain(response.status)
 
     const storedUser = await prisma.user.findUnique({
-      where: {
-        email
-      }
+      where: { email }
     })
 
     expect(storedUser).toBeNull()
@@ -166,26 +144,32 @@ describe('Backend registration flow', () => {
   })
 
   it('prevents duplicate registrations from creating extra user or account records', async () => {
-    const payload = createPayload()
-    const firstResponse = await postRegister(payload)
-    const duplicateResponse = await postRegister(payload)
+    const email = `register-flow-${randomUUID()}@example.com`
+
+    const firstResponse = await postRegister({
+      email,
+      password,
+      name: 'Register Flow Test User',
+      callbackURL: '/auth/login'
+    })
+
+    const duplicateResponse = await postRegister({
+      email,
+      password,
+      name: 'Register Flow Test User',
+      callbackURL: '/auth/login'
+    })
 
     expect(firstResponse.status).toBe(200)
     expect([200, 400]).toContain(duplicateResponse.status)
 
     const usersWithEmail = await prisma.user.count({
-      where: {
-        email: payload.email
-      }
+      where: { email }
     })
 
     const storedUser = await prisma.user.findUnique({
-      where: {
-        email: payload.email
-      },
-      select: {
-        id: true
-      }
+      where: { email },
+      select: { id: true }
     })
 
     const accountCount = await prisma.account.count({

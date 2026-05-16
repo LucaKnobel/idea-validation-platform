@@ -75,6 +75,10 @@ export const auth = betterAuth({
     provider: 'postgresql'
   }),
 
+  trustedOrigins: process.env.NODE_ENV === 'production'
+    ? [process.env.CORS_ORIGIN, process.env.CORS_ORIGIN_WWW].filter((origin): origin is string => Boolean(origin))
+    : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+
   advanced: {
     ipAddress: {
       // Managed NGINX forwards the client IP via these headers.
