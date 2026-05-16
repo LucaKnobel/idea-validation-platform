@@ -40,7 +40,7 @@ export const useLogout = (): UseLogoutComposable => {
   }
 
   /**
-   * Prevents duplicate submissions, signs the user out, and redirects to the localized login page.
+   * Prevents duplicate submissions, signs the user out, invalidates the session cache, and redirects to the localized login page.
    */
   const handleLogout = async (): Promise<void> => {
     if (isLoggingOut.value) {
@@ -55,6 +55,9 @@ export const useLogout = (): UseLogoutComposable => {
       if (!ok) {
         return
       }
+
+      // Invalidate the session cache to prevent the auth middleware from using stale session data
+      clearNuxtData()
 
       showSuccess('auth.logout.success.title', 'auth.logout.success.message')
       closeDialog()
