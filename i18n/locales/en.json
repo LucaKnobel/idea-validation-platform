@@ -27,6 +27,7 @@
     "password": {
       "label": "Password",
       "placeholder": "Enter your password",
+      "hint": "At least 15 characters including uppercase, lowercase, a number and a special character.",
       "confirm": {
         "label": "Confirm password",
         "placeholder": "Confirm your password"
@@ -60,6 +61,14 @@
       "login": {
         "title": "Login not possible",
         "message": "Sign in failed. Please check your input. If an account exists, you may need to verify your email or request a new verification link."
+      },
+      "resetPasswordRequest": {
+        "title": "Reset link request not possible",
+        "message": "The reset link could not be requested right now. Please try again later."
+      },
+      "resetPassword": {
+        "title": "Password reset not possible",
+        "message": "Your password could not be reset. The link may be invalid or expired. Please request a new reset link and try again."
       },
       "logout": {
         "title": "Logout failed",
@@ -152,6 +161,25 @@
           "title": "Verification email sent",
           "message": "If an account exists for this email, a new verification email has been sent."
         }
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot your password?",
+      "message": "Enter your email address and we'll send you a link to reset your password.",
+      "submit": "Send reset link",
+      "backToLogin": "Back to login"
+    },
+    "resetPassword": {
+      "title": "Reset your password",
+      "message": "Enter a new password for your account.",
+      "submit": "Reset password",
+      "success": {
+        "title": "Password reset successfully!",
+        "message": "Your password has been changed. You can now sign in with your new password."
+      },
+      "emailSent": {
+        "title": "Reset link sent!",
+        "message": "If an account exists for this email address, a password reset link has been sent. Please check your inbox."
       }
     }
   },

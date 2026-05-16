@@ -27,6 +27,7 @@
     "password": {
       "label": "Passwort",
       "placeholder": "Geben Sie Ihr Passwort ein",
+      "hint": "Mind. 15 Zeichen mit Groß- und Kleinbuchstaben, einer Zahl und einem Sonderzeichen.",
       "confirm": {
         "label": "Passwort bestätigen",
         "placeholder": "Bestätigen Sie Ihr Passwort"
@@ -60,6 +61,14 @@
       "login": {
         "title": "Anmeldung nicht möglich",
         "message": "Anmeldung nicht möglich. Bitte prüfen Sie Ihre Eingaben. Falls ein Konto besteht, bestätigen Sie ggf. Ihre E-Mail-Adresse oder fordern Sie einen neuen Bestätigungslink an."
+      },
+      "resetPasswordRequest": {
+        "title": "Reset-Link konnte nicht angefordert werden",
+        "message": "Der Link zum Zurücksetzen konnte derzeit nicht angefordert werden. Bitte versuchen Sie es später erneut."
+      },
+      "resetPassword": {
+        "title": "Passwort konnte nicht zurückgesetzt werden",
+        "message": "Ihr Passwort konnte nicht zurückgesetzt werden. Der Link ist möglicherweise ungültig oder abgelaufen. Bitte fordern Sie einen neuen Link an und versuchen Sie es erneut."
       },
       "logout": {
         "title": "Abmeldung fehlgeschlagen",
@@ -153,12 +162,31 @@
           "message": "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde eine neue Bestätigungs-E-Mail gesendet."
         }
       }
+    },
+    "forgotPassword": {
+      "title": "Passwort vergessen?",
+      "message": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+      "submit": "Link zum Zurücksetzen senden",
+      "backToLogin": "Zurück zur Anmeldung"
+    },
+    "resetPassword": {
+      "title": "Passwort zurücksetzen",
+      "message": "Geben Sie ein neues Passwort für Ihr Konto ein.",
+      "submit": "Passwort zurücksetzen",
+      "success": {
+        "title": "Passwort erfolgreich zurückgesetzt!",
+        "message": "Ihr Passwort wurde geändert. Sie können sich nun mit Ihrem neuen Passwort anmelden."
+      },
+      "emailSent": {
+        "title": "Link zum Zurücksetzen versendet!",
+        "message": "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde ein Link zum Zurücksetzen des Passworts versendet. Bitte prüfen Sie Ihr Postfach."
+      }
     }
   },
   "landing": {
     "hero": {
-      "title": "Entwickle Produkte, die wirklich gefragt sind.",
-      "description": "Validiere deine digitalen Geschäftsideen mit echten Daten, bevor du Zeit und Geld investierst. Evidara hilft dir zu erkennen, was funktioniert, bevor du es umsetzt.",
+      "title": "Entwickeln Sie Produkte, die wirklich gefragt sind.",
+      "description": "Validieren Sie Ihre digitalen Geschäftsideen mit echten Daten, bevor Sie Zeit und Geld investieren. Evidara hilft Ihnen zu erkennen, was funktioniert, bevor Sie es umsetzen.",
       "ctaPrimary": "Loslegen",
       "ctaSecondary": "Mehr erfahren"
     }
@@ -214,7 +242,7 @@
   },
   "settings": {
     "title": "Einstellungen",
-    "description": "Passe deine App-Einstellungen an.",
+    "description": "Passen Sie Ihre App-Einstellungen an.",
     "general": "Allgemein",
     "theme": "Theme",
     "themeSystem": "System",

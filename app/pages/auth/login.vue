@@ -12,10 +12,15 @@ const { login, hasError, errorTitle, errorText } = useAuth()
 const localePath = useLocalePath()
 const { showSuccess } = useToastNotification()
 const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
 const schema = createLoginFormSchema()
 const isSubmitting = ref(false)
 
+/**
+ * Static field configuration consumed by `UAuthForm`.
+ */
 const fields: AuthFormField[] = [{
   name: 'email',
   type: 'email',
@@ -30,6 +35,9 @@ const fields: AuthFormField[] = [{
   required: true
 }]
 
+/**
+ * Prevents duplicate submissions, signs the user in, and redirects to the dashboard on success.
+ */
 const onSubmit = async (event: FormSubmitEvent<LoginForm>): Promise<void> => {
   if (isSubmitting.value) return
   isSubmitting.value = true
@@ -45,6 +53,17 @@ const onSubmit = async (event: FormSubmitEvent<LoginForm>): Promise<void> => {
     isSubmitting.value = false
   }
 }
+
+onMounted(async () => {
+  if (route.query.reset === 'success') {
+    showSuccess('auth.resetPassword.success.title', 'auth.resetPassword.success.message')
+
+    await router.replace({
+      path: route.path,
+      query: {}
+    })
+  }
+})
 </script>
 
 <template>

@@ -3,7 +3,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   InvalidAuthRequestBodyError,
   UnsupportedAuthRequestBodyError
-} from '../../server/infrastructure/auth/auth-body-validator'
+} from '@infrastructure/auth/auth-body-validator'
 
 const testState = vi.hoisted(() => {
   class MockAPIError extends Error {
@@ -54,14 +54,21 @@ vi.mock('#imports', () => ({
   })
 }))
 
-vi.mock('@infrastructure/auth/auth-body-validator', () => ({
-  UnsupportedAuthRequestBodyError,
-  InvalidAuthRequestBodyError,
-  validateAuthRequestBody: testState.validateAuthRequestBody
-}))
+vi.mock('@infrastructure/auth/auth-body-validator', async () => {
+  const { UnsupportedAuthRequestBodyError, InvalidAuthRequestBodyError } = await import('@infrastructure/auth/auth-body-validator')
+  return {
+    UnsupportedAuthRequestBodyError,
+    InvalidAuthRequestBodyError,
+    validateAuthRequestBody: testState.validateAuthRequestBody
+  }
+})
 
 vi.mock('@infrastructure/mail/send-verification-mail', () => ({
   sendVerificationMail: vi.fn(() => Promise.resolve())
+}))
+
+vi.mock('@infrastructure/mail/send-reset-password-mail', () => ({
+  sendResetPasswordMail: vi.fn(() => Promise.resolve())
 }))
 
 vi.mock('@infrastructure/http/locale-resolver', () => ({
@@ -96,9 +103,19 @@ const getAfterHook = () => {
   return config.hooks?.after
 }
 
+const getLogger = () => {
+  const config = testState.config as {
+    logger?: {
+      log?: (level: string, message: string, ...args: unknown[]) => void
+    }
+  }
+
+  return config.logger
+}
+
 describe('auth before-hook body validation', () => {
   beforeAll(async () => {
-    await import('../../server/infrastructure/auth/auth')
+    await import('@infrastructure/auth/auth')
   })
 
   beforeEach(() => {
@@ -205,5 +222,35 @@ describe('auth before-hook body validation', () => {
         userId: 'user-123'
       })
     )
+  })
+
+  it('logs sign-up as accepted to reflect neutral duplicate handling', async () => {
+    const afterHook = getAfterHook()
+
+    expect(afterHook).toBeTypeOf('function')
+    await afterHook?.({
+      path: '/sign-up/email',
+      context: {}
+    })
+
+    expect(testState.info).toHaveBeenCalledWith(
+      'Auth sign up accepted',
+      expect.objectContaining({
+        source: 'auth-event',
+        event: 'auth.sign_up',
+        path: '/sign-up/email'
+      })
+    )
+  })
+
+  it('redacts email addresses from Better Auth duplicate signup logs', () => {
+    const authLogger = getLogger()
+
+    expect(authLogger?.log).toBeTypeOf('function')
+    authLogger?.log?.('info', 'Sign-up attempt for existing email: user@example.com')
+
+    expect(testState.info).toHaveBeenCalledWith('Sign-up attempt for existing email', {
+      source: 'better-auth'
+    })
   })
 })

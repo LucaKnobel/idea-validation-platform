@@ -3,7 +3,7 @@ import {
   InvalidAuthRequestBodyError,
   UnsupportedAuthRequestBodyError,
   validateAuthRequestBody
-} from '../../server/infrastructure/auth/auth-body-validator'
+} from '@infrastructure/auth/auth-body-validator'
 
 describe('validateAuthRequestBody', () => {
   it('returns undefined when request has no body', () => {
@@ -13,7 +13,7 @@ describe('validateAuthRequestBody', () => {
   })
 
   it('throws UnsupportedAuthRequestBodyError for unknown auth endpoint with body', () => {
-    expect(() => validateAuthRequestBody('/reset-password', { email: 'user@example.com' })).toThrow(UnsupportedAuthRequestBodyError)
+    expect(() => validateAuthRequestBody('/unknown-endpoint', { email: 'user@example.com' })).toThrow(UnsupportedAuthRequestBodyError)
   })
 
   it('throws InvalidAuthRequestBodyError with issues for malformed sign-in payload', () => {
@@ -39,8 +39,10 @@ describe('validateAuthRequestBody', () => {
       callbackURL: '/dashboard'
     })
 
-    expect(result?.email).toBe('user@example.com')
-    expect(result?.rememberMe).toBe(false)
-    expect(result?.callbackURL).toBe('/dashboard')
+    expect(result).toMatchObject({
+      email: 'user@example.com',
+      rememberMe: false,
+      callbackURL: '/dashboard'
+    })
   })
 })

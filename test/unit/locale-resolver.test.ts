@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { resolveLocaleFromRequest } from '../../server/infrastructure/http/locale-resolver'
+import { resolveLocaleFromRequest } from '@infrastructure/http/locale-resolver'
 
 describe('resolveLocaleFromRequest', () => {
   it('uses locale from i18n cookie when present', () => {

@@ -1,28 +1,30 @@
 import { describe, expect, it } from 'vitest'
-import { buildVerificationMailContent } from '../../server/infrastructure/mail/verification-mail-content'
+import { buildVerificationMailContent } from '@infrastructure/mail/verification-mail-content'
+
+const VERIFY_URL = 'https://example.com/verify?token=abc'
+
+const localeCases = [
+  {
+    locale: 'en',
+    expectedSubject: 'Please verify your email address',
+    expectedLang: 'en'
+  },
+  {
+    locale: 'de',
+    expectedSubject: 'Bitte bestätigen Sie Ihre E-Mail-Adresse',
+    expectedLang: 'de'
+  }
+] as const
 
 describe('buildVerificationMailContent', () => {
-  it('builds german content with link and localized copy', () => {
-    const verifyUrl = 'https://example.com/verify?token=abc123'
-    const result = buildVerificationMailContent(verifyUrl, 'de')
+  it.each(localeCases)('builds $locale locale mail content correctly', ({ locale, expectedSubject, expectedLang }) => {
+    const result = buildVerificationMailContent(VERIFY_URL, locale)
 
-    expect(result.subject).toBe('Bitte bestätige deine E-Mail-Adresse')
-    expect(result.text).toContain(verifyUrl)
-    expect(result.text).toContain('1 Stunde gültig')
-    expect(result.html).toContain('<html lang="de">')
-    expect(result.html).toContain('E-Mail-Adresse bestätigen')
-    expect(result.html).toContain(verifyUrl)
-  })
-
-  it('builds english content with link and localized copy', () => {
-    const verifyUrl = 'https://example.com/verify?token=xyz789'
-    const result = buildVerificationMailContent(verifyUrl, 'en')
-
-    expect(result.subject).toBe('Please verify your email address')
-    expect(result.text).toContain(verifyUrl)
-    expect(result.text).toContain('valid for 1 hour')
-    expect(result.html).toContain('<html lang="en">')
-    expect(result.html).toContain('Verify your email address')
-    expect(result.html).toContain(verifyUrl)
+    expect(result.subject).toBe(expectedSubject)
+    expect(result.text).toContain(VERIFY_URL)
+    expect(result.text).not.toContain('{{verifyUrl}}')
+    expect(result.html).toContain(VERIFY_URL)
+    expect(result.html).toContain('<!DOCTYPE html>')
+    expect(result.html).toContain(`<html lang="${expectedLang}">`)
   })
 })

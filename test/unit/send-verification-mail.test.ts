@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { sendVerificationMail } from '../../server/infrastructure/mail/send-verification-mail'
+import { sendVerificationMail } from '@infrastructure/mail/send-verification-mail'
 
 const { sendMailMock, buildVerificationMailContentMock } = vi.hoisted(() => ({
   sendMailMock: vi.fn(),
@@ -21,6 +21,8 @@ vi.mock('@infrastructure/mail/verification-mail-content', () => ({
 }))
 
 describe('sendVerificationMail', () => {
+  const verifyUrl = 'https://example.com/verify?token=abc'
+
   beforeEach(() => {
     vi.clearAllMocks()
     sendMailMock.mockResolvedValue(undefined)
@@ -31,13 +33,28 @@ describe('sendVerificationMail', () => {
     })
   })
 
-  it('uses english as default locale when no locale is provided', async () => {
-    await sendVerificationMail({
-      to: 'user@example.com',
-      verifyUrl: 'https://example.com/verify?token=abc'
-    })
+  it.each([
+    {
+      title: 'uses english as default locale when no locale is provided',
+      payload: {
+        to: 'user@example.com',
+        verifyUrl
+      },
+      expectedLocale: 'en'
+    },
+    {
+      title: 'uses provided locale for content generation',
+      payload: {
+        to: 'user@example.com',
+        verifyUrl,
+        locale: 'de' as const
+      },
+      expectedLocale: 'de'
+    }
+  ])('$title', async ({ payload, expectedLocale }) => {
+    await sendVerificationMail(payload)
 
-    expect(buildVerificationMailContentMock).toHaveBeenCalledWith('https://example.com/verify?token=abc', 'en')
+    expect(buildVerificationMailContentMock).toHaveBeenCalledWith(verifyUrl, expectedLocale)
     expect(sendMailMock).toHaveBeenCalledWith({
       from: 'no-reply@example.com',
       to: 'user@example.com',
@@ -47,22 +64,12 @@ describe('sendVerificationMail', () => {
     })
   })
 
-  it('uses provided locale for content generation', async () => {
-    await sendVerificationMail({
-      to: 'user@example.com',
-      verifyUrl: 'https://example.com/verify?token=abc',
-      locale: 'de'
-    })
-
-    expect(buildVerificationMailContentMock).toHaveBeenCalledWith('https://example.com/verify?token=abc', 'de')
-  })
-
   it('propagates transporter errors', async () => {
     sendMailMock.mockRejectedValueOnce(new Error('SMTP unavailable'))
 
     await expect(sendVerificationMail({
       to: 'user@example.com',
-      verifyUrl: 'https://example.com/verify?token=abc',
+      verifyUrl,
       locale: 'en'
     })).rejects.toThrow('SMTP unavailable')
   })

@@ -1,5 +1,5 @@
 info:
-  name: "{contentPath}"
+  name: send-verification-email
   type: folder
   seq: 1
 

@@ -9,67 +9,549 @@ servers:
 
 tags:
   - name: Content
-    description: Content endpoints
+    description: Read-only localized content endpoints
+  - name: Auth
+    description: Authentication and session management endpoints
+
+security: []
 
 paths:
-  /content/{contentPath}:
+  /content/{slug}:
     get:
       operationId: getContent
-      summary: Get content by path
+      summary: Get localized content by slug
       description: |
-        Returns localized content by path.
-        Falls back to English if not found.
+        Returns content for the requested slug.
+        Locale resolution is cookie-based (`i18n_redirected`) with fallback to `en`.
+        If localized content is missing, the endpoint falls back to English content.
       tags:
         - Content
       parameters:
-        - name: contentPath
+        - name: slug
           in: path
           required: true
+          description: Content slug path, for example `legal/privacy`.
           schema:
             type: string
-          description: Full content path (e.g. legal/privacy)
-
-        - name: locale
-          in: query
-          required: false
-          schema:
-            type: string
-            enum: [en, de]
-            default: en
-          description: Language of the content
-
+            minLength: 1
       responses:
         '200':
           description: Content found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Content'
-
-        '400':
-          description: Invalid request
-
+                $ref: '#/components/schemas/ContentDocument'
         '404':
           description: Content not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/sign-up/email:
+    post:
+      operationId: signUpWithEmail
+      summary: Register a new account
+      description: |
+        Creates a new account and triggers verification flow.
+        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
+      tags:
+        - Auth
+      parameters:
+        - $ref: '#/components/parameters/OriginHeader'
+        - $ref: '#/components/parameters/RefererHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+      responses:
+        '200':
+          description: Sign-up accepted (neutral success response)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthStatusResponse'
+        '400':
+          description: Invalid request body or missing/untrusted origin context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+
+  /auth/sign-in/email:
+    post:
+      operationId: signInWithEmail
+      summary: Sign in with email and password
+      description: |
+        Authenticates a user and issues a session cookie when successful.
+        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
+      tags:
+        - Auth
+      parameters:
+        - $ref: '#/components/parameters/OriginHeader'
+        - $ref: '#/components/parameters/RefererHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+      responses:
+        '200':
+          description: Sign-in succeeded and session cookie is issued
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: Contains `better-auth.session_token`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthStatusResponse'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+        '403':
+          description: Email not verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+
+  /auth/sign-out:
+    post:
+      operationId: signOut
+      summary: Sign out current session
+      description: |
+        Invalidates the current session.
+        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
+      tags:
+        - Auth
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OriginHeader'
+        - $ref: '#/components/parameters/RefererHeader'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              example: {}
+      responses:
+        '200':
+          description: Sign-out succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthStatusResponse'
+        '400':
+          description: Missing or untrusted origin context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+        '401':
+          description: No active session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+
+  /auth/get-session:
+    get:
+      operationId: getSession
+      summary: Get current session and user
+      tags:
+        - Auth
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Session payload returned (or null fields when no active session)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionEnvelope'
+        '401':
+          description: Invalid or missing session cookie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+
+  /auth/send-verification-email:
+    post:
+      operationId: sendVerificationEmail
+      summary: Send (or re-send) verification email
+      description: |
+        Sends (or re-sends) the verification email.
+        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
+      tags:
+        - Auth
+      parameters:
+        - $ref: '#/components/parameters/OriginHeader'
+        - $ref: '#/components/parameters/RefererHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendVerificationEmailRequest'
+      responses:
+        '200':
+          description: Request accepted (neutral success response)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthStatusResponse'
+        '400':
+          description: Invalid request body or missing/untrusted origin context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+
+  /auth/verify-email:
+    get:
+      operationId: verifyEmail
+      summary: Verify email using token
+      tags:
+        - Auth
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: callbackURL
+          in: query
+          required: false
+          schema:
+            type: string
+            minLength: 1
+          description: Relative callback path after successful verification.
+      responses:
+        '200':
+          description: Email verification processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthStatusResponse'
+        '400':
+          description: Invalid or expired verification token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+
+  /auth/request-password-reset:
+    post:
+      operationId: requestPasswordReset
+      summary: Request a password reset email
+      description: |
+        Requests a password reset email.
+        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
+      tags:
+        - Auth
+      parameters:
+        - $ref: '#/components/parameters/OriginHeader'
+        - $ref: '#/components/parameters/RefererHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestPasswordResetRequest'
+      responses:
+        '200':
+          description: Request accepted (generic response to prevent account enumeration)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthStatusResponse'
+        '400':
+          description: Invalid request body or missing/untrusted origin context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+
+  /auth/reset-password:
+    post:
+      operationId: resetPassword
+      summary: Reset password with token
+      description: |
+        Resets the password using a valid reset token.
+        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
+      tags:
+        - Auth
+      parameters:
+        - $ref: '#/components/parameters/OriginHeader'
+        - $ref: '#/components/parameters/RefererHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '200':
+          description: Password reset succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthStatusResponse'
+        '400':
+          description: Invalid request body, token, or missing/untrusted origin context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
 
 components:
+  parameters:
+    OriginHeader:
+      name: Origin
+      in: header
+      required: true
+      description: Request origin. Must match a trusted origin configured by the server.
+      schema:
+        type: string
+        format: uri
+
+    RefererHeader:
+      name: Referer
+      in: header
+      required: true
+      description: Request referer. Must belong to a trusted origin.
+      schema:
+        type: string
+        format: uri
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: better-auth.session_token
+
   schemas:
-    Content:
+    Locale:
+      type: string
+      enum: [en, de]
+
+    ContentDocument:
       type: object
-      required:
-        - id
-        - title
-        - path
-        - locale
+      description: Content document returned by Nuxt Content.
       properties:
         id:
           type: string
-        title:
-          type: string
         path:
           type: string
-        locale:
+        title:
           type: string
-          enum: [en, de]
         description:
           type: string
+        locale:
+          $ref: '#/components/schemas/Locale'
+      additionalProperties: true
+
+    ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        statusMessage:
+          type: string
+        message:
+          type: string
+      additionalProperties: true
+
+    AuthErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: INVALID_REQUEST_BODY
+        message:
+          type: string
+          example: Invalid request body
+      additionalProperties: true
+
+    AuthStatusResponse:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Request accepted
+      additionalProperties: true
+
+    SessionEnvelope:
+      type: object
+      description: Session payload returned by Better Auth.
+      properties:
+        session:
+          type: object
+          nullable: true
+          additionalProperties: true
+        user:
+          type: object
+          nullable: true
+          additionalProperties: true
+      additionalProperties: true
+
+    SignUpRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 15
+          maxLength: 256
+          description: Must include uppercase, lowercase, number, and special character.
+        name:
+          type: string
+          description: Optional display name.
+        callbackURL:
+          type: string
+          description: Relative path callback (for example `/auth/login`).
+          pattern: '^/(?!/).*'
+
+    SignInRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 1
+          maxLength: 256
+        rememberMe:
+          type: boolean
+          default: true
+        callbackURL:
+          type: string
+          description: Relative path callback.
+          pattern: '^/(?!/).*'
+
+    SendVerificationEmailRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+        callbackURL:
+          type: string
+          description: Relative path callback.
+          pattern: '^/(?!/).*'
+
+    RequestPasswordResetRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+        redirectTo:
+          type: string
+          format: uri
+          description: Absolute URL used in reset email.
+
+    ResetPasswordRequest:
+      type: object
+      required:
+        - newPassword
+        - token
+      properties:
+        newPassword:
+          type: string
+          minLength: 15
+          maxLength: 256
+          description: Must include uppercase, lowercase, number, and special character.
+        token:
+          type: string
+          minLength: 1
+          maxLength: 512

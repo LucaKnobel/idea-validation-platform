@@ -5,6 +5,7 @@ import { useRuntimeConfig } from '#imports'
 import { prisma } from '@infrastructure/db/prisma'
 import { InvalidAuthRequestBodyError, UnsupportedAuthRequestBodyError, validateAuthRequestBody } from '@infrastructure/auth/auth-body-validator'
 import { sendVerificationMail } from '@infrastructure/mail/send-verification-mail'
+import { sendResetPasswordMail } from '@infrastructure/mail/send-reset-password-mail'
 import { resolveLocaleFromRequest } from '@infrastructure/http/locale-resolver'
 import { logger } from '@infrastructure/logging/logger'
 
@@ -25,8 +26,26 @@ const authEventByPath = {
   '/sign-in/email': { event: 'auth.sign_in', action: 'sign in' },
   '/sign-out': { event: 'auth.sign_out', action: 'sign out' },
   '/send-verification-email': { event: 'auth.send_verification_email', action: 'send verification email' },
-  '/verify-email': { event: 'auth.verify_email', action: 'verify email' }
+  '/verify-email': { event: 'auth.verify_email', action: 'verify email' },
+  '/request-password-reset': { event: 'auth.request_password_reset', action: 'request password reset' },
+  '/reset-password': { event: 'auth.reset_password', action: 'reset password' }
 } as const
+
+const neutralAuthEventPaths = new Set<string>([
+  '/sign-up/email',
+  '/send-verification-email'
+])
+
+/**
+ * Removes account-enumeration details from framework log messages before they reach the app logger.
+ */
+const redactBetterAuthMessage = (message: string): string => {
+  if (message.startsWith('Sign-up attempt for existing email:')) {
+    return 'Sign-up attempt for existing email'
+  }
+
+  return message
+}
 
 // Request body error factories
 
@@ -40,21 +59,93 @@ const unsupportedRequestBodyError = () => new APIError('BAD_REQUEST', {
   code: 'UNSUPPORTED_AUTH_REQUEST_BODY'
 })
 
+/**
+ * Detects rate-limit errors emitted by Better Auth so they can be logged separately.
+ */
+const isRateLimitError = (error: APIError): boolean => {
+  const status = (error as { status?: number }).status
+  if (status === 429) return true
+
+  const code = (error as { body?: { code?: string } }).body?.code
+  if (code === 'TOO_MANY_REQUESTS') return true
+
+  return false
+}
+
 // Better-Auth Configuration
 
 const { logLevel } = useRuntimeConfig()
 
+/**
+ * Central Better Auth instance for the application.
+ *
+ * It wires database persistence, request validation, locale-aware mail delivery,
+ * rate limiting, and structured logging into one backend-facing auth entry point.
+ */
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql'
   }),
+
+  trustedOrigins: process.env.NODE_ENV === 'production'
+    ? [process.env.CORS_ORIGIN, process.env.CORS_ORIGIN_WWW].filter((origin): origin is string => Boolean(origin))
+    : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+
+  advanced: {
+    ipAddress: {
+      // Managed NGINX forwards the client IP via these headers.
+      ipAddressHeaders: ['x-forwarded-for', 'x-real-ip'],
+      // Rate-limit IPv6 by /64 to reduce bypass via address rotation.
+      ipv6Subnet: 64
+    }
+  },
+
+  rateLimit: {
+    storage: 'database',
+    modelName: 'rateLimit',
+    enabled: true,
+    // Default: 50 requests per 10 seconds for all auth endpoints
+    window: 10,
+    max: 50,
+    customRules: {
+      // Credential-based sign-in: very strict to slow brute-force
+      '/sign-in/email': { window: 60, max: 5 },
+      // Registration: tight to prevent account spam
+      '/sign-up/email': { window: 60, max: 5 },
+      // Password reset request: strict to prevent email flooding
+      '/request-password-reset': { window: 300, max: 3 },
+      // Password reset confirmation: strict, link is single-use anyway
+      '/reset-password': { window: 300, max: 5 },
+      // Verification email resend: prevent mail bombing
+      '/send-verification-email': { window: 300, max: 3 },
+      // Email verification click: lenient, user may retry from link
+      '/verify-email': { window: 60, max: 10 },
+      // Session check: read-only, high frequency expected
+      '/get-session': false
+    }
+  },
 
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
     autoSignIn: false,
     minPasswordLength: 15,
-    maxPasswordLength: 256
+    maxPasswordLength: 256,
+    revokeSessionsOnPasswordReset: true,
+    resetPasswordTokenExpiresIn: 3600,
+    sendResetPassword: async ({ user, url }, request) => {
+      const locale = resolveLocaleFromRequest(request)
+      void sendResetPasswordMail({ to: user.email, resetUrl: url, locale })
+        .then(() => {
+          logger.info('Password reset email sent', { userId: user.id, locale })
+        })
+        .catch((error: unknown) => {
+          logger.error('Failed to send password reset email', { userId: user.id, locale }, error)
+        })
+    },
+    onPasswordReset: async ({ user }, _request) => {
+      logger.info('Password reset completed', { userId: user.id })
+    }
   },
 
   emailVerification: {
@@ -103,11 +194,22 @@ export const auth = betterAuth({
       const userId = (ctx.context as { newSession?: { user?: { id?: string } } }).newSession?.user?.id
 
       if (failure) {
+        if (isRateLimitError(returned)) {
+          logger.warn('Auth request rate limited', {
+            source: 'auth-event',
+            event: 'auth.rate_limit',
+            path: ctx.path
+          })
+          return
+        }
+
         logger.warn(`Auth ${action} failed`, { source: 'auth-event', event, path: ctx.path })
         return
       }
 
-      logger.info(`Auth ${action} succeeded`, {
+      const outcome = neutralAuthEventPaths.has(ctx.path) ? 'accepted' : 'succeeded'
+
+      logger.info(`Auth ${action} ${outcome}`, {
         source: 'auth-event',
         event,
         path: ctx.path,
@@ -126,13 +228,14 @@ export const auth = betterAuth({
         return
       }
 
+      const safeMessage = redactBetterAuthMessage(message)
       const meta = { source: 'better-auth' }
       const errorArg = args.find(arg => arg instanceof Error)
 
-      if (level === 'debug') logger.debug(message, meta)
-      else if (level === 'info') logger.info(message, meta)
-      else if (level === 'warn') logger.warn(message, meta)
-      else logger.error(message, meta, errorArg)
+      if (level === 'debug') logger.debug(safeMessage, meta)
+      else if (level === 'info') logger.info(safeMessage, meta)
+      else if (level === 'warn') logger.warn(safeMessage, meta)
+      else logger.error(safeMessage, meta, errorArg)
     }
   }
 })
