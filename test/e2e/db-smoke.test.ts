@@ -1,9 +1,13 @@
 import { randomUUID } from 'node:crypto'
 import { afterAll, describe, expect, it } from 'vitest'
+import { setup } from '@nuxt/test-utils/e2e'
 
 import { prisma } from '@infrastructure/db/prisma'
+import { createAuthE2ESetupOptions } from './auth-test-helpers'
 
-describe('Database smoke test', () => {
+describe('Database smoke test', async () => {
+  await setup(createAuthE2ESetupOptions())
+
   const testSuffix = randomUUID()
   const userId = `smoke-user-${testSuffix}`
   const userEmail = `smoke-${testSuffix}@example.com`
@@ -14,8 +18,6 @@ describe('Database smoke test', () => {
         email: userEmail
       }
     })
-
-    await prisma.$disconnect()
   })
 
   it('DB connection works', async () => {
