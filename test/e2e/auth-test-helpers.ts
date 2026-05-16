@@ -89,6 +89,55 @@ export const postSignIn = (payload: SignInPayload, options?: AuthRequestOptions)
   })
 }
 
+export const postSignOut = (cookieHeader: string, options?: AuthRequestOptions) => {
+  const headers: Record<string, string> = {
+    ...createAuthHeaders(options),
+    cookie: cookieHeader
+  }
+
+  return fetch(createApiUrl('/api/auth/sign-out'), {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({})
+  })
+}
+
+export const getPageWithCookie = (path: string, cookieHeader: string, options?: AuthRequestOptions) => {
+  const origin = options?.origin ?? createRequestOrigin()
+  const headers: Record<string, string> = {
+    'cookie': cookieHeader,
+    'x-forwarded-for': options?.clientIp ?? createClientIp(),
+    'accept': 'text/html'
+  }
+
+  return fetch(new URL(path, `${origin}/`).toString(), {
+    method: 'GET',
+    headers,
+    redirect: 'manual'
+  })
+}
+
+export const getApiWithCookie = (path: string, cookieHeader: string, options?: AuthRequestOptions) => {
+  const origin = options?.origin ?? createRequestOrigin()
+  const includeOriginHeaders = options?.includeOriginHeaders ?? true
+
+  const headers: Record<string, string> = {
+    'cookie': cookieHeader,
+    'x-forwarded-for': options?.clientIp ?? createClientIp()
+  }
+
+  if (includeOriginHeaders) {
+    headers.origin = origin
+    headers.referer = options?.referer ?? `${origin}/`
+  }
+
+  return fetch(new URL(path, `${origin}/`).toString(), {
+    method: 'GET',
+    headers,
+    redirect: 'manual'
+  })
+}
+
 export const getSession = (cookieHeader: string, options?: AuthRequestOptions) => {
   const origin = options?.origin ?? createRequestOrigin()
   const includeOriginHeaders = options?.includeOriginHeaders ?? true
