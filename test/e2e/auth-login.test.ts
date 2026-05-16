@@ -4,6 +4,7 @@ import { setup } from '@nuxt/test-utils/e2e'
 import { prisma } from '@infrastructure/db/prisma'
 
 import {
+  createRegisteredAuthUser,
   getE2ESetupOptions,
   clearAuthTables,
   expectAuthFailure,
@@ -19,33 +20,15 @@ import {
 
 beforeEach(clearAuthTables)
 
-const createRegisteredUser = async (verified: boolean) => {
-  const email = `login-flow-${randomUUID()}@example.com`
-
-  const signUpResponse = await postRegister({
-    email,
-    password,
-    name: 'Login Flow Test User',
-    callbackURL: '/auth/login'
-  })
-
-  expect(signUpResponse.status).toBe(200)
-
-  if (verified) {
-    await prisma.user.update({
-      where: { email },
-      data: { emailVerified: true }
-    })
-  }
-
-  return { email }
-}
-
 describe('Auth login flow', async () => {
   await setup(getE2ESetupOptions())
 
   it('logs in a verified user with valid credentials', async () => {
-    const { email } = await createRegisteredUser(true)
+    const { email } = await createRegisteredAuthUser({
+      emailPrefix: 'login-flow',
+      name: 'Login Flow Test User',
+      verified: true
+    })
 
     const response = await postSignIn({
       email,
@@ -57,7 +40,11 @@ describe('Auth login flow', async () => {
   })
 
   it('rejects login with an invalid password and does not set a session cookie', async () => {
-    const { email } = await createRegisteredUser(true)
+    const { email } = await createRegisteredAuthUser({
+      emailPrefix: 'login-flow',
+      name: 'Login Flow Test User',
+      verified: true
+    })
 
     const response = await postSignIn({
       email,
@@ -81,7 +68,11 @@ describe('Auth login flow', async () => {
   })
 
   it('rejects login for an unverified user and does not create a session', async () => {
-    const { email } = await createRegisteredUser(false)
+    const { email } = await createRegisteredAuthUser({
+      emailPrefix: 'login-flow',
+      name: 'Login Flow Test User',
+      verified: false
+    })
 
     const response = await postSignIn({
       email,
@@ -105,7 +96,11 @@ describe('Auth login flow', async () => {
   })
 
   it('returns the same auth error payload for unknown user and wrong password to reduce account enumeration', async () => {
-    const { email } = await createRegisteredUser(true)
+    const { email } = await createRegisteredAuthUser({
+      emailPrefix: 'login-flow',
+      name: 'Login Flow Test User',
+      verified: true
+    })
 
     const wrongPasswordResponse = await postSignIn({
       email,
@@ -153,7 +148,11 @@ describe('Auth login flow', async () => {
   })
 
   it('rate limits repeated failed login attempts from the same client IP', async () => {
-    const { email } = await createRegisteredUser(true)
+    const { email } = await createRegisteredAuthUser({
+      emailPrefix: 'login-flow',
+      name: 'Login Flow Test User',
+      verified: true
+    })
     const clientIp = '203.0.113.173'
 
     for (let attempt = 0; attempt < 5; attempt += 1) {
@@ -179,7 +178,11 @@ describe('Auth login flow', async () => {
   })
 
   it('issues a new session cookie value on repeated successful logins', async () => {
-    const { email } = await createRegisteredUser(true)
+    const { email } = await createRegisteredAuthUser({
+      emailPrefix: 'login-flow',
+      name: 'Login Flow Test User',
+      verified: true
+    })
 
     const firstLogin = await postSignIn({
       email,
@@ -212,7 +215,11 @@ describe('Auth login flow', async () => {
   })
 
   it('creates a hardened session cookie and persists a session record on successful login', async () => {
-    const { email } = await createRegisteredUser(true)
+    const { email } = await createRegisteredAuthUser({
+      emailPrefix: 'login-flow',
+      name: 'Login Flow Test User',
+      verified: true
+    })
 
     const signInResponse = await postSignIn({
       email,
