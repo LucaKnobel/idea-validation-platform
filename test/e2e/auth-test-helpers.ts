@@ -39,6 +39,11 @@ export type RequestPasswordResetPayload = {
   redirectTo?: string
 }
 
+export type ResetPasswordPayload = {
+  newPassword: string
+  token: string
+}
+
 export type AuthRequestOptions = {
   clientIp?: string
   origin?: string
@@ -107,6 +112,14 @@ export const postRequestPasswordReset = (payload: RequestPasswordResetPayload, o
       email: payload.email,
       ...(redirectTo ? { redirectTo } : {})
     })
+  })
+}
+
+export const postResetPassword = (payload: ResetPasswordPayload, options?: AuthRequestOptions) => {
+  return fetch(createApiUrl('/api/auth/reset-password'), {
+    method: 'POST',
+    headers: createAuthHeaders(options),
+    body: JSON.stringify(payload)
   })
 }
 
