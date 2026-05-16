@@ -4,6 +4,7 @@ import { setup } from '@nuxt/test-utils/e2e'
 import {
   clearAuthTables,
   createAuthenticatedSession,
+  expectAuthenticatedSessionCreated,
   getApiWithCookie,
   getE2ESetupOptions,
   getSession,
@@ -16,10 +17,11 @@ describe('Auth logout flow', async () => {
   await setup(getE2ESetupOptions())
 
   it('logs out an authenticated user', async () => {
-    const { cookieHeader } = await createAuthenticatedSession({
+    const sessionResult = await createAuthenticatedSession({
       emailPrefix: 'logout-flow',
       name: 'Logout Flow Test User'
     })
+    const { cookieHeader } = expectAuthenticatedSessionCreated(sessionResult)
 
     const logoutResponse = await postSignOut(cookieHeader)
 
@@ -27,10 +29,11 @@ describe('Auth logout flow', async () => {
   })
 
   it('invalidates the active session after logout', async () => {
-    const { cookieHeader } = await createAuthenticatedSession({
+    const sessionResult = await createAuthenticatedSession({
       emailPrefix: 'logout-flow',
       name: 'Logout Flow Test User'
     })
+    const { cookieHeader } = expectAuthenticatedSessionCreated(sessionResult)
 
     const sessionBeforeLogout = await getSession(cookieHeader)
     expect(sessionBeforeLogout.status).toBe(200)
@@ -57,10 +60,11 @@ describe('Auth logout flow', async () => {
   })
 
   it('blocks access to a protected route after logout', async () => {
-    const { cookieHeader } = await createAuthenticatedSession({
+    const sessionResult = await createAuthenticatedSession({
       emailPrefix: 'logout-flow',
       name: 'Logout Flow Test User'
     })
+    const { cookieHeader } = expectAuthenticatedSessionCreated(sessionResult)
 
     const beforeLogoutResponse = await getApiWithCookie('/api/protected-probe', cookieHeader)
     expect(beforeLogoutResponse.status).toBe(404)

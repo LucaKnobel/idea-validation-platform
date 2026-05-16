@@ -6,6 +6,7 @@ import { prisma } from '@infrastructure/db/prisma'
 import {
   clearAuthTables,
   createRegisteredAuthUser,
+  expectRegisteredAuthUserCreated,
   getE2ESetupOptions,
   postRequestPasswordReset
 } from './auth-test-helpers'
@@ -16,10 +17,11 @@ describe('Forgot password flow', async () => {
   await setup(getE2ESetupOptions())
 
   it('accepts a password reset request for an existing user', async () => {
-    const user = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'forgot-password',
       name: 'Forgot Password Test User'
     })
+    const user = expectRegisteredAuthUserCreated(registrationResult)
 
     const response = await postRequestPasswordReset({
       email: user.email,
@@ -34,10 +36,11 @@ describe('Forgot password flow', async () => {
   })
 
   it('generates and persists a reset token for an existing user', async () => {
-    const user = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'forgot-password',
       name: 'Forgot Password Test User'
     })
+    const user = expectRegisteredAuthUserCreated(registrationResult)
 
     const response = await postRequestPasswordReset({
       email: user.email,
@@ -63,10 +66,11 @@ describe('Forgot password flow', async () => {
   })
 
   it('returns the same generic response for an unknown email', async () => {
-    const knownUser = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'forgot-password',
       name: 'Forgot Password Test User'
     })
+    const knownUser = expectRegisteredAuthUserCreated(registrationResult)
 
     const knownResponse = await postRequestPasswordReset({
       email: knownUser.email,
@@ -89,10 +93,11 @@ describe('Forgot password flow', async () => {
   })
 
   it('does not leak user enumeration via password reset responses', async () => {
-    const knownUser = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'forgot-password',
       name: 'Forgot Password Test User'
     })
+    const knownUser = expectRegisteredAuthUserCreated(registrationResult)
 
     const knownResponse = await postRequestPasswordReset({
       email: knownUser.email,

@@ -5,16 +5,16 @@ import { prisma } from '@infrastructure/db/prisma'
 
 import {
   createRegisteredAuthUser,
+  expectRegisteredAuthUserCreated,
   getE2ESetupOptions,
   clearAuthTables,
   expectAuthFailure,
   expectNoSessionCookie,
   expectNoSensitiveSessionFields,
   expectSecureSessionCookie,
-  extractCookieHeader,
+  extractAuthSessionCookieHeader,
   getSession,
   password,
-  postRegister,
   postSignIn
 } from './auth-test-helpers'
 
@@ -24,11 +24,12 @@ describe('Auth login flow', async () => {
   await setup(getE2ESetupOptions())
 
   it('logs in a verified user with valid credentials', async () => {
-    const { email } = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'login-flow',
       name: 'Login Flow Test User',
       verified: true
     })
+    const { email } = expectRegisteredAuthUserCreated(registrationResult)
 
     const response = await postSignIn({
       email,
@@ -40,11 +41,12 @@ describe('Auth login flow', async () => {
   })
 
   it('rejects login with an invalid password and does not set a session cookie', async () => {
-    const { email } = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'login-flow',
       name: 'Login Flow Test User',
       verified: true
     })
+    const { email } = expectRegisteredAuthUserCreated(registrationResult)
 
     const response = await postSignIn({
       email,
@@ -68,11 +70,12 @@ describe('Auth login flow', async () => {
   })
 
   it('rejects login for an unverified user and does not create a session', async () => {
-    const { email } = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'login-flow',
       name: 'Login Flow Test User',
       verified: false
     })
+    const { email } = expectRegisteredAuthUserCreated(registrationResult)
 
     const response = await postSignIn({
       email,
@@ -96,11 +99,12 @@ describe('Auth login flow', async () => {
   })
 
   it('returns the same auth error payload for unknown user and wrong password to reduce account enumeration', async () => {
-    const { email } = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'login-flow',
       name: 'Login Flow Test User',
       verified: true
     })
+    const { email } = expectRegisteredAuthUserCreated(registrationResult)
 
     const wrongPasswordResponse = await postSignIn({
       email,
@@ -148,11 +152,12 @@ describe('Auth login flow', async () => {
   })
 
   it('rate limits repeated failed login attempts from the same client IP', async () => {
-    const { email } = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'login-flow',
       name: 'Login Flow Test User',
       verified: true
     })
+    const { email } = expectRegisteredAuthUserCreated(registrationResult)
     const clientIp = '203.0.113.173'
 
     for (let attempt = 0; attempt < 5; attempt += 1) {
@@ -178,11 +183,12 @@ describe('Auth login flow', async () => {
   })
 
   it('issues a new session cookie value on repeated successful logins', async () => {
-    const { email } = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'login-flow',
       name: 'Login Flow Test User',
       verified: true
     })
+    const { email } = expectRegisteredAuthUserCreated(registrationResult)
 
     const firstLogin = await postSignIn({
       email,
@@ -206,8 +212,8 @@ describe('Auth login flow', async () => {
     expect(secondSetCookie).toBeTruthy()
     expectSecureSessionCookie(secondSetCookie ?? '')
 
-    const firstCookie = firstSetCookie ? extractCookieHeader(firstSetCookie) : null
-    const secondCookie = secondSetCookie ? extractCookieHeader(secondSetCookie) : null
+    const firstCookie = firstSetCookie ? extractAuthSessionCookieHeader(firstSetCookie) : null
+    const secondCookie = secondSetCookie ? extractAuthSessionCookieHeader(secondSetCookie) : null
 
     expect(firstCookie).toBeTruthy()
     expect(secondCookie).toBeTruthy()
@@ -215,11 +221,12 @@ describe('Auth login flow', async () => {
   })
 
   it('creates a hardened session cookie and persists a session record on successful login', async () => {
-    const { email } = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'login-flow',
       name: 'Login Flow Test User',
       verified: true
     })
+    const { email } = expectRegisteredAuthUserCreated(registrationResult)
 
     const signInResponse = await postSignIn({
       email,
@@ -233,14 +240,15 @@ describe('Auth login flow', async () => {
     expect(setCookie).toBeTruthy()
     expectSecureSessionCookie(setCookie ?? '')
 
-    const cookieHeader = setCookie ? extractCookieHeader(setCookie) : null
+    const cookieHeader = setCookie ? extractAuthSessionCookieHeader(setCookie) : null
     expect(cookieHeader).toBeTruthy()
 
     const sessionResponse = await getSession(cookieHeader ?? '')
 
     expect(sessionResponse.status).toBe(200)
     const sessionPayload = await sessionResponse.json() as unknown
-    expectNoSensitiveSessionFields(sessionPayload)
+    const sessionUser = (sessionPayload as { user?: unknown } | null)?.user ?? null
+    expectNoSensitiveSessionFields(sessionUser)
 
     const user = await prisma.user.findUnique({
       where: { email },

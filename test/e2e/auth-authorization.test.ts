@@ -4,6 +4,7 @@ import { setup } from '@nuxt/test-utils/e2e'
 import {
   clearAuthTables,
   createAuthenticatedSession,
+  expectAuthenticatedSessionCreated,
   getE2ESetupOptions,
   getPageWithCookie,
   getSession
@@ -23,10 +24,11 @@ describe('Authorization flow', async () => {
   })
 
   it('allows authenticated users to access /en/dashboard', async () => {
-    const { cookieHeader } = await createAuthenticatedSession({
+    const sessionResult = await createAuthenticatedSession({
       emailPrefix: 'authz-dashboard',
       name: 'AuthZ Dashboard User'
     })
+    const { cookieHeader } = expectAuthenticatedSessionCreated(sessionResult)
 
     const response = await getPageWithCookie('/en/dashboard', cookieHeader)
 
@@ -34,14 +36,16 @@ describe('Authorization flow', async () => {
   })
 
   it('prevents user A from accessing user B session resource', async () => {
-    const userA = await createAuthenticatedSession({
+    const userAResult = await createAuthenticatedSession({
       emailPrefix: 'authz-user-a',
       name: 'AuthZ User A'
     })
-    const userB = await createAuthenticatedSession({
+    const userBResult = await createAuthenticatedSession({
       emailPrefix: 'authz-user-b',
       name: 'AuthZ User B'
     })
+    const userA = expectAuthenticatedSessionCreated(userAResult)
+    const userB = expectAuthenticatedSessionCreated(userBResult)
 
     const userASessionResponse = await getSession(userA.cookieHeader)
     const userBSessionResponse = await getSession(userB.cookieHeader)
