@@ -6,6 +6,8 @@ import { prisma } from '@infrastructure/db/prisma'
 import {
   clearAuthTables,
   createRegisteredAuthUser,
+  expectPasswordResetTokenCreated,
+  expectRegisteredAuthUserCreated,
   getE2ESetupOptions,
   password,
   postResetPassword,
@@ -19,14 +21,16 @@ describe('Reset password flow', async () => {
   await setup(getE2ESetupOptions())
 
   it('resets the password with a valid token', async () => {
-    const user = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'reset-password',
       name: 'Reset Password Test User',
       verified: true
     })
+    const user = expectRegisteredAuthUserCreated(registrationResult)
     const newPassword = 'NewStrongPassword1!'
 
-    const { token } = await requestPasswordResetAndGetToken(user.email, user.id)
+    const resetTokenResult = await requestPasswordResetAndGetToken(user.email, user.id)
+    const { token } = expectPasswordResetTokenCreated(resetTokenResult)
     const resetResponse = await postResetPassword({
       newPassword,
       token
@@ -44,11 +48,12 @@ describe('Reset password flow', async () => {
   })
 
   it('rejects an invalid token', async () => {
-    const user = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'reset-password',
       name: 'Reset Password Test User',
       verified: true
     })
+    const user = expectRegisteredAuthUserCreated(registrationResult)
 
     const response = await postResetPassword({
       newPassword: 'NewStrongPassword1!',
@@ -70,11 +75,12 @@ describe('Reset password flow', async () => {
   })
 
   it('rejects an expired token', async () => {
-    const user = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'reset-password',
       name: 'Reset Password Test User',
       verified: true
     })
+    const user = expectRegisteredAuthUserCreated(registrationResult)
     const expiredToken = `expired-${randomUUID()}`
 
     await prisma.verification.create({
@@ -98,13 +104,15 @@ describe('Reset password flow', async () => {
   })
 
   it('allows a reset token to be used only once', async () => {
-    const user = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'reset-password',
       name: 'Reset Password Test User',
       verified: true
     })
+    const user = expectRegisteredAuthUserCreated(registrationResult)
     const newPassword = 'NewStrongPassword1!'
-    const { token } = await requestPasswordResetAndGetToken(user.email, user.id)
+    const resetTokenResult = await requestPasswordResetAndGetToken(user.email, user.id)
+    const { token } = expectPasswordResetTokenCreated(resetTokenResult)
 
     const firstResetResponse = await postResetPassword({
       newPassword,
@@ -125,13 +133,15 @@ describe('Reset password flow', async () => {
   })
 
   it('disables the old password and accepts the new password after reset', async () => {
-    const user = await createRegisteredAuthUser({
+    const registrationResult = await createRegisteredAuthUser({
       emailPrefix: 'reset-password',
       name: 'Reset Password Test User',
       verified: true
     })
+    const user = expectRegisteredAuthUserCreated(registrationResult)
     const newPassword = 'NewStrongPassword1!'
-    const { token } = await requestPasswordResetAndGetToken(user.email, user.id)
+    const resetTokenResult = await requestPasswordResetAndGetToken(user.email, user.id)
+    const { token } = expectPasswordResetTokenCreated(resetTokenResult)
 
     const resetResponse = await postResetPassword({
       newPassword,

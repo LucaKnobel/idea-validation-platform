@@ -1,8 +1,6 @@
 import { randomInt } from 'node:crypto'
-
 import { url } from '@nuxt/test-utils/e2e'
 import { expect } from 'vitest'
-
 import { prisma } from '@infrastructure/db/prisma'
 
 type AuthE2ESetupOptions
@@ -34,6 +32,16 @@ export type CreateAuthUserOptions = {
   verified?: boolean
 }
 
+export type RegisteredAuthUser = {
+  id: string
+  email: string
+}
+
+export type RegisteredAuthUserActionResult = {
+  signUpResponse: Response
+  user: RegisteredAuthUser | null
+}
+
 export type SignInPayload = {
   email: string
   password: string
@@ -48,6 +56,27 @@ export type RequestPasswordResetPayload = {
 export type ResetPasswordPayload = {
   newPassword: string
   token: string
+}
+
+export type AuthenticatedSession = RegisteredAuthUser & {
+  cookieHeader: string
+}
+
+export type AuthenticatedSessionActionResult = {
+  user: RegisteredAuthUser | null
+  signInResponse: Response | null
+  setCookie: string | null
+  cookieHeader: string | null
+}
+
+export type PasswordResetTokenActionResult = {
+  response: Response
+  token: string | null
+  verification: {
+    identifier: string
+    value: string
+    expiresAt: Date
+  } | null
 }
 
 export type AuthRequestOptions = {
@@ -99,7 +128,7 @@ export const postRegister = (payload: RegisterPayload, options?: AuthRequestOpti
 
 /**
  * Creates a user via sign-up and optionally marks the account as verified.
- * Returns the persisted user id/email from the database.
+ * Returns raw action results without assertions.
  */
 export const createRegisteredAuthUser = async (options?: CreateAuthUserOptions) => {
   const emailPrefix = options?.emailPrefix ?? 'auth-e2e-user'
@@ -114,8 +143,6 @@ export const createRegisteredAuthUser = async (options?: CreateAuthUserOptions) 
     callbackURL: '/auth/login'
   })
 
-  expect(signUpResponse.status).toBe(200)
-
   if (verified) {
     await prisma.user.update({
       where: { email },
@@ -128,9 +155,19 @@ export const createRegisteredAuthUser = async (options?: CreateAuthUserOptions) 
     select: { id: true, email: true }
   })
 
-  expect(user).not.toBeNull()
+  return {
+    signUpResponse,
+    user
+  } satisfies RegisteredAuthUserActionResult
+}
 
-  return user!
+export const expectRegisteredAuthUserCreated = (
+  result: RegisteredAuthUserActionResult
+): RegisteredAuthUser => {
+  expect(result.signUpResponse.status).toBe(200)
+  expect(result.user).not.toBeNull()
+
+  return result.user as RegisteredAuthUser
 }
 
 export const postSignIn = (payload: SignInPayload, options?: AuthRequestOptions) => {
@@ -157,13 +194,25 @@ export const extractAuthSessionCookieHeader = (setCookie: string): string | null
 
 /**
  * Creates a verified user and returns a valid authenticated cookie session.
+ * Returns raw action results without assertions.
  */
 export const createAuthenticatedSession = async (options?: Omit<CreateAuthUserOptions, 'verified'>) => {
-  const user = await createRegisteredAuthUser({
+  const registrationResult = await createRegisteredAuthUser({
     emailPrefix: options?.emailPrefix,
     name: options?.name,
     verified: true
   })
+
+  const user = registrationResult.user
+
+  if (!user) {
+    return {
+      user: null,
+      signInResponse: null,
+      setCookie: null,
+      cookieHeader: null
+    } satisfies AuthenticatedSessionActionResult
+  }
 
   const signInResponse = await postSignIn({
     email: user.email,
@@ -171,18 +220,30 @@ export const createAuthenticatedSession = async (options?: Omit<CreateAuthUserOp
     rememberMe: true
   })
 
-  expect(signInResponse.status).toBe(200)
-
   const setCookie = signInResponse.headers.get('set-cookie')
-  expect(setCookie).toBeTruthy()
-
   const cookieHeader = setCookie ? extractAuthSessionCookieHeader(setCookie) : null
-  expect(cookieHeader).toBeTruthy()
 
   return {
-    id: user.id,
-    email: user.email,
-    cookieHeader: cookieHeader ?? ''
+    user,
+    signInResponse,
+    setCookie,
+    cookieHeader
+  } satisfies AuthenticatedSessionActionResult
+}
+
+export const expectAuthenticatedSessionCreated = (
+  result: AuthenticatedSessionActionResult
+): AuthenticatedSession => {
+  expect(result.user).not.toBeNull()
+  expect(result.signInResponse).not.toBeNull()
+  expect(result.signInResponse?.status).toBe(200)
+  expect(result.setCookie).toBeTruthy()
+  expect(result.cookieHeader).toBeTruthy()
+
+  return {
+    id: result.user!.id,
+    email: result.user!.email,
+    cookieHeader: result.cookieHeader ?? ''
   }
 }
 
@@ -204,10 +265,10 @@ export const postRequestPasswordReset = (payload: RequestPasswordResetPayload, o
 
 /**
  * Requests a password reset and returns the generated token persisted in the verification table.
+ * Returns raw action results without assertions.
  */
 export const requestPasswordResetAndGetToken = async (email: string, userId: string, redirectTo = '/auth/reset-password') => {
   const response = await postRequestPasswordReset({ email, redirectTo })
-  expect(response.status).toBe(200)
 
   const verification = await prisma.verification.findFirst({
     where: {
@@ -218,15 +279,25 @@ export const requestPasswordResetAndGetToken = async (email: string, userId: str
     }
   })
 
-  expect(verification).not.toBeNull()
-
-  const token = verification?.identifier.slice('reset-password:'.length) ?? ''
-  expect(token).toBeTruthy()
+  const token = verification?.identifier.slice('reset-password:'.length) ?? null
 
   return {
     response,
     token,
-    verification: verification!
+    verification
+  } satisfies PasswordResetTokenActionResult
+}
+
+export const expectPasswordResetTokenCreated = (
+  result: PasswordResetTokenActionResult
+): { token: string, verification: NonNullable<PasswordResetTokenActionResult['verification']> } => {
+  expect(result.response.status).toBe(200)
+  expect(result.verification).not.toBeNull()
+  expect(result.token).toBeTruthy()
+
+  return {
+    token: result.token ?? '',
+    verification: result.verification as NonNullable<PasswordResetTokenActionResult['verification']>
   }
 }
 
@@ -305,11 +376,6 @@ export const getSession = (cookieHeader: string, options?: AuthRequestOptions) =
     method: 'GET',
     headers
   })
-}
-
-export const extractCookieHeader = (setCookie: string): string | null => {
-  const match = setCookie.match(/([^=;\s]+=[^;,.\s]+)/)
-  return match?.[1] ?? null
 }
 
 /**
