@@ -1,0 +1,7 @@
+info:
+  name: sign-up
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
