@@ -46,6 +46,8 @@ const onSubmit = async (event: FormSubmitEvent<LoginForm>): Promise<void> => {
     const success = await login(event.data.email, event.data.password)
 
     if (success) {
+      // Defensive cache invalidation in case stale session data is still present.
+      clearNuxtData()
       showSuccess('auth.login.success.title', 'auth.login.success.message')
       await navigateTo(localePath('/dashboard'))
     }

@@ -51,6 +51,9 @@ export const useAuth = (): UseAuthComposable => {
         return false
       }
 
+      // Ensure route middleware reads fresh session state after sign-in.
+      clearNuxtData()
+
       return true
     } catch (error: unknown) {
       handleLoginError(error)
@@ -186,6 +189,10 @@ export const useAuth = (): UseAuthComposable => {
 
     try {
       await authClient.signOut()
+
+      // Ensure route middleware reads fresh session state after sign-out.
+      clearNuxtData()
+
       return true
     } catch (error: unknown) {
       handleLogoutError(error)

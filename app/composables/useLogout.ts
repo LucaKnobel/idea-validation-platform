@@ -56,9 +56,6 @@ export const useLogout = (): UseLogoutComposable => {
         return
       }
 
-      // Invalidate the session cache to prevent the auth middleware from using stale session data
-      clearNuxtData()
-
       showSuccess('auth.logout.success.title', 'auth.logout.success.message')
       closeDialog()
       await navigateTo(localePath('/auth/login'))
