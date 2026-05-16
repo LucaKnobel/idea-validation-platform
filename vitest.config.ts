@@ -29,6 +29,7 @@ export default defineConfig({
         }
       },
       {
+        resolve: { alias },
         test: {
           name: 'e2e',
           include: ['test/e2e/*.{test,spec}.ts'],
