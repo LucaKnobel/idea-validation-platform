@@ -34,6 +34,11 @@ export type SignInPayload = {
   rememberMe?: boolean
 }
 
+export type RequestPasswordResetPayload = {
+  email: string
+  redirectTo?: string
+}
+
 export type AuthRequestOptions = {
   clientIp?: string
   origin?: string
@@ -86,6 +91,22 @@ export const postSignIn = (payload: SignInPayload, options?: AuthRequestOptions)
     method: 'POST',
     headers: createAuthHeaders(options),
     body: JSON.stringify(payload)
+  })
+}
+
+export const postRequestPasswordReset = (payload: RequestPasswordResetPayload, options?: AuthRequestOptions) => {
+  const origin = options?.origin ?? createRequestOrigin()
+  const redirectTo = payload.redirectTo
+    ? new URL(payload.redirectTo, origin).toString()
+    : undefined
+
+  return fetch(createApiUrl('/api/auth/request-password-reset'), {
+    method: 'POST',
+    headers: createAuthHeaders(options),
+    body: JSON.stringify({
+      email: payload.email,
+      ...(redirectTo ? { redirectTo } : {})
+    })
   })
 }
 
