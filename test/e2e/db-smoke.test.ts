@@ -3,10 +3,10 @@ import { afterAll, describe, expect, it } from 'vitest'
 import { setup } from '@nuxt/test-utils/e2e'
 
 import { prisma } from '@infrastructure/db/prisma'
-import { createAuthE2ESetupOptions } from './auth-test-helpers'
+import { getE2ESetupOptions } from './auth-test-helpers'
 
 describe('Database smoke test', async () => {
-  await setup(createAuthE2ESetupOptions())
+  await setup(getE2ESetupOptions())
 
   const testSuffix = randomUUID()
   const userId = `smoke-user-${testSuffix}`

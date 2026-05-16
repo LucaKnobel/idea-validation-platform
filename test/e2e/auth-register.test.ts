@@ -1,13 +1,12 @@
 import { randomUUID } from 'node:crypto'
-
 import { beforeEach, describe, expect, it } from 'vitest'
 import { setup } from '@nuxt/test-utils/e2e'
-
 import { prisma } from '@infrastructure/db/prisma'
 
 import {
-  createAuthE2ESetupOptions,
+  getE2ESetupOptions,
   clearAuthTables,
+  expectAuthFailure,
   password,
   postRegister
 } from './auth-test-helpers'
@@ -15,7 +14,7 @@ import {
 beforeEach(clearAuthTables)
 
 describe('Auth registration flow', async () => {
-  await setup(createAuthE2ESetupOptions())
+  await setup(getE2ESetupOptions())
 
   it('accepts a valid sign-up request and returns HTTP 200', async () => {
     const email = `register-flow-${randomUUID()}@example.com`
@@ -92,7 +91,7 @@ describe('Auth registration flow', async () => {
       callbackURL: 'https://example.com/auth/login'
     })
 
-    expect([400, 403, 422]).toContain(response.status)
+    await expectAuthFailure(response, 400, 'INVALID_REQUEST_BODY')
 
     const storedUser = await prisma.user.findUnique({
       where: { email }
@@ -111,7 +110,7 @@ describe('Auth registration flow', async () => {
       callbackURL: '/auth/login'
     })
 
-    expect([400, 422]).toContain(response.status)
+    await expectAuthFailure(response, 400, 'INVALID_REQUEST_BODY')
 
     const storedUser = await prisma.user.findUnique({
       where: { email }
@@ -161,7 +160,7 @@ describe('Auth registration flow', async () => {
     })
 
     expect(firstResponse.status).toBe(200)
-    expect([200, 400]).toContain(duplicateResponse.status)
+    expect(duplicateResponse.status).toBe(200)
 
     const usersWithEmail = await prisma.user.count({
       where: { email }
@@ -180,5 +179,30 @@ describe('Auth registration flow', async () => {
 
     expect(usersWithEmail).toBe(1)
     expect(accountCount).toBe(1)
+  })
+
+  it('rate limits repeated sign-up requests from the same client IP', async () => {
+    const clientIp = '203.0.113.174'
+
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      const response = await postRegister({
+        email: `rl-signup-${attempt}-${randomUUID()}@example.com`,
+        password: 'weak',
+        name: 'Rate Limit Signup Test User',
+        callbackURL: '/auth/login'
+      }, { clientIp })
+
+      await expectAuthFailure(response, 400, 'INVALID_REQUEST_BODY')
+    }
+
+    const limitedResponse = await postRegister({
+      email: `rl-signup-limited-${randomUUID()}@example.com`,
+      password: 'weak',
+      name: 'Rate Limit Signup Test User',
+      callbackURL: '/auth/login'
+    }, { clientIp })
+
+    const limitedBody = await expectAuthFailure(limitedResponse, 429)
+    expect((limitedBody.message ?? '').toLowerCase()).toContain('too many requests')
   })
 })
