@@ -12,7 +12,13 @@ const localePath = useLocalePath()
 const route = useRoute()
 const router = useRouter()
 
+/**
+ * Extracts the reset token from the query string.
+ */
 const token = computed(() => route.query.token as string)
+/**
+ * Guards the page against missing or empty reset tokens.
+ */
 const isValidToken = computed(() => !!token.value)
 
 const schema = createPasswordSchema()
@@ -24,6 +30,9 @@ const formState = reactive<PasswordForm>({
   passwordConfirm: ''
 })
 
+/**
+ * Submits the new password and redirects back to the login page with a success flag.
+ */
 const onSubmit = async (event: FormSubmitEvent<PasswordForm>): Promise<void> => {
   if (isSubmitting.value) return
   isSubmitting.value = true
@@ -41,6 +50,9 @@ const onSubmit = async (event: FormSubmitEvent<PasswordForm>): Promise<void> => 
   }
 }
 
+/**
+ * Redirects users back to the reset request page when the token is missing.
+ */
 onMounted(() => {
   if (!isValidToken.value) {
     router.push(localePath('/auth/forgot-password'))

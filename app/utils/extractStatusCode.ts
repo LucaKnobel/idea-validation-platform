@@ -1,3 +1,6 @@
+/**
+ * Extracts an HTTP status code from common error object shapes returned by browser and auth clients.
+ */
 export const extractStatusCode = (error: unknown): number | undefined => {
   if (!error || typeof error !== 'object') {
     return undefined

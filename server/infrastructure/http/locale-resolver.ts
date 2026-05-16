@@ -2,6 +2,9 @@ import type { AppLocale } from '@shared/types/locale'
 
 const I18N_COOKIE_KEY = 'i18n_redirected'
 
+/**
+ * Normalizes raw locale values to the application's supported locale union.
+ */
 const normalizeLocale = (value: string | null | undefined): AppLocale | null => {
   if (value === 'de' || value === 'en') {
     return value
@@ -10,6 +13,9 @@ const normalizeLocale = (value: string | null | undefined): AppLocale | null => 
   return null
 }
 
+/**
+ * Reads the locale cookie from an incoming request when it is available.
+ */
 const getCookieLocale = (request?: Request): AppLocale | null => {
   const cookieHeader = request?.headers.get('cookie')
 
@@ -31,6 +37,9 @@ const getCookieLocale = (request?: Request): AppLocale | null => {
   return null
 }
 
+/**
+ * Resolves the best locale for backend flows using the locale cookie first and `Accept-Language` as fallback.
+ */
 export const resolveLocaleFromRequest = (request?: Request | null): AppLocale => {
   const cookieLocale = getCookieLocale(request ?? undefined)
 

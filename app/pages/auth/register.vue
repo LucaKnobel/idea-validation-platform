@@ -15,6 +15,9 @@ const localePath = useLocalePath()
 const schema = createRegisterFormSchema()
 const isSubmitting = ref(false)
 
+/**
+ * Static field configuration consumed by `UAuthForm`.
+ */
 const fields: AuthFormField[] = [{
   name: 'email',
   type: 'email',
@@ -35,6 +38,9 @@ const fields: AuthFormField[] = [{
   required: true
 }]
 
+/**
+ * Creates the account and preserves the email address for the follow-up verification page.
+ */
 const onSubmit = async (event: FormSubmitEvent<RegisterForm>): Promise<void> => {
   if (isSubmitting.value) return
   isSubmitting.value = true

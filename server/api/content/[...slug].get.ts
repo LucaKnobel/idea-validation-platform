@@ -5,6 +5,9 @@ import { queryCollection } from '@nuxt/content/server'
 import type { AppLocale } from '@shared/types/locale'
 import { enforceRateLimit } from '@server/api/rate-limit/enforce-rate-limit'
 
+/**
+ * Resolves localized content by slug and falls back to English when a translated page is missing.
+ */
 export default defineEventHandler(async (event) => {
   await enforceRateLimit(event, {
     name: 'content.read',

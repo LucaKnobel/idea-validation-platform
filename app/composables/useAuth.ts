@@ -1,3 +1,6 @@
+/**
+ * Exposes authentication workflows and shared auth-related error state for UI consumers.
+ */
 export interface UseAuthComposable {
   login: (email: string, password: string, rememberMe?: boolean) => Promise<boolean>
   register: (email: string, password: string, name: string) => Promise<boolean>
@@ -11,6 +14,11 @@ export interface UseAuthComposable {
   errorText: Ref<string | undefined>
 }
 
+/**
+ * Wraps Better Auth client calls behind a small, UI-friendly API.
+ *
+ * Each action returns `true` on success and `false` when an error message was recorded.
+ */
 export const useAuth = (): UseAuthComposable => {
   const localePath = useLocalePath()
   const {
@@ -25,6 +33,9 @@ export const useAuth = (): UseAuthComposable => {
     handleLogoutError
   } = useErrorHandler()
 
+  /**
+   * Signs a user in and stores translated error state when the request fails.
+   */
   const login = async (email: string, password: string, rememberMe = true): Promise<boolean> => {
     resetError()
 
@@ -47,6 +58,9 @@ export const useAuth = (): UseAuthComposable => {
     }
   }
 
+  /**
+   * Creates a new account and configures the localized login page as the post-verification target.
+   */
   const register = async (email: string, password: string, name: string): Promise<boolean> => {
     resetError()
 
@@ -70,6 +84,11 @@ export const useAuth = (): UseAuthComposable => {
     }
   }
 
+  /**
+   * Requests a new verification email.
+   *
+   * Returns neutral success for `400` responses to avoid exposing account state.
+   */
   const resendVerificationEmail = async (email: string): Promise<boolean> => {
     resetError()
 
@@ -100,6 +119,11 @@ export const useAuth = (): UseAuthComposable => {
     }
   }
 
+  /**
+   * Starts the password reset flow and points the backend to the localized reset page.
+   *
+   * Returns neutral success for `400` responses to avoid exposing account state.
+   */
   const requestPasswordReset = async (email: string): Promise<boolean> => {
     resetError()
 
@@ -130,6 +154,9 @@ export const useAuth = (): UseAuthComposable => {
     }
   }
 
+  /**
+   * Completes a password reset with the token issued by the reset email.
+   */
   const resetPassword = async (newPassword: string, token: string): Promise<boolean> => {
     resetError()
 
@@ -151,6 +178,9 @@ export const useAuth = (): UseAuthComposable => {
     }
   }
 
+  /**
+   * Ends the current authenticated session.
+   */
   const logout = async (): Promise<boolean> => {
     resetError()
 
