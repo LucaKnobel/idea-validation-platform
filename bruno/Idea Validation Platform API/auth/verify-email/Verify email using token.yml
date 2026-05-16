@@ -1,0 +1,109 @@
+info:
+  name: Verify email using token
+  type: http
+  seq: 1
+  tags:
+    - Auth
+
+http:
+  method: GET
+  url: "{{baseUrl}}/auth/verify-email"
+  params:
+    - name: token
+      value: ""
+      type: query
+    - name: callbackURL
+      value: ""
+      type: query
+      description: Relative callback path after successful verification.
+      disabled: true
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 Response
+    description: Email verification processed
+    request:
+      url: "{{baseUrl}}/auth/verify-email"
+      method: GET
+      params:
+        - name: token
+          value: ""
+          type: query
+        - name: callbackURL
+          value: ""
+          type: query
+          description: Relative callback path after successful verification.
+          disabled: true
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "status": true,
+            "message": "Request accepted"
+          }
+  - name: 400 Response
+    description: Invalid or expired verification token
+    request:
+      url: "{{baseUrl}}/auth/verify-email"
+      method: GET
+      params:
+        - name: token
+          value: ""
+          type: query
+        - name: callbackURL
+          value: ""
+          type: query
+          description: Relative callback path after successful verification.
+          disabled: true
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "code": "INVALID_REQUEST_BODY",
+            "message": "Invalid request body"
+          }
+  - name: 429 Response
+    description: Too many requests
+    request:
+      url: "{{baseUrl}}/auth/verify-email"
+      method: GET
+      params:
+        - name: token
+          value: ""
+          type: query
+        - name: callbackURL
+          value: ""
+          type: query
+          description: Relative callback path after successful verification.
+          disabled: true
+    response:
+      status: 429
+      statusText: Too Many Requests
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "code": "INVALID_REQUEST_BODY",
+            "message": "Invalid request body"
+          }
