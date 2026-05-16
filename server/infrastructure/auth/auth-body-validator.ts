@@ -19,11 +19,17 @@ type ParsedAuthBody = LoginUserBodyDto
   | RequestPasswordResetBodyDto
   | ResetPasswordBodyDto
 
+/**
+ * Reduced validation issue shape that is safe to log and expose internally.
+ */
 export interface ValidationIssue {
   path: string
   code: string
 }
 
+/**
+ * Raised when a Better Auth route is missing an explicit body schema mapping.
+ */
 export class UnsupportedAuthRequestBodyError extends Error {
   constructor() {
     super('Unsupported auth request body')
@@ -31,6 +37,9 @@ export class UnsupportedAuthRequestBodyError extends Error {
   }
 }
 
+/**
+ * Raised when an auth payload fails schema validation.
+ */
 export class InvalidAuthRequestBodyError extends Error {
   readonly issues: ValidationIssue[]
 
@@ -53,6 +62,9 @@ const NO_BODY_PATHS = new Set<string>([
   '/sign-out'
 ])
 
+/**
+ * Validates auth request bodies against the schema registered for the Better Auth route.
+ */
 export const validateAuthRequestBody = (path: string, body: unknown): ParsedAuthBody | undefined => {
   if (typeof body === 'undefined') {
     return undefined

@@ -18,6 +18,9 @@ const router = useRouter()
 const schema = createLoginFormSchema()
 const isSubmitting = ref(false)
 
+/**
+ * Static field configuration consumed by `UAuthForm`.
+ */
 const fields: AuthFormField[] = [{
   name: 'email',
   type: 'email',
@@ -32,6 +35,9 @@ const fields: AuthFormField[] = [{
   required: true
 }]
 
+/**
+ * Prevents duplicate submissions, signs the user in, and redirects to the dashboard on success.
+ */
 const onSubmit = async (event: FormSubmitEvent<LoginForm>): Promise<void> => {
   if (isSubmitting.value) return
   isSubmitting.value = true

@@ -36,6 +36,9 @@ const neutralAuthEventPaths = new Set<string>([
   '/send-verification-email'
 ])
 
+/**
+ * Removes account-enumeration details from framework log messages before they reach the app logger.
+ */
 const redactBetterAuthMessage = (message: string): string => {
   if (message.startsWith('Sign-up attempt for existing email:')) {
     return 'Sign-up attempt for existing email'
@@ -56,6 +59,9 @@ const unsupportedRequestBodyError = () => new APIError('BAD_REQUEST', {
   code: 'UNSUPPORTED_AUTH_REQUEST_BODY'
 })
 
+/**
+ * Detects rate-limit errors emitted by Better Auth so they can be logged separately.
+ */
 const isRateLimitError = (error: APIError): boolean => {
   const status = (error as { status?: number }).status
   if (status === 429) return true
@@ -70,6 +76,12 @@ const isRateLimitError = (error: APIError): boolean => {
 
 const { logLevel } = useRuntimeConfig()
 
+/**
+ * Central Better Auth instance for the application.
+ *
+ * It wires database persistence, request validation, locale-aware mail delivery,
+ * rate limiting, and structured logging into one backend-facing auth entry point.
+ */
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql'

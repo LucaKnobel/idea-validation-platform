@@ -7,6 +7,9 @@ import type { RateLimitStore, RateLimitResult } from '@interfaces/rate-limit-sto
  * Implements sliding window counter with atomic transactions.
  */
 export class PostgresRateLimitStore implements RateLimitStore {
+  /**
+   * Consumes one request from the caller's bucket and returns the updated limit state.
+   */
   async consume(key: string, maxRequests: number, windowSeconds: number): Promise<RateLimitResult> {
     const now = Date.now()
     const windowStart = now - windowSeconds * 1000
@@ -61,4 +64,7 @@ export class PostgresRateLimitStore implements RateLimitStore {
   }
 }
 
+/**
+ * Shared application rate-limit store backed by the database.
+ */
 export const rateLimitStore = new PostgresRateLimitStore()

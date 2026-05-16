@@ -5,6 +5,9 @@ const route = useRoute()
 const { locale } = useI18n()
 const localePath = useLocalePath()
 
+/**
+ * Reconstructs the current content slug from the catch-all route parameter.
+ */
 const slug = computed(() => {
   const value = Array.isArray(route.params.slug)
     ? route.params.slug.join('/')
@@ -13,10 +16,16 @@ const slug = computed(() => {
   return withLeadingSlash(String(value))
 })
 
+/**
+ * Backend endpoint that resolves the localized content document for the current slug.
+ */
 const contentPath = computed(() => `/api/content${slug.value}`)
 
 const { data: page } = await useAsyncData(
   () => `page-${locale.value}-${slug.value}`,
+  /**
+   * Loads the current content document and turns backend misses into a null state for the page UI.
+   */
   async () => {
     try {
       return await $fetch(contentPath.value)
