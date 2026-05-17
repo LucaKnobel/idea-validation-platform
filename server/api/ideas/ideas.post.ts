@@ -1,6 +1,6 @@
-import { enforceRateLimit } from '@server/api/rate-limit/enforce-rate-limit'
-import { CreateIdeaBodySchema, IdeaResponseSchema, type IdeaResponseDto } from '@server/api/schemas/idea-schemas'
-import { auth } from '@infrastructure/auth/auth'
+import { enforceRateLimit } from '@server/infrastructure/rate-limit/enforce-rate-limit'
+import { CreateIdeaBodySchema, IdeaResponseSchema, type IdeaResponseDto } from '@infrastructure/validation/idea-schemas'
+import { requireAuthenticatedUserId } from '../../infrastructure/auth/require-authenticated-user'
 import { createIdea } from '@infrastructure/composition'
 
 export default defineEventHandler(async (event): Promise<IdeaResponseDto> => {
@@ -11,15 +11,12 @@ export default defineEventHandler(async (event): Promise<IdeaResponseDto> => {
     scope: 'user'
   })
 
-  const session = await auth.api.getSession({ headers: event.headers })
-  if (!session?.user) {
-    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
-  }
+  const userId = await requireAuthenticatedUserId(event)
 
   const body = await readValidatedBody(event, CreateIdeaBodySchema.parse)
 
   const createdIdea = await createIdea({
-    userId: session.user.id,
+    userId,
     title: body.title,
     description: body.description && body.description.length > 0 ? body.description : null
   })

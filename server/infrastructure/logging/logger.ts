@@ -1,6 +1,6 @@
 import pino from 'pino'
 import { useRuntimeConfig } from '#imports'
-import type { Logger } from '@interfaces/logger-interface'
+import type { Logger } from '@interfaces/logger'
 
 type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error'
 

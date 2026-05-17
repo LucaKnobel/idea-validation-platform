@@ -27,7 +27,7 @@ const buildIp = (): string => `203.0.113.${randomInt(1, 250)}`
 
 beforeAll(() => {
   registerEndpoint('/api/test/rate-limit', async (event) => {
-    const { enforceRateLimit } = await import('@server/api/rate-limit/enforce-rate-limit')
+    const { enforceRateLimit } = await import('@server/infrastructure/rate-limit/enforce-rate-limit')
 
     await enforceRateLimit(event, {
       name: 'integration.rate_limit',
@@ -40,7 +40,7 @@ beforeAll(() => {
   })
 
   registerEndpoint('/api/test/rate-limit-user-or-ip', async (event) => {
-    const { enforceRateLimit } = await import('@server/api/rate-limit/enforce-rate-limit')
+    const { enforceRateLimit } = await import('@server/infrastructure/rate-limit/enforce-rate-limit')
 
     const rawUserId = event.node.req.headers['x-test-user-id']
     const userId = Array.isArray(rawUserId) ? rawUserId[0] : rawUserId
@@ -60,7 +60,7 @@ beforeAll(() => {
   })
 
   registerEndpoint('/api/test/rate-limit-user-only', async (event) => {
-    const { enforceRateLimit } = await import('@server/api/rate-limit/enforce-rate-limit')
+    const { enforceRateLimit } = await import('@server/infrastructure/rate-limit/enforce-rate-limit')
 
     const rawUserId = event.node.req.headers['x-test-user-id']
     const userId = Array.isArray(rawUserId) ? rawUserId[0] : rawUserId

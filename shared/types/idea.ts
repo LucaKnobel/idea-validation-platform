@@ -1,1 +1,1 @@
-export type { CreateIdeaBodyDto, IdeaResponseDto } from '@server/api/schemas/idea-schemas'
+export type { CreateIdeaBodyDto, IdeaResponseDto } from '@infrastructure/validation/idea-schemas'
