@@ -97,12 +97,6 @@ Responsibilities:
 ```txt
 server/
   api/
-    rate-limit/             # request protection (rate limiting)
-      policies.ts
-      rateLimit.ts
-
-    schemas/                # validation schemas (Zod)
-    mappers/                # DTO ↔ internal model mapping
 
     *.ts                    # API handlers (file-based routing)
 
@@ -116,6 +110,11 @@ server/
     db/                     # DB implementations & Repos
     logging/                # logger
     mail/                   # Mail config & services
+    rate-limit/             # request protection (rate limiting)
+    policies.ts
+    rateLimit.ts
+    validation/                # validation schemas (Zod)
+    mappers/                # DTO ↔ internal model mapping
     ...
 
 shared/
@@ -153,15 +152,6 @@ plugins/                    # Nuxt runtime integration
 - handles HTTP requests  
 - acts as controller layer  
 
-#### schemas/
-- input validation  
-
-#### mappers/
-- DTO ↔ internal model conversion  
-
-#### rate-limit/
-- request protection  
-- applied before validation  
 
 ---
 
@@ -177,7 +167,18 @@ plugins/                    # Nuxt runtime integration
 - implements interfaces  
 
 #### services/
-- external integrations  
+- external integrations 
+
+#### validation/
+- input validation  
+
+#### mappers/
+- DTO ↔ internal model conversion  
+
+#### rate-limit/
+- request protection  
+- applied before validation  
+
 
 ---
 

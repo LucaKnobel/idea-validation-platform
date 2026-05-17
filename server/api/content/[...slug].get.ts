@@ -1,9 +1,9 @@
 import { withLeadingSlash } from 'ufo'
 import { getCookie } from 'h3'
-import { GetContentParamsSchema } from '@server/api/schemas/content-schemas'
+import { GetContentParamsSchema } from '@infrastructure/validation/content-schemas'
 import { queryCollection } from '@nuxt/content/server'
 import type { AppLocale } from '@shared/types/locale'
-import { enforceRateLimit } from '@server/api/rate-limit/enforce-rate-limit'
+import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
 
 /**
  * Resolves localized content by slug and falls back to English when a translated page is missing.

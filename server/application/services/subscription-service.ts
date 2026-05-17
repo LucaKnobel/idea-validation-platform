@@ -1,7 +1,7 @@
 import type { SubscriptionService } from '@application/interfaces/subscription-service'
 import type { SubscriptionRepository } from '@application/interfaces/subscription-repository'
 import type { Subscription } from '@application/models/subscription'
-import type { Logger } from '@interfaces/logger-interface'
+import type { Logger } from '@interfaces/logger'
 import { SubscriptionLimitExceededError } from '@application/errors/subscription-errors'
 
 const FREE_BUSINESS_IDEA_LIMIT = 1
