@@ -109,6 +109,7 @@ server/
   infrastructure/ 
     auth/                   # Auth config & services
     composition.ts          # Composition Root (wires concrete dependencies)
+    handlers/               # Custom API handler wrappers (public/protected)
     db/                     # DB implementations & Repos
     logging/                # logger
     mail/                   # Mail config & services
@@ -171,6 +172,17 @@ Rules:
 - no business logic inside composition
 - no request-specific state
 - prefer singleton-like stateless wiring (module-level constants)
+
+#### handlers/
+- contains custom handler wrappers for API endpoints
+- current wrappers are `definePublicHandler` and `defineProtectedHandler`
+- wrappers handle cross-cutting technical concerns only
+
+Rules:
+
+- wrappers may do auth extraction and global error mapping
+- wrappers must not contain validation, rate-limit policies, DTO mapping, or business logic
+- business errors from the application layer should be mapped to HTTP errors centrally in infrastructure error mapping
 
 #### prisma/
 - database client  
@@ -258,12 +270,34 @@ Handler rule:
 
 - handlers import composed use cases from composition root
 - handlers must not instantiate repositories/services themselves
+- handlers should use the custom public/protected wrappers where applicable
 
 Example:
 
 ```ts
 import { createIdea } from '@infrastructure/composition'
 ```
+
+---
+
+## Custom Handler Usage
+
+Available wrappers:
+
+- `definePublicHandler` for endpoints without authentication
+- `defineProtectedHandler` for endpoints that require an authenticated user
+
+Rules:
+
+- use custom wrappers for first-party API endpoints
+- do not wrap external catch-all handlers when the library already owns request/response behavior
+- keep validation, rate limiting, and DTO mapping explicit inside the endpoint
+
+Error handling:
+
+- application services may throw business errors
+- infrastructure maps business errors to safe HTTP errors centrally
+- unknown technical errors must be logged and returned as generic `500 Internal Server Error`
 
 ---
 

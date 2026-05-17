@@ -3,6 +3,9 @@ import type { Subscription as PrismaSubscription } from '@generated/prisma/clien
 import type { SubscriptionRepository } from '@application/interfaces/subscription-repository'
 import type { Subscription } from '@application/models/subscription'
 
+/**
+ * Maps a Prisma subscription row to the application subscription model.
+ */
 const toDomainSubscription = (row: PrismaSubscription): Subscription => ({
   userId: row.userId,
   plan: row.plan,
@@ -12,6 +15,9 @@ const toDomainSubscription = (row: PrismaSubscription): Subscription => ({
 })
 
 export const subscriptionRepository: SubscriptionRepository = {
+  /**
+   * Returns a user's subscription or null when no subscription exists yet.
+   */
   async findByUserId(userId: string): Promise<Subscription | null> {
     const row = await prisma.subscription.findUnique({
       where: { userId }
@@ -20,6 +26,9 @@ export const subscriptionRepository: SubscriptionRepository = {
     return row ? toDomainSubscription(row) : null
   },
 
+  /**
+   * Creates and returns a persisted subscription.
+   */
   async create(subscription: Subscription): Promise<Subscription> {
     const row = await prisma.subscription.create({
       data: {
@@ -34,6 +43,9 @@ export const subscriptionRepository: SubscriptionRepository = {
     return toDomainSubscription(row)
   },
 
+  /**
+   * Updates and returns an existing subscription identified by userId.
+   */
   async update(subscription: Subscription): Promise<Subscription> {
     const row = await prisma.subscription.update({
       where: { userId: subscription.userId },

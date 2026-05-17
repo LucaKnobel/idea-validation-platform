@@ -2,11 +2,17 @@ import { createError, defineEventHandler, type EventHandlerRequest, type H3Event
 import { mapError } from '@infrastructure/errors/map-error'
 import { auth } from '@infrastructure/auth/auth'
 
+/**
+ * Handler signature for authenticated routes that only need the resolved user ID.
+ */
 type ProtectedRouteHandler<T extends EventHandlerRequest, D> = (
   event: H3Event<T>,
   userId: string
 ) => D | Promise<D>
 
+/**
+ * Wraps authenticated API handlers with session resolution and centralized error mapping.
+ */
 export const defineProtectedHandler = <T extends EventHandlerRequest, D>(
   handler: ProtectedRouteHandler<T, D>
 ) => {

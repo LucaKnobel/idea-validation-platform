@@ -6,6 +6,9 @@ import { createSubscriptionService } from '@application/services/subscription-se
 import { createCreateIdea } from '@application/services/create-idea'
 import { createGetIdeas } from '@application/services/get-ideas'
 
+/**
+ * Central composition root for wiring repositories, infrastructure adapters, and use cases.
+ */
 const subscriptionService = createSubscriptionService(
   subscriptionRepository,
   logger
