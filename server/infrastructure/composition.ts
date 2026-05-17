@@ -13,11 +13,13 @@ const subscriptionService = createSubscriptionService(
 
 const createIdea = createCreateIdea(
   ideaRepository,
-  subscriptionService
+  subscriptionService,
+  logger
 )
 
 const getIdeas = createGetIdeas(
-  ideaRepository
+  ideaRepository,
+  logger
 )
 
 export {

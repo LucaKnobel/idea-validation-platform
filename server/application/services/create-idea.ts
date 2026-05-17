@@ -1,10 +1,12 @@
 import type { IdeaRepository } from '@application/interfaces/idea-repository'
 import type { Idea } from '@application/models/idea'
 import type { SubscriptionService } from '@application/interfaces/subscription-service'
+import type { Logger } from '@interfaces/logger'
 
 export const createCreateIdea = (
   ideaRepository: IdeaRepository,
-  subscriptionService: SubscriptionService
+  subscriptionService: SubscriptionService,
+  logger: Logger
 ) => {
   return async (
     input: { userId: string, title: string, description: string | null }
@@ -13,10 +15,14 @@ export const createCreateIdea = (
 
     await subscriptionService.assertCanCreateBusinessIdea(input.userId, currentIdeaCount)
 
-    return ideaRepository.create({
+    const createdIdea = await ideaRepository.create({
       userId: input.userId,
       title: input.title,
       description: input.description
     })
+
+    logger.debug('Idea created', { userId: input.userId, ideaId: createdIdea.id })
+
+    return createdIdea
   }
 }

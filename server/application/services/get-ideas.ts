@@ -1,7 +1,8 @@
 import type { IdeaRepository } from '@application/interfaces/idea-repository'
 import type { Idea } from '@application/models/idea'
+import type { Logger } from '@interfaces/logger'
 
-export const createGetIdeas = (ideaRepository: IdeaRepository) => {
+export const createGetIdeas = (ideaRepository: IdeaRepository, logger: Logger) => {
   return async (input: {
     userId: string
     search: string | null
@@ -27,6 +28,14 @@ export const createGetIdeas = (ideaRepository: IdeaRepository) => {
     })
 
     const totalPages = result.total === 0 ? 0 : Math.ceil(result.total / input.pageSize)
+
+    logger.debug('Ideas listed', {
+      userId: input.userId,
+      page: input.page,
+      pageSize: input.pageSize,
+      items: result.ideas.length,
+      total: result.total
+    })
 
     return {
       ideas: result.ideas,
