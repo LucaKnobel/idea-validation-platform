@@ -1,0 +1,42 @@
+import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
+import {
+  GetIdeasQuerySchema,
+  IdeasListResponseSchema,
+  type IdeasListResponseDto
+} from '@infrastructure/validation/idea-schemas'
+import { getIdeas } from '@infrastructure/composition'
+import { requireAuthenticatedUserId } from '@infrastructure/auth/require-authenticated-user'
+
+export default defineEventHandler(async (event): Promise<IdeasListResponseDto> => {
+  await enforceRateLimit(event, {
+    name: 'ideas.list',
+    maxRequests: 30,
+    windowSeconds: 60,
+    scope: 'user'
+  })
+
+  const userId = await requireAuthenticatedUserId(event)
+  const query = await getValidatedQuery(event, GetIdeasQuerySchema.parse)
+
+  const result = await getIdeas({
+    userId,
+    search: query.q ?? null,
+    page: query.page,
+    pageSize: query.pageSize
+  })
+
+  return IdeasListResponseSchema.parse({
+    items: result.ideas.map(idea => ({
+      id: idea.id,
+      title: idea.title,
+      description: idea.description,
+      createdAt: idea.createdAt.toISOString(),
+      updatedAt: idea.updatedAt.toISOString()
+    })),
+    page: result.page,
+    pageSize: result.pageSize,
+    total: result.total,
+    totalPages: result.totalPages,
+    q: result.search
+  })
+})
