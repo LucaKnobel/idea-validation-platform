@@ -4,6 +4,7 @@ import { logger } from '@infrastructure/logging/logger'
 
 import { createSubscriptionService } from '@application/services/subscription-service'
 import { createCreateIdea } from '@application/services/create-idea'
+import { createGetIdeas } from '@application/services/get-ideas'
 
 const subscriptionService = createSubscriptionService(
   subscriptionRepository,
@@ -15,7 +16,12 @@ const createIdea = createCreateIdea(
   subscriptionService
 )
 
+const getIdeas = createGetIdeas(
+  ideaRepository
+)
+
 export {
   subscriptionService,
-  createIdea
+  createIdea,
+  getIdeas
 }
