@@ -83,6 +83,7 @@ Includes:
 - repositories  
 - logging  
 - authentication  
+- composition root (dependency wiring)  
 - external services  
 
 Responsibilities:
@@ -107,6 +108,7 @@ server/
 
   infrastructure/ 
     auth/                   # Auth config & services
+    composition.ts          # Composition Root (wires concrete dependencies)
     db/                     # DB implementations & Repos
     logging/                # logger
     mail/                   # Mail config & services
@@ -158,6 +160,17 @@ plugins/                    # Nuxt runtime integration
 ### `server/infrastructure/`
 
 - technical implementations  
+
+#### composition.ts
+- central composition root for dependency wiring
+- builds concrete services/use cases from repositories + infrastructure adapters
+- exports ready-to-use use case functions for API handlers
+
+Rules:
+
+- no business logic inside composition
+- no request-specific state
+- prefer singleton-like stateless wiring (module-level constants)
 
 #### prisma/
 - database client  
@@ -224,10 +237,32 @@ API Handler
  → Rate Limit
  → Validation
  → Mapping
+ → Composition Root (resolved use case)
  → Service (Use Case)
  → Interface
  → Repository
  → Prisma
+```
+
+---
+
+## Composition Root Usage
+
+Location:
+
+```txt
+server/infrastructure/composition.ts
+```
+
+Handler rule:
+
+- handlers import composed use cases from composition root
+- handlers must not instantiate repositories/services themselves
+
+Example:
+
+```ts
+import { createIdea } from '@infrastructure/composition'
 ```
 
 ---
