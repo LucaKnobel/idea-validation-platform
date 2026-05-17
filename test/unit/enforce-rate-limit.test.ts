@@ -11,8 +11,8 @@ const testState = vi.hoisted(() => ({
 vi.mock('h3', () => ({
   getRequestIP: testState.getRequestIP,
   setHeader: testState.setHeader,
-  createError: ({ statusCode, statusMessage }: { statusCode: number, statusMessage: string }) => {
-    const error = new Error(statusMessage) as Error & { statusCode: number }
+  createError: ({ statusCode, statusText }: { statusCode: number, statusText: string }) => {
+    const error = new Error(statusText) as Error & { statusCode: number }
     error.statusCode = statusCode
     return error
   }

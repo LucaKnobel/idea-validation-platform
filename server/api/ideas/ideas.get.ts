@@ -5,9 +5,9 @@ import {
   type IdeasListResponseDto
 } from '@infrastructure/validation/idea-schemas'
 import { getIdeas } from '@infrastructure/composition'
-import { requireAuthenticatedUserId } from '@infrastructure/auth/require-authenticated-user'
+import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
 
-export default defineEventHandler(async (event): Promise<IdeasListResponseDto> => {
+export default defineProtectedHandler(async (event, userId): Promise<IdeasListResponseDto> => {
   await enforceRateLimit(event, {
     name: 'ideas.list',
     maxRequests: 30,
@@ -15,7 +15,6 @@ export default defineEventHandler(async (event): Promise<IdeasListResponseDto> =
     scope: 'user'
   })
 
-  const userId = await requireAuthenticatedUserId(event)
   const query = await getValidatedQuery(event, GetIdeasQuerySchema.parse)
 
   const result = await getIdeas({

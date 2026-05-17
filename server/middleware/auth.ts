@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 401,
-      statusMessage: 'Authentication required'
+      statusText: 'Authentication required'
     })
   }
 
