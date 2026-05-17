@@ -3,6 +3,9 @@ import type { Idea } from '@application/models/idea'
 import type { SubscriptionService } from '@application/interfaces/subscription-service'
 import type { Logger } from '@interfaces/logger'
 
+/**
+ * Builds the use case that creates a new idea after enforcing subscription limits.
+ */
 export const createCreateIdea = (
   ideaRepository: IdeaRepository,
   subscriptionService: SubscriptionService,

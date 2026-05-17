@@ -2,6 +2,9 @@ import { createError, type H3Event } from 'h3'
 import { SubscriptionLimitExceededError } from '@application/errors/subscription-errors'
 import { logger } from '@infrastructure/logging/logger'
 
+/**
+ * Maps application and unexpected errors to safe HTTP errors for API handlers.
+ */
 export const mapError = (error: unknown, event?: H3Event): Error => {
   if (error instanceof Error && 'statusCode' in error) {
     return error

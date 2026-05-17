@@ -2,6 +2,9 @@ import type { IdeaRepository } from '@application/interfaces/idea-repository'
 import type { Idea } from '@application/models/idea'
 import type { Logger } from '@interfaces/logger'
 
+/**
+ * Builds the use case that lists a user's ideas with search and pagination metadata.
+ */
 export const createGetIdeas = (ideaRepository: IdeaRepository, logger: Logger) => {
   return async (input: {
     userId: string
