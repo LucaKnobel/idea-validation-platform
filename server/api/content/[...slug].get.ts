@@ -4,11 +4,12 @@ import { GetContentParamsSchema } from '@infrastructure/validation/content-schem
 import { queryCollection } from '@nuxt/content/server'
 import type { AppLocale } from '@shared/types/locale'
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
+import { definePublicHandler } from '@infrastructure/handlers/public-handler'
 
 /**
  * Resolves localized content by slug and falls back to English when a translated page is missing.
  */
-export default defineEventHandler(async (event) => {
+export default definePublicHandler(async (event) => {
   await enforceRateLimit(event, {
     name: 'content.read',
     maxRequests: 100,
