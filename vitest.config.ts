@@ -7,6 +7,7 @@ const testEnv = loadEnv('test', process.cwd(), '')
 
 const alias = {
   '@server': fileURLToPath(new URL('./server', import.meta.url)),
+  '@application': fileURLToPath(new URL('./server/application', import.meta.url)),
   '@interfaces': fileURLToPath(new URL('./server/application/interfaces', import.meta.url)),
   '@infrastructure': fileURLToPath(new URL('./server/infrastructure', import.meta.url)),
   '@shared': fileURLToPath(new URL('./shared', import.meta.url)),
