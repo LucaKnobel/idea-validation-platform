@@ -41,6 +41,20 @@ export const ideaRepository: IdeaRepository = {
   },
 
   /**
+   * Deletes an idea for a user and returns whether a row was removed.
+   */
+  async deleteByIdForUser(input: { userId: string, ideaId: string }): Promise<boolean> {
+    const result = await prisma.idea.deleteMany({
+      where: {
+        id: input.ideaId,
+        userId: input.userId
+      }
+    })
+
+    return result.count > 0
+  },
+
+  /**
    * Returns a paginated list of a user's ideas together with the filtered total count.
    */
   async listByUserId(input: {
