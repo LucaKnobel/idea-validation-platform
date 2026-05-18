@@ -101,6 +101,8 @@ const rangeEnd = computed(() => {
   return Math.min(page.value * pageSize.value, total.value)
 })
 
+const hasIdeas = computed(() => total.value > 0)
+
 const formatter = computed(() => new Intl.DateTimeFormat(locale.value, {
   dateStyle: 'medium',
   timeStyle: 'short'
@@ -111,7 +113,7 @@ const formatDate = (value: string): string => formatter.value.format(new Date(va
 const tableUi = {
   separator: 'hidden',
   th: 'sticky top-0 z-10 bg-default',
-  tr: 'data-[selectable=true]:cursor-pointer'
+  tr: 'data-[selectable=true]:cursor-pointer data-[selectable=true]:transition-colors data-[selectable=true]:duration-150 data-[selectable=true]:hover:bg-elevated/70 data-[selectable=true]:active:bg-elevated'
 }
 
 const openCreateIdeaModal = (): void => {
@@ -179,7 +181,7 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="mx-auto w-full max-w-[92rem] space-y-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 class="text-2xl font-semibold text-highlighted">
@@ -190,8 +192,8 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
       <UButton
         icon="i-lucide-plus"
         color="primary"
-        size="sm"
-        class="self-start rounded-lg px-3 sm:self-auto"
+        size="md"
+        class="w-full justify-center self-start rounded-xl px-4 shadow-sm ring-1 ring-primary/20 sm:w-auto sm:self-auto"
         @click="openCreateIdeaModal"
       >
         {{ $t('dashboard.createIdea') }}
@@ -200,32 +202,27 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
 
     <UCard>
       <template #header>
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <h2 class="text-base font-semibold text-highlighted">
-              {{ $t('dashboard.table.title') }}
-            </h2>
-          </div>
+        <div class="flex w-full items-center gap-2 sm:w-auto">
+          <UInput
+            v-model="searchInput"
+            icon="i-lucide-search"
+            :placeholder="$t('dashboard.searchPlaceholder')"
+            size="md"
+            class="flex-1 sm:w-80"
+            @keydown.enter.prevent="applySearch"
+          />
 
-          <div class="flex w-full items-center gap-2 sm:w-auto">
-            <UInput
-              v-model="searchInput"
-              icon="i-lucide-search"
-              :placeholder="$t('dashboard.searchPlaceholder')"
-              class="flex-1 sm:w-72"
-              @keydown.enter.prevent="applySearch"
-            />
-
-            <UButton
-              icon="i-lucide-search"
-              color="neutral"
-              size="sm"
-              :loading="isLoading"
-              @click="applySearch"
-            >
-              <span class="hidden sm:inline">{{ $t('actions.search') }}</span>
-            </UButton>
-          </div>
+          <UButton
+            icon="i-lucide-search"
+            color="neutral"
+            size="md"
+            variant="soft"
+            :aria-label="$t('actions.search')"
+            :loading="isLoading"
+            @click="applySearch"
+          >
+            <span class="hidden sm:inline">{{ $t('actions.search') }}</span>
+          </UButton>
         </div>
       </template>
 
@@ -322,7 +319,10 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
           </div>
         </div>
 
-        <div class="fixed inset-x-0 bottom-0 z-20 border-t border-default bg-default/95 px-4 py-3 shadow-lg backdrop-blur sm:static sm:z-auto sm:rounded-lg sm:border sm:bg-default sm:px-4 sm:py-2 sm:shadow-none sm:backdrop-blur-0 md:shrink-0">
+        <div
+          v-if="hasIdeas"
+          class="fixed inset-x-0 bottom-0 z-20 border-t border-default bg-default/95 px-4 py-3 shadow-lg backdrop-blur sm:static sm:z-auto sm:rounded-lg sm:border sm:bg-default sm:px-4 sm:py-2 sm:shadow-none sm:backdrop-blur-0 md:shrink-0"
+        >
           <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p class="text-sm text-muted">
               {{ $t('dashboard.paginationSummary', { from: rangeStart, to: rangeEnd, total }) }}
