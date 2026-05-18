@@ -10,7 +10,7 @@ import { defineProtectedHandler } from '@infrastructure/handlers/protected-handl
 export default defineProtectedHandler(async (event, userId): Promise<IdeasListResponseDto> => {
   await enforceRateLimit(event, {
     name: 'ideas.list',
-    maxRequests: 30,
+    maxRequests: 50,
     windowSeconds: 60,
     scope: 'user'
   })

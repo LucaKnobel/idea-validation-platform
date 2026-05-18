@@ -267,9 +267,9 @@
   },
   "dashboard": {
     "title": "My Business Ideas",
-    "description": "Manage and review your business ideas in one place.",
+    "description": "",
     "createIdea": "Create idea",
-    "searchPlaceholder": "Search ideas by title or description",
+    "searchPlaceholder": "Search idea",
     "paginationSummary": "Showing {from}-{to} of {total}",
     "actionsNotImplemented": {
       "title": "Action not implemented",
@@ -285,7 +285,7 @@
     },
     "table": {
       "title": "Ideas overview",
-      "description": "All saved business ideas with search and quick actions.",
+      "description": "",
       "empty": "No ideas found",
       "noDescription": "No description",
       "columns": {

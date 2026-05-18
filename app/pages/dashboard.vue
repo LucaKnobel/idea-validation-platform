@@ -110,6 +110,7 @@ const formatDate = (value: string): string => formatter.value.format(new Date(va
 
 const tableUi = {
   separator: 'hidden',
+  th: 'sticky top-0 z-10 bg-default',
   tr: 'data-[selectable=true]:cursor-pointer'
 }
 
@@ -180,14 +181,17 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
 <template>
   <div class="space-y-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <UPageHeader
-        :title="$t('dashboard.title')"
-        :description="$t('dashboard.description')"
-      />
+      <div>
+        <h1 class="text-2xl font-semibold text-highlighted">
+          {{ $t('dashboard.title') }}
+        </h1>
+      </div>
 
       <UButton
         icon="i-lucide-plus"
         color="primary"
+        size="sm"
+        class="self-start rounded-lg px-3 sm:self-auto"
         @click="openCreateIdeaModal"
       >
         {{ $t('dashboard.createIdea') }}
@@ -197,31 +201,29 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
     <UCard>
       <template #header>
         <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div class="space-y-1">
+          <div>
             <h2 class="text-base font-semibold text-highlighted">
               {{ $t('dashboard.table.title') }}
             </h2>
-            <p class="text-sm text-muted">
-              {{ $t('dashboard.table.description') }}
-            </p>
           </div>
 
-          <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+          <div class="flex w-full items-center gap-2 sm:w-auto">
             <UInput
               v-model="searchInput"
               icon="i-lucide-search"
               :placeholder="$t('dashboard.searchPlaceholder')"
-              class="w-full sm:w-80"
+              class="flex-1 sm:w-72"
               @keydown.enter.prevent="applySearch"
             />
 
             <UButton
               icon="i-lucide-search"
               color="neutral"
+              size="sm"
               :loading="isLoading"
               @click="applySearch"
             >
-              {{ $t('actions.search') }}
+              <span class="hidden sm:inline">{{ $t('actions.search') }}</span>
             </UButton>
           </div>
         </div>
@@ -236,98 +238,105 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
         :description="$t('dashboard.error.message')"
       />
 
-      <UTable
-        class="mt-4 md:min-h-[28rem]"
-        :data="ideas"
-        :columns="columns"
-        :loading="isLoading"
-        :empty="$t('dashboard.table.empty')"
-        :ui="tableUi"
-        @select="onRowSelect"
-      >
-        <template #title-cell="{ row }">
-          <div class="space-y-1">
-            <ULink
-              class="font-medium text-highlighted hover:text-primary"
-              :to="getIdeaWorkspaceRoute(row.original.id)"
+      <div class="dashboard-table-layout mt-4 space-y-4 pb-20 sm:pb-0 md:flex md:flex-col md:space-y-4">
+        <div class="overflow-hidden rounded-lg border border-default md:flex-1">
+          <div class="dashboard-table-scroll h-[56vh] overflow-y-auto md:h-full md:overflow-y-visible">
+            <UTable
+              :data="ideas"
+              :columns="columns"
+              :loading="isLoading"
+              :empty="$t('dashboard.table.empty')"
+              :ui="tableUi"
+              @select="onRowSelect"
             >
-              {{ row.original.title }}
-            </ULink>
+              <template #title-cell="{ row }">
+                <div class="space-y-1">
+                  <ULink
+                    class="font-medium text-highlighted hover:text-primary"
+                    :to="getIdeaWorkspaceRoute(row.original.id)"
+                  >
+                    {{ row.original.title }}
+                  </ULink>
 
-            <p class="text-sm text-muted md:hidden">
-              {{ row.original.description || '-' }}
-            </p>
+                  <p class="text-sm text-muted md:hidden">
+                    {{ row.original.description || '-' }}
+                  </p>
+                </div>
+              </template>
+
+              <template #description-cell="{ row }">
+                <p class="line-clamp-2 text-sm text-muted">
+                  {{ row.original.description || '-' }}
+                </p>
+              </template>
+
+              <template #createdAt-cell="{ row }">
+                <span class="text-sm text-toned">
+                  {{ formatDate(row.original.createdAt) }}
+                </span>
+              </template>
+
+              <template #updatedAt-cell="{ row }">
+                <span class="text-sm text-toned">
+                  {{ formatDate(row.original.updatedAt) }}
+                </span>
+              </template>
+
+              <template #actions-cell>
+                <div class="flex justify-end">
+                  <UIcon
+                    name="i-lucide-chevron-right"
+                    class="size-4 text-muted"
+                  />
+                </div>
+              </template>
+
+              <template #empty>
+                <div class="flex min-h-56 flex-col items-center justify-center gap-4 px-6 py-10 text-center">
+                  <div class="flex size-12 items-center justify-center rounded-full bg-elevated">
+                    <UIcon
+                      name="i-lucide-lightbulb"
+                      class="size-6 text-primary"
+                    />
+                  </div>
+
+                  <div class="space-y-1">
+                    <p class="font-medium text-highlighted">
+                      {{ $t('dashboard.empty.title') }}
+                    </p>
+                    <p class="max-w-md text-sm text-muted">
+                      {{ $t('dashboard.empty.description') }}
+                    </p>
+                  </div>
+
+                  <UButton
+                    icon="i-lucide-plus"
+                    color="primary"
+                    @click="openCreateIdeaModal"
+                  >
+                    {{ $t('dashboard.createIdea') }}
+                  </UButton>
+                </div>
+              </template>
+            </UTable>
           </div>
-        </template>
+        </div>
 
-        <template #description-cell="{ row }">
-          <p class="line-clamp-2 text-sm text-muted">
-            {{ row.original.description || '-' }}
-          </p>
-        </template>
+        <div class="fixed inset-x-0 bottom-0 z-20 border-t border-default bg-default/95 px-4 py-3 shadow-lg backdrop-blur sm:static sm:z-auto sm:rounded-lg sm:border sm:bg-default sm:px-4 sm:py-2 sm:shadow-none sm:backdrop-blur-0 md:shrink-0">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm text-muted">
+              {{ $t('dashboard.paginationSummary', { from: rangeStart, to: rangeEnd, total }) }}
+            </p>
 
-        <template #createdAt-cell="{ row }">
-          <span class="text-sm text-toned">
-            {{ formatDate(row.original.createdAt) }}
-          </span>
-        </template>
-
-        <template #updatedAt-cell="{ row }">
-          <span class="text-sm text-toned">
-            {{ formatDate(row.original.updatedAt) }}
-          </span>
-        </template>
-
-        <template #actions-cell>
-          <div class="flex justify-end">
-            <UIcon
-              name="i-lucide-chevron-right"
-              class="size-4 text-muted"
+            <UPagination
+              v-model:page="page"
+              :total="total"
+              :items-per-page="pageSize"
+              show-edges
+              :disabled="isLoading"
             />
           </div>
-        </template>
-
-        <template #empty>
-          <div class="flex min-h-56 flex-col items-center justify-center gap-4 px-6 py-10 text-center">
-            <div class="flex size-12 items-center justify-center rounded-full bg-elevated">
-              <UIcon
-                name="i-lucide-lightbulb"
-                class="size-6 text-primary"
-              />
-            </div>
-
-            <div class="space-y-1">
-              <p class="font-medium text-highlighted">
-                {{ $t('dashboard.empty.title') }}
-              </p>
-              <p class="max-w-md text-sm text-muted">
-                {{ $t('dashboard.empty.description') }}
-              </p>
-            </div>
-
-            <UButton
-              icon="i-lucide-plus"
-              color="primary"
-              @click="openCreateIdeaModal"
-            >
-              {{ $t('dashboard.createIdea') }}
-            </UButton>
-          </div>
-        </template>
-      </UTable>
-
-      <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p class="text-sm text-muted">
-          {{ $t('dashboard.paginationSummary', { from: rangeStart, to: rangeEnd, total }) }}
-        </p>
-
-        <UPagination
-          v-model:page="page"
-          :total="total"
-          :items-per-page="pageSize"
-          show-edges
-          :disabled="isLoading"
-        />
+        </div>
       </div>
     </UCard>
 
@@ -444,3 +453,28 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
     </UModal>
   </div>
 </template>
+
+<style scoped>
+@media (min-width: 768px) and (max-height: 900px) {
+  .dashboard-table-layout {
+    height: calc(100vh - 14rem);
+  }
+
+  .dashboard-table-scroll {
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+
+@media (min-width: 768px) and (min-height: 901px) {
+  .dashboard-table-layout {
+    height: 42rem;
+  }
+
+  .dashboard-table-scroll {
+    height: 100%;
+    max-height: none;
+    overflow-y: visible;
+  }
+}
+</style>
