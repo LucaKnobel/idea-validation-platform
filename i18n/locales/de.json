@@ -267,9 +267,9 @@
   },
   "dashboard": {
     "title": "Meine Geschäftsideen",
-    "description": "Verwalten und prüfen Sie Ihre Geschäftsideen an einem Ort.",
+    "description": "",
     "createIdea": "Idee erstellen",
-    "searchPlaceholder": "Ideen nach Titel oder Beschreibung suchen",
+    "searchPlaceholder": "Idee suchen",
     "paginationSummary": "Zeige {from}-{to} von {total}",
     "actionsNotImplemented": {
       "title": "Aktion noch nicht implementiert",
@@ -285,7 +285,7 @@
     },
     "table": {
       "title": "Ideenübersicht",
-      "description": "Alle gespeicherten Geschäftsideen mit Suchfunktion und Aktionen.",
+      "description": "",
       "empty": "Keine Ideen gefunden",
       "noDescription": "Keine Beschreibung",
       "columns": {
