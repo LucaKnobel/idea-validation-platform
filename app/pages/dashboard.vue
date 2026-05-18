@@ -181,7 +181,7 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-[92rem] space-y-6">
+  <div class="space-y-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 class="text-2xl font-semibold text-highlighted">
@@ -202,13 +202,13 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
 
     <UCard>
       <template #header>
-        <div class="flex w-full items-center gap-2 sm:w-auto">
+        <div class="flex items-center gap-2">
           <UInput
             v-model="searchInput"
             icon="i-lucide-search"
             :placeholder="$t('dashboard.searchPlaceholder')"
             size="md"
-            class="flex-1 sm:w-80"
+            class="w-48 sm:w-64"
             @keydown.enter.prevent="applySearch"
           />
 
