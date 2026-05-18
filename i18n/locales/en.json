@@ -264,5 +264,100 @@
       "title": "Danger zone",
       "placeholder": "Account deletion and destructive actions will be added here."
     }
+  },
+  "dashboard": {
+    "title": "My Business Ideas",
+    "description": "Manage and review your business ideas in one place.",
+    "createIdea": "Create idea",
+    "searchPlaceholder": "Search ideas by title or description",
+    "paginationSummary": "Showing {from}-{to} of {total}",
+    "actionsNotImplemented": {
+      "title": "Action not implemented",
+      "message": "This action will be available soon."
+    },
+    "error": {
+      "title": "Ideas could not be loaded",
+      "message": "Please try again in a moment."
+    },
+    "empty": {
+      "title": "You don't have any ideas yet",
+      "description": "Create your first business idea so you can manage, search, and refine it from here later on."
+    },
+    "table": {
+      "title": "Ideas overview",
+      "description": "All saved business ideas with search and quick actions.",
+      "empty": "No ideas found",
+      "noDescription": "No description",
+      "columns": {
+        "title": "Title",
+        "description": "Description",
+        "createdAt": "Created at",
+        "updatedAt": "Updated at",
+        "actions": "Actions"
+      }
+    },
+    "createForm": {
+      "title": "Create new idea",
+      "description": "Capture your business idea so you can evaluate and refine it later.",
+      "intro": "Keep it concise for now. A clear title and short description are enough to start building on the idea later.",
+      "fields": {
+        "title": {
+          "label": "Title",
+          "description": "A short, clear name for the idea.",
+          "placeholder": "e.g. AI-powered sales assistant"
+        },
+        "description": {
+          "label": "Description",
+          "description": "Optional: briefly outline the value, target audience, or problem.",
+          "placeholder": "Briefly describe the problem, target users, and your proposed solution."
+        }
+      },
+      "validation": {
+        "titleRequired": "Please enter a title.",
+        "titleTooLong": "Title must not exceed 200 characters.",
+        "descriptionTooLong": "Description must not exceed 3000 characters."
+      },
+      "success": {
+        "title": "Idea created",
+        "message": "Your idea was saved successfully."
+      },
+      "error": {
+        "title": "Could not create idea",
+        "message": "Please try again."
+      }
+    },
+    "upgradeModal": {
+      "title": "Upgrade to Pro required",
+      "description": "On the Free plan, you can create one business idea.",
+      "pitch": "With Pro, you can create unlimited business ideas and scale your validation process without limits.",
+      "cta": "Upgrade to Pro"
+    },
+    "delete": {
+      "title": "Delete business idea",
+      "description": "Please confirm that you want to permanently delete this idea.",
+      "warning": "This action removes the business idea and all associated data permanently. It cannot be undone.",
+      "ideaLabel": "Idea to delete",
+      "confirm": "Delete permanently",
+      "success": {
+        "title": "Idea deleted",
+        "message": "The business idea was permanently removed."
+      },
+      "error": {
+        "title": "Could not delete idea",
+        "message": "Please try again."
+      }
+    }
+  },
+  "upgradePage": {
+    "title": "Upgrade to Pro",
+    "description": "Soon you will be able to upgrade your plan to Pro here.",
+    "wipBadge": "Work in Progress",
+    "wipText": "This upgrade page is not implemented yet."
+  },
+  "ideaWorkspace": {
+    "title": "Idea Workspace",
+    "description": "Workspace for the selected business idea.",
+    "wipBadge": "Work in Progress",
+    "wipText": "This section will be expanded next."
   }
 }

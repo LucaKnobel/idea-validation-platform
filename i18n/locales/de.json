@@ -264,5 +264,100 @@
       "title": "Gefährlicher Bereich",
       "placeholder": "Kontolöschung und weitere kritische Aktionen werden hier ergänzt."
     }
+  },
+  "dashboard": {
+    "title": "Meine Geschäftsideen",
+    "description": "Verwalten und prüfen Sie Ihre Geschäftsideen an einem Ort.",
+    "createIdea": "Idee erstellen",
+    "searchPlaceholder": "Ideen nach Titel oder Beschreibung suchen",
+    "paginationSummary": "Zeige {from}-{to} von {total}",
+    "actionsNotImplemented": {
+      "title": "Aktion noch nicht implementiert",
+      "message": "Diese Aktion ist bald verfügbar."
+    },
+    "error": {
+      "title": "Ideen konnten nicht geladen werden",
+      "message": "Bitte versuchen Sie es in einem Moment erneut."
+    },
+    "empty": {
+      "title": "Du hast noch keine Ideen",
+      "description": "Erstelle deine erste Geschäftsidee, damit du sie hier verwalten, durchsuchen und später weiter ausarbeiten kannst."
+    },
+    "table": {
+      "title": "Ideenübersicht",
+      "description": "Alle gespeicherten Geschäftsideen mit Suchfunktion und Aktionen.",
+      "empty": "Keine Ideen gefunden",
+      "noDescription": "Keine Beschreibung",
+      "columns": {
+        "title": "Titel",
+        "description": "Beschreibung",
+        "createdAt": "Erstellt am",
+        "updatedAt": "Aktualisiert am",
+        "actions": "Aktionen"
+      }
+    },
+    "createForm": {
+      "title": "Neue Idee erstellen",
+      "description": "Erfassen Sie Ihre Geschäftsidee, um sie später zu bewerten und weiterzuentwickeln.",
+      "intro": "Halte die Idee zunächst kompakt fest. Titel und Kurzbeschreibung reichen aus, um später darauf aufzubauen.",
+      "fields": {
+        "title": {
+          "label": "Titel",
+          "description": "Ein kurzer, klarer Name für die Idee.",
+          "placeholder": "z. B. KI-gestützter Vertriebsassistent"
+        },
+        "description": {
+          "label": "Beschreibung",
+          "description": "Optional: kurz den Nutzen, die Zielgruppe oder das Problem skizzieren.",
+          "placeholder": "Beschreiben Sie kurz das Problem, die Zielgruppe und den Ansatz."
+        }
+      },
+      "validation": {
+        "titleRequired": "Bitte geben Sie einen Titel ein.",
+        "titleTooLong": "Der Titel darf maximal 200 Zeichen lang sein.",
+        "descriptionTooLong": "Die Beschreibung darf maximal 3000 Zeichen lang sein."
+      },
+      "success": {
+        "title": "Idee erstellt",
+        "message": "Ihre Idee wurde erfolgreich gespeichert."
+      },
+      "error": {
+        "title": "Idee konnte nicht erstellt werden",
+        "message": "Bitte versuchen Sie es erneut."
+      }
+    },
+    "upgradeModal": {
+      "title": "Upgrade auf Pro erforderlich",
+      "description": "Im Free-Plan können Sie eine Geschäftsidee erstellen.",
+      "pitch": "Mit Pro können Sie unbegrenzt Geschäftsideen erstellen und Ihre Validierung ohne Einschränkungen skalieren.",
+      "cta": "Auf Pro upgraden"
+    },
+    "delete": {
+      "title": "Geschäftsidee löschen",
+      "description": "Bitte bestätigen Sie, dass Sie diese Idee dauerhaft löschen möchten.",
+      "warning": "Diese Aktion entfernt die Geschäftsidee und alle dazugehörigen Daten dauerhaft. Dieser Schritt kann nicht rückgängig gemacht werden.",
+      "ideaLabel": "Zu löschende Idee",
+      "confirm": "Endgültig löschen",
+      "success": {
+        "title": "Idee gelöscht",
+        "message": "Die Geschäftsidee wurde dauerhaft entfernt."
+      },
+      "error": {
+        "title": "Idee konnte nicht gelöscht werden",
+        "message": "Bitte versuchen Sie es erneut."
+      }
+    }
+  },
+  "upgradePage": {
+    "title": "Upgrade auf Pro",
+    "description": "Hier können Sie bald Ihren Plan auf Pro upgraden.",
+    "wipBadge": "Work in Progress",
+    "wipText": "Diese Upgrade-Seite ist noch nicht implementiert."
+  },
+  "ideaWorkspace": {
+    "title": "Idea Workspace",
+    "description": "Arbeitsbereich für die ausgewählte Geschäftsidee.",
+    "wipBadge": "Work in Progress",
+    "wipText": "Dieser Bereich wird als nächstes ausgebaut."
   }
 }
