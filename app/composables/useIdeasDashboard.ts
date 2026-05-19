@@ -21,7 +21,6 @@ export const useIdeasDashboard = (): UseIdeasDashboardComposable => {
   const { listIdeas, createIdea: createIdeaRequest, deleteIdea: deleteIdeaRequest } = useIdeasApi()
 
   const ideas = ref<IdeaResponseDto[]>([])
-  const isLoading = ref(false)
   const hasError = ref(false)
 
   const page = ref(1)
@@ -31,6 +30,7 @@ export const useIdeasDashboard = (): UseIdeasDashboardComposable => {
 
   const searchInput = ref('')
   const activeSearch = ref('')
+  const isLoading = ref(false)
 
   const fetchIdeas = async (): Promise<void> => {
     isLoading.value = true

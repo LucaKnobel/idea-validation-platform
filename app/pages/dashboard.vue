@@ -238,84 +238,92 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
       <div class="dashboard-table-layout mt-4 space-y-4 pb-20 sm:pb-0 md:flex md:flex-col md:space-y-4">
         <div class="overflow-hidden rounded-lg border border-default md:flex-1">
           <div class="dashboard-table-scroll h-[56vh] overflow-y-auto md:h-full md:overflow-y-visible">
-            <UTable
-              :data="ideas"
-              :columns="columns"
-              :loading="isLoading"
-              :empty="$t('dashboard.table.empty')"
-              :ui="tableUi"
-              @select="onRowSelect"
-            >
-              <template #title-cell="{ row }">
-                <div class="space-y-1">
-                  <ULink
-                    class="font-medium text-highlighted hover:text-primary"
-                    :to="getIdeaWorkspaceRoute(row.original.id)"
-                  >
-                    {{ row.original.title }}
-                  </ULink>
+            <ClientOnly>
+              <UTable
+                :data="ideas"
+                :columns="columns"
+                :loading="isLoading"
+                :empty="$t('dashboard.table.empty')"
+                :ui="tableUi"
+                @select="onRowSelect"
+              >
+                <template #title-cell="{ row }">
+                  <div class="space-y-1">
+                    <ULink
+                      class="font-medium text-highlighted hover:text-primary"
+                      :to="getIdeaWorkspaceRoute(row.original.id)"
+                    >
+                      {{ row.original.title }}
+                    </ULink>
 
-                  <p class="text-sm text-muted md:hidden">
+                    <p class="text-sm text-muted md:hidden">
+                      {{ row.original.description || '-' }}
+                    </p>
+                  </div>
+                </template>
+
+                <template #description-cell="{ row }">
+                  <p class="line-clamp-2 text-sm text-muted">
                     {{ row.original.description || '-' }}
                   </p>
-                </div>
-              </template>
+                </template>
 
-              <template #description-cell="{ row }">
-                <p class="line-clamp-2 text-sm text-muted">
-                  {{ row.original.description || '-' }}
-                </p>
-              </template>
+                <template #createdAt-cell="{ row }">
+                  <span class="text-sm text-toned">
+                    {{ formatDate(row.original.createdAt) }}
+                  </span>
+                </template>
 
-              <template #createdAt-cell="{ row }">
-                <span class="text-sm text-toned">
-                  {{ formatDate(row.original.createdAt) }}
-                </span>
-              </template>
+                <template #updatedAt-cell="{ row }">
+                  <span class="text-sm text-toned">
+                    {{ formatDate(row.original.updatedAt) }}
+                  </span>
+                </template>
 
-              <template #updatedAt-cell="{ row }">
-                <span class="text-sm text-toned">
-                  {{ formatDate(row.original.updatedAt) }}
-                </span>
-              </template>
-
-              <template #actions-cell>
-                <div class="flex justify-end">
-                  <UIcon
-                    name="i-lucide-chevron-right"
-                    class="size-4 text-muted"
-                  />
-                </div>
-              </template>
-
-              <template #empty>
-                <div class="flex min-h-56 flex-col items-center justify-center gap-4 px-6 py-10 text-center">
-                  <div class="flex size-12 items-center justify-center rounded-full bg-elevated">
+                <template #actions-cell>
+                  <div class="flex justify-end">
                     <UIcon
-                      name="i-lucide-lightbulb"
-                      class="size-6 text-primary"
+                      name="i-lucide-chevron-right"
+                      class="size-4 text-muted"
                     />
                   </div>
+                </template>
 
-                  <div class="space-y-1">
-                    <p class="font-medium text-highlighted">
-                      {{ $t('dashboard.empty.title') }}
-                    </p>
-                    <p class="max-w-md text-sm text-muted">
-                      {{ $t('dashboard.empty.description') }}
-                    </p>
+                <template #empty>
+                  <div class="flex min-h-56 flex-col items-center justify-center gap-4 px-6 py-10 text-center">
+                    <div class="flex size-12 items-center justify-center rounded-full bg-elevated">
+                      <UIcon
+                        name="i-lucide-lightbulb"
+                        class="size-6 text-primary"
+                      />
+                    </div>
+
+                    <div class="space-y-1">
+                      <p class="font-medium text-highlighted">
+                        {{ $t('dashboard.empty.title') }}
+                      </p>
+                      <p class="max-w-md text-sm text-muted">
+                        {{ $t('dashboard.empty.description') }}
+                      </p>
+                    </div>
+
+                    <UButton
+                      icon="i-lucide-plus"
+                      color="primary"
+                      @click="openCreateIdeaModal"
+                    >
+                      {{ $t('dashboard.createIdea') }}
+                    </UButton>
                   </div>
+                </template>
+              </UTable>
 
-                  <UButton
-                    icon="i-lucide-plus"
-                    color="primary"
-                    @click="openCreateIdeaModal"
-                  >
-                    {{ $t('dashboard.createIdea') }}
-                  </UButton>
+              <template #fallback>
+                <div class="flex min-h-56 items-center justify-center px-6 py-10 text-sm text-muted">
+                  {{ $t('common.loading') }}
                 </div>
               </template>
-            </UTable>
+            </ClientOnly>
           </div>
         </div>
 
