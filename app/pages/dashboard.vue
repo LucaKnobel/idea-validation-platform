@@ -164,6 +164,7 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
     showSuccess('dashboard.createForm.success.title', 'dashboard.createForm.success.message')
 
     isCreateModalOpen.value = false
+    await navigateTo(getIdeaWorkspaceRoute(created.id))
   } catch (error: unknown) {
     const statusCode = extractStatusCode(error)
 
@@ -351,7 +352,6 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
     <UModal
       v-model:open="isCreateModalOpen"
       :title="$t('dashboard.createForm.title')"
-      :description="$t('dashboard.createForm.description')"
       :dismissible="!isCreatingIdea"
       :ui="{
         content: 'w-[92vw] sm:max-w-2xl md:min-w-[44rem]',
@@ -359,12 +359,6 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
       }"
     >
       <template #body>
-        <div class="rounded-xl border border-default bg-elevated/40 p-4">
-          <p class="text-sm text-toned">
-            {{ $t('dashboard.createForm.intro') }}
-          </p>
-        </div>
-
         <UForm
           :schema="createIdeaSchema"
           :state="createIdeaFormState"
@@ -412,7 +406,6 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
             <UButton
               type="submit"
               color="primary"
-              icon="i-lucide-plus"
               :loading="isCreatingIdea"
             >
               {{ $t('dashboard.createIdea') }}

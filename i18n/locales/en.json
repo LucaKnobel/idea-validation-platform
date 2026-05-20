@@ -298,8 +298,6 @@
     },
     "createForm": {
       "title": "Create new idea",
-      "description": "Capture your business idea so you can evaluate and refine it later.",
-      "intro": "Keep it concise for now. A clear title and short description are enough to start building on the idea later.",
       "fields": {
         "title": {
           "label": "Title",
