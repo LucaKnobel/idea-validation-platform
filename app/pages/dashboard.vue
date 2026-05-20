@@ -47,11 +47,21 @@ const createIdeaSchema = computed(() => z.object({
 const columns = computed(() => [
   {
     accessorKey: 'title',
-    header: t('dashboard.table.columns.title')
+    header: t('dashboard.table.columns.title'),
+    size: 320,
+    maxSize: 360,
+    meta: {
+      class: {
+        th: 'md:w-[20rem]',
+        td: 'md:w-[20rem]'
+      }
+    }
   },
   {
     accessorKey: 'description',
     header: t('dashboard.table.columns.description'),
+    size: 420,
+    maxSize: 460,
     meta: {
       class: {
         th: 'hidden md:table-cell',
@@ -62,26 +72,38 @@ const columns = computed(() => [
   {
     accessorKey: 'createdAt',
     header: t('dashboard.table.columns.createdAt'),
+    size: 180,
+    maxSize: 180,
     meta: {
       class: {
-        th: 'hidden md:table-cell',
-        td: 'hidden md:table-cell whitespace-nowrap'
+        th: 'hidden md:table-cell md:w-[11.25rem]',
+        td: 'hidden md:table-cell md:w-[11.25rem]'
       }
     }
   },
   {
     accessorKey: 'updatedAt',
     header: t('dashboard.table.columns.updatedAt'),
+    size: 180,
+    maxSize: 180,
     meta: {
       class: {
-        th: 'hidden md:table-cell',
-        td: 'hidden md:table-cell whitespace-nowrap'
+        th: 'hidden md:table-cell md:w-[11.25rem]',
+        td: 'hidden md:table-cell md:w-[11.25rem]'
       }
     }
   },
   {
     id: 'actions',
-    header: ''
+    header: '',
+    size: 48,
+    maxSize: 48,
+    meta: {
+      class: {
+        th: 'w-12 md:w-12',
+        td: 'w-12 md:w-12'
+      }
+    }
   }
 ])
 
@@ -112,7 +134,8 @@ const formatDate = (value: string): string => formatter.value.format(new Date(va
 
 const tableUi = {
   separator: 'hidden',
-  th: 'sticky top-0 z-10 bg-default',
+  base: 'w-full table-fixed border-separate border-spacing-0',
+  th: 'bg-default',
   tr: 'data-[selectable=true]:cursor-pointer data-[selectable=true]:transition-colors data-[selectable=true]:duration-150 data-[selectable=true]:hover:bg-elevated/70 data-[selectable=true]:active:bg-elevated'
 }
 
@@ -142,6 +165,11 @@ const openUpgradeModal = (): void => {
 
 const closeUpgradeModal = (): void => {
   isUpgradeModalOpen.value = false
+}
+
+const clearSearchAndReload = async (): Promise<void> => {
+  searchInput.value = ''
+  await applySearch()
 }
 
 const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, description?: string }>): Promise<void> => {
@@ -206,12 +234,26 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
         <div class="flex items-center gap-2">
           <UInput
             v-model="searchInput"
-            icon="i-lucide-search"
             :placeholder="$t('dashboard.searchPlaceholder')"
             size="md"
+            :ui="{ trailing: 'pe-1' }"
             class="w-48 sm:w-64"
             @keydown.enter.prevent="applySearch"
-          />
+          >
+            <template
+              v-if="searchInput?.length"
+              #trailing
+            >
+              <UButton
+                color="neutral"
+                variant="link"
+                size="sm"
+                icon="i-lucide-circle-x"
+                aria-label="Clear input"
+                @click="clearSearchAndReload"
+              />
+            </template>
+          </UInput>
 
           <UButton
             icon="i-lucide-search"
@@ -238,21 +280,24 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
 
       <div class="dashboard-table-layout mt-4 space-y-4 pb-20 sm:pb-0 md:flex md:flex-col md:space-y-4">
         <div class="overflow-hidden rounded-lg border border-default md:flex-1">
-          <div class="dashboard-table-scroll h-[56vh] overflow-y-auto md:h-full md:overflow-y-visible">
+          <div class="dashboard-table-scroll md:h-full">
             <ClientOnly>
               <UTable
+                class="h-[56vh] md:h-auto"
                 :data="ideas"
                 :columns="columns"
                 :loading="isLoading"
                 :empty="$t('dashboard.table.empty')"
+                sticky
                 :ui="tableUi"
                 @select="onRowSelect"
               >
                 <template #title-cell="{ row }">
-                  <div class="space-y-1">
+                  <div class="title-cell-content w-full space-y-1 overflow-hidden">
                     <ULink
-                      class="font-medium text-highlighted hover:text-primary"
+                      class="block max-w-full wrap-break-word font-medium text-highlighted hover:text-primary"
                       :to="getIdeaWorkspaceRoute(row.original.id)"
+                      :title="row.original.title"
                     >
                       {{ row.original.title }}
                     </ULink>
@@ -264,7 +309,10 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
                 </template>
 
                 <template #description-cell="{ row }">
-                  <p class="line-clamp-2 text-sm text-muted">
+                  <p
+                    class="description-cell-content text-sm text-muted"
+                    :title="row.original.description || '-'"
+                  >
                     {{ row.original.description || '-' }}
                   </p>
                 </template>
@@ -285,7 +333,7 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
                   <div class="flex justify-end">
                     <UIcon
                       name="i-lucide-chevron-right"
-                      class="size-4 text-muted"
+                      class="size-5 shrink-0 text-muted"
                     />
                   </div>
                 </template>
@@ -465,6 +513,20 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
     height: 100%;
     overflow-y: auto;
   }
+}
+
+.dashboard-table-scroll :deep(.title-cell-content),
+.dashboard-table-scroll :deep(.description-cell-content) {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  white-space: normal;
+  word-break: break-word;
 }
 
 @media (min-width: 768px) and (min-height: 901px) {
