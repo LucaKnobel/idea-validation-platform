@@ -19,6 +19,7 @@ export interface UseIdeasDashboardComposable {
  */
 export const useIdeasDashboard = (): UseIdeasDashboardComposable => {
   const { listIdeas, createIdea: createIdeaRequest, deleteIdea: deleteIdeaRequest } = useIdeasApi()
+  const { handleRateLimitError } = useErrorHandler()
 
   const ideas = ref<IdeaResponseDto[]>([])
   const hasError = ref(false)
@@ -46,7 +47,11 @@ export const useIdeasDashboard = (): UseIdeasDashboardComposable => {
       ideas.value = response.items
       total.value = response.total
       totalPages.value = response.totalPages
-    } catch {
+    } catch (error: unknown) {
+      if (handleRateLimitError(error)) {
+        return
+      }
+
       hasError.value = true
       ideas.value = []
       total.value = 0
