@@ -298,17 +298,15 @@
     },
     "createForm": {
       "title": "Neue Idee erstellen",
-      "description": "Erfassen Sie Ihre Geschäftsidee, um sie später zu bewerten und weiterzuentwickeln.",
-      "intro": "Halte die Idee zunächst kompakt fest. Titel und Kurzbeschreibung reichen aus, um später darauf aufzubauen.",
       "fields": {
         "title": {
           "label": "Titel",
-          "description": "Ein kurzer, klarer Name für die Idee.",
+          "description": "Kurz und eindeutig.",
           "placeholder": "z. B. KI-gestützter Vertriebsassistent"
         },
         "description": {
           "label": "Beschreibung",
-          "description": "Optional: kurz den Nutzen, die Zielgruppe oder das Problem skizzieren.",
+          "description": "Optional: Nutzen, Zielgruppe oder Problem in 1-2 Sätzen.",
           "placeholder": "Beschreiben Sie kurz das Problem, die Zielgruppe und den Ansatz."
         }
       },
