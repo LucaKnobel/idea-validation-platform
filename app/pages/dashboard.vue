@@ -12,6 +12,7 @@ definePageMeta({
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { showSuccess, showError } = useToastNotification()
+const { handleRateLimitError } = useErrorHandler()
 
 const {
   ideas,
@@ -194,6 +195,10 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
     isCreateModalOpen.value = false
     await navigateTo(getIdeaWorkspaceRoute(created.id))
   } catch (error: unknown) {
+    if (handleRateLimitError(error)) {
+      return
+    }
+
     const statusCode = extractStatusCode(error)
 
     if (statusCode === 403) {

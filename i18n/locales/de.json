@@ -94,6 +94,10 @@
         "title": "Seite nicht gefunden",
         "message": "Die gesuchte Seite existiert nicht oder wurde verschoben."
       },
+      "429": {
+        "title": "Zu viele Anfragen",
+        "message": "Das System ist aktuell stark ausgelastet. Bitte warten Sie kurz und versuchen Sie es dann erneut."
+      },
       "500": {
         "title": "Serverfehler",
         "message": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."

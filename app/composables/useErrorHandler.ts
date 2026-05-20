@@ -6,6 +6,7 @@ export interface UseErrorHandlerComposable {
   errorTitle: Ref<string | undefined>
   errorText: Ref<string | undefined>
   resetError: () => void
+  handleRateLimitError: (error: unknown) => boolean
   handleRegistrationError: (error: unknown) => { titleKey: string, textKey: string }
   handleLoginError: (error: unknown) => { titleKey: string, textKey: string }
   handlePasswordResetRequestError: (error: unknown) => { titleKey: string, textKey: string }
@@ -39,6 +40,28 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     errorTitle.value = undefined
     errorText.value = undefined
     hasError.value = false
+  }
+
+  /**
+   * Handles API rate-limit responses globally and shows the Nuxt error page.
+   * Returns true when the incoming error was a 429 and has been handled.
+   */
+  const handleRateLimitError = (error: unknown): boolean => {
+    if (extractStatusCode(error) !== 429) {
+      return false
+    }
+
+    const rateLimitError = createError({
+      statusCode: 429,
+      statusMessage: 'Too Many Requests'
+    })
+
+    if (import.meta.client) {
+      showError(rateLimitError)
+      return true
+    }
+
+    throw rateLimitError
   }
 
   /**
@@ -160,6 +183,7 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     errorTitle,
     errorText,
     resetError,
+    handleRateLimitError,
     handleRegistrationError,
     handleLoginError,
     handlePasswordResetRequestError,

@@ -5,24 +5,27 @@ const props = defineProps<{ error: NuxtError }>()
 
 const localePath = useLocalePath()
 
-const getErrorKey = () => {
-  const status = props.error.status
+const getErrorKey = (): '404' | '429' | '500' | 'default' => {
+  const status = props.error.statusCode ?? props.error.status
 
   if (status === 404) {
     return '404'
   }
+
   if (status === 429) {
     return '429'
   }
+
   if (status && status >= 500) {
     return '500'
   }
+
   return 'default'
 }
 
 const errorKey = getErrorKey()
 
-const handleError = async () => {
+const handleError = async (): Promise<void> => {
   clearError()
   await navigateTo(localePath('/'))
 }

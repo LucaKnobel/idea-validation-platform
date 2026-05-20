@@ -4,6 +4,7 @@ import { withLeadingSlash } from 'ufo'
 const route = useRoute()
 const { locale } = useI18n()
 const localePath = useLocalePath()
+const { handleRateLimitError } = useErrorHandler()
 
 /**
  * Reconstructs the current content slug from the catch-all route parameter.
@@ -29,7 +30,10 @@ const { data: page } = await useAsyncData(
   async () => {
     try {
       return await $fetch(contentPath.value)
-    } catch {
+    } catch (error: unknown) {
+      if (handleRateLimitError(error)) {
+        return null
+      }
       return null
     }
   },
