@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { FormSubmitEvent, TableRow } from '@nuxt/ui'
-import { computed } from 'vue'
+import type { FormSubmitEvent, TableColumn, TableRow } from '@nuxt/ui'
+import { computed, h, resolveComponent } from 'vue'
 import * as z from 'zod'
 import type { IdeaResponseDto } from '../../shared/types/idea'
 
@@ -13,6 +13,7 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { showSuccess, showError } = useToastNotification()
 const { handleRateLimitError } = useErrorHandler()
+const UIcon = resolveComponent('UIcon')
 
 const {
   ideas,
@@ -45,7 +46,7 @@ const createIdeaSchema = computed(() => z.object({
   description: z.string().trim().max(3000, t('dashboard.createForm.validation.descriptionTooLong')).optional().or(z.literal(''))
 }))
 
-const columns = computed(() => [
+const columns = computed<TableColumn<IdeaResponseDto>[]>(() => [
   {
     accessorKey: 'title',
     header: t('dashboard.table.columns.title'),
@@ -75,10 +76,11 @@ const columns = computed(() => [
     header: t('dashboard.table.columns.createdAt'),
     size: 180,
     maxSize: 180,
+    cell: ({ row }) => formatDate(row.original.createdAt),
     meta: {
       class: {
         th: 'hidden md:table-cell md:w-[11.25rem]',
-        td: 'hidden md:table-cell md:w-[11.25rem]'
+        td: 'hidden md:table-cell md:w-[11.25rem] text-sm text-toned'
       }
     }
   },
@@ -87,10 +89,11 @@ const columns = computed(() => [
     header: t('dashboard.table.columns.updatedAt'),
     size: 180,
     maxSize: 180,
+    cell: ({ row }) => formatDate(row.original.updatedAt),
     meta: {
       class: {
         th: 'hidden md:table-cell md:w-[11.25rem]',
-        td: 'hidden md:table-cell md:w-[11.25rem]'
+        td: 'hidden md:table-cell md:w-[11.25rem] text-sm text-toned'
       }
     }
   },
@@ -99,6 +102,16 @@ const columns = computed(() => [
     header: '',
     size: 48,
     maxSize: 48,
+    cell: () => h(
+      'div',
+      { class: 'flex justify-end' },
+      [
+        h(UIcon, {
+          name: 'i-lucide-chevron-right',
+          class: 'size-5 shrink-0 text-muted'
+        })
+      ]
+    ),
     meta: {
       class: {
         th: 'w-12 md:w-12',
@@ -135,9 +148,7 @@ const formatDate = (value: string): string => formatter.value.format(new Date(va
 
 const tableUi = {
   separator: 'hidden',
-  base: 'w-full table-fixed border-separate border-spacing-0',
-  th: 'bg-default',
-  tr: 'data-[selectable=true]:cursor-pointer data-[selectable=true]:transition-colors data-[selectable=true]:duration-150 data-[selectable=true]:hover:bg-elevated/70 data-[selectable=true]:active:bg-elevated'
+  base: 'w-full table-fixed border-separate border-spacing-0'
 }
 
 const openCreateIdeaModal = (): void => {
@@ -288,7 +299,7 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
           <div class="dashboard-table-scroll md:h-full">
             <ClientOnly>
               <UTable
-                class="h-[56vh] md:h-auto"
+                class="h-[56vh] md:h-full"
                 :data="ideas"
                 :columns="columns"
                 :loading="isLoading"
@@ -298,7 +309,7 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
                 @select="onRowSelect"
               >
                 <template #title-cell="{ row }">
-                  <div class="title-cell-content w-full space-y-1 overflow-hidden">
+                  <div class="title-cell-content clamped-text line-clamp-2 w-full space-y-1 overflow-hidden">
                     <ULink
                       class="block max-w-full wrap-break-word font-medium text-highlighted hover:text-primary"
                       :to="getIdeaWorkspaceRoute(row.original.id)"
@@ -315,32 +326,11 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
 
                 <template #description-cell="{ row }">
                   <p
-                    class="description-cell-content text-sm text-muted"
+                    class="description-cell-content clamped-text line-clamp-2 text-sm text-muted"
                     :title="row.original.description || '-'"
                   >
                     {{ row.original.description || '-' }}
                   </p>
-                </template>
-
-                <template #createdAt-cell="{ row }">
-                  <span class="text-sm text-toned">
-                    {{ formatDate(row.original.createdAt) }}
-                  </span>
-                </template>
-
-                <template #updatedAt-cell="{ row }">
-                  <span class="text-sm text-toned">
-                    {{ formatDate(row.original.updatedAt) }}
-                  </span>
-                </template>
-
-                <template #actions-cell>
-                  <div class="flex justify-end">
-                    <UIcon
-                      name="i-lucide-chevron-right"
-                      class="size-5 shrink-0 text-muted"
-                    />
-                  </div>
                 </template>
 
                 <template #empty>
@@ -383,7 +373,7 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
 
         <div
           v-if="hasIdeas"
-          class="fixed inset-x-0 bottom-0 z-20 border-t border-default bg-default/95 px-4 py-3 shadow-lg backdrop-blur sm:static sm:z-auto sm:rounded-lg sm:border sm:bg-default sm:px-4 sm:py-2 sm:shadow-none sm:backdrop-blur-0 md:shrink-0"
+          class="pagination-dock"
         >
           <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p class="text-sm text-muted">
@@ -479,7 +469,7 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
       }"
     >
       <template #body>
-        <div class="rounded-xl border border-primary/20 bg-primary/5 p-4">
+        <div class="upgrade-callout">
           <p class="text-sm text-toned">
             {{ $t('dashboard.upgradeModal.pitch') }}
           </p>
@@ -509,40 +499,69 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
 </template>
 
 <style scoped>
-@media (min-width: 768px) and (max-height: 900px) {
+.pagination-dock {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 20;
+  border-top: 1px solid var(--ui-border);
+  background-color: color-mix(in srgb, var(--ui-bg) 95%, transparent);
+  padding: 0.75rem 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+@media (min-width: 640px) {
+  .pagination-dock {
+    position: static;
+    z-index: auto;
+    border: 1px solid var(--ui-border);
+    border-radius: 0.5rem;
+    background-color: var(--ui-bg);
+    padding: 0.5rem 1rem;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .pagination-dock {
+    flex-shrink: 0;
+  }
+}
+
+.upgrade-callout {
+  border-radius: 0.75rem;
+  border: 1px solid;
+  padding: 1rem;
+  border-color: color-mix(in srgb, var(--ui-primary) 20%, transparent);
+  background-color: color-mix(in srgb, var(--ui-primary) 5%, transparent);
+}
+
+@media (min-width: 768px) {
   .dashboard-table-layout {
-    height: calc(100vh - 14rem);
+    height: min(50rem, calc(100vh - 10rem));
   }
 
   .dashboard-table-scroll {
     height: 100%;
     overflow-y: auto;
   }
+
+  .dashboard-table-scroll :deep(thead th) {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background-color: var(--ui-bg);
+  }
 }
 
-.dashboard-table-scroll :deep(.title-cell-content),
-.dashboard-table-scroll :deep(.description-cell-content) {
+.clamped-text {
   min-width: 0;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  line-clamp: 2;
   white-space: normal;
   word-break: break-word;
-}
-
-@media (min-width: 768px) and (min-height: 901px) {
-  .dashboard-table-layout {
-    height: 42rem;
-  }
-
-  .dashboard-table-scroll {
-    height: 100%;
-    max-height: none;
-    overflow-y: visible;
-  }
 }
 </style>
