@@ -35,6 +35,9 @@ const {
   createIdea
 })
 
+/**
+ * Configures dashboard table columns and responsive visibility per breakpoint.
+ */
 const columns = computed<TableColumn<IdeaResponseDto>[]>(() => [
   {
     accessorKey: 'title',
@@ -110,6 +113,9 @@ const columns = computed<TableColumn<IdeaResponseDto>[]>(() => [
   }
 ])
 
+/**
+ * Computes the first visible item index for the current pagination state.
+ */
 const rangeStart = computed(() => {
   if (total.value === 0) {
     return 0
@@ -118,6 +124,9 @@ const rangeStart = computed(() => {
   return (page.value - 1) * pageSize.value + 1
 })
 
+/**
+ * Computes the last visible item index for the current pagination state.
+ */
 const rangeEnd = computed(() => {
   if (total.value === 0) {
     return 0
@@ -128,11 +137,17 @@ const rangeEnd = computed(() => {
 
 const hasIdeas = computed(() => total.value > 0)
 
+/**
+ * Locale-aware formatter reused by the table date cells.
+ */
 const formatter = computed(() => new Intl.DateTimeFormat(locale.value, {
   dateStyle: 'medium',
   timeStyle: 'short'
 }))
 
+/**
+ * Converts ISO timestamps to localized date/time labels.
+ */
 const formatDate = (value: string): string => formatter.value.format(new Date(value))
 
 const tableUi = {
@@ -140,15 +155,24 @@ const tableUi = {
   base: 'w-full table-fixed border-separate border-spacing-0'
 }
 
+/**
+ * Navigates to the selected idea workspace when a table row is clicked.
+ */
 const onRowSelect = async (_event: Event, row: TableRow<IdeaResponseDto>): Promise<void> => {
   await navigateTo(localePath(`/idea-workspace/${row.original.id}`))
 }
 
+/**
+ * Clears the search input and reloads the dashboard list.
+ */
 const clearSearchAndReload = async (): Promise<void> => {
   searchInput.value = ''
   await applySearch()
 }
 
+/**
+ * Delegates modal submit payloads to the create-idea flow composable.
+ */
 const onCreateIdeaSubmit = async (form: CreateIdeaForm): Promise<void> => {
   await submitCreateIdea(form)
 }

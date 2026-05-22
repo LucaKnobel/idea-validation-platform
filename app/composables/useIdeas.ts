@@ -1,6 +1,7 @@
-import type { IdeaResponseDto, IdeasListResponseDto } from '../../shared/types/idea'
-
-export interface useIdeasComposable {
+/**
+ * Public contract for ideas listing, filtering, pagination and mutations.
+ */
+export interface UseIdeasComposable {
   ideas: Ref<IdeaResponseDto[]>
   isLoading: Ref<boolean>
   hasError: Ref<boolean>
@@ -17,7 +18,7 @@ export interface useIdeasComposable {
 /**
  * Handles listing ideas with server-side search and pagination state for the dashboard UI.
  */
-export const useIdeas = (): useIdeasComposable => {
+export const useIdeas = (): UseIdeasComposable => {
   const { listIdeas, createIdea: createIdeaRequest, deleteIdea: deleteIdeaRequest } = useIdeasApi()
   const { handleRateLimitError } = useErrorHandler()
 
@@ -33,6 +34,9 @@ export const useIdeas = (): useIdeasComposable => {
   const activeSearch = ref('')
   const isLoading = ref(false)
 
+  /**
+   * Loads ideas for the current page and active query.
+   */
   const fetchIdeas = async (): Promise<void> => {
     isLoading.value = true
     hasError.value = false
@@ -61,6 +65,9 @@ export const useIdeas = (): useIdeasComposable => {
     }
   }
 
+  /**
+   * Normalizes the search input and refreshes the first page when needed.
+   */
   const applySearch = async (): Promise<void> => {
     const normalizedQuery = searchInput.value.trim()
     const shouldRefetchCurrentPage = normalizedQuery === activeSearch.value && page.value === 1
@@ -80,10 +87,16 @@ export const useIdeas = (): useIdeasComposable => {
     await fetchIdeas()
   }
 
+  /**
+   * Refreshes the current list state using existing page/search inputs.
+   */
   const refresh = async (): Promise<void> => {
     await fetchIdeas()
   }
 
+  /**
+   * Creates an idea and keeps pagination state consistent with the dashboard list.
+   */
   const createIdea = async (input: { title: string, description?: string }): Promise<IdeaResponseDto | null> => {
     const createdIdea = await createIdeaRequest({
       title: input.title,
@@ -99,6 +112,9 @@ export const useIdeas = (): useIdeasComposable => {
     return createdIdea
   }
 
+  /**
+   * Deletes an idea and updates pagination if the current page becomes empty.
+   */
   const deleteIdea = async (input: { ideaId: string }): Promise<boolean> => {
     await deleteIdeaRequest(input.ideaId)
 
@@ -113,10 +129,16 @@ export const useIdeas = (): useIdeasComposable => {
     return true
   }
 
+  /**
+   * Reloads data whenever pagination changes.
+   */
   watch(page, async () => {
     await fetchIdeas()
   })
 
+  /**
+   * Loads the initial idea list when the dashboard page mounts.
+   */
   onMounted(async () => {
     await fetchIdeas()
   })
