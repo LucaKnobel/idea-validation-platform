@@ -1,38 +1,6 @@
 import * as z from 'zod'
 
 /**
- * Form model for account registration.
- */
-export type RegisterForm = {
-  email: string
-  password: string
-  passwordConfirm: string
-}
-
-/**
- * Form model for email/password sign-in.
- */
-export type LoginForm = {
-  email: string
-  password: string
-}
-
-/**
- * Form model for email-only verification and recovery flows.
- */
-export type VerifyEmailForm = {
-  email: string
-}
-
-/**
- * Form model for password creation and confirmation.
- */
-export type PasswordForm = {
-  password: string
-  passwordConfirm: string
-}
-
-/**
  * Creates localized Zod schemas for the authentication forms used by the frontend.
  */
 export const useValidation = () => {
@@ -96,10 +64,26 @@ export const useValidation = () => {
     path: ['passwordConfirm']
   })
 
+  /**
+   * Builds the schema for idea creation in the dashboard modal.
+   */
+  const createIdeaFormSchema = () => z.object({
+    title: z.string()
+      .trim()
+      .min(1, t('dashboard.createForm.validation.titleRequired'))
+      .max(200, t('dashboard.createForm.validation.titleTooLong')),
+    description: z.string()
+      .trim()
+      .max(3000, t('dashboard.createForm.validation.descriptionTooLong'))
+      .optional()
+      .or(z.literal(''))
+  })
+
   return {
     createPasswordSchema,
     createRegisterFormSchema,
     createLoginFormSchema,
-    createVerifyEmailSchema
+    createVerifyEmailSchema,
+    createIdeaFormSchema
   }
 }

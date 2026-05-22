@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import type { FormSubmitEvent, TableColumn, TableRow } from '@nuxt/ui'
-import { computed, h, resolveComponent } from 'vue'
-import * as z from 'zod'
-import type { IdeaResponseDto } from '../../shared/types/idea'
 
 definePageMeta({
   middleware: ['auth-middleware'],
@@ -13,6 +10,7 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { showSuccess, showError } = useToastNotification()
 const { handleRateLimitError } = useErrorHandler()
+const { createIdeaFormSchema } = useValidation()
 const UIcon = resolveComponent('UIcon')
 
 const {
@@ -41,10 +39,7 @@ const createIdeaFormState = reactive<CreateIdeaForm>({
   description: ''
 })
 
-const createIdeaSchema = computed(() => z.object({
-  title: z.string().trim().min(1, t('dashboard.createForm.validation.titleRequired')).max(200, t('dashboard.createForm.validation.titleTooLong')),
-  description: z.string().trim().max(3000, t('dashboard.createForm.validation.descriptionTooLong')).optional().or(z.literal(''))
-}))
+const createIdeaSchema = computed(() => createIdeaFormSchema())
 
 const columns = computed<TableColumn<IdeaResponseDto>[]>(() => [
   {

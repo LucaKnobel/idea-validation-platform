@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
 
+interface PasswordForm {
+  password: string
+  passwordConfirm: string
+}
+
 definePageMeta({
   layout: 'auth',
   middleware: ['guest-middleware']
