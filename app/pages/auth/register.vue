@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
-import type { RegisterForm } from '~/composables/useValidation'
+
+interface RegisterForm {
+  email: string
+  password: string
+  passwordConfirm: string
+}
 
 definePageMeta({
   layout: 'auth',
