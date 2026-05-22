@@ -328,12 +328,6 @@
         "message": "Bitte versuchen Sie es erneut."
       }
     },
-    "upgradeModal": {
-      "title": "Upgrade auf Pro erforderlich",
-      "description": "Im Free-Plan können Sie eine Geschäftsidee erstellen.",
-      "pitch": "Mit Pro können Sie unbegrenzt Geschäftsideen erstellen und Ihre Validierung ohne Einschränkungen skalieren.",
-      "cta": "Auf Pro upgraden"
-    },
     "delete": {
       "title": "Geschäftsidee löschen",
       "description": "Bitte bestätigen Sie, dass Sie diese Idee dauerhaft löschen möchten.",
@@ -355,6 +349,12 @@
     "description": "Hier können Sie bald Ihren Plan auf Pro upgraden.",
     "wipBadge": "Work in Progress",
     "wipText": "Diese Upgrade-Seite ist noch nicht implementiert."
+  },
+  "upgradeToProModal": {
+    "title": "Upgrade auf Pro erforderlich",
+    "description": "Im Free-Plan können Sie eine Geschäftsidee erstellen.",
+    "pitch": "Mit Pro können Sie unbegrenzt Geschäftsideen erstellen und Ihre Validierung ohne Einschränkungen skalieren.",
+    "cta": "Auf Pro upgraden"
   },
   "ideaWorkspace": {
     "title": "Idea Workspace",

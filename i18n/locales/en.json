@@ -328,12 +328,6 @@
         "message": "Please try again."
       }
     },
-    "upgradeModal": {
-      "title": "Upgrade to Pro required",
-      "description": "On the Free plan, you can create one business idea.",
-      "pitch": "With Pro, you can create unlimited business ideas and scale your validation process without limits.",
-      "cta": "Upgrade to Pro"
-    },
     "delete": {
       "title": "Delete business idea",
       "description": "Please confirm that you want to permanently delete this idea.",
@@ -355,6 +349,12 @@
     "description": "Soon you will be able to upgrade your plan to Pro here.",
     "wipBadge": "Work in Progress",
     "wipText": "This upgrade page is not implemented yet."
+  },
+  "upgradeToProModal": {
+    "title": "Upgrade to Pro required",
+    "description": "On the Free plan, you can create one business idea.",
+    "pitch": "With Pro, you can create unlimited business ideas and scale your validation process without limits.",
+    "cta": "Upgrade to Pro"
   },
   "ideaWorkspace": {
     "title": "Idea Workspace",
