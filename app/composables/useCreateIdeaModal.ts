@@ -80,7 +80,7 @@ export const useCreateIdeaModal = (options: UseCreateIdeaModalOptions): UseCreat
         return
       }
 
-      showSuccess('dashboard.createForm.success.title', 'dashboard.createForm.success.message')
+      showSuccess('createIdeaModal.success.title', 'createIdeaModal.success.message')
 
       isCreateModalOpen.value = false
       await navigateTo(localePath(`/idea-workspace/${created.id}`))
@@ -95,7 +95,7 @@ export const useCreateIdeaModal = (options: UseCreateIdeaModalOptions): UseCreat
         return
       }
 
-      showError('dashboard.createForm.error.title', 'dashboard.createForm.error.message')
+      showError('createIdeaModal.error.title', 'createIdeaModal.error.message')
     } finally {
       isCreatingIdea.value = false
     }

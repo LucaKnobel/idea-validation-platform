@@ -300,34 +300,6 @@
         "actions": "Aktionen"
       }
     },
-    "createForm": {
-      "title": "Neue Idee erstellen",
-      "fields": {
-        "title": {
-          "label": "Titel",
-          "description": "Kurz und eindeutig.",
-          "placeholder": "z. B. KI-gestützter Vertriebsassistent"
-        },
-        "description": {
-          "label": "Beschreibung",
-          "description": "Optional: Nutzen, Zielgruppe oder Problem in 1-2 Sätzen.",
-          "placeholder": "Beschreiben Sie kurz das Problem, die Zielgruppe und den Ansatz."
-        }
-      },
-      "validation": {
-        "titleRequired": "Bitte geben Sie einen Titel ein.",
-        "titleTooLong": "Der Titel darf maximal 200 Zeichen lang sein.",
-        "descriptionTooLong": "Die Beschreibung darf maximal 3000 Zeichen lang sein."
-      },
-      "success": {
-        "title": "Idee erstellt",
-        "message": "Ihre Idee wurde erfolgreich gespeichert."
-      },
-      "error": {
-        "title": "Idee konnte nicht erstellt werden",
-        "message": "Bitte versuchen Sie es erneut."
-      }
-    },
     "delete": {
       "title": "Geschäftsidee löschen",
       "description": "Bitte bestätigen Sie, dass Sie diese Idee dauerhaft löschen möchten.",
@@ -342,6 +314,35 @@
         "title": "Idee konnte nicht gelöscht werden",
         "message": "Bitte versuchen Sie es erneut."
       }
+    }
+  },
+  "createIdeaModal": {
+    "title": "Neue Idee erstellen",
+    "submit": "Idee erstellen",
+    "fields": {
+      "title": {
+        "label": "Titel",
+        "description": "Kurz und eindeutig.",
+        "placeholder": "z. B. KI-gestützter Vertriebsassistent"
+      },
+      "description": {
+        "label": "Beschreibung",
+        "description": "Optional: Nutzen, Zielgruppe oder Problem in 1-2 Sätzen.",
+        "placeholder": "Beschreiben Sie kurz das Problem, die Zielgruppe und den Ansatz."
+      }
+    },
+    "validation": {
+      "titleRequired": "Bitte geben Sie einen Titel ein.",
+      "titleTooLong": "Der Titel darf maximal 200 Zeichen lang sein.",
+      "descriptionTooLong": "Die Beschreibung darf maximal 3000 Zeichen lang sein."
+    },
+    "success": {
+      "title": "Idee erstellt",
+      "message": "Ihre Idee wurde erfolgreich gespeichert."
+    },
+    "error": {
+      "title": "Idee konnte nicht erstellt werden",
+      "message": "Bitte versuchen Sie es erneut."
     }
   },
   "upgradePage": {

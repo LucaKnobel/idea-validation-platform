@@ -300,34 +300,6 @@
         "actions": "Actions"
       }
     },
-    "createForm": {
-      "title": "Create new idea",
-      "fields": {
-        "title": {
-          "label": "Title",
-          "description": "A short, clear name for the idea.",
-          "placeholder": "e.g. AI-powered sales assistant"
-        },
-        "description": {
-          "label": "Description",
-          "description": "Optional: briefly outline the value, target audience, or problem.",
-          "placeholder": "Briefly describe the problem, target users, and your proposed solution."
-        }
-      },
-      "validation": {
-        "titleRequired": "Please enter a title.",
-        "titleTooLong": "Title must not exceed 200 characters.",
-        "descriptionTooLong": "Description must not exceed 3000 characters."
-      },
-      "success": {
-        "title": "Idea created",
-        "message": "Your idea was saved successfully."
-      },
-      "error": {
-        "title": "Could not create idea",
-        "message": "Please try again."
-      }
-    },
     "delete": {
       "title": "Delete business idea",
       "description": "Please confirm that you want to permanently delete this idea.",
@@ -342,6 +314,35 @@
         "title": "Could not delete idea",
         "message": "Please try again."
       }
+    }
+  },
+  "createIdeaModal": {
+    "title": "Create new idea",
+    "submit": "Create idea",
+    "fields": {
+      "title": {
+        "label": "Title",
+        "description": "A short, clear name for the idea.",
+        "placeholder": "e.g. AI-powered sales assistant"
+      },
+      "description": {
+        "label": "Description",
+        "description": "Optional: briefly outline the value, target audience, or problem.",
+        "placeholder": "Briefly describe the problem, target users, and your proposed solution."
+      }
+    },
+    "validation": {
+      "titleRequired": "Please enter a title.",
+      "titleTooLong": "Title must not exceed 200 characters.",
+      "descriptionTooLong": "Description must not exceed 3000 characters."
+    },
+    "success": {
+      "title": "Idea created",
+      "message": "Your idea was saved successfully."
+    },
+    "error": {
+      "title": "Could not create idea",
+      "message": "Please try again."
     }
   },
   "upgradePage": {

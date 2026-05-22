@@ -28,7 +28,7 @@ const onSubmit = (): void => {
 <template>
   <UModal
     v-model:open="open"
-    :title="t('dashboard.createForm.title')"
+    :title="t('createIdeaModal.title')"
     :dismissible="!isCreatingIdea"
     :ui="{
       content: 'w-[92vw] sm:max-w-2xl md:min-w-[44rem]',
@@ -44,13 +44,13 @@ const onSubmit = (): void => {
       >
         <UFormField
           name="title"
-          :label="t('dashboard.createForm.fields.title.label')"
-          :description="t('dashboard.createForm.fields.title.description')"
+          :label="t('createIdeaModal.fields.title.label')"
+          :description="t('createIdeaModal.fields.title.description')"
           required
         >
           <UInput
             v-model="state.title"
-            :placeholder="t('dashboard.createForm.fields.title.placeholder')"
+            :placeholder="t('createIdeaModal.fields.title.placeholder')"
             :disabled="isCreatingIdea"
             class="w-full"
           />
@@ -58,12 +58,12 @@ const onSubmit = (): void => {
 
         <UFormField
           name="description"
-          :label="t('dashboard.createForm.fields.description.label')"
-          :description="t('dashboard.createForm.fields.description.description')"
+          :label="t('createIdeaModal.fields.description.label')"
+          :description="t('createIdeaModal.fields.description.description')"
         >
           <UTextarea
             v-model="state.description"
-            :placeholder="t('dashboard.createForm.fields.description.placeholder')"
+            :placeholder="t('createIdeaModal.fields.description.placeholder')"
             :disabled="isCreatingIdea"
             :rows="4"
             class="w-full"
@@ -85,7 +85,7 @@ const onSubmit = (): void => {
             color="primary"
             :loading="isCreatingIdea"
           >
-            {{ t('dashboard.createIdea') }}
+            {{ t('createIdeaModal.submit') }}
           </UButton>
         </div>
       </UForm>

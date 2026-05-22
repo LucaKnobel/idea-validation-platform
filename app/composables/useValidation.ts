@@ -70,11 +70,11 @@ export const useValidation = () => {
   const createIdeaFormSchema = () => z.object({
     title: z.string()
       .trim()
-      .min(1, t('dashboard.createForm.validation.titleRequired'))
-      .max(200, t('dashboard.createForm.validation.titleTooLong')),
+      .min(1, t('createIdeaModal.validation.titleRequired'))
+      .max(200, t('createIdeaModal.validation.titleTooLong')),
     description: z.string()
       .trim()
-      .max(3000, t('dashboard.createForm.validation.descriptionTooLong'))
+      .max(3000, t('createIdeaModal.validation.descriptionTooLong'))
       .optional()
       .or(z.literal(''))
   })
