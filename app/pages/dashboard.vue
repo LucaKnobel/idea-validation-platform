@@ -22,7 +22,18 @@ const {
   searchInput,
   applySearch,
   createIdea
-} = useIdeasDashboard()
+} = useIdeas()
+
+const {
+  isCreateModalOpen,
+  isCreatingIdea,
+  createIdeaFormState,
+  createIdeaSchema,
+  openCreateIdeaModal,
+  submitCreateIdea
+} = useCreateIdeaModal({
+  createIdea
+})
 
 const columns = computed<TableColumn<IdeaResponseDto>[]>(() => [
   {
@@ -129,21 +140,8 @@ const tableUi = {
   base: 'w-full table-fixed border-separate border-spacing-0'
 }
 
-const getIdeaWorkspaceRoute = (ideaId: string): string => localePath(`/idea-workspace/${ideaId}`)
-
-const {
-  isCreateModalOpen,
-  isCreatingIdea,
-  createIdeaFormState,
-  createIdeaSchema,
-  openCreateIdeaModal,
-  submitCreateIdea
-} = useCreateIdeaModal({
-  createIdea
-})
-
 const onRowSelect = async (_event: Event, row: TableRow<IdeaResponseDto>): Promise<void> => {
-  await navigateTo(getIdeaWorkspaceRoute(row.original.id))
+  await navigateTo(localePath(`/idea-workspace/${row.original.id}`))
 }
 
 const clearSearchAndReload = async (): Promise<void> => {
@@ -243,7 +241,7 @@ const onCreateIdeaSubmit = async (form: CreateIdeaForm): Promise<void> => {
                   <div class="title-cell-content clamped-text line-clamp-2 w-full space-y-1 overflow-hidden">
                     <ULink
                       class="block max-w-full wrap-break-word font-medium text-highlighted hover:text-primary"
-                      :to="getIdeaWorkspaceRoute(row.original.id)"
+                      :to="localePath(`/idea-workspace/${row.original.id}`)"
                       :title="row.original.title"
                     >
                       {{ row.original.title }}
@@ -365,14 +363,6 @@ const onCreateIdeaSubmit = async (form: CreateIdeaForm): Promise<void> => {
   .pagination-dock {
     flex-shrink: 0;
   }
-}
-
-.upgrade-callout {
-  border-radius: 0.75rem;
-  border: 1px solid;
-  padding: 1rem;
-  border-color: color-mix(in srgb, var(--ui-primary) 20%, transparent);
-  background-color: color-mix(in srgb, var(--ui-primary) 5%, transparent);
 }
 
 @media (min-width: 768px) {

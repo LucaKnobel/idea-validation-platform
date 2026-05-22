@@ -19,7 +19,7 @@ const localePath = useLocalePath()
     }"
   >
     <template #body>
-      <div class="upgrade-callout">
+      <div class="rounded-xl border border-primary/20 bg-primary/5 p-4">
         <p class="text-sm text-toned">
           {{ t('upgradeToProModal.pitch') }}
         </p>

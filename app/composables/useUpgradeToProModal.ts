@@ -1,5 +1,5 @@
 export const useUpgradeToProModal = () => {
-  const isUpgradeModalOpen = ref(false)
+  const isUpgradeModalOpen = useState<boolean>('upgrade-to-pro-modal-open', () => false)
 
   const openUpgradeModal = (): void => {
     isUpgradeModalOpen.value = true
