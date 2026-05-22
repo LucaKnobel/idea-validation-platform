@@ -8,10 +8,7 @@ definePageMeta({
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
-const { showSuccess, showError } = useToastNotification()
-const { handleRateLimitError } = useErrorHandler()
-const { createIdeaFormSchema } = useValidation()
-const { isUpgradeModalOpen, openUpgradeModal } = useUpgradeToProModal()
+const { isUpgradeModalOpen } = useUpgradeToProModal()
 const UIcon = resolveComponent('UIcon')
 
 const {
@@ -25,20 +22,6 @@ const {
   applySearch,
   createIdea
 } = useIdeasDashboard()
-
-interface CreateIdeaForm {
-  title: string
-  description?: string
-}
-
-const isCreateModalOpen = ref(false)
-const isCreatingIdea = ref(false)
-const createIdeaFormState = reactive<CreateIdeaForm>({
-  title: '',
-  description: ''
-})
-
-const createIdeaSchema = computed(() => createIdeaFormSchema())
 
 const columns = computed<TableColumn<IdeaResponseDto>[]>(() => [
   {
@@ -145,21 +128,19 @@ const tableUi = {
   base: 'w-full table-fixed border-separate border-spacing-0'
 }
 
-const openCreateIdeaModal = (): void => {
-  createIdeaFormState.title = ''
-  createIdeaFormState.description = ''
-  isCreateModalOpen.value = true
-}
-
-const closeCreateIdeaModal = (): void => {
-  if (isCreatingIdea.value) {
-    return
-  }
-
-  isCreateModalOpen.value = false
-}
-
 const getIdeaWorkspaceRoute = (ideaId: string): string => localePath(`/idea-workspace/${ideaId}`)
+
+const {
+  isCreateModalOpen,
+  isCreatingIdea,
+  createIdeaFormState,
+  createIdeaSchema,
+  openCreateIdeaModal,
+  closeCreateIdeaModal,
+  submitCreateIdea
+} = useCreateIdeaModal({
+  createIdea
+})
 
 const onRowSelect = async (_event: Event, row: TableRow<IdeaResponseDto>): Promise<void> => {
   await navigateTo(getIdeaWorkspaceRoute(row.original.id))
@@ -171,43 +152,10 @@ const clearSearchAndReload = async (): Promise<void> => {
 }
 
 const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, description?: string }>): Promise<void> => {
-  if (isCreatingIdea.value) {
-    return
-  }
-
-  isCreatingIdea.value = true
-
-  try {
-    const created = await createIdea({
-      title: event.data.title,
-      description: (event.data.description ?? '').trim() ? event.data.description : undefined
-    })
-
-    if (!created) {
-      return
-    }
-
-    showSuccess('dashboard.createForm.success.title', 'dashboard.createForm.success.message')
-
-    isCreateModalOpen.value = false
-    await navigateTo(getIdeaWorkspaceRoute(created.id))
-  } catch (error: unknown) {
-    if (handleRateLimitError(error)) {
-      return
-    }
-
-    const statusCode = extractStatusCode(error)
-
-    if (statusCode === 403) {
-      isCreateModalOpen.value = false
-      openUpgradeModal()
-      return
-    }
-
-    showError('dashboard.createForm.error.title', 'dashboard.createForm.error.message')
-  } finally {
-    isCreatingIdea.value = false
-  }
+  await submitCreateIdea({
+    title: event.data.title,
+    description: event.data.description ?? ''
+  })
 }
 </script>
 
