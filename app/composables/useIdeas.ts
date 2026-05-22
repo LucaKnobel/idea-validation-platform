@@ -1,6 +1,6 @@
 import type { IdeaResponseDto, IdeasListResponseDto } from '../../shared/types/idea'
 
-export interface UseIdeasDashboardComposable {
+export interface useIdeasComposable {
   ideas: Ref<IdeaResponseDto[]>
   isLoading: Ref<boolean>
   hasError: Ref<boolean>
@@ -17,7 +17,7 @@ export interface UseIdeasDashboardComposable {
 /**
  * Handles listing ideas with server-side search and pagination state for the dashboard UI.
  */
-export const useIdeasDashboard = (): UseIdeasDashboardComposable => {
+export const useIdeas = (): useIdeasComposable => {
   const { listIdeas, createIdea: createIdeaRequest, deleteIdea: deleteIdeaRequest } = useIdeasApi()
   const { handleRateLimitError } = useErrorHandler()
 
