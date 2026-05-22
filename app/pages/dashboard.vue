@@ -11,6 +11,7 @@ const localePath = useLocalePath()
 const { showSuccess, showError } = useToastNotification()
 const { handleRateLimitError } = useErrorHandler()
 const { createIdeaFormSchema } = useValidation()
+const { isUpgradeModalOpen, openUpgradeModal } = useUpgradeToProModal()
 const UIcon = resolveComponent('UIcon')
 
 const {
@@ -32,8 +33,6 @@ interface CreateIdeaForm {
 
 const isCreateModalOpen = ref(false)
 const isCreatingIdea = ref(false)
-const isUpgradeModalOpen = ref(false)
-
 const createIdeaFormState = reactive<CreateIdeaForm>({
   title: '',
   description: ''
@@ -164,14 +163,6 @@ const getIdeaWorkspaceRoute = (ideaId: string): string => localePath(`/idea-work
 
 const onRowSelect = async (_event: Event, row: TableRow<IdeaResponseDto>): Promise<void> => {
   await navigateTo(getIdeaWorkspaceRoute(row.original.id))
-}
-
-const openUpgradeModal = (): void => {
-  isUpgradeModalOpen.value = true
-}
-
-const closeUpgradeModal = (): void => {
-  isUpgradeModalOpen.value = false
 }
 
 const clearSearchAndReload = async (): Promise<void> => {
@@ -453,43 +444,7 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
       </template>
     </UModal>
 
-    <UModal
-      v-model:open="isUpgradeModalOpen"
-      :title="$t('dashboard.upgradeModal.title')"
-      :description="$t('dashboard.upgradeModal.description')"
-      :ui="{
-        content: 'w-[92vw] sm:max-w-xl',
-        body: 'space-y-5',
-        footer: 'justify-end'
-      }"
-    >
-      <template #body>
-        <div class="upgrade-callout">
-          <p class="text-sm text-toned">
-            {{ $t('dashboard.upgradeModal.pitch') }}
-          </p>
-        </div>
-      </template>
-
-      <template #footer>
-        <UButton
-          color="neutral"
-          variant="ghost"
-          @click="closeUpgradeModal"
-        >
-          {{ $t('actions.cancel') }}
-        </UButton>
-
-        <UButton
-          icon="i-lucide-sparkles"
-          color="primary"
-          :to="localePath('/upgrade-to-pro')"
-          @click="closeUpgradeModal"
-        >
-          {{ $t('dashboard.upgradeModal.cta') }}
-        </UButton>
-      </template>
-    </UModal>
+    <AppUpgradeToProModal v-model:open="isUpgradeModalOpen" />
   </div>
 </template>
 
