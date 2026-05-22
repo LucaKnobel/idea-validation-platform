@@ -38,14 +38,6 @@ export const useCreateIdeaModal = (options: UseCreateIdeaModalOptions) => {
     isCreateModalOpen.value = true
   }
 
-  const closeCreateIdeaModal = (): void => {
-    if (isCreatingIdea.value) {
-      return
-    }
-
-    isCreateModalOpen.value = false
-  }
-
   const submitCreateIdea = async (input: CreateIdeaForm): Promise<void> => {
     if (isCreatingIdea.value) {
       return
@@ -90,7 +82,6 @@ export const useCreateIdeaModal = (options: UseCreateIdeaModalOptions) => {
     createIdeaFormState,
     createIdeaSchema,
     openCreateIdeaModal,
-    closeCreateIdeaModal,
     submitCreateIdea
   }
 }

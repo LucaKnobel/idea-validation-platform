@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { FormSubmitEvent, TableColumn, TableRow } from '@nuxt/ui'
+import type { TableColumn, TableRow } from '@nuxt/ui'
+import type { CreateIdeaForm } from '~/composables/useCreateIdeaModal'
 
 definePageMeta({
   middleware: ['auth-middleware'],
@@ -136,7 +137,6 @@ const {
   createIdeaFormState,
   createIdeaSchema,
   openCreateIdeaModal,
-  closeCreateIdeaModal,
   submitCreateIdea
 } = useCreateIdeaModal({
   createIdea
@@ -151,11 +151,8 @@ const clearSearchAndReload = async (): Promise<void> => {
   await applySearch()
 }
 
-const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, description?: string }>): Promise<void> => {
-  await submitCreateIdea({
-    title: event.data.title,
-    description: event.data.description ?? ''
-  })
+const onCreateIdeaSubmit = async (form: CreateIdeaForm): Promise<void> => {
+  await submitCreateIdea(form)
 }
 </script>
 
@@ -326,71 +323,13 @@ const onCreateIdeaSubmit = async (event: FormSubmitEvent<{ title: string, descri
       </div>
     </UCard>
 
-    <UModal
+    <AppCreateIdeaModal
       v-model:open="isCreateModalOpen"
-      :title="$t('dashboard.createForm.title')"
-      :dismissible="!isCreatingIdea"
-      :ui="{
-        content: 'w-[92vw] sm:max-w-2xl md:min-w-[44rem]',
-        body: 'space-y-6'
-      }"
-    >
-      <template #body>
-        <UForm
-          :schema="createIdeaSchema"
-          :state="createIdeaFormState"
-          class="space-y-5"
-          @submit="onCreateIdeaSubmit"
-        >
-          <UFormField
-            name="title"
-            :label="$t('dashboard.createForm.fields.title.label')"
-            :description="$t('dashboard.createForm.fields.title.description')"
-            required
-          >
-            <UInput
-              v-model="createIdeaFormState.title"
-              :placeholder="$t('dashboard.createForm.fields.title.placeholder')"
-              :disabled="isCreatingIdea"
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            name="description"
-            :label="$t('dashboard.createForm.fields.description.label')"
-            :description="$t('dashboard.createForm.fields.description.description')"
-          >
-            <UTextarea
-              v-model="createIdeaFormState.description"
-              :placeholder="$t('dashboard.createForm.fields.description.placeholder')"
-              :disabled="isCreatingIdea"
-              :rows="4"
-              class="w-full"
-            />
-          </UFormField>
-
-          <div class="flex justify-end gap-2 pt-2">
-            <UButton
-              color="neutral"
-              variant="ghost"
-              :disabled="isCreatingIdea"
-              @click="closeCreateIdeaModal"
-            >
-              {{ $t('actions.cancel') }}
-            </UButton>
-
-            <UButton
-              type="submit"
-              color="primary"
-              :loading="isCreatingIdea"
-            >
-              {{ $t('dashboard.createIdea') }}
-            </UButton>
-          </div>
-        </UForm>
-      </template>
-    </UModal>
+      v-model:state="createIdeaFormState"
+      :is-creating-idea="isCreatingIdea"
+      :schema="createIdeaSchema"
+      @submit="onCreateIdeaSubmit"
+    />
 
     <AppUpgradeToProModal v-model:open="isUpgradeModalOpen" />
   </div>
