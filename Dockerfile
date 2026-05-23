@@ -6,6 +6,9 @@ FROM node:24-slim AS builder
 WORKDIR /app
 
 ARG DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ARG NODE_OPTIONS="--max-old-space-size=4096"
+ARG BETTER_AUTH_SECRET
+ARG BETTER_AUTH_URL
 ENV DATABASE_URL=${DATABASE_URL}
 
 # Prisma needs openssl
@@ -25,7 +28,7 @@ COPY . .
 RUN npx prisma generate
 
 # Build the Nuxt app
-RUN npm run build
+RUN NODE_OPTIONS=${NODE_OPTIONS} BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET} BETTER_AUTH_URL=${BETTER_AUTH_URL} npm run build
 
 
 # ---------------------------
