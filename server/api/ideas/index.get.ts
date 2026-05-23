@@ -7,6 +7,9 @@ import {
 import { getIdeas } from '@infrastructure/composition'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
 
+/**
+ * Returns a paginated list of ideas for the authenticated user.
+ */
 export default defineProtectedHandler(async (event, userId): Promise<IdeasListResponseDto> => {
   await enforceRateLimit(event, {
     name: 'ideas.list',

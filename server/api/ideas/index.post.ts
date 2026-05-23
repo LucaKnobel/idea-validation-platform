@@ -3,6 +3,9 @@ import { CreateIdeaBodySchema, IdeaResponseSchema, type IdeaResponseDto } from '
 import { createIdea } from '@infrastructure/composition'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
 
+/**
+ * Creates a new idea for the authenticated user.
+ */
 export default defineProtectedHandler(async (event, userId): Promise<IdeaResponseDto> => {
   await enforceRateLimit(event, {
     name: 'ideas.create',
