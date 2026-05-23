@@ -83,7 +83,7 @@ export const useCreateIdeaModal = (options: UseCreateIdeaModalOptions): UseCreat
       showSuccess('createIdeaModal.success.title', 'createIdeaModal.success.message')
 
       isCreateModalOpen.value = false
-      await navigateTo(localePath(`/idea-workspace/${created.id}`))
+      await navigateTo(localePath(`/ideas/${created.id}/versions/${created.id}/overview`))
     } catch (error: unknown) {
       if (handleRateLimitError(error)) {
         return
