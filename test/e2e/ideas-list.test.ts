@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { setup, url } from '@nuxt/test-utils/e2e'
-import { prisma } from '@infrastructure/db/prisma'
 import type { IdeasListResponseDto } from '@shared/types/idea'
 
 import {
@@ -10,29 +9,13 @@ import {
   getApiWithCookie,
   getE2ESetupOptions
 } from './auth-test-helpers'
+import { createIdeaForUser } from './ideas-test-helpers'
 
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
 describe('GET /api/ideas integration', async () => {
   await setup(getE2ESetupOptions())
-
-  const createIdeaForUser = async (input: {
-    userId: string
-    title: string
-    description?: string | null
-  }) => {
-    return await prisma.idea.create({
-      data: {
-        userId: input.userId,
-        title: input.title,
-        description: input.description ?? null
-      },
-      select: {
-        id: true
-      }
-    })
-  }
 
   const getIdeasWithCookie = async (
     cookieHeader: string,
