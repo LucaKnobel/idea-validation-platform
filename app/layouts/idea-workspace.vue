@@ -16,6 +16,34 @@ const navigationItems = computed(() => [
   {
     label: 'Overview',
     to: `${workspaceBasePath.value}/overview`
+  },
+  {
+    label: 'Canvas',
+    to: `${workspaceBasePath.value}/canvas`
+  },
+  {
+    label: 'Hypotheses',
+    to: `${workspaceBasePath.value}/hypotheses`
+  },
+  {
+    label: 'Experiments',
+    to: `${workspaceBasePath.value}/experiments`
+  },
+  {
+    label: 'Evidence',
+    to: `${workspaceBasePath.value}/evidence`
+  },
+  {
+    label: 'Decision',
+    to: `${workspaceBasePath.value}/decision`
+  },
+  {
+    label: 'Versions',
+    to: `${workspaceBasePath.value}/versions`
+  },
+  {
+    label: 'Settings',
+    to: `${workspaceBasePath.value}/settings`
   }
 ])
 </script>
