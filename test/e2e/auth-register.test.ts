@@ -1,23 +1,25 @@
 import { randomUUID } from 'node:crypto'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { setup } from '@nuxt/test-utils/e2e'
 import { prisma } from '@infrastructure/db/prisma'
 
 import {
   getE2ESetupOptions,
   clearAuthTables,
+  createAuthTestEmail,
   expectAuthFailure,
   password,
   postRegister
 } from './auth-test-helpers'
 
 beforeEach(clearAuthTables)
+afterEach(clearAuthTables)
 
 describe('Auth registration flow', async () => {
   await setup(getE2ESetupOptions())
 
   it('accepts a valid sign-up request and returns HTTP 200', async () => {
-    const email = `register-flow-${randomUUID()}@example.com`
+    const email = createAuthTestEmail('register-flow-valid')
 
     const response = await postRegister({
       email,
@@ -30,7 +32,7 @@ describe('Auth registration flow', async () => {
   })
 
   it('creates an unverified user profile after sign-up', async () => {
-    const email = `register-flow-${randomUUID()}@example.com`
+    const email = createAuthTestEmail('register-flow-unverified')
 
     const response = await postRegister({
       email,
@@ -52,7 +54,7 @@ describe('Auth registration flow', async () => {
   })
 
   it('stores a non-plain-text password hash in the account record', async () => {
-    const email = `register-flow-${randomUUID()}@example.com`
+    const email = createAuthTestEmail('register-flow-password-hash')
 
     const response = await postRegister({
       email,
@@ -82,7 +84,7 @@ describe('Auth registration flow', async () => {
   })
 
   it('rejects absolute callback URLs during registration and persists no user', async () => {
-    const email = `invalid-callback-${randomUUID()}@example.com`
+    const email = createAuthTestEmail('invalid-callback')
 
     const response = await postRegister({
       email,
@@ -101,7 +103,7 @@ describe('Auth registration flow', async () => {
   })
 
   it('rejects weak sign-up passwords and does not persist a user', async () => {
-    const email = `weak-password-${randomUUID()}@example.com`
+    const email = createAuthTestEmail('weak-password')
 
     const response = await postRegister({
       email,
@@ -120,7 +122,7 @@ describe('Auth registration flow', async () => {
   })
 
   it('normalizes email input before persistence', async () => {
-    const rawEmail = `  Register.Flow+Case-${randomUUID()}@Example.COM  `
+    const rawEmail = `  E2E-AUTH-Register.Flow+Case-${randomUUID()}@Example.COM  `
     const normalizedEmail = rawEmail.trim().toLowerCase()
 
     const response = await postRegister({
@@ -143,7 +145,7 @@ describe('Auth registration flow', async () => {
   })
 
   it('prevents duplicate registrations from creating extra user or account records', async () => {
-    const email = `register-flow-${randomUUID()}@example.com`
+    const email = createAuthTestEmail('register-flow-duplicate')
 
     const firstResponse = await postRegister({
       email,
@@ -186,7 +188,7 @@ describe('Auth registration flow', async () => {
 
     for (let attempt = 0; attempt < 5; attempt += 1) {
       const response = await postRegister({
-        email: `rl-signup-${attempt}-${randomUUID()}@example.com`,
+        email: createAuthTestEmail(`rl-signup-${attempt}`),
         password: 'weak',
         name: 'Rate Limit Signup Test User',
         callbackURL: '/auth/login'
@@ -196,7 +198,7 @@ describe('Auth registration flow', async () => {
     }
 
     const limitedResponse = await postRegister({
-      email: `rl-signup-limited-${randomUUID()}@example.com`,
+      email: createAuthTestEmail('rl-signup-limited'),
       password: 'weak',
       name: 'Rate Limit Signup Test User',
       callbackURL: '/auth/login'
