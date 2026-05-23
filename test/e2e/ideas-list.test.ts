@@ -50,6 +50,39 @@ describe('GET /api/ideas integration', async () => {
     expect(response.status).toBe(401)
   })
 
+  it('does not expose ideas from another user', async () => {
+    const userAResult = await createAuthenticatedSession({
+      emailPrefix: 'ideas-list-isolation-a',
+      name: 'Ideas Isolation A'
+    })
+    const userBResult = await createAuthenticatedSession({
+      emailPrefix: 'ideas-list-isolation-b',
+      name: 'Ideas Isolation B'
+    })
+
+    const userA = expectAuthenticatedSessionCreated(userAResult)
+    const userB = expectAuthenticatedSessionCreated(userBResult)
+
+    const userBIdea = await createIdeaForUser({
+      userId: userB.id,
+      title: 'Private idea from user B',
+      description: 'Must not be visible to user A'
+    })
+
+    const response = await getIdeasWithCookie(userA.cookieHeader, {
+      page: 1,
+      pageSize: 10
+    })
+
+    expect(response.status).toBe(200)
+
+    const payload = await response.json() as IdeasListResponseDto
+
+    expect(payload.total).toBe(0)
+    expect(payload.items).toHaveLength(0)
+    expect(payload.items.some(item => item.id === userBIdea.id)).toBe(false)
+  })
+
   it('returns only the authenticated user ideas with correct pagination metadata', async () => {
     const userAResult = await createAuthenticatedSession({
       emailPrefix: 'ideas-list-owner-a',
