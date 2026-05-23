@@ -159,7 +159,7 @@ const tableUi = {
  * Navigates to the selected idea workspace when a table row is clicked.
  */
 const onRowSelect = async (_event: Event, row: TableRow<IdeaResponseDto>): Promise<void> => {
-  await navigateTo(localePath(`/idea-workspace/${row.original.id}`))
+  await navigateTo(localePath(`/ideas/${row.original.id}/versions/${row.original.id}/overview`))
 }
 
 /**
@@ -265,7 +265,7 @@ const onCreateIdeaSubmit = async (form: CreateIdeaForm): Promise<void> => {
                   <div class="title-cell-content clamped-text line-clamp-2 w-full space-y-1 overflow-hidden">
                     <ULink
                       class="block max-w-full wrap-break-word font-medium text-highlighted hover:text-primary"
-                      :to="localePath(`/idea-workspace/${row.original.id}`)"
+                      :to="localePath(`/ideas/${row.original.id}/versions/${row.original.id}/overview`)"
                       :title="row.original.title"
                     >
                       {{ row.original.title }}
