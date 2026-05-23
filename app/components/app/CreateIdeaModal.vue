@@ -20,6 +20,9 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
+/**
+ * Emits the current form state so submit flow stays in the composable.
+ */
 const onSubmit = (): void => {
   emit('submit', state.value)
 }
