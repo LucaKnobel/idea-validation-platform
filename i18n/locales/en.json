@@ -361,6 +361,31 @@
     "title": "Idea Workspace",
     "description": "Workspace for the selected business idea.",
     "wipBadge": "Work in Progress",
-    "wipText": "This section will be expanded next."
+    "wipText": "This section will be expanded next.",
+    "navigation": {
+      "overview": "Overview",
+      "canvas": "Canvas",
+      "hypotheses": "Hypotheses",
+      "decision": "Decision",
+      "history": "History",
+      "settings": "Settings"
+    },
+    "actions": {
+      "backToIdeas": "All Ideas",
+      "openNavigation": "Open navigation",
+      "closeNavigation": "Close navigation"
+    },
+    "labels": {
+      "version": "Version"
+    },
+    "status": {
+      "inValidation": "In Validation"
+    },
+    "placeholders": {
+      "ideaTitle": "Selected idea"
+    },
+    "versionSwitcher": {
+      "comingSoon": "More versions coming soon"
+    }
   }
 }

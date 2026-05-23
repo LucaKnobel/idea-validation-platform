@@ -361,6 +361,31 @@
     "title": "Idea Workspace",
     "description": "Arbeitsbereich für die ausgewählte Geschäftsidee.",
     "wipBadge": "Work in Progress",
-    "wipText": "Dieser Bereich wird als nächstes ausgebaut."
+    "wipText": "Dieser Bereich wird als nächstes ausgebaut.",
+    "navigation": {
+      "overview": "Overview",
+      "canvas": "Canvas",
+      "hypotheses": "Hypothesen",
+      "decision": "Entscheidung",
+      "history": "Verlauf",
+      "settings": "Einstellungen"
+    },
+    "actions": {
+      "backToIdeas": "Alle Ideen",
+      "openNavigation": "Navigation öffnen",
+      "closeNavigation": "Navigation schliessen"
+    },
+    "labels": {
+      "version": "Version"
+    },
+    "status": {
+      "inValidation": "In Validierung"
+    },
+    "placeholders": {
+      "ideaTitle": "Ausgewählte Idee"
+    },
+    "versionSwitcher": {
+      "comingSoon": "Weitere Versionen folgen"
+    }
   }
 }
