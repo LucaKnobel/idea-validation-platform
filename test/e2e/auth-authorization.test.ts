@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { setup } from '@nuxt/test-utils/e2e'
 
 import {
@@ -11,6 +11,7 @@ import {
 } from './auth-test-helpers'
 
 beforeEach(clearAuthTables)
+afterEach(clearAuthTables)
 
 describe('Authorization flow', async () => {
   await setup(getE2ESetupOptions())

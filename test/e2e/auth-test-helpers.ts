@@ -93,8 +93,28 @@ type AuthErrorResponse = {
 
 const internalErrorLeakPattern = /prisma|sql|stack|trace|referenceerror|typeerror|syntaxerror/i
 const sensitiveSessionKeyPattern = /password|hash|token|secret|api[_-]?key|credential|providersecret/i
+const authE2EEmailPrefix = 'e2e-auth'
+const usedClientIps = new Set<string>()
 
 export const createClientIp = (): string => `203.0.113.${randomInt(10, 240)}`
+
+const normalizeEmailPrefix = (prefix: string): string => {
+  const normalized = prefix
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+
+  return normalized.length > 0 ? normalized : 'user'
+}
+
+/**
+ * Builds a namespaced test email so cleanup can target only e2e-created users.
+ */
+export const createAuthTestEmail = (prefix = 'auth-e2e-user'): string => {
+  return `${authE2EEmailPrefix}-${normalizeEmailPrefix(prefix)}-${randomInt(1_000_000, 9_999_999)}@example.com`
+}
 
 const createRequestOrigin = (): string => new URL(url('/')).origin
 const isSecureOrigin = (): boolean => createRequestOrigin().startsWith('https://')
@@ -104,10 +124,13 @@ const createApiUrl = (path: string): string => new URL(path, `${createRequestOri
 const createAuthHeaders = (options?: AuthRequestOptions): Record<string, string> => {
   const origin = options?.origin ?? createRequestOrigin()
   const includeOriginHeaders = options?.includeOriginHeaders ?? true
+  const clientIp = options?.clientIp ?? createClientIp()
+
+  usedClientIps.add(clientIp)
 
   const headers: Record<string, string> = {
     'content-type': 'application/json',
-    'x-forwarded-for': options?.clientIp ?? createClientIp()
+    'x-forwarded-for': clientIp
   }
 
   if (includeOriginHeaders) {
@@ -134,7 +157,7 @@ export const createRegisteredAuthUser = async (options?: CreateAuthUserOptions) 
   const emailPrefix = options?.emailPrefix ?? 'auth-e2e-user'
   const name = options?.name ?? 'Auth E2E Test User'
   const verified = options?.verified ?? false
-  const email = `${emailPrefix}-${randomInt(1_000_000, 9_999_999)}@example.com`
+  const email = createAuthTestEmail(emailPrefix)
 
   const signUpResponse = await postRegister({
     email,
@@ -438,9 +461,51 @@ export const expectNoSensitiveSessionFields = (sessionPayload: unknown): void =>
 }
 
 export const clearAuthTables = async () => {
-  await prisma.rateLimit.deleteMany({})
-  await prisma.verification.deleteMany({})
-  await prisma.session.deleteMany({})
-  await prisma.account.deleteMany({})
-  await prisma.user.deleteMany({})
+  const e2eUsers = await prisma.user.findMany({
+    where: {
+      email: {
+        startsWith: `${authE2EEmailPrefix}-`
+      }
+    },
+    select: {
+      id: true,
+      email: true
+    }
+  })
+
+  const userIds = e2eUsers.map(user => user.id)
+  const userEmails = e2eUsers.map(user => user.email)
+  const userRateLimitClauses = userIds.map(userId => ({ key: { contains: `user:${userId}` } }))
+  const ipRateLimitClauses = Array.from(usedClientIps).map(ip => ({ key: { contains: ip } }))
+
+  if (userRateLimitClauses.length > 0 || ipRateLimitClauses.length > 0) {
+    await prisma.rateLimit.deleteMany({
+      where: {
+        OR: [...userRateLimitClauses, ...ipRateLimitClauses]
+      }
+    })
+  }
+
+  if (userIds.length > 0 || userEmails.length > 0) {
+    await prisma.verification.deleteMany({
+      where: {
+        OR: [
+          ...(userIds.length > 0 ? [{ value: { in: userIds } }] : []),
+          ...(userEmails.length > 0 ? [{ identifier: { in: userEmails } }] : [])
+        ]
+      }
+    })
+  }
+
+  if (userIds.length > 0) {
+    await prisma.user.deleteMany({
+      where: {
+        id: {
+          in: userIds
+        }
+      }
+    })
+  }
+
+  usedClientIps.clear()
 }
