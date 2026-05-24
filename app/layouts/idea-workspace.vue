@@ -1,172 +1,121 @@
 <script setup lang="ts">
-import type { DropdownMenuItem } from '@nuxt/ui'
-
-/**
- * Workspace sections that share the same shell layout.
- */
-type WorkspaceSection = 'overview' | 'canvas' | 'hypotheses' | 'decision' | 'history' | 'settings'
-
-/**
- * Navigation item used by the workspace shell.
- */
-type WorkspaceNavigationItem = {
-  key: WorkspaceSection
-  label: string
-  to: string
-  icon: string
-  active: boolean
-}
+import { ref, computed } from 'vue'
+import { useRoute, useLocalePath, useI18n } from '#imports'
 
 const route = useRoute()
 const localePath = useLocalePath()
 const { t } = useI18n()
 
 const mobileDrawerOpen = ref(false)
-
-const ideaId = computed(() => String(route.params.ideaId ?? ''))
-const versionId = computed(() => String(route.params.versionId ?? ''))
-
 const dashboardPath = computed(() => localePath('/dashboard'))
 
-/**
- * Builds the locale-aware route for a workspace section.
- */
-const buildWorkspaceRoute = (section: WorkspaceSection): string => localePath(`/ideas/${ideaId.value}/versions/${versionId.value}/${section}`)
-
-/**
- * Falls back to a placeholder until the idea title is provided by page metadata.
- */
-const workspaceIdeaTitle = computed(() => {
-  const metaTitle = route.meta.workspaceIdeaTitle
-
-  return typeof metaTitle === 'string' && metaTitle.length > 0
-    ? metaTitle
-    : t('ideaWorkspace.placeholders.ideaTitle')
-})
-
-/**
- * Falls back to a generic version label until the active version is wired.
- */
-const workspaceVersionLabel = computed(() => {
-  const metaVersionLabel = route.meta.workspaceVersionLabel
-
-  return typeof metaVersionLabel === 'string' && metaVersionLabel.length > 0
-    ? metaVersionLabel
-    : t('ideaWorkspace.labels.version')
-})
-
-/**
- * Falls back to the default validation status used by the shell.
- */
-const workspaceStatusLabel = computed(() => {
-  const metaStatus = route.meta.workspaceStatus
-
-  return typeof metaStatus === 'string' && metaStatus.length > 0
-    ? metaStatus
-    : t('ideaWorkspace.status.inValidation')
-})
-
-/**
- * Version dropdown content for the shell header.
- */
-const versionMenuItems = computed<DropdownMenuItem[][]>(() => [
-  [{
-    label: workspaceVersionLabel.value,
-    icon: 'i-lucide-check',
-    disabled: true
-  }],
-  [{
-    label: t('ideaWorkspace.versionSwitcher.comingSoon'),
-    icon: 'i-lucide-clock-3',
-    disabled: true
-  }]
-])
-
-/**
- * Shared workspace navigation used by the sidebar and the mobile drawer.
- */
-const navigationItems = computed<WorkspaceNavigationItem[]>(() => [
+const navigation = computed(() => [
   {
-    key: 'overview',
     label: t('ideaWorkspace.navigation.overview'),
-    to: buildWorkspaceRoute('overview'),
+    to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/overview`),
     icon: 'i-lucide-layout-dashboard',
     active: route.path.endsWith('/overview')
   },
   {
-    key: 'canvas',
     label: t('ideaWorkspace.navigation.canvas'),
-    to: buildWorkspaceRoute('canvas'),
+    to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/canvas`),
     icon: 'i-lucide-panels-top-left',
     active: route.path.endsWith('/canvas')
   },
   {
-    key: 'hypotheses',
     label: t('ideaWorkspace.navigation.hypotheses'),
-    to: buildWorkspaceRoute('hypotheses'),
+    to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/hypotheses`),
     icon: 'i-lucide-flask-conical',
     active: route.path.includes('/hypotheses')
   },
   {
-    key: 'decision',
     label: t('ideaWorkspace.navigation.decision'),
-    to: buildWorkspaceRoute('decision'),
+    to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/decision`),
     icon: 'i-lucide-scale',
     active: route.path.endsWith('/decision')
   },
   {
-    key: 'history',
     label: t('ideaWorkspace.navigation.history'),
-    to: buildWorkspaceRoute('history'),
+    to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/history`),
     icon: 'i-lucide-history',
     active: route.path.endsWith('/history')
-  },
-  {
-    key: 'settings',
-    label: t('ideaWorkspace.navigation.settings'),
-    to: buildWorkspaceRoute('settings'),
-    icon: 'i-lucide-settings-2',
-    active: route.path.endsWith('/settings')
   }
 ])
 
-/**
- * Desktop navigation excludes Settings so it can stay visually anchored below the separator.
- */
-const primaryNavigationItems = computed(() => navigationItems.value.filter(item => item.key !== 'settings'))
-
-/**
- * Dedicated Settings entry used in the lower section of the shell navigation.
- */
-const settingsNavigationItem = computed<WorkspaceNavigationItem>(() => navigationItems.value.find(item => item.key === 'settings') ?? {
-  key: 'settings',
+const settingsNav = computed(() => ({
   label: t('ideaWorkspace.navigation.settings'),
-  to: buildWorkspaceRoute('settings'),
+  to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/settings`),
   icon: 'i-lucide-settings-2',
-  active: false
-})
+  active: route.path.endsWith('/settings')
+}))
 </script>
 
 <template>
-  <div class="flex h-dvh flex-col overflow-hidden bg-default">
-    <IdeaWorkspaceHeader
-      :back-to="dashboardPath"
-      :back-label="$t('ideaWorkspace.actions.backToIdeas')"
-      :idea-title="workspaceIdeaTitle"
-      :version-label="workspaceVersionLabel"
-      :status-label="workspaceStatusLabel"
-      :version-items="versionMenuItems"
-      :mobile-menu-label="$t('ideaWorkspace.actions.openNavigation')"
-      @toggle-menu="mobileDrawerOpen = true"
-    />
-
-    <div class="flex min-h-0 flex-1">
-      <IdeaWorkspaceSidebar
-        :dashboard-to="dashboardPath"
-        :main-items="primaryNavigationItems"
-        :settings-item="settingsNavigationItem"
+  <div class="flex h-dvh flex-col bg-default">
+    <!-- Eigener flexibler Header -->
+    <header class="flex items-center gap-4 px-6 py-6 border-b border-default bg-default min-h-20">
+      <AppLogo size="md" />
+      <span class="flex-1 text-center font-semibold text-xl truncate">
+        {{ route.meta.workspaceIdeaTitle || t('ideaWorkspace.placeholders.ideaTitle') }}
+      </span>
+      <UButton
+        icon="i-lucide-menu"
+        class="lg:hidden"
+        color="neutral"
+        variant="ghost"
+        :aria-label="t('ideaWorkspace.actions.openNavigation')"
+        @click="mobileDrawerOpen = true"
       />
+    </header>
 
+    <div class="flex flex-1 min-h-0">
+      <!-- Sidebar (Desktop) -->
+      <USidebar class="hidden lg:flex w-64 flex-col border-r border-default bg-default">
+        <div class="px-6 py-5 flex flex-col gap-2">
+          <AppLogo
+            size="md"
+            :to="dashboardPath"
+          />
+          <UButton
+            :to="dashboardPath"
+            icon="i-lucide-arrow-left"
+            color="neutral"
+            variant="ghost"
+            class="w-full justify-start mt-2"
+          >
+            {{ t('ideaWorkspace.actions.backToIdeas') }}
+          </UButton>
+        </div>
+        <nav class="flex-1 px-3 pb-4">
+          <div class="space-y-1">
+            <UButton
+              v-for="item in navigation"
+              :key="item.to"
+              :to="item.to"
+              :icon="item.icon"
+              color="neutral"
+              :variant="item.active ? 'soft' : 'ghost'"
+              class="w-full justify-start rounded-lg px-3 py-2"
+            >
+              {{ item.label }}
+            </UButton>
+          </div>
+          <div class="mt-auto pt-4">
+            <USeparator class="mb-4" />
+            <UButton
+              :to="settingsNav.to"
+              :icon="settingsNav.icon"
+              color="neutral"
+              :variant="settingsNav.active ? 'soft' : 'ghost'"
+              class="w-full justify-start rounded-lg px-3 py-2"
+            >
+              {{ settingsNav.label }}
+            </UButton>
+          </div>
+        </nav>
+      </USidebar>
+
+      <!-- Main Content -->
       <main class="min-w-0 flex-1 overflow-y-auto">
         <div class="px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
           <slot />
@@ -174,14 +123,66 @@ const settingsNavigationItem = computed<WorkspaceNavigationItem>(() => navigatio
       </main>
     </div>
 
-    <IdeaWorkspaceMobileDrawer
+    <!-- Mobile Drawer -->
+    <USlideover
       v-model:open="mobileDrawerOpen"
-      :dashboard-to="dashboardPath"
-      :back-to="dashboardPath"
-      :back-label="$t('ideaWorkspace.actions.backToIdeas')"
-      :main-items="primaryNavigationItems"
-      :settings-item="settingsNavigationItem"
-      :close-label="$t('ideaWorkspace.actions.closeNavigation')"
-    />
+      side="left"
+      :ui="{ content: 'w-full max-w-xs' }"
+    >
+      <template #header>
+        <div class="flex items-center justify-between gap-3 px-4 py-4">
+          <AppLogo
+            size="md"
+            :to="dashboardPath"
+          />
+          <UButton
+            :aria-label="t('ideaWorkspace.actions.closeNavigation')"
+            icon="i-lucide-x"
+            color="neutral"
+            variant="ghost"
+            @click="mobileDrawerOpen = false"
+          />
+        </div>
+      </template>
+      <template #body>
+        <div class="flex flex-col gap-2 px-4 py-4">
+          <UButton
+            :to="dashboardPath"
+            icon="i-lucide-arrow-left"
+            color="neutral"
+            variant="ghost"
+            class="w-full justify-start"
+            @click="mobileDrawerOpen = false"
+          >
+            {{ t('ideaWorkspace.actions.backToIdeas') }}
+          </UButton>
+          <USeparator class="my-4" />
+          <nav class="space-y-1">
+            <UButton
+              v-for="item in navigation"
+              :key="item.to"
+              :to="item.to"
+              :icon="item.icon"
+              color="neutral"
+              :variant="item.active ? 'soft' : 'ghost'"
+              class="w-full justify-start rounded-lg px-3 py-2"
+              @click="mobileDrawerOpen = false"
+            >
+              {{ item.label }}
+            </UButton>
+            <UButton
+              :to="settingsNav.to"
+              :icon="settingsNav.icon"
+              color="neutral"
+              variant="ghost"
+              class="w-full justify-start rounded-lg px-3 py-2"
+              @click="mobileDrawerOpen = false"
+            >
+              {{ settingsNav.label }}
+            </UButton>
+          </nav>
+        </div>
+      </template>
+    </USlideover>
   </div>
 </template>
