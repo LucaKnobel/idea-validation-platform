@@ -11,6 +11,7 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { isUpgradeModalOpen } = useUpgradeToProModal()
 const UIcon = resolveComponent('UIcon')
+const workspaceIdeaTitleState = useState<string | null>('workspace-idea-title', () => null)
 
 const {
   ideas,
@@ -156,9 +157,17 @@ const tableUi = {
 }
 
 /**
+ * Stores the selected idea title so workspace layouts can show it without an extra request.
+ */
+const setWorkspaceIdeaTitle = (title: string): void => {
+  workspaceIdeaTitleState.value = title
+}
+
+/**
  * Navigates to the selected idea workspace when a table row is clicked.
  */
 const onRowSelect = async (_event: Event, row: TableRow<IdeaResponseDto>): Promise<void> => {
+  setWorkspaceIdeaTitle(row.original.title)
   await navigateTo(localePath(`/ideas/${row.original.id}/versions/${row.original.id}/overview`))
 }
 
@@ -267,6 +276,7 @@ const onCreateIdeaSubmit = async (form: CreateIdeaForm): Promise<void> => {
                       class="block max-w-full wrap-break-word font-medium text-highlighted hover:text-primary"
                       :to="localePath(`/ideas/${row.original.id}/versions/${row.original.id}/overview`)"
                       :title="row.original.title"
+                      @click="setWorkspaceIdeaTitle(row.original.title)"
                     >
                       {{ row.original.title }}
                     </ULink>
