@@ -9,3 +9,13 @@ export class IdeaNotFoundError extends ApplicationError {
     this.name = 'IdeaNotFoundError'
   }
 }
+
+/**
+ * Raised when an idea exists but has no versions, violating domain invariants.
+ */
+export class IdeaHasNoVersionsError extends ApplicationError {
+  constructor(ideaId: string) {
+    super(`Idea ${ideaId} has no versions.`)
+    this.name = 'IdeaHasNoVersionsError'
+  }
+}

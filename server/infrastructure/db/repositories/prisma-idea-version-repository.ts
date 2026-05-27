@@ -1,8 +1,7 @@
 import { prisma } from '@infrastructure/db/prisma'
-import type { Prisma, IdeaVersionType } from '@generated/prisma/client'
+import type { Prisma } from '@generated/prisma/client'
 import type { IdeaVersionRepository } from '@application/interfaces/idea-version-repository'
 import type { Idea } from '@application/models/idea'
-import type { IdeaVersion } from '@application/models/idea-version'
 
 type PrismaIdeaWithVersions = Prisma.IdeaGetPayload<{
   include: {
@@ -10,6 +9,7 @@ type PrismaIdeaWithVersions = Prisma.IdeaGetPayload<{
       orderBy: {
         versionNumber: 'desc'
       }
+      take: 1
     }
   }
 }>
@@ -28,28 +28,6 @@ const toDomainIdea = (row: PrismaIdeaWithVersions): Idea => {
       createdAt: version.createdAt,
       updatedAt: version.updatedAt
     })),
-    createdAt: row.createdAt,
-    updatedAt: row.updatedAt
-  }
-}
-
-const toDomainVersion = (row: {
-  id: string
-  ideaId: string
-  versionNumber: number
-  type: IdeaVersionType
-  title: string
-  description: string | null
-  createdAt: Date
-  updatedAt: Date
-}): IdeaVersion => {
-  return {
-    id: row.id,
-    ideaId: row.ideaId,
-    versionNumber: row.versionNumber,
-    type: row.type,
-    title: row.title,
-    description: row.description,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt
   }
@@ -79,24 +57,6 @@ const buildIdeaWhere = (input: {
 }
 
 export const ideaVersionRepository: IdeaVersionRepository = {
-  async createInitial(input: {
-    ideaId: string
-    title: string
-    description: string | null
-  }): Promise<IdeaVersion> {
-    const row = await prisma.ideaVersion.create({
-      data: {
-        ideaId: input.ideaId,
-        versionNumber: 1,
-        type: 'INITIAL' satisfies IdeaVersionType,
-        title: input.title,
-        description: input.description
-      }
-    })
-
-    return toDomainVersion(row)
-  },
-
   async listIdeasByUser(input: {
     userId: string
     search: string | null
@@ -115,7 +75,8 @@ export const ideaVersionRepository: IdeaVersionRepository = {
         orderBy: { updatedAt: 'desc' },
         include: {
           versions: {
-            orderBy: { versionNumber: 'desc' }
+            orderBy: { versionNumber: 'desc' },
+            take: 1
           }
         },
         skip,

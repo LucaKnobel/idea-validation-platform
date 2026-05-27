@@ -1,6 +1,6 @@
 import { createError, type H3Event } from 'h3'
 import { SubscriptionLimitExceededError } from '@application/errors/subscription-errors'
-import { IdeaNotFoundError } from '@application/errors/idea-errors'
+import { IdeaHasNoVersionsError, IdeaNotFoundError } from '@application/errors/idea-errors'
 import { logger } from '@infrastructure/logging/logger'
 
 /**
@@ -22,6 +22,13 @@ export const mapError = (error: unknown, event?: H3Event): Error => {
     return createError({
       statusCode: 404,
       statusText: 'Idea not found'
+    })
+  }
+
+  if (error instanceof IdeaHasNoVersionsError) {
+    return createError({
+      statusCode: 500,
+      statusText: 'Idea data is incomplete'
     })
   }
 

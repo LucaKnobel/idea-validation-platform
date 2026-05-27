@@ -1,4 +1,5 @@
 import type { IdeaVersion } from '@application/models/idea-version'
+import { IdeaHasNoVersionsError } from '@application/errors/idea-errors'
 
 export type Idea = {
   id: string
@@ -9,11 +10,13 @@ export type Idea = {
 }
 
 export const getLatestIdeaVersion = (idea: Idea): IdeaVersion => {
-  const latest = idea.versions[0]
-
-  if (!latest) {
-    throw new Error(`Idea ${idea.id} is missing versions.`)
+  if (idea.versions.length === 0) {
+    throw new IdeaHasNoVersionsError(idea.id)
   }
+
+  const latest = idea.versions.reduce((currentLatest, version) => {
+    return version.versionNumber > currentLatest.versionNumber ? version : currentLatest
+  })
 
   return latest
 }
