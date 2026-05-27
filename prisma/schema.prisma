@@ -116,11 +116,32 @@ model Idea {
   id          String   @id @default(uuid())
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title       String
-  description String?
+  versions    IdeaVersion[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([userId])
   @@map("idea")
+}
+
+enum IdeaVersionType {
+  INITIAL
+  ITERATION
+  PIVOT
+}
+
+model IdeaVersion {
+  id                String   @id @default(uuid())
+  ideaId            String
+  idea              Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  versionNumber     Int
+  type              IdeaVersionType
+  title             String
+  description       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([ideaId])
+  @@unique([ideaId, versionNumber])
+  @@map("ideaVersion")
 }
