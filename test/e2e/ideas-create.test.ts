@@ -72,10 +72,19 @@ describe('POST /api/ideas integration', async () => {
       where: { id: payload.id }
     })
 
+    const storedLatestVersion = await prisma.ideaVersion.findFirst({
+      where: { ideaId: payload.id },
+      orderBy: { versionNumber: 'desc' },
+      select: {
+        title: true,
+        description: true
+      }
+    })
+
     expect(storedIdea).not.toBeNull()
     expect(storedIdea?.userId).toBe(user.id)
-    expect(storedIdea?.title).toBe('MVP discovery board')
-    expect(storedIdea?.description).toBe('First idea draft')
+    expect(storedLatestVersion?.title).toBe('MVP discovery board')
+    expect(storedLatestVersion?.description).toBe('First idea draft')
   })
 
   it('normalizes blank descriptions to null before persistence', async () => {
@@ -95,12 +104,13 @@ describe('POST /api/ideas integration', async () => {
     const payload = await response.json() as IdeaResponseDto
     expect(payload.description).toBeNull()
 
-    const storedIdea = await prisma.idea.findUnique({
-      where: { id: payload.id },
+    const storedLatestVersion = await prisma.ideaVersion.findFirst({
+      where: { ideaId: payload.id },
+      orderBy: { versionNumber: 'desc' },
       select: { description: true }
     })
 
-    expect(storedIdea?.description).toBeNull()
+    expect(storedLatestVersion?.description).toBeNull()
   })
 
   it('rejects invalid payloads with 400', async () => {

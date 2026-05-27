@@ -1,18 +1,18 @@
-import type { IdeaRepository } from '@application/interfaces/idea-repository'
-import type { IdeaSummary } from '@application/models/idea-summary'
+import type { IdeaVersionRepository } from '@application/interfaces/idea-version-repository'
+import type { Idea } from '@application/models/idea'
 import type { Logger } from '@interfaces/logger'
 
 /**
  * Builds the use case that lists a user's ideas with search and pagination metadata.
  */
-export const createGetIdeas = (ideaRepository: IdeaRepository, logger: Logger) => {
+export const createGetIdeas = (ideaVersionRepository: IdeaVersionRepository, logger: Logger) => {
   return async (input: {
     userId: string
     search: string | null
     page: number
     pageSize: number
   }): Promise<{
-    ideas: IdeaSummary[]
+    ideas: Idea[]
     page: number
     pageSize: number
     total: number
@@ -23,7 +23,7 @@ export const createGetIdeas = (ideaRepository: IdeaRepository, logger: Logger) =
       ? input.search.trim()
       : null
 
-    const result = await ideaRepository.listByUserId({
+    const result = await ideaVersionRepository.listIdeasByUser({
       userId: input.userId,
       search: normalizedSearch,
       page: input.page,

@@ -6,6 +6,7 @@ import {
 } from '@infrastructure/validation/idea-schemas'
 import { getIdeas } from '@infrastructure/composition'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
+import { getLatestIdeaVersion } from '@application/models/idea'
 
 /**
  * Returns a paginated list of ideas for the authenticated user.
@@ -28,13 +29,17 @@ export default defineProtectedHandler(async (event, userId): Promise<IdeasListRe
   })
 
   return IdeasListResponseSchema.parse({
-    items: result.ideas.map(idea => ({
-      id: idea.id,
-      title: idea.title,
-      description: idea.description,
-      createdAt: idea.createdAt.toISOString(),
-      updatedAt: idea.updatedAt.toISOString()
-    })),
+    items: result.ideas.map((idea) => {
+      const latestVersion = getLatestIdeaVersion(idea)
+
+      return {
+        id: idea.id,
+        title: latestVersion.title,
+        description: latestVersion.description,
+        createdAt: idea.createdAt.toISOString(),
+        updatedAt: idea.updatedAt.toISOString()
+      }
+    }),
     page: result.page,
     pageSize: result.pageSize,
     total: result.total,
