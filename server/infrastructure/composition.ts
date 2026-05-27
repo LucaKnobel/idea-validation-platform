@@ -1,4 +1,5 @@
 import { ideaRepository } from '@infrastructure/db/repositories/prisma-idea-repository'
+import { ideaVersionRepository } from '@infrastructure/db/repositories/prisma-idea-version-repository'
 import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
 import { logger } from '@infrastructure/logging/logger'
 
@@ -17,12 +18,13 @@ const subscriptionService = createSubscriptionService(
 
 const createIdea = createCreateIdea(
   ideaRepository,
+  ideaVersionRepository,
   subscriptionService,
   logger
 )
 
 const getIdeas = createGetIdeas(
-  ideaRepository,
+  ideaVersionRepository,
   logger
 )
 

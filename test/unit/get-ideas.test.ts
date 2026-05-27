@@ -1,25 +1,25 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createGetIdeas } from '@application/services/get-ideas'
-import type { IdeaRepository } from '@application/interfaces/idea-repository'
+import type { IdeaVersionRepository } from '@application/interfaces/idea-version-repository'
 import type { Logger } from '@interfaces/logger'
-import { makeIdea, makeIdeaRepository, makeLogger } from './helpers'
+import { makeIdea, makeIdeaVersionRepository, makeLogger } from './helpers'
 
 describe('createGetIdeas', () => {
-  let repository: IdeaRepository
+  let versionRepository: IdeaVersionRepository
   let logger: Logger
   let getIdeas: ReturnType<typeof createGetIdeas>
 
   beforeEach(() => {
-    repository = makeIdeaRepository()
+    versionRepository = makeIdeaVersionRepository()
     logger = makeLogger()
-    getIdeas = createGetIdeas(repository, logger)
-    vi.mocked(repository.listByUserId).mockResolvedValue({ ideas: [], total: 0 })
+    getIdeas = createGetIdeas(versionRepository, logger)
+    vi.mocked(versionRepository.listIdeasByUser).mockResolvedValue({ ideas: [], total: 0 })
   })
 
   it('calls listByUserId with the correct input', async () => {
     await getIdeas({ userId: 'user-001', search: 'saas', page: 2, pageSize: 5 })
 
-    expect(repository.listByUserId).toHaveBeenCalledWith({
+    expect(versionRepository.listIdeasByUser).toHaveBeenCalledWith({
       userId: 'user-001',
       search: 'saas',
       page: 2,
@@ -29,7 +29,7 @@ describe('createGetIdeas', () => {
 
   it('returns the ideas from the repository', async () => {
     const ideas = [makeIdea({ id: 'idea-1' }), makeIdea({ id: 'idea-2' })]
-    vi.mocked(repository.listByUserId).mockResolvedValue({ ideas, total: 2 })
+    vi.mocked(versionRepository.listIdeasByUser).mockResolvedValue({ ideas, total: 2 })
 
     const result = await getIdeas({ userId: 'user-001', search: null, page: 1, pageSize: 10 })
 
@@ -37,7 +37,7 @@ describe('createGetIdeas', () => {
   })
 
   it('returns correct pagination metadata', async () => {
-    vi.mocked(repository.listByUserId).mockResolvedValue({
+    vi.mocked(versionRepository.listIdeasByUser).mockResolvedValue({
       ideas: [makeIdea({ id: 'idea-1' })],
       total: 25
     })
@@ -51,7 +51,7 @@ describe('createGetIdeas', () => {
   })
 
   it('returns totalPages of 0 when total is 0', async () => {
-    vi.mocked(repository.listByUserId).mockResolvedValue({ ideas: [], total: 0 })
+    vi.mocked(versionRepository.listIdeasByUser).mockResolvedValue({ ideas: [], total: 0 })
 
     const result = await getIdeas({ userId: 'user-001', search: null, page: 1, pageSize: 10 })
 
@@ -59,7 +59,7 @@ describe('createGetIdeas', () => {
   })
 
   it('calculates totalPages correctly when total is exactly divisible by pageSize', async () => {
-    vi.mocked(repository.listByUserId).mockResolvedValue({ ideas: [], total: 20 })
+    vi.mocked(versionRepository.listIdeasByUser).mockResolvedValue({ ideas: [], total: 20 })
 
     const result = await getIdeas({ userId: 'user-001', search: null, page: 1, pageSize: 10 })
 
@@ -67,7 +67,7 @@ describe('createGetIdeas', () => {
   })
 
   it('calculates totalPages correctly when there is a remainder', async () => {
-    vi.mocked(repository.listByUserId).mockResolvedValue({ ideas: [], total: 11 })
+    vi.mocked(versionRepository.listIdeasByUser).mockResolvedValue({ ideas: [], total: 11 })
 
     const result = await getIdeas({ userId: 'user-001', search: null, page: 1, pageSize: 10 })
 
@@ -77,7 +77,7 @@ describe('createGetIdeas', () => {
   it('normalizes search by trimming whitespace', async () => {
     await getIdeas({ userId: 'user-001', search: '  saas  ', page: 1, pageSize: 10 })
 
-    expect(repository.listByUserId).toHaveBeenCalledWith(
+    expect(versionRepository.listIdeasByUser).toHaveBeenCalledWith(
       expect.objectContaining({ search: 'saas' })
     )
   })
@@ -85,7 +85,7 @@ describe('createGetIdeas', () => {
   it('treats whitespace-only search as null', async () => {
     await getIdeas({ userId: 'user-001', search: '   ', page: 1, pageSize: 10 })
 
-    expect(repository.listByUserId).toHaveBeenCalledWith(
+    expect(versionRepository.listIdeasByUser).toHaveBeenCalledWith(
       expect.objectContaining({ search: null })
     )
   })
@@ -93,7 +93,7 @@ describe('createGetIdeas', () => {
   it('passes null search through unchanged', async () => {
     await getIdeas({ userId: 'user-001', search: null, page: 1, pageSize: 10 })
 
-    expect(repository.listByUserId).toHaveBeenCalledWith(
+    expect(versionRepository.listIdeasByUser).toHaveBeenCalledWith(
       expect.objectContaining({ search: null })
     )
   })
@@ -116,7 +116,7 @@ describe('createGetIdeas', () => {
   })
 
   it('logs a debug message after fetching', async () => {
-    vi.mocked(repository.listByUserId).mockResolvedValue({
+    vi.mocked(versionRepository.listIdeasByUser).mockResolvedValue({
       ideas: [makeIdea({ id: 'idea-1' })],
       total: 1
     })
