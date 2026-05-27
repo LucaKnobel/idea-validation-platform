@@ -5,6 +5,7 @@ export interface UseIdeasComposable {
   ideas: Ref<IdeaResponseDto[]>
   isLoading: Ref<boolean>
   hasError: Ref<boolean>
+  hasActiveSearch: Ref<boolean>
   page: Ref<number>
   pageSize: Ref<number>
   total: Ref<number>
@@ -32,6 +33,7 @@ export const useIdeas = (): UseIdeasComposable => {
 
   const searchInput = ref('')
   const activeSearch = ref('')
+  const hasActiveSearch = computed(() => activeSearch.value.trim().length > 0)
   const isLoading = ref(false)
 
   /**
@@ -147,6 +149,7 @@ export const useIdeas = (): UseIdeasComposable => {
     ideas,
     isLoading,
     hasError,
+    hasActiveSearch,
     page,
     pageSize,
     total,

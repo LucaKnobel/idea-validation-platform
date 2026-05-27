@@ -287,6 +287,11 @@
       "title": "You don't have any ideas yet",
       "description": "Create your first business idea so you can manage, search, and refine it from here later on."
     },
+    "emptyFiltered": {
+      "title": "No ideas match your filter",
+      "description": "No results were found for your current search. Adjust or clear the filter and try again.",
+      "resetFilter": "Clear filter"
+    },
     "table": {
       "title": "Ideas overview",
       "description": "",

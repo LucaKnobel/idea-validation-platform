@@ -287,6 +287,11 @@
       "title": "Du hast noch keine Ideen",
       "description": "Erstelle deine erste Geschäftsidee, damit du sie hier verwalten, durchsuchen und später weiter ausarbeiten kannst."
     },
+    "emptyFiltered": {
+      "title": "Keine Ideen passen zu deinem Filter",
+      "description": "Für deine aktuelle Suche wurden keine Treffer gefunden. Passe den Filter an oder setze ihn zurück.",
+      "resetFilter": "Filter zurücksetzen"
+    },
     "table": {
       "title": "Ideenübersicht",
       "description": "",

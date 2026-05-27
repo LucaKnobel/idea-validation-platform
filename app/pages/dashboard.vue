@@ -17,6 +17,7 @@ const {
   ideas,
   isLoading,
   hasError,
+  hasActiveSearch,
   page,
   pageSize,
   total,
@@ -307,14 +308,25 @@ const onCreateIdeaSubmit = async (form: CreateIdeaForm): Promise<void> => {
 
                     <div class="space-y-1">
                       <p class="font-medium text-highlighted">
-                        {{ $t('dashboard.empty.title') }}
+                        {{ $t(hasActiveSearch ? 'dashboard.emptyFiltered.title' : 'dashboard.empty.title') }}
                       </p>
                       <p class="max-w-md text-sm text-muted">
-                        {{ $t('dashboard.empty.description') }}
+                        {{ $t(hasActiveSearch ? 'dashboard.emptyFiltered.description' : 'dashboard.empty.description') }}
                       </p>
                     </div>
 
                     <UButton
+                      v-if="hasActiveSearch"
+                      icon="i-lucide-rotate-ccw"
+                      color="neutral"
+                      variant="soft"
+                      @click="clearSearchAndReload"
+                    >
+                      {{ $t('dashboard.emptyFiltered.resetFilter') }}
+                    </UButton>
+
+                    <UButton
+                      v-else
                       icon="i-lucide-plus"
                       color="primary"
                       @click="openCreateIdeaModal"
