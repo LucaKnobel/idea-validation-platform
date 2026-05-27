@@ -18,7 +18,6 @@ const subscriptionService = createSubscriptionService(
 
 const createIdea = createCreateIdea(
   ideaRepository,
-  ideaVersionRepository,
   subscriptionService,
   logger
 )

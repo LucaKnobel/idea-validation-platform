@@ -1,6 +1,37 @@
 import { prisma } from '@infrastructure/db/prisma'
 import type { IdeaRepository } from '@application/interfaces/idea-repository'
+import type { Prisma } from '@generated/prisma/client'
 import type { Idea } from '@application/models/idea'
+
+type PrismaIdeaWithLatestVersion = Prisma.IdeaGetPayload<{
+  include: {
+    versions: {
+      orderBy: {
+        versionNumber: 'desc'
+      }
+      take: 1
+    }
+  }
+}>
+
+const toDomainIdea = (row: PrismaIdeaWithLatestVersion): Idea => {
+  return {
+    id: row.id,
+    userId: row.userId,
+    versions: row.versions.map(version => ({
+      id: version.id,
+      ideaId: version.ideaId,
+      versionNumber: version.versionNumber,
+      type: version.type,
+      title: version.title,
+      description: version.description,
+      createdAt: version.createdAt,
+      updatedAt: version.updatedAt
+    })),
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt
+  }
+}
 
 export const ideaRepository: IdeaRepository = {
   /**
@@ -13,22 +44,34 @@ export const ideaRepository: IdeaRepository = {
   },
 
   /**
-   * Persists a new idea root and returns the mapped domain model.
+   * Atomically creates an idea and its initial version.
    */
-  async create(input: { userId: string }): Promise<Idea> {
+  async createWithInitialVersion(input: {
+    userId: string
+    title: string
+    description: string | null
+  }): Promise<Idea> {
     const row = await prisma.idea.create({
       data: {
-        userId: input.userId
+        userId: input.userId,
+        versions: {
+          create: {
+            versionNumber: 1,
+            type: 'INITIAL',
+            title: input.title,
+            description: input.description
+          }
+        }
+      },
+      include: {
+        versions: {
+          orderBy: { versionNumber: 'desc' },
+          take: 1
+        }
       }
     })
 
-    return {
-      id: row.id,
-      userId: row.userId,
-      versions: [],
-      createdAt: row.createdAt,
-      updatedAt: row.updatedAt
-    }
+    return toDomainIdea(row)
   },
 
   /**

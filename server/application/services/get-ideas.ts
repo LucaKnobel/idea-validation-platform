@@ -2,23 +2,27 @@ import type { IdeaVersionRepository } from '@application/interfaces/idea-version
 import type { Idea } from '@application/models/idea'
 import type { Logger } from '@interfaces/logger'
 
+export type GetIdeasInput = {
+  userId: string
+  search: string | null
+  page: number
+  pageSize: number
+}
+
+export type GetIdeasOutput = {
+  ideas: Idea[]
+  page: number
+  pageSize: number
+  total: number
+  totalPages: number
+  search: string | null
+}
+
 /**
  * Builds the use case that lists a user's ideas with search and pagination metadata.
  */
 export const createGetIdeas = (ideaVersionRepository: IdeaVersionRepository, logger: Logger) => {
-  return async (input: {
-    userId: string
-    search: string | null
-    page: number
-    pageSize: number
-  }): Promise<{
-    ideas: Idea[]
-    page: number
-    pageSize: number
-    total: number
-    totalPages: number
-    search: string | null
-  }> => {
+  return async (input: GetIdeasInput): Promise<GetIdeasOutput> => {
     const normalizedSearch = input.search && input.search.trim().length > 0
       ? input.search.trim()
       : null

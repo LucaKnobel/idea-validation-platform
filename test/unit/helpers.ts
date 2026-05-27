@@ -6,6 +6,15 @@ import type { IdeaVersionRepository } from '@application/interfaces/idea-version
 import type { SubscriptionService } from '@application/interfaces/subscription-service'
 import type { Logger } from '@interfaces/logger'
 
+export const makeIdea = (overrides: Partial<Idea> = {}): Idea => ({
+  id: 'idea-001',
+  userId: 'user-001',
+  versions: [makeIdeaVersion()],
+  createdAt: new Date('2026-01-01T00:00:00Z'),
+  updatedAt: new Date('2026-01-01T00:00:00Z'),
+  ...overrides
+})
+
 export const makeIdeaVersion = (overrides: Partial<IdeaVersion> = {}): IdeaVersion => ({
   id: 'idea-version-001',
   ideaId: 'idea-001',
@@ -18,23 +27,13 @@ export const makeIdeaVersion = (overrides: Partial<IdeaVersion> = {}): IdeaVersi
   ...overrides
 })
 
-export const makeIdea = (overrides: Partial<Idea> = {}): Idea => ({
-  id: 'idea-001',
-  userId: 'user-001',
-  versions: [makeIdeaVersion()],
-  createdAt: new Date('2026-01-01T00:00:00Z'),
-  updatedAt: new Date('2026-01-01T00:00:00Z'),
-  ...overrides
-})
-
 export const makeIdeaRepository = (): IdeaRepository => ({
   countByUserId: vi.fn(),
-  create: vi.fn(),
+  createWithInitialVersion: vi.fn(),
   deleteByIdForUser: vi.fn()
 })
 
 export const makeIdeaVersionRepository = (): IdeaVersionRepository => ({
-  createInitial: vi.fn(),
   listIdeasByUser: vi.fn()
 })
 
@@ -47,6 +46,7 @@ export const makeSubscriptionService = (): SubscriptionService => ({
 })
 
 export const makeLogger = (): Logger => ({
+  trace: vi.fn(),
   debug: vi.fn(),
   info: vi.fn(),
   warn: vi.fn(),

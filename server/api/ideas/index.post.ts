@@ -22,8 +22,9 @@ export default defineProtectedHandler(async (event, userId): Promise<IdeaRespons
     title: body.title,
     description: body.description && body.description.length > 0 ? body.description : null
   })
-  const latestVersion = getLatestIdeaVersion(createdIdea)
 
+  const latestVersion = getLatestIdeaVersion(createdIdea)
+  setResponseStatus(event, 201)
   return IdeaResponseSchema.parse({
     id: createdIdea.id,
     title: latestVersion.title,
