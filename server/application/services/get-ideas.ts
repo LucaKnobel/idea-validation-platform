@@ -1,5 +1,5 @@
 import type { IdeaRepository } from '@application/interfaces/idea-repository'
-import type { Idea } from '@application/models/idea'
+import type { IdeaSummary } from '@application/models/idea-summary'
 import type { Logger } from '@interfaces/logger'
 
 /**
@@ -12,7 +12,7 @@ export const createGetIdeas = (ideaRepository: IdeaRepository, logger: Logger) =
     page: number
     pageSize: number
   }): Promise<{
-    ideas: Idea[]
+    ideas: IdeaSummary[]
     page: number
     pageSize: number
     total: number

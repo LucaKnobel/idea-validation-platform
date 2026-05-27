@@ -1,5 +1,5 @@
 import type { IdeaRepository } from '@application/interfaces/idea-repository'
-import type { Idea } from '@application/models/idea'
+import type { IdeaSummary } from '@application/models/idea-summary'
 import type { SubscriptionService } from '@application/interfaces/subscription-service'
 import type { Logger } from '@interfaces/logger'
 
@@ -13,7 +13,7 @@ export const createCreateIdea = (
 ) => {
   return async (
     input: { userId: string, title: string, description: string | null }
-  ): Promise<Idea> => {
+  ): Promise<IdeaSummary> => {
     const currentIdeaCount = await ideaRepository.countByUserId(input.userId)
 
     await subscriptionService.assertCanCreateBusinessIdea(input.userId, currentIdeaCount)
