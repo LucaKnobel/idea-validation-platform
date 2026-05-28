@@ -31,6 +31,7 @@ export interface UseCreateIdeaModalComposable {
 export const useCreateIdeaModal = (options: UseCreateIdeaModalOptions): UseCreateIdeaModalComposable => {
   const localePath = useLocalePath()
   const workspaceIdeaTitleState = useState<string | null>('workspace-idea-title', () => null)
+  const workspaceIdeaDescriptionState = useState<string | null>('workspace-idea-description', () => null)
   const { showSuccess, showError } = useToastNotification()
   const { handleRateLimitError } = useErrorHandler()
   const { createIdeaFormSchema } = useValidation()
@@ -85,6 +86,7 @@ export const useCreateIdeaModal = (options: UseCreateIdeaModalOptions): UseCreat
 
       isCreateModalOpen.value = false
       workspaceIdeaTitleState.value = created.title
+      workspaceIdeaDescriptionState.value = created.description ?? null
       await navigateTo(localePath(`/ideas/${created.id}/versions/${created.id}/overview`))
     } catch (error: unknown) {
       if (handleRateLimitError(error)) {
