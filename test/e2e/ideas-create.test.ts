@@ -58,7 +58,7 @@ describe('POST /api/ideas integration', async () => {
       description: '  First idea draft  '
     })
 
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(201)
 
     const payload = await response.json() as IdeaResponseDto
 
@@ -99,7 +99,7 @@ describe('POST /api/ideas integration', async () => {
       description: '   '
     })
 
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(201)
 
     const payload = await response.json() as IdeaResponseDto
     expect(payload.description).toBeNull()
@@ -137,7 +137,7 @@ describe('POST /api/ideas integration', async () => {
     const firstResponse = await postIdea(user.cookieHeader, {
       title: 'First idea'
     })
-    expect(firstResponse.status).toBe(200)
+    expect(firstResponse.status).toBe(201)
 
     const secondResponse = await postIdea(user.cookieHeader, {
       title: 'Second idea'
