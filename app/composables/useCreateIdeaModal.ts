@@ -87,7 +87,7 @@ export const useCreateIdeaModal = (options: UseCreateIdeaModalOptions): UseCreat
       isCreateModalOpen.value = false
       workspaceIdeaTitleState.value = created.title
       workspaceIdeaDescriptionState.value = created.description ?? null
-      await navigateTo(localePath(`/ideas/${created.id}/versions/${created.id}/overview`))
+      await navigateTo(localePath(`/ideas/${created.id}/versions/${created.latestVersionId}/overview`))
     } catch (error: unknown) {
       if (handleRateLimitError(error)) {
         return

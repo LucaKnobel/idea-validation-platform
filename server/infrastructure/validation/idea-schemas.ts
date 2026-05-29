@@ -17,6 +17,7 @@ export const IdeaRouteParamsSchema = z.object({
 
 export const IdeaResponseSchema = z.object({
   id: z.uuid(),
+  latestVersionId: z.uuid(),
   title: z.string(),
   description: z.string().nullable(),
   createdAt: z.iso.datetime(),

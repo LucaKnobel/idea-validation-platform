@@ -34,6 +34,7 @@ export default defineProtectedHandler(async (event, userId): Promise<IdeasListRe
 
       return {
         id: idea.id,
+        latestVersionId: latestVersion.id,
         title: latestVersion.title,
         description: latestVersion.description,
         createdAt: idea.createdAt.toISOString(),
