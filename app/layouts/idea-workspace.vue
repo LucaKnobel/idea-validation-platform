@@ -105,7 +105,7 @@ const footerItems = computed(() => [
       <template #header>
         <AppLogo
           size="md"
-          :to="localePath('/dashboard')"
+          :to="'/dashboard'"
         />
       </template>
 

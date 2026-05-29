@@ -17,7 +17,8 @@
     "remove": "Remove",
     "filter": "Filter",
     "create": "Create",
-    "save": "Save"
+    "save": "Save",
+    "refresh": "Refresh"
   },
   "form": {
     "email": {
@@ -391,6 +392,32 @@
     },
     "versionSwitcher": {
       "comingSoon": "More versions coming soon"
+    },
+    "canvasPage": {
+      "title": "Business Model Canvas",
+      "description": "Capture assumptions per canvas section and save the current version snapshot.",
+      "bulletHint": "Use one bullet per line (e.g. - Early adopters)",
+      "unsaved": "Unsaved changes",
+      "sectionPlaceholder": "- Enter one point per line",
+      "sections": {
+        "KEY_PARTNERS": "Key Partnerships",
+        "KEY_ACTIVITIES": "Key Activities",
+        "VALUE_PROPOSITIONS": "Value Propositions",
+        "CUSTOMER_RELATIONSHIPS": "Customer Relationships",
+        "CUSTOMER_SEGMENTS": "Customer Segments",
+        "KEY_RESOURCES": "Key Resources",
+        "CHANNELS": "Channels",
+        "COST_STRUCTURE": "Cost Structure",
+        "REVENUE_STREAMS": "Revenue Streams"
+      },
+      "success": {
+        "title": "Canvas saved",
+        "message": "Your business model canvas was saved successfully."
+      },
+      "error": {
+        "title": "Could not save canvas",
+        "message": "Please try again."
+      }
     }
   }
 }
