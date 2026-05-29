@@ -22,51 +22,42 @@ const sectionOrder = [
 
 type CanvasSectionType = (typeof sectionOrder)[number]
 
-const sectionMeta: Record<CanvasSectionType, { labelKey: string, icon: string, rows: number }> = {
+const sectionMeta: Record<CanvasSectionType, { labelKey: string, icon: string }> = {
   KEY_PARTNERS: {
     labelKey: 'ideaWorkspace.canvasPage.sections.KEY_PARTNERS',
-    icon: 'i-lucide-link-2',
-    rows: 6
+    icon: 'i-lucide-link-2'
   },
   KEY_ACTIVITIES: {
     labelKey: 'ideaWorkspace.canvasPage.sections.KEY_ACTIVITIES',
-    icon: 'i-lucide-zap',
-    rows: 4
+    icon: 'i-lucide-zap'
   },
   VALUE_PROPOSITIONS: {
     labelKey: 'ideaWorkspace.canvasPage.sections.VALUE_PROPOSITIONS',
-    icon: 'i-lucide-gift',
-    rows: 6
+    icon: 'i-lucide-gift'
   },
   CUSTOMER_RELATIONSHIPS: {
     labelKey: 'ideaWorkspace.canvasPage.sections.CUSTOMER_RELATIONSHIPS',
-    icon: 'i-lucide-heart',
-    rows: 4
+    icon: 'i-lucide-heart'
   },
   CUSTOMER_SEGMENTS: {
     labelKey: 'ideaWorkspace.canvasPage.sections.CUSTOMER_SEGMENTS',
-    icon: 'i-lucide-users',
-    rows: 6
+    icon: 'i-lucide-users'
   },
   KEY_RESOURCES: {
     labelKey: 'ideaWorkspace.canvasPage.sections.KEY_RESOURCES',
-    icon: 'i-lucide-factory',
-    rows: 4
+    icon: 'i-lucide-factory'
   },
   CHANNELS: {
     labelKey: 'ideaWorkspace.canvasPage.sections.CHANNELS',
-    icon: 'i-lucide-truck',
-    rows: 4
+    icon: 'i-lucide-truck'
   },
   COST_STRUCTURE: {
     labelKey: 'ideaWorkspace.canvasPage.sections.COST_STRUCTURE',
-    icon: 'i-lucide-tag',
-    rows: 5
+    icon: 'i-lucide-tag'
   },
   REVENUE_STREAMS: {
     labelKey: 'ideaWorkspace.canvasPage.sections.REVENUE_STREAMS',
-    icon: 'i-lucide-wallet',
-    rows: 5
+    icon: 'i-lucide-wallet'
   }
 }
 
@@ -259,14 +250,14 @@ onMounted(async () => {
 
     <div
       v-else
-      class="grid grid-cols-1 gap-4 lg:grid-cols-10 lg:auto-rows-[7rem] lg:gap-0"
+      class="grid grid-cols-1 gap-4 lg:grid-cols-10 lg:grid-rows-[repeat(6,minmax(0,1fr))] lg:gap-0 lg:h-[calc(100vh-18rem)] lg:min-h-[48rem] lg:max-h-[64rem]"
     >
       <section
         v-for="section in sectionOrder"
         :key="section"
         :class="[
-          'flex h-full flex-col gap-3 rounded-lg border-2 border-accented/70 bg-muted/20 p-3 shadow-sm',
-          'lg:rounded-none lg:border lg:border-accented/80 lg:bg-default lg:shadow-none',
+          'flex min-h-80 h-full flex-col gap-3 rounded-lg border-2 border-accented/70 bg-muted/20 p-3 shadow-sm',
+          'lg:min-h-0 lg:rounded-none lg:border lg:border-accented/80 lg:bg-default lg:shadow-none',
           sectionLayoutClass[section]
         ]"
       >
@@ -280,13 +271,18 @@ onMounted(async () => {
           />
         </div>
 
-        <UTextarea
-          v-model="draft[section]"
-          :rows="sectionMeta[section].rows"
-          class="w-full"
-          :placeholder="$t('ideaWorkspace.canvasPage.sectionPlaceholder')"
-          :disabled="isSaving"
-        />
+        <div class="min-h-0 flex-1">
+          <UTextarea
+            v-model="draft[section]"
+            :rows="1"
+            class="h-full w-full"
+            :ui="{
+              base: 'h-full min-h-0 resize-none align-top'
+            }"
+            :placeholder="$t('ideaWorkspace.canvasPage.sectionPlaceholder')"
+            :disabled="isSaving"
+          />
+        </div>
       </section>
     </div>
   </div>
