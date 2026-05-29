@@ -16,7 +16,10 @@ const route = useRoute()
 
     <UCard>
       <div class="space-y-2">
-        <UBadge color="warning" variant="subtle">
+        <UBadge
+          color="warning"
+          variant="subtle"
+        >
           Step 2 Placeholder
         </UBadge>
 
