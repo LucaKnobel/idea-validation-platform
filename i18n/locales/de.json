@@ -17,7 +17,8 @@
     "remove": "Entfernen",
     "filter": "Filtern",
     "create": "Erstellen",
-    "save": "Speichern"
+    "save": "Speichern",
+    "refresh": "Aktualisieren"
   },
   "form": {
     "email": {
@@ -391,6 +392,32 @@
     },
     "versionSwitcher": {
       "comingSoon": "Weitere Versionen folgen"
+    },
+    "canvasPage": {
+      "title": "Business Model Canvas",
+      "description": "Erfassen Sie Annahmen pro Canvas-Bereich und speichern Sie den aktuellen Versionsstand.",
+      "bulletHint": "Verwenden Sie eine Aufzählung pro Zeile (z. B. - Early Adopters)",
+      "unsaved": "Ungespeicherte Änderungen",
+      "sectionPlaceholder": "- Einen Punkt pro Zeile erfassen",
+      "sections": {
+        "KEY_PARTNERS": "Schlüsselpartner",
+        "KEY_ACTIVITIES": "Schlüsselaktivitäten",
+        "VALUE_PROPOSITIONS": "Wertangebote",
+        "CUSTOMER_RELATIONSHIPS": "Kundenbeziehungen",
+        "CUSTOMER_SEGMENTS": "Kundensegmente",
+        "KEY_RESOURCES": "Schlüsselressourcen",
+        "CHANNELS": "Kanäle",
+        "COST_STRUCTURE": "Kostenstruktur",
+        "REVENUE_STREAMS": "Einnahmequellen"
+      },
+      "success": {
+        "title": "Canvas gespeichert",
+        "message": "Ihr Business Model Canvas wurde erfolgreich gespeichert."
+      },
+      "error": {
+        "title": "Canvas konnte nicht gespeichert werden",
+        "message": "Bitte versuchen Sie es erneut."
+      }
     }
   }
 }
