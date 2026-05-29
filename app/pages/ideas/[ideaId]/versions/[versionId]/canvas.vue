@@ -250,18 +250,18 @@ onMounted(async () => {
 
     <div
       v-else
-      class="grid grid-cols-1 gap-4 lg:grid-cols-10 lg:grid-rows-[repeat(6,minmax(0,1fr))] lg:gap-0 lg:h-[calc(100vh-18rem)] lg:min-h-[48rem] lg:max-h-[64rem]"
+      class="grid grid-cols-1 gap-4 lg:grid-cols-10 lg:grid-rows-6 lg:gap-0 lg:h-[calc(100vh-18rem)] lg:min-h-192 lg:max-h-256"
     >
       <section
         v-for="section in sectionOrder"
         :key="section"
         :class="[
-          'flex min-h-80 h-full flex-col gap-3 rounded-lg border-2 border-accented/70 bg-muted/20 p-3 shadow-sm',
-          'lg:min-h-0 lg:rounded-none lg:border lg:border-accented/80 lg:bg-default lg:shadow-none',
+          'flex min-h-80 h-full flex-col gap-3 rounded-lg border border-default bg-muted/20 p-3 shadow-sm ring-1 ring-default/40',
+          'lg:min-h-0 lg:rounded-none lg:border lg:border-accented/70 lg:bg-default lg:shadow-none lg:ring-0',
           sectionLayoutClass[section]
         ]"
       >
-        <div class="flex items-center justify-between gap-2 border-b border-accented/60 pb-2">
+        <div class="flex items-center justify-between gap-2 border-b border-default/80 pb-2">
           <h2 class="text-sm font-semibold text-highlighted">
             {{ t(sectionMeta[section].labelKey) }}
           </h2>
@@ -276,8 +276,11 @@ onMounted(async () => {
             v-model="draft[section]"
             :rows="1"
             class="h-full w-full"
+            color="neutral"
+            variant="subtle"
+            :highlight="false"
             :ui="{
-              base: 'h-full min-h-0 resize-none align-top'
+              base: 'h-full min-h-0 resize-none align-top border-none ring-0'
             }"
             :placeholder="$t('ideaWorkspace.canvasPage.sectionPlaceholder')"
             :disabled="isSaving"
