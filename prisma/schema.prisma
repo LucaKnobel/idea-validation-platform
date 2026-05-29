@@ -11,13 +11,13 @@ datasource db {
 
 // Better Auth standard model
 model User {
-  id            String    @id
+  id            String        @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean       @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   sessions      Session[]
   accounts      Account[]
   subscription  Subscription? // not Better Auth standard
@@ -113,12 +113,12 @@ model Subscription {
 }
 
 model Idea {
-  id          String   @id @default(uuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  versions    IdeaVersion[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String        @id @default(uuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  versions  IdeaVersion[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   @@index([userId])
   @@map("idea")
@@ -130,18 +130,45 @@ enum IdeaVersionType {
   PIVOT
 }
 
-model IdeaVersion {
-  id                String   @id @default(uuid())
-  ideaId            String
-  idea              Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
-  versionNumber     Int
-  type              IdeaVersionType
-  title             String
-  description       String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+enum CanvasElementType {
+  CUSTOMER_SEGMENTS
+  VALUE_PROPOSITIONS
+  CHANNELS
+  CUSTOMER_RELATIONSHIPS
+  REVENUE_STREAMS
+  KEY_RESOURCES
+  KEY_ACTIVITIES
+  KEY_PARTNERS
+  COST_STRUCTURE
+}
 
-  @@index([ideaId])
+model IdeaVersion {
+  id             String          @id @default(uuid())
+  ideaId         String
+  idea           Idea            @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  canvasElements CanvasElement[]
+  versionNumber  Int
+  type           IdeaVersionType
+  title          String
+  description    String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
   @@unique([ideaId, versionNumber])
+  @@index([ideaId])
   @@map("ideaVersion")
+}
+
+model CanvasElement {
+  id            String            @id @default(uuid())
+  ideaVersionId String
+  ideaVersion   IdeaVersion       @relation(fields: [ideaVersionId], references: [id], onDelete: Cascade)
+  type          CanvasElementType
+  content       String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([ideaVersionId])
+  @@index([ideaVersionId, type])
+  @@map("canvasElement")
 }
