@@ -171,7 +171,7 @@ const setWorkspaceIdeaContext = (title: string, description?: string | null): vo
  */
 const onRowSelect = async (_event: Event, row: TableRow<IdeaResponseDto>): Promise<void> => {
   setWorkspaceIdeaContext(row.original.title, row.original.description)
-  await navigateTo(localePath(`/ideas/${row.original.id}/versions/${row.original.id}/overview`))
+  await navigateTo(localePath(`/ideas/${row.original.id}/versions/${row.original.latestVersionId}/overview`))
 }
 
 /**
@@ -277,7 +277,7 @@ const onCreateIdeaSubmit = async (form: CreateIdeaForm): Promise<void> => {
                   <div class="title-cell-content clamped-text line-clamp-2 w-full space-y-1 overflow-hidden">
                     <ULink
                       class="block max-w-full wrap-break-word font-medium text-highlighted hover:text-primary"
-                      :to="localePath(`/ideas/${row.original.id}/versions/${row.original.id}/overview`)"
+                      :to="localePath(`/ideas/${row.original.id}/versions/${row.original.latestVersionId}/overview`)"
                       :title="row.original.title"
                       @click="setWorkspaceIdeaContext(row.original.title, row.original.description)"
                     >
