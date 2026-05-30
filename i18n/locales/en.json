@@ -401,12 +401,12 @@
     "canvasPage": {
       "title": "Business Model Canvas",
       "description": "Capture assumptions per canvas section and save the current version snapshot.",
-      "bulletHint": "Use one bullet per line (e.g. - Early adopters)",
+      "bulletHint": "Use one bullet per line (e.g. • Early adopters)",
       "unsaved": "Unsaved changes",
       "actions": {
         "reset": "Reset"
       },
-      "sectionPlaceholder": "- Enter one point per line",
+      "sectionPlaceholder": "• Enter one point per line",
       "sections": {
         "KEY_PARTNERS": "Key Partnerships",
         "KEY_ACTIVITIES": "Key Activities",
