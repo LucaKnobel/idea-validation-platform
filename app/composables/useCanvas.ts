@@ -15,7 +15,6 @@ export interface UseCanvasComposable {
   isSaving: Ref<boolean>
   hasError: Ref<boolean>
   loadCanvas: (input: { ideaId: string, versionId: string }) => Promise<void>
-  reloadCanvas: (input: { ideaId: string, versionId: string }) => Promise<void>
   replaceCanvas: (input: {
     ideaId: string
     versionId: string
@@ -146,13 +145,6 @@ export const useCanvas = (): UseCanvasComposable => {
   }
 
   /**
-   * High-level reload action used by the canvas page.
-   */
-  const reloadCanvas = async (input: { ideaId: string, versionId: string }): Promise<void> => {
-    await loadCanvas(input)
-  }
-
-  /**
    * Replaces the complete canvas snapshot and updates local state with the persisted result.
    */
   const replaceCanvas = async (input: {
@@ -244,7 +236,6 @@ export const useCanvas = (): UseCanvasComposable => {
     isSaving,
     hasError,
     loadCanvas,
-    reloadCanvas,
     replaceCanvas,
     saveCanvas,
     setElements,

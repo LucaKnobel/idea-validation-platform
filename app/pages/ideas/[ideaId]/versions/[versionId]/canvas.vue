@@ -15,7 +15,7 @@ const {
   isLoading,
   isSaving,
   hasError,
-  reloadCanvas: reloadCanvasData,
+  loadCanvas: loadCanvasData,
   saveCanvas: saveCanvasData
 } = useCanvas()
 
@@ -77,7 +77,7 @@ const reloadCanvas = async (): Promise<void> => {
     return
   }
 
-  await reloadCanvasData({
+  await loadCanvasData({
     ideaId: ideaId.value,
     versionId: versionId.value
   })
