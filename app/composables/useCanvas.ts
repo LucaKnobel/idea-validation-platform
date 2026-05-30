@@ -24,6 +24,7 @@ export interface UseCanvasComposable {
 export const useCanvas = (): UseCanvasComposable => {
   const { getCanvas, replaceCanvas: replaceCanvasRequest } = useCanvasApi()
   const { handleRateLimitError } = useErrorHandler()
+  const { createReplaceCanvasSchema } = useValidation()
 
   const elements = ref<CanvasElementResponseDto[]>([])
   const isLoading = ref(false)
@@ -75,10 +76,20 @@ export const useCanvas = (): UseCanvasComposable => {
         }))
         .filter(element => element.content.length > 0)
 
+      const replaceCanvasSchema = createReplaceCanvasSchema()
+      const validationResult = replaceCanvasSchema.safeParse({
+        elements: normalizedElements
+      })
+
+      if (!validationResult.success) {
+        hasError.value = true
+        return false
+      }
+
       const response = await replaceCanvasRequest({
         ideaId: input.ideaId,
         versionId: input.versionId,
-        elements: normalizedElements
+        elements: validationResult.data.elements
       })
 
       elements.value = response.elements

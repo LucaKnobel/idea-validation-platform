@@ -6,6 +6,18 @@ import * as z from 'zod'
 export const useValidation = () => {
   const { t } = useI18n()
 
+  const canvasElementTypes = [
+    'KEY_PARTNERS',
+    'KEY_ACTIVITIES',
+    'VALUE_PROPOSITIONS',
+    'CUSTOMER_RELATIONSHIPS',
+    'CUSTOMER_SEGMENTS',
+    'KEY_RESOURCES',
+    'CHANNELS',
+    'COST_STRUCTURE',
+    'REVENUE_STREAMS'
+  ] as const
+
   /**
    * Builds a normalized email schema with localized validation errors.
    */
@@ -79,11 +91,32 @@ export const useValidation = () => {
       .or(z.literal(''))
   })
 
+  /**
+   * Builds the schema for one canvas element entry.
+   */
+  const createCanvasElementSchema = () => z.object({
+    type: z.enum(canvasElementTypes),
+    content: z.string({ error: t('validation.canvas.contentRequired') })
+      .trim()
+      .min(1, t('validation.canvas.contentRequired'))
+      .max(500, t('validation.canvas.contentTooLong'))
+  })
+
+  /**
+   * Builds the schema for replacing a full canvas snapshot.
+   */
+  const createReplaceCanvasSchema = () => z.object({
+    elements: z.array(createCanvasElementSchema())
+      .max(500, t('validation.canvas.tooManyElements'))
+  })
+
   return {
     createPasswordSchema,
     createRegisterFormSchema,
     createLoginFormSchema,
     createVerifyEmailSchema,
-    createIdeaFormSchema
+    createIdeaFormSchema,
+    createCanvasElementSchema,
+    createReplaceCanvasSchema
   }
 }
