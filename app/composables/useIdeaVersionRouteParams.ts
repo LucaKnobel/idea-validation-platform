@@ -4,8 +4,6 @@
 export interface UseIdeaVersionRouteParamsComposable {
   ideaId: ComputedRef<string>
   versionId: ComputedRef<string>
-  hasIdeaId: ComputedRef<boolean>
-  hasVersionId: ComputedRef<boolean>
   hasIdeaVersionRouteParams: ComputedRef<boolean>
 }
 
@@ -25,15 +23,11 @@ export const useIdeaVersionRouteParams = (): UseIdeaVersionRouteParamsComposable
     return typeof value === 'string' ? value : ''
   })
 
-  const hasIdeaId = computed(() => ideaId.value.length > 0)
-  const hasVersionId = computed(() => versionId.value.length > 0)
-  const hasIdeaVersionRouteParams = computed(() => hasIdeaId.value && hasVersionId.value)
+  const hasIdeaVersionRouteParams = computed(() => ideaId.value.length > 0 && versionId.value.length > 0)
 
   return {
     ideaId,
     versionId,
-    hasIdeaId,
-    hasVersionId,
     hasIdeaVersionRouteParams
   }
 }

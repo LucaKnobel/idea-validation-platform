@@ -8,21 +8,13 @@ export type CanvasDraftState = Record<CanvasSectionType, string>
  */
 export interface UseCanvasComposable {
   sectionOrder: readonly CanvasSectionType[]
-  elements: Ref<CanvasElementResponseDto[]>
   draft: Ref<CanvasDraftState>
   hasUnsavedChanges: ComputedRef<boolean>
   isLoading: Ref<boolean>
   isSaving: Ref<boolean>
   hasError: Ref<boolean>
   loadCanvas: (input: { ideaId: string, versionId: string }) => Promise<void>
-  replaceCanvas: (input: {
-    ideaId: string
-    versionId: string
-    elements: ReplaceIdeaVersionCanvasBodyDto['elements']
-  }) => Promise<boolean>
   saveCanvas: (input: { ideaId: string, versionId: string }) => Promise<boolean>
-  setElements: (nextElements: CanvasElementResponseDto[]) => void
-  reset: () => void
 }
 
 /**
@@ -207,38 +199,14 @@ export const useCanvas = (): UseCanvasComposable => {
     })
   }
 
-  /**
-   * Replaces local canvas state without a network call.
-   */
-  const setElements = (nextElements: CanvasElementResponseDto[]): void => {
-    elements.value = [...nextElements]
-    syncDraftFromElements()
-  }
-
-  /**
-   * Resets local canvas state.
-   */
-  const reset = (): void => {
-    elements.value = []
-    draft.value = createEmptyDraft()
-    persistedSnapshot.value = createSnapshot(draft.value)
-    isLoading.value = false
-    isSaving.value = false
-    hasError.value = false
-  }
-
   return {
     sectionOrder,
-    elements,
     draft,
     hasUnsavedChanges,
     isLoading,
     isSaving,
     hasError,
     loadCanvas,
-    replaceCanvas,
-    saveCanvas,
-    setElements,
-    reset
+    saveCanvas
   }
 }
