@@ -4,19 +4,9 @@ definePageMeta({
   layout: 'idea-workspace'
 })
 
-const route = useRoute()
 const { t } = useI18n()
 const { showSuccess, showError } = useToastNotification()
-
-const ideaId = computed(() => {
-  const value = route.params.ideaId
-  return typeof value === 'string' ? value : ''
-})
-
-const versionId = computed(() => {
-  const value = route.params.versionId
-  return typeof value === 'string' ? value : ''
-})
+const { ideaId, versionId, hasIdeaVersionRouteParams } = useIdeaVersionRouteParams()
 
 const {
   sectionOrder,
@@ -82,10 +72,8 @@ const sectionLayoutClass: Record<CanvasSectionType, string> = {
   REVENUE_STREAMS: 'lg:col-span-5 lg:row-span-2'
 }
 
-const canLoadCanvas = computed(() => ideaId.value.length > 0 && versionId.value.length > 0)
-
 const reloadCanvas = async (): Promise<void> => {
-  if (!canLoadCanvas.value) {
+  if (!hasIdeaVersionRouteParams.value) {
     return
   }
 
@@ -96,7 +84,7 @@ const reloadCanvas = async (): Promise<void> => {
 }
 
 const saveCanvas = async (): Promise<void> => {
-  if (!canLoadCanvas.value) {
+  if (!hasIdeaVersionRouteParams.value) {
     return
   }
 
