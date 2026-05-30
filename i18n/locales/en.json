@@ -51,6 +51,11 @@
       "confirmMismatch": "Passwords must match",
       "hint": "At least 15 characters including uppercase, lowercase, a number and a special character.",
       "requirements": "Password requirements"
+    },
+    "canvas": {
+      "contentRequired": "Each canvas item must contain text",
+      "contentTooLong": "A canvas item must not exceed 500 characters",
+      "tooManyElements": "A maximum of 500 canvas elements is allowed"
     }
   },
   "error": {

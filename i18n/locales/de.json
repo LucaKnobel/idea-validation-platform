@@ -51,6 +51,11 @@
       "confirmMismatch": "Passwörter müssen übereinstimmen",
       "hint": "Mind. 15 Zeichen mit Groß- und Kleinbuchstaben, einer Zahl und einem Sonderzeichen.",
       "requirements": "Passwortanforderungen"
+    },
+    "canvas": {
+      "contentRequired": "Jeder Canvas-Eintrag muss Text enthalten",
+      "contentTooLong": "Ein Canvas-Eintrag darf maximal 500 Zeichen haben",
+      "tooManyElements": "Es sind maximal 500 Canvas-Einträge erlaubt"
     }
   },
   "error": {
