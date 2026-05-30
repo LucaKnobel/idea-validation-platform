@@ -20,8 +20,6 @@ const versionId = computed(() => {
 
 const {
   sectionOrder,
-  sectionMeta,
-  sectionLayoutClass,
   draft,
   hasUnsavedChanges,
   isLoading,
@@ -30,6 +28,59 @@ const {
   reloadCanvas: reloadCanvasData,
   saveCanvas: saveCanvasData
 } = useCanvas()
+
+type CanvasSectionType = (typeof sectionOrder)[number]
+
+const sectionMeta: Record<CanvasSectionType, { labelKey: string, icon: string }> = {
+  KEY_PARTNERS: {
+    labelKey: 'ideaWorkspace.canvasPage.sections.KEY_PARTNERS',
+    icon: 'i-lucide-link-2'
+  },
+  KEY_ACTIVITIES: {
+    labelKey: 'ideaWorkspace.canvasPage.sections.KEY_ACTIVITIES',
+    icon: 'i-lucide-zap'
+  },
+  VALUE_PROPOSITIONS: {
+    labelKey: 'ideaWorkspace.canvasPage.sections.VALUE_PROPOSITIONS',
+    icon: 'i-lucide-gift'
+  },
+  CUSTOMER_RELATIONSHIPS: {
+    labelKey: 'ideaWorkspace.canvasPage.sections.CUSTOMER_RELATIONSHIPS',
+    icon: 'i-lucide-heart'
+  },
+  CUSTOMER_SEGMENTS: {
+    labelKey: 'ideaWorkspace.canvasPage.sections.CUSTOMER_SEGMENTS',
+    icon: 'i-lucide-users'
+  },
+  KEY_RESOURCES: {
+    labelKey: 'ideaWorkspace.canvasPage.sections.KEY_RESOURCES',
+    icon: 'i-lucide-factory'
+  },
+  CHANNELS: {
+    labelKey: 'ideaWorkspace.canvasPage.sections.CHANNELS',
+    icon: 'i-lucide-truck'
+  },
+  COST_STRUCTURE: {
+    labelKey: 'ideaWorkspace.canvasPage.sections.COST_STRUCTURE',
+    icon: 'i-lucide-tag'
+  },
+  REVENUE_STREAMS: {
+    labelKey: 'ideaWorkspace.canvasPage.sections.REVENUE_STREAMS',
+    icon: 'i-lucide-wallet'
+  }
+}
+
+const sectionLayoutClass: Record<CanvasSectionType, string> = {
+  KEY_PARTNERS: 'lg:col-span-2 lg:row-span-4',
+  KEY_ACTIVITIES: 'lg:col-span-2 lg:row-span-2',
+  VALUE_PROPOSITIONS: 'lg:col-span-2 lg:row-span-4',
+  CUSTOMER_RELATIONSHIPS: 'lg:col-span-2 lg:row-span-2',
+  CUSTOMER_SEGMENTS: 'lg:col-span-2 lg:row-span-4',
+  KEY_RESOURCES: 'lg:col-span-2 lg:row-span-2',
+  CHANNELS: 'lg:col-span-2 lg:row-span-2',
+  COST_STRUCTURE: 'lg:col-span-5 lg:row-span-2',
+  REVENUE_STREAMS: 'lg:col-span-5 lg:row-span-2'
+}
 
 const canLoadCanvas = computed(() => ideaId.value.length > 0 && versionId.value.length > 0)
 
