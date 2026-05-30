@@ -1,22 +1,11 @@
 import * as z from 'zod'
+import { CANVAS_SECTION_ORDER } from '~/types/canvasSections'
 
 /**
- * Creates localized Zod schemas for the authentication forms used by the frontend.
+ * Creates localized Zod schemas used by frontend forms (auth, idea creation, and canvas).
  */
 export const useValidation = () => {
   const { t } = useI18n()
-
-  const canvasElementTypes = [
-    'KEY_PARTNERS',
-    'KEY_ACTIVITIES',
-    'VALUE_PROPOSITIONS',
-    'CUSTOMER_RELATIONSHIPS',
-    'CUSTOMER_SEGMENTS',
-    'KEY_RESOURCES',
-    'CHANNELS',
-    'COST_STRUCTURE',
-    'REVENUE_STREAMS'
-  ] as const
 
   /**
    * Builds a normalized email schema with localized validation errors.
@@ -95,7 +84,7 @@ export const useValidation = () => {
    * Builds the schema for one canvas element entry.
    */
   const createCanvasElementSchema = () => z.object({
-    type: z.enum(canvasElementTypes),
+    type: z.enum(CANVAS_SECTION_ORDER),
     content: z.string({ error: t('validation.canvas.contentRequired') })
       .trim()
       .min(1, t('validation.canvas.contentRequired'))
