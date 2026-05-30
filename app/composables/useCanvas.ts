@@ -87,7 +87,7 @@ export const useCanvas = (): UseCanvasComposable => {
     return text
       .split('\n')
       .map(line => line.trim())
-      .map(line => line.replace(/^[-*]\s*/, '').trim())
+      .map(line => line.replace(/^[-*•]\s*/, '').trim())
       .filter(line => line.length > 0)
       .map(content => ({ type: section, content }))
   }
@@ -105,7 +105,7 @@ export const useCanvas = (): UseCanvasComposable => {
         .filter(content => content.length > 0)
 
       nextDraft[section] = sectionItems.length > 0
-        ? sectionItems.map(content => `- ${content}`).join('\n')
+        ? sectionItems.map(content => `• ${content}`).join('\n')
         : ''
     }
 
