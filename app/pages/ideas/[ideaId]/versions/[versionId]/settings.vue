@@ -4,16 +4,11 @@ definePageMeta({
   layout: 'idea-workspace'
 })
 
-const route = useRoute()
 const { t } = useI18n()
+const { ideaId } = useIdeaVersionRouteParams()
 
 const workspaceIdeaTitleState = useState<string | null>('workspace-idea-title', () => null)
 const workspaceIdeaDescriptionState = useState<string | null>('workspace-idea-description', () => null)
-
-const ideaId = computed(() => {
-  const param = route.params.ideaId
-  return typeof param === 'string' ? param : ''
-})
 
 const {
   isDeleteModalOpen,
