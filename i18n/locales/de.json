@@ -398,6 +398,9 @@
       "description": "Erfassen Sie Annahmen pro Canvas-Bereich und speichern Sie den aktuellen Versionsstand.",
       "bulletHint": "Verwenden Sie eine Aufzählung pro Zeile (z. B. - Early Adopters)",
       "unsaved": "Ungespeicherte Änderungen",
+      "actions": {
+        "reset": "Zurücksetzen"
+      },
       "sectionPlaceholder": "- Einen Punkt pro Zeile erfassen",
       "sections": {
         "KEY_PARTNERS": "Schlüsselpartner",
