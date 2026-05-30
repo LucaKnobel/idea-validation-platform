@@ -206,6 +206,7 @@ onMounted(async () => {
 
       <div class="ms-auto flex items-center gap-2">
         <UButton
+          v-if="hasUnsavedChanges"
           color="neutral"
           variant="soft"
           icon="i-lucide-refresh-cw"
@@ -213,7 +214,7 @@ onMounted(async () => {
           :disabled="isLoading || isSaving"
           @click="reloadCanvas"
         >
-          {{ $t('actions.refresh') }}
+          {{ $t('ideaWorkspace.canvasPage.actions.reset') }}
         </UButton>
 
         <UButton
