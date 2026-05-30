@@ -10,3 +10,10 @@ export type HypothesisCanvasSection = {
   createdAt: Date
   updatedAt: Date
 }
+
+/**
+ * Removes duplicate canvas section types from the given array.
+ */
+export const uniqueCanvasSectionTypes = (values: CanvasElementType[]): CanvasElementType[] => {
+  return [...new Set(values)]
+}

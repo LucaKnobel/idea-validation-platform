@@ -2,6 +2,7 @@ import { prisma } from '@infrastructure/db/prisma'
 import type { Prisma, CanvasElement as PrismaCanvasElement } from '@generated/prisma/client'
 import type { CanvasRepository } from '@application/interfaces/canvas-repository'
 import type { CanvasElement, CanvasElementType } from '@application/models/canvas-element'
+import { isIdeaVersionOwnedByUser } from '@infrastructure/db/ownership-helpers'
 
 /**
  * Maps a Prisma canvas element row into the application domain model.
@@ -14,23 +15,6 @@ const toDomainCanvasElement = (row: PrismaCanvasElement): CanvasElement => {
     content: row.content,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt
-  }
-}
-
-/**
- * Builds an ownership filter for a specific idea version.
- */
-const buildOwnedIdeaVersionWhere = (input: {
-  userId: string
-  ideaId: string
-  ideaVersionId: string
-}): Prisma.IdeaVersionWhereInput => {
-  return {
-    id: input.ideaVersionId,
-    ideaId: input.ideaId,
-    idea: {
-      userId: input.userId
-    }
   }
 }
 
@@ -51,22 +35,6 @@ const buildOwnedCanvasElementWhere = (input: {
       }
     }
   }
-}
-
-/**
- * Checks whether the requested idea version belongs to the given user.
- */
-const isIdeaVersionOwnedByUser = async (input: {
-  userId: string
-  ideaId: string
-  ideaVersionId: string
-}): Promise<boolean> => {
-  const ownedIdeaVersion = await prisma.ideaVersion.findFirst({
-    where: buildOwnedIdeaVersionWhere(input),
-    select: { id: true }
-  })
-
-  return ownedIdeaVersion !== null
 }
 
 /**
