@@ -2,6 +2,8 @@ import type { IdeaVersionCanvasResponseDto, ReplaceIdeaVersionCanvasBodyDto } fr
 
 /**
  * Public contract implemented by useCanvasApi.
+ *
+ * Both methods throw on HTTP/network failures so callers can map errors consistently.
  */
 export interface UseCanvasApiComposable {
   /**
@@ -33,7 +35,7 @@ export const useCanvasApi = (): UseCanvasApiComposable => {
     ideaId: string
     versionId: string
   }): Promise<IdeaVersionCanvasResponseDto> => {
-    return await $fetch<IdeaVersionCanvasResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/canvas`)
+    return $fetch<IdeaVersionCanvasResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/canvas`)
   }
 
   /**
@@ -44,7 +46,7 @@ export const useCanvasApi = (): UseCanvasApiComposable => {
     versionId: string
     elements: ReplaceIdeaVersionCanvasBodyDto['elements']
   }): Promise<IdeaVersionCanvasResponseDto> => {
-    return await $fetch<IdeaVersionCanvasResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/canvas`, {
+    return $fetch<IdeaVersionCanvasResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/canvas`, {
       method: 'PUT',
       body: {
         elements: input.elements

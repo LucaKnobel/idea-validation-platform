@@ -1,10 +1,11 @@
-import type { CanvasElementResponseDto, ReplaceIdeaVersionCanvasBodyDto } from '../../shared/types/canvas'
-
-export type CanvasSectionType = ReplaceIdeaVersionCanvasBodyDto['elements'][number]['type']
-export type CanvasDraftState = Record<CanvasSectionType, string>
+import type { CanvasElementResponseDto, ReplaceIdeaVersionCanvasBodyDto } from '#shared/types/canvas'
+import { CANVAS_SECTION_ORDER, createEmptyCanvasDraft, type CanvasDraftState, type CanvasSectionType } from '~/types/canvasSections'
 
 /**
  * Public contract for loading and replacing one idea version canvas snapshot.
+ *
+ * `hasError` is set to true when load/save fails with a non-rate-limit error.
+ * `hasUnsavedChanges` compares trimmed draft content against the last persisted snapshot.
  */
 export interface UseCanvasComposable {
   sectionOrder: readonly CanvasSectionType[]
@@ -25,37 +26,10 @@ export const useCanvas = (): UseCanvasComposable => {
   const { handleRateLimitError } = useErrorHandler()
   const { createReplaceCanvasSchema } = useValidation()
 
-  const sectionOrder: CanvasSectionType[] = [
-    'KEY_PARTNERS',
-    'KEY_ACTIVITIES',
-    'VALUE_PROPOSITIONS',
-    'CUSTOMER_RELATIONSHIPS',
-    'CUSTOMER_SEGMENTS',
-    'KEY_RESOURCES',
-    'CHANNELS',
-    'COST_STRUCTURE',
-    'REVENUE_STREAMS'
-  ]
-
-  /**
-   * Creates an empty draft object for all canvas sections.
-   */
-  const createEmptyDraft = (): CanvasDraftState => {
-    return {
-      KEY_PARTNERS: '',
-      KEY_ACTIVITIES: '',
-      VALUE_PROPOSITIONS: '',
-      CUSTOMER_RELATIONSHIPS: '',
-      CUSTOMER_SEGMENTS: '',
-      KEY_RESOURCES: '',
-      CHANNELS: '',
-      COST_STRUCTURE: '',
-      REVENUE_STREAMS: ''
-    }
-  }
+  const sectionOrder = CANVAS_SECTION_ORDER
 
   const elements = ref<CanvasElementResponseDto[]>([])
-  const draft = ref<CanvasDraftState>(createEmptyDraft())
+  const draft = ref<CanvasDraftState>(createEmptyCanvasDraft())
   const persistedSnapshot = ref<string>('')
   const isLoading = ref(false)
   const isSaving = ref(false)
@@ -85,9 +59,11 @@ export const useCanvas = (): UseCanvasComposable => {
 
   /**
    * Synchronizes draft text areas from persisted canvas elements.
+   *
+   * Every non-empty entry is normalized as one bullet line for editing.
    */
   const syncDraftFromElements = (): void => {
-    const nextDraft = createEmptyDraft()
+    const nextDraft = createEmptyCanvasDraft()
 
     for (const section of sectionOrder) {
       const sectionItems = elements.value
@@ -109,7 +85,9 @@ export const useCanvas = (): UseCanvasComposable => {
   })
 
   /**
-   * Loads canvas entries for the given idea/version pair.
+    * Loads canvas entries for the given idea/version pair.
+    *
+    * On non-rate-limit failures, local elements are reset to an empty draft.
    */
   const loadCanvas = async (input: { ideaId: string, versionId: string }): Promise<void> => {
     isLoading.value = true
@@ -137,7 +115,10 @@ export const useCanvas = (): UseCanvasComposable => {
   }
 
   /**
-   * Replaces the complete canvas snapshot and updates local state with the persisted result.
+    * Replaces the complete canvas snapshot and updates local state with the persisted result.
+    *
+    * Returns false when frontend validation fails, the request fails,
+    * or a rate-limit error was handled globally.
    */
   const replaceCanvas = async (input: {
     ideaId: string
@@ -188,11 +169,13 @@ export const useCanvas = (): UseCanvasComposable => {
 
   /**
    * Converts the current draft to payload and persists it.
+   *
+   * Each non-empty line becomes one canvas element and leading list markers are removed.
    */
   const saveCanvas = async (input: { ideaId: string, versionId: string }): Promise<boolean> => {
     const payload = sectionOrder.flatMap(section => parseSectionToEntries(section, draft.value[section]))
 
-    return await replaceCanvas({
+    return replaceCanvas({
       ideaId: input.ideaId,
       versionId: input.versionId,
       elements: payload
