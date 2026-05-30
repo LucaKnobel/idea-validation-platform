@@ -142,11 +142,26 @@ enum CanvasElementType {
   COST_STRUCTURE
 }
 
+enum HypothesisDimension {
+  PROBLEM
+  SOLUTION
+  MARKET
+  MONETIZATION
+  EXECUTION
+}
+
+enum HypothesisPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
 model IdeaVersion {
   id             String          @id @default(uuid())
   ideaId         String
   idea           Idea            @relation(fields: [ideaId], references: [id], onDelete: Cascade)
   canvasElements CanvasElement[]
+  hypotheses     Hypothesis[]
   versionNumber  Int
   type           IdeaVersionType
   title          String
@@ -157,6 +172,34 @@ model IdeaVersion {
   @@unique([ideaId, versionNumber])
   @@index([ideaId])
   @@map("ideaVersion")
+}
+
+model Hypothesis {
+  id                String                      @id @default(uuid())
+  ideaVersionId     String
+  ideaVersion       IdeaVersion                 @relation(fields: [ideaVersionId], references: [id], onDelete: Cascade)
+  statement         String
+  dimension         HypothesisDimension
+  priority          HypothesisPriority
+  canvasSectionLinks HypothesisCanvasSection[]
+  createdAt         DateTime                    @default(now())
+  updatedAt         DateTime                    @updatedAt
+
+  @@index([ideaVersionId])
+  @@map("hypothesis")
+}
+
+model HypothesisCanvasSection {
+  id                String          @id @default(uuid())
+  hypothesisId      String
+  hypothesis        Hypothesis      @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
+  canvasElementType CanvasElementType
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@unique([hypothesisId, canvasElementType])
+  @@index([canvasElementType])
+  @@map("hypothesisCanvasSection")
 }
 
 model CanvasElement {
