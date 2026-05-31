@@ -56,6 +56,14 @@
       "contentRequired": "Jeder Canvas-Eintrag muss Text enthalten",
       "contentTooLong": "Ein Canvas-Eintrag darf maximal 500 Zeichen haben",
       "tooManyElements": "Es sind maximal 500 Canvas-Einträge erlaubt"
+    },
+    "hypothesis": {
+      "statementRequired": "Eine Hypothesen-Aussage ist erforderlich",
+      "statementTooLong": "Eine Hypothesen-Aussage darf maximal 3000 Zeichen haben",
+      "dimensionRequired": "Bitte wählen Sie eine Hypothesen-Dimension",
+      "priorityRequired": "Bitte wählen Sie eine Priorität",
+      "canvasSectionMin": "Wählen Sie mindestens einen Canvas-Bereich",
+      "canvasSectionMax": "Es können maximal 9 Canvas-Bereiche verknüpft werden"
     }
   },
   "error": {
@@ -425,6 +433,132 @@
       "error": {
         "title": "Canvas konnte nicht gespeichert werden",
         "message": "Bitte versuchen Sie es erneut."
+      }
+    },
+    "hypotheses": {
+      "title": "Hypothesen",
+      "description": "Erfassen, klassifizieren und priorisieren Sie Ihre zentralen Annahmen für diese Ideen-Version.",
+      "count": "{count} Hypothesen",
+      "actions": {
+        "create": "Hypothese erstellen",
+        "update": "Hypothese aktualisieren",
+        "deleteConfirm": "Hypothese löschen"
+      },
+      "status": {
+        "OPEN": "Offen"
+      },
+      "dimensions": {
+        "PROBLEM": "Problem",
+        "SOLUTION": "Lösung",
+        "MARKET": "Markt",
+        "MONETIZATION": "Monetarisierung",
+        "EXECUTION": "Umsetzung"
+      },
+      "priorities": {
+        "HIGH": "Hoch",
+        "MEDIUM": "Mittel",
+        "LOW": "Niedrig"
+      },
+      "table": {
+        "actions": {
+          "expand": "Zeile ausklappen",
+          "collapse": "Zeile einklappen"
+        },
+        "filters": {
+          "placeholder": "Status filtern",
+          "all": "Alle Status"
+        },
+        "columns": {
+          "statement": "Aussage",
+          "dimension": "Dimension",
+          "priority": "Priorität",
+          "sections": "Canvas-Bereiche",
+          "status": "Status",
+          "actions": "Aktionen"
+        },
+        "empty": "Noch keine Hypothesen"
+      },
+      "empty": {
+        "title": "Noch keine Hypothesen",
+        "description": "Starten Sie mit den riskantesten Annahmen und verknüpfen Sie jede mit einem Canvas-Bereich."
+      },
+      "expanded": {
+        "canvas": {
+          "title": "Canvas-Bereiche",
+          "empty": "Noch keine Canvas-Bereiche verknüpft."
+        },
+        "metrics": {
+          "title": "Übersicht Experiment-Metriken",
+          "placeholder": "Metrikdefinitionen und Schwellwerte für diese Hypothese werden hier als Nächstes angezeigt."
+        },
+        "experiments": {
+          "title": "Übersicht Experimente",
+          "placeholder": "Verknüpfte Experimente und letzte Ergebnisse werden hier im nächsten Schritt angezeigt."
+        }
+      },
+      "modal": {
+        "createTitle": "Hypothese erstellen",
+        "editTitle": "Hypothese bearbeiten",
+        "description": "Definieren Sie eine klare Annahme, klassifizieren Sie sie und verknüpfen Sie sie mit relevanten Canvas-Bereichen."
+      },
+      "deleteModal": {
+        "title": "Hypothese löschen",
+        "description": "Bitte bestätigen Sie, dass Sie diese Hypothese entfernen möchten.",
+        "warning": "Diese Aktion löscht die Hypothese inklusive verknüpfter Metriken, Schwellwerte und Experimente dauerhaft."
+      },
+      "form": {
+        "statement": {
+          "label": "Hypothesen-Aussage",
+          "description": "Formulieren Sie eine konkrete und testbare Annahme.",
+          "placeholder": "Beispiel: Freelancer zahlen für wöchentliche KI-generierte Lead-Listen."
+        },
+        "dimension": {
+          "label": "Unsicherheits-Dimension",
+          "placeholder": "Dimension wählen"
+        },
+        "priority": {
+          "label": "Priorität",
+          "placeholder": "Priorität wählen"
+        },
+        "sections": {
+          "label": "Canvas-Bereiche",
+          "description": "Wählen Sie einen oder mehrere Business-Model-Canvas-Bereiche für diese Hypothese.",
+          "placeholder": "Bereiche wählen",
+          "searchPlaceholder": "Bereiche filtern",
+          "confirm": "Fertig"
+        }
+      },
+      "success": {
+        "create": {
+          "title": "Hypothese erstellt",
+          "message": "Die Hypothese wurde erfolgreich gespeichert."
+        },
+        "update": {
+          "title": "Hypothese aktualisiert",
+          "message": "Die Hypothese wurde erfolgreich aktualisiert."
+        },
+        "delete": {
+          "title": "Hypothese gelöscht",
+          "message": "Die Hypothese wurde erfolgreich entfernt."
+        }
+      },
+      "error": {
+        "load": {
+          "title": "Hypothesen konnten nicht geladen werden",
+          "message": "Bitte versuchen Sie es in einem Moment erneut."
+        },
+        "create": {
+          "title": "Hypothese konnte nicht erstellt werden",
+          "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+        },
+        "update": {
+          "title": "Hypothese konnte nicht aktualisiert werden",
+          "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+        },
+        "delete": {
+          "title": "Hypothese konnte nicht gelöscht werden",
+          "message": "Bitte versuchen Sie es erneut."
+        }
       }
     }
   }

@@ -45,7 +45,7 @@ export const HypothesisResponseSchema = z.object({
   statement: z.string(),
   dimension: HypothesisDimensionSchema,
   priority: HypothesisPrioritySchema,
-  canvasSections: z.array(HypothesisCanvasSectionResponseSchema),
+  canvasSectionLinks: z.array(HypothesisCanvasSectionResponseSchema),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime()
 })
