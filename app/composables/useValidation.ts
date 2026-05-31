@@ -1,5 +1,20 @@
 import * as z from 'zod'
 import { CANVAS_SECTION_ORDER } from '~/types/canvasSections'
+import type { CreateHypothesisBodyDto } from '#shared/types/hypothesis'
+
+const HYPOTHESIS_DIMENSIONS = [
+  'PROBLEM',
+  'SOLUTION',
+  'MARKET',
+  'MONETIZATION',
+  'EXECUTION'
+] as const satisfies readonly CreateHypothesisBodyDto['dimension'][]
+
+const HYPOTHESIS_PRIORITIES = [
+  'HIGH',
+  'MEDIUM',
+  'LOW'
+] as const satisfies readonly CreateHypothesisBodyDto['priority'][]
 
 /**
  * Creates localized Zod schemas used by frontend forms (auth, idea creation, and canvas).
@@ -99,6 +114,21 @@ export const useValidation = () => {
       .max(500, t('validation.canvas.tooManyElements'))
   })
 
+  /**
+   * Builds the schema for creating and updating hypotheses.
+   */
+  const createHypothesisFormSchema = () => z.object({
+    statement: z.string({ error: t('validation.hypothesis.statementRequired') })
+      .trim()
+      .min(1, t('validation.hypothesis.statementRequired'))
+      .max(3000, t('validation.hypothesis.statementTooLong')),
+    dimension: z.enum(HYPOTHESIS_DIMENSIONS, { error: t('validation.hypothesis.dimensionRequired') }),
+    priority: z.enum(HYPOTHESIS_PRIORITIES, { error: t('validation.hypothesis.priorityRequired') }),
+    canvasSectionTypes: z.array(z.enum(CANVAS_SECTION_ORDER))
+      .min(1, t('validation.hypothesis.canvasSectionMin'))
+      .max(9, t('validation.hypothesis.canvasSectionMax'))
+  })
+
   return {
     createPasswordSchema,
     createRegisterFormSchema,
@@ -106,6 +136,7 @@ export const useValidation = () => {
     createVerifyEmailSchema,
     createIdeaFormSchema,
     createCanvasElementSchema,
-    createReplaceCanvasSchema
+    createReplaceCanvasSchema,
+    createHypothesisFormSchema
   }
 }
