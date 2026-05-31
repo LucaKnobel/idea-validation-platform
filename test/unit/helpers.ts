@@ -11,6 +11,8 @@ import type { Logger } from '@interfaces/logger'
 export const VALID_USER_ID = 'user-001'
 export const VALID_IDEA_ID = 'idea-001'
 export const VALID_IDEA_VERSION_ID = 'idea-version-001'
+export const VALID_UUID = 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d'
+export const VALID_ISO_DATETIME = '2026-05-30T12:34:56.000Z'
 
 export const makeIdea = (overrides: Partial<Idea> = {}): Idea => ({
   id: 'idea-001',
@@ -64,8 +66,8 @@ export const makeCanvasElement = (overrides: Partial<CanvasElement> = {}): Canva
   ideaVersionId: VALID_IDEA_VERSION_ID,
   type: 'KEY_PARTNERS',
   content: 'Strategic supplier',
-  createdAt: new Date('2026-05-30T12:34:56.000Z'),
-  updatedAt: new Date('2026-05-30T12:34:56.000Z'),
+  createdAt: new Date(VALID_ISO_DATETIME),
+  updatedAt: new Date(VALID_ISO_DATETIME),
   ...overrides
 })
 

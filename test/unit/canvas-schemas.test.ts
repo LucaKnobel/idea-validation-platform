@@ -8,9 +8,7 @@ import {
   ReplaceIdeaVersionCanvasBodySchema
 } from '@infrastructure/validation/canvas-schemas'
 import { canvasElementTypes } from '@application/models/canvas-element'
-
-const VALID_UUID = 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d'
-const VALID_ISO_DATETIME = '2026-05-30T12:34:56.000Z'
+import { VALID_ISO_DATETIME, VALID_UUID } from './helpers'
 
 describe('CanvasRouteParamsSchema', () => {
   it('accepts valid route params', () => {
