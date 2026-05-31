@@ -5,6 +5,9 @@ import type { IdeaRepository } from '@application/interfaces/idea-repository'
 import type { IdeaVersionRepository } from '@application/interfaces/idea-version-repository'
 import type { CanvasRepository } from '@application/interfaces/canvas-repository'
 import type { CanvasElement } from '@application/models/canvas-element'
+import type { HypothesisRepository } from '@application/interfaces/hypothesis-repository'
+import type { Hypothesis } from '@application/models/hypothesis'
+import type { HypothesisCanvasSection } from '@application/models/hypothesis-canvas-section'
 import type { SubscriptionService } from '@application/interfaces/subscription-service'
 import type { Logger } from '@interfaces/logger'
 
@@ -74,4 +77,34 @@ export const makeCanvasElement = (overrides: Partial<CanvasElement> = {}): Canva
 export const makeCanvasRepository = (): CanvasRepository => ({
   getByIdeaVersionForUser: vi.fn(),
   replaceByIdeaVersionForUser: vi.fn()
+})
+
+export const makeHypothesisCanvasSection = (
+  overrides: Partial<HypothesisCanvasSection> = {}
+): HypothesisCanvasSection => ({
+  id: 'hypothesis-canvas-section-001',
+  hypothesisId: 'hypothesis-001',
+  canvasElementType: 'KEY_PARTNERS',
+  createdAt: new Date(VALID_ISO_DATETIME),
+  updatedAt: new Date(VALID_ISO_DATETIME),
+  ...overrides
+})
+
+export const makeHypothesis = (overrides: Partial<Hypothesis> = {}): Hypothesis => ({
+  id: 'hypothesis-001',
+  ideaVersionId: VALID_IDEA_VERSION_ID,
+  statement: 'Test hypothesis',
+  dimension: 'PROBLEM',
+  priority: 'HIGH',
+  canvasSectionLinks: [makeHypothesisCanvasSection()],
+  createdAt: new Date(VALID_ISO_DATETIME),
+  updatedAt: new Date(VALID_ISO_DATETIME),
+  ...overrides
+})
+
+export const makeHypothesisRepository = (): HypothesisRepository => ({
+  listByIdeaVersionForUser: vi.fn(),
+  createForIdeaVersion: vi.fn(),
+  updateByIdForUser: vi.fn(),
+  deleteByIdForUser: vi.fn()
 })
