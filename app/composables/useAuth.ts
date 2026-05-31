@@ -26,6 +26,7 @@ export const useAuth = (): UseAuthComposable => {
     errorTitle,
     errorText,
     resetError,
+    handleRateLimitError,
     handleRegistrationError,
     handleLoginError,
     handlePasswordResetRequestError,
@@ -47,12 +48,21 @@ export const useAuth = (): UseAuthComposable => {
       })
 
       if (error) {
+        if (handleRateLimitError(error)) {
+          return false
+        }
         handleLoginError(error)
         return false
       }
 
+      // Ensure route middleware reads fresh session state after sign-in.
+      clearNuxtData()
+
       return true
     } catch (error: unknown) {
+      if (handleRateLimitError(error)) {
+        return false
+      }
       handleLoginError(error)
       return false
     }
@@ -73,12 +83,18 @@ export const useAuth = (): UseAuthComposable => {
       })
 
       if (error) {
+        if (handleRateLimitError(error)) {
+          return false
+        }
         handleRegistrationError(error)
         return false
       }
 
       return true
     } catch (error: unknown) {
+      if (handleRateLimitError(error)) {
+        return false
+      }
       handleRegistrationError(error)
       return false
     }
@@ -99,6 +115,9 @@ export const useAuth = (): UseAuthComposable => {
       })
 
       if (error) {
+        if (handleRateLimitError(error)) {
+          return false
+        }
         // Return neutral success on 400 to avoid account-state disclosure.
         if (extractStatusCode(error) === 400) {
           return true
@@ -110,6 +129,9 @@ export const useAuth = (): UseAuthComposable => {
 
       return true
     } catch (error: unknown) {
+      if (handleRateLimitError(error)) {
+        return false
+      }
       if (extractStatusCode(error) === 400) {
         return true
       }
@@ -134,6 +156,9 @@ export const useAuth = (): UseAuthComposable => {
       })
 
       if (error) {
+        if (handleRateLimitError(error)) {
+          return false
+        }
         // Return neutral success on 400 to avoid account-state disclosure.
         if (extractStatusCode(error) === 400) {
           return true
@@ -145,6 +170,9 @@ export const useAuth = (): UseAuthComposable => {
 
       return true
     } catch (error: unknown) {
+      if (handleRateLimitError(error)) {
+        return false
+      }
       if (extractStatusCode(error) === 400) {
         return true
       }
@@ -167,12 +195,18 @@ export const useAuth = (): UseAuthComposable => {
       })
 
       if (error) {
+        if (handleRateLimitError(error)) {
+          return false
+        }
         handlePasswordResetError(error)
         return false
       }
 
       return true
     } catch (error: unknown) {
+      if (handleRateLimitError(error)) {
+        return false
+      }
       handlePasswordResetError(error)
       return false
     }
@@ -186,8 +220,15 @@ export const useAuth = (): UseAuthComposable => {
 
     try {
       await authClient.signOut()
+
+      // Ensure route middleware reads fresh session state after sign-out.
+      clearNuxtData()
+
       return true
     } catch (error: unknown) {
+      if (handleRateLimitError(error)) {
+        return false
+      }
       handleLogoutError(error)
       return false
     }

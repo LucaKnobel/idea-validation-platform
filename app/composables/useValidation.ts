@@ -1,39 +1,23 @@
 import * as z from 'zod'
+import { CANVAS_SECTION_ORDER } from '~/types/canvasSections'
+import type { CreateHypothesisBodyDto } from '#shared/types/hypothesis'
+
+const HYPOTHESIS_DIMENSIONS = [
+  'PROBLEM',
+  'SOLUTION',
+  'MARKET',
+  'MONETIZATION',
+  'EXECUTION'
+] as const satisfies readonly CreateHypothesisBodyDto['dimension'][]
+
+const HYPOTHESIS_PRIORITIES = [
+  'HIGH',
+  'MEDIUM',
+  'LOW'
+] as const satisfies readonly CreateHypothesisBodyDto['priority'][]
 
 /**
- * Form model for account registration.
- */
-export type RegisterForm = {
-  email: string
-  password: string
-  passwordConfirm: string
-}
-
-/**
- * Form model for email/password sign-in.
- */
-export type LoginForm = {
-  email: string
-  password: string
-}
-
-/**
- * Form model for email-only verification and recovery flows.
- */
-export type VerifyEmailForm = {
-  email: string
-}
-
-/**
- * Form model for password creation and confirmation.
- */
-export type PasswordForm = {
-  password: string
-  passwordConfirm: string
-}
-
-/**
- * Creates localized Zod schemas for the authentication forms used by the frontend.
+ * Creates localized Zod schemas used by frontend forms (auth, idea creation, and canvas).
  */
 export const useValidation = () => {
   const { t } = useI18n()
@@ -96,10 +80,63 @@ export const useValidation = () => {
     path: ['passwordConfirm']
   })
 
+  /**
+   * Builds the schema for idea creation in the dashboard modal.
+   */
+  const createIdeaFormSchema = () => z.object({
+    title: z.string()
+      .trim()
+      .min(1, t('createIdeaModal.validation.titleRequired'))
+      .max(200, t('createIdeaModal.validation.titleTooLong')),
+    description: z.string()
+      .trim()
+      .max(3000, t('createIdeaModal.validation.descriptionTooLong'))
+      .optional()
+      .or(z.literal(''))
+  })
+
+  /**
+   * Builds the schema for one canvas element entry.
+   */
+  const createCanvasElementSchema = () => z.object({
+    type: z.enum(CANVAS_SECTION_ORDER),
+    content: z.string({ error: t('validation.canvas.contentRequired') })
+      .trim()
+      .min(1, t('validation.canvas.contentRequired'))
+      .max(500, t('validation.canvas.contentTooLong'))
+  })
+
+  /**
+   * Builds the schema for replacing a full canvas snapshot.
+   */
+  const createReplaceCanvasSchema = () => z.object({
+    elements: z.array(createCanvasElementSchema())
+      .max(500, t('validation.canvas.tooManyElements'))
+  })
+
+  /**
+   * Builds the schema for creating and updating hypotheses.
+   */
+  const createHypothesisFormSchema = () => z.object({
+    statement: z.string({ error: t('validation.hypothesis.statementRequired') })
+      .trim()
+      .min(1, t('validation.hypothesis.statementRequired'))
+      .max(3000, t('validation.hypothesis.statementTooLong')),
+    dimension: z.enum(HYPOTHESIS_DIMENSIONS, { error: t('validation.hypothesis.dimensionRequired') }),
+    priority: z.enum(HYPOTHESIS_PRIORITIES, { error: t('validation.hypothesis.priorityRequired') }),
+    canvasSectionTypes: z.array(z.enum(CANVAS_SECTION_ORDER))
+      .min(1, t('validation.hypothesis.canvasSectionMin'))
+      .max(9, t('validation.hypothesis.canvasSectionMax'))
+  })
+
   return {
     createPasswordSchema,
     createRegisterFormSchema,
     createLoginFormSchema,
-    createVerifyEmailSchema
+    createVerifyEmailSchema,
+    createIdeaFormSchema,
+    createCanvasElementSchema,
+    createReplaceCanvasSchema,
+    createHypothesisFormSchema
   }
 }

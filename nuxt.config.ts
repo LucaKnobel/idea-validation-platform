@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/eslint', '@nuxt/ui', '@nuxtjs/i18n', '@nuxt/content', 'nuxt-security'],
 
   devtools: {
-    enabled: false
+    enabled: true
   },
 
   css: ['~/assets/css/main.css'],
@@ -32,11 +32,8 @@ export default defineNuxtConfig({
     '@interfaces': fileURLToPath(new URL('./server/application/interfaces', import.meta.url)),
     '@infrastructure': fileURLToPath(new URL('./server/infrastructure', import.meta.url)),
     '@shared': fileURLToPath(new URL('./shared', import.meta.url)),
-    '@generated': fileURLToPath(new URL('./generated', import.meta.url))
-  },
-
-  routeRules: {
-    '/': { prerender: true }
+    '@generated': fileURLToPath(new URL('./generated', import.meta.url)),
+    '@application': fileURLToPath(new URL('./server/application', import.meta.url))
   },
 
   devServer: {

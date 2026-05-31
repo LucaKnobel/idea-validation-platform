@@ -11,6 +11,9 @@ const getErrorKey = () => {
   if (status === 404) {
     return '404'
   }
+  if (status === 429) {
+    return '429'
+  }
   if (status && status >= 500) {
     return '500'
   }

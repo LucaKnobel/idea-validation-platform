@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { GetContentParamsSchema } from '@server/api/schemas/content-schemas'
+import { GetContentParamsSchema } from '@infrastructure/validation/content-schemas'
 
 describe('GetContentParamsSchema', () => {
   it('accepts a valid slug', () => {

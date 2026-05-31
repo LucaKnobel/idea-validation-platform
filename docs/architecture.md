@@ -83,6 +83,7 @@ Includes:
 - repositories  
 - logging  
 - authentication  
+- composition root (dependency wiring)  
 - external services  
 
 Responsibilities:
@@ -97,12 +98,6 @@ Responsibilities:
 ```txt
 server/
   api/
-    rate-limit/             # request protection (rate limiting)
-      policies.ts
-      rateLimit.ts
-
-    schemas/                # validation schemas (Zod)
-    mappers/                # DTO ↔ internal model mapping
 
     *.ts                    # API handlers (file-based routing)
 
@@ -113,9 +108,16 @@ server/
 
   infrastructure/ 
     auth/                   # Auth config & services
+    composition.ts          # Composition Root (wires concrete dependencies)
+    handlers/               # Custom API handler wrappers (public/protected)
     db/                     # DB implementations & Repos
     logging/                # logger
     mail/                   # Mail config & services
+    rate-limit/             # request protection (rate limiting)
+    policies.ts
+    rateLimit.ts
+    validation/                # validation schemas (Zod)
+    mappers/                # DTO ↔ internal model mapping
     ...
 
 shared/
@@ -153,21 +155,34 @@ plugins/                    # Nuxt runtime integration
 - handles HTTP requests  
 - acts as controller layer  
 
-#### schemas/
-- input validation  
-
-#### mappers/
-- DTO ↔ internal model conversion  
-
-#### rate-limit/
-- request protection  
-- applied before validation  
 
 ---
 
 ### `server/infrastructure/`
 
 - technical implementations  
+
+#### composition.ts
+- central composition root for dependency wiring
+- builds concrete services/use cases from repositories + infrastructure adapters
+- exports ready-to-use use case functions for API handlers
+
+Rules:
+
+- no business logic inside composition
+- no request-specific state
+- prefer singleton-like stateless wiring (module-level constants)
+
+#### handlers/
+- contains custom handler wrappers for API endpoints
+- current wrappers are `definePublicHandler` and `defineProtectedHandler`
+- wrappers handle cross-cutting technical concerns only
+
+Rules:
+
+- wrappers may do auth extraction and global error mapping
+- wrappers must not contain validation, rate-limit policies, DTO mapping, or business logic
+- business errors from the application layer should be mapped to HTTP errors centrally in infrastructure error mapping
 
 #### prisma/
 - database client  
@@ -177,7 +192,18 @@ plugins/                    # Nuxt runtime integration
 - implements interfaces  
 
 #### services/
-- external integrations  
+- external integrations 
+
+#### validation/
+- input validation  
+
+#### mappers/
+- DTO ↔ internal model conversion  
+
+#### rate-limit/
+- request protection  
+- applied before validation  
+
 
 ---
 
@@ -223,11 +249,55 @@ API Handler
  → Rate Limit
  → Validation
  → Mapping
+ → Composition Root (resolved use case)
  → Service (Use Case)
  → Interface
  → Repository
  → Prisma
 ```
+
+---
+
+## Composition Root Usage
+
+Location:
+
+```txt
+server/infrastructure/composition.ts
+```
+
+Handler rule:
+
+- handlers import composed use cases from composition root
+- handlers must not instantiate repositories/services themselves
+- handlers should use the custom public/protected wrappers where applicable
+
+Example:
+
+```ts
+import { createIdea } from '@infrastructure/composition'
+```
+
+---
+
+## Custom Handler Usage
+
+Available wrappers:
+
+- `definePublicHandler` for endpoints without authentication
+- `defineProtectedHandler` for endpoints that require an authenticated user
+
+Rules:
+
+- use custom wrappers for first-party API endpoints
+- do not wrap external catch-all handlers when the library already owns request/response behavior
+- keep validation, rate limiting, and DTO mapping explicit inside the endpoint
+
+Error handling:
+
+- application services may throw business errors
+- infrastructure maps business errors to safe HTTP errors centrally
+- unknown technical errors must be logged and returned as generic `500 Internal Server Error`
 
 ---
 

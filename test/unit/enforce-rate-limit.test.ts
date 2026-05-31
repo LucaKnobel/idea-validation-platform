@@ -11,8 +11,8 @@ const testState = vi.hoisted(() => ({
 vi.mock('h3', () => ({
   getRequestIP: testState.getRequestIP,
   setHeader: testState.setHeader,
-  createError: ({ statusCode, statusMessage }: { statusCode: number, statusMessage: string }) => {
-    const error = new Error(statusMessage) as Error & { statusCode: number }
+  createError: ({ statusCode, statusText }: { statusCode: number, statusText: string }) => {
+    const error = new Error(statusText) as Error & { statusCode: number }
     error.statusCode = statusCode
     return error
   }
@@ -57,7 +57,7 @@ describe('enforceRateLimit', () => {
       retryAfterSeconds: 0
     })
 
-    const { enforceRateLimit } = await import('@server/api/rate-limit/enforce-rate-limit')
+    const { enforceRateLimit } = await import('@server/infrastructure/rate-limit/enforce-rate-limit')
     const event = createEvent()
 
     await enforceRateLimit(event as never, {
@@ -82,7 +82,7 @@ describe('enforceRateLimit', () => {
       retryAfterSeconds: 12
     })
 
-    const { enforceRateLimit } = await import('@server/api/rate-limit/enforce-rate-limit')
+    const { enforceRateLimit } = await import('@server/infrastructure/rate-limit/enforce-rate-limit')
     const event = createEvent()
 
     await expect(
@@ -109,7 +109,7 @@ describe('enforceRateLimit', () => {
       retryAfterSeconds: 0
     })
 
-    const { enforceRateLimit } = await import('@server/api/rate-limit/enforce-rate-limit')
+    const { enforceRateLimit } = await import('@server/infrastructure/rate-limit/enforce-rate-limit')
     const event = createEvent({ context: { userId: 'user-123' } })
 
     await enforceRateLimit(event as never, {
@@ -125,7 +125,7 @@ describe('enforceRateLimit', () => {
   it('throws 500 for user scope without authenticated user', async () => {
     testState.getRequestIP.mockReturnValue('203.0.113.14')
 
-    const { enforceRateLimit } = await import('@server/api/rate-limit/enforce-rate-limit')
+    const { enforceRateLimit } = await import('@server/infrastructure/rate-limit/enforce-rate-limit')
     const event = createEvent({ context: {} })
 
     await expect(

@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
-import type { LoginForm } from '~/composables/useValidation'
+
+interface LoginForm {
+  email: string
+  password: string
+}
 
 definePageMeta({
   layout: 'auth',
@@ -46,6 +50,8 @@ const onSubmit = async (event: FormSubmitEvent<LoginForm>): Promise<void> => {
     const success = await login(event.data.email, event.data.password)
 
     if (success) {
+      // Defensive cache invalidation in case stale session data is still present.
+      clearNuxtData()
       showSuccess('auth.login.success.title', 'auth.login.success.message')
       await navigateTo(localePath('/dashboard'))
     }

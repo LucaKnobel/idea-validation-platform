@@ -19,6 +19,11 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://tester:test@localhost:5432/testDb
+      # Avoid Node OOM during Nuxt production build in e2e test step.
+      NODE_OPTIONS: --max-old-space-size=6144
+      # Explicit CI auth vars so Better Auth never falls back to insecure defaults.
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+      BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
 
     # Skip for Dependabot: Its PRs are dependency updates, already security-checked
     if: github.actor != 'dependabot[bot]'

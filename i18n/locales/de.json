@@ -17,7 +17,8 @@
     "remove": "Entfernen",
     "filter": "Filtern",
     "create": "Erstellen",
-    "save": "Speichern"
+    "save": "Speichern",
+    "refresh": "Aktualisieren"
   },
   "form": {
     "email": {
@@ -50,6 +51,19 @@
       "confirmMismatch": "Passwörter müssen übereinstimmen",
       "hint": "Mind. 15 Zeichen mit Groß- und Kleinbuchstaben, einer Zahl und einem Sonderzeichen.",
       "requirements": "Passwortanforderungen"
+    },
+    "canvas": {
+      "contentRequired": "Jeder Canvas-Eintrag muss Text enthalten",
+      "contentTooLong": "Ein Canvas-Eintrag darf maximal 500 Zeichen haben",
+      "tooManyElements": "Es sind maximal 500 Canvas-Einträge erlaubt"
+    },
+    "hypothesis": {
+      "statementRequired": "Eine Hypothesen-Aussage ist erforderlich",
+      "statementTooLong": "Eine Hypothesen-Aussage darf maximal 3000 Zeichen haben",
+      "dimensionRequired": "Bitte wählen Sie eine Hypothesen-Dimension",
+      "priorityRequired": "Bitte wählen Sie eine Priorität",
+      "canvasSectionMin": "Wählen Sie mindestens einen Canvas-Bereich",
+      "canvasSectionMax": "Es können maximal 9 Canvas-Bereiche verknüpft werden"
     }
   },
   "error": {
@@ -93,6 +107,10 @@
       "404": {
         "title": "Seite nicht gefunden",
         "message": "Die gesuchte Seite existiert nicht oder wurde verschoben."
+      },
+      "429": {
+        "title": "Zu viele Anfragen",
+        "message": "Das System ist aktuell stark ausgelastet. Bitte warten Sie kurz und versuchen Sie es dann erneut."
       },
       "500": {
         "title": "Serverfehler",
@@ -263,6 +281,285 @@
     "dangerZone": {
       "title": "Gefährlicher Bereich",
       "placeholder": "Kontolöschung und weitere kritische Aktionen werden hier ergänzt."
+    }
+  },
+  "dashboard": {
+    "title": "Meine Geschäftsideen",
+    "description": "",
+    "createIdea": "Idee erstellen",
+    "searchPlaceholder": "Idee suchen",
+    "paginationSummary": "Zeige {from}-{to} von {total}",
+    "actionsNotImplemented": {
+      "title": "Aktion noch nicht implementiert",
+      "message": "Diese Aktion ist bald verfügbar."
+    },
+    "error": {
+      "title": "Ideen konnten nicht geladen werden",
+      "message": "Bitte versuchen Sie es in einem Moment erneut."
+    },
+    "empty": {
+      "title": "Du hast noch keine Ideen",
+      "description": "Erstelle deine erste Geschäftsidee, damit du sie hier verwalten, durchsuchen und später weiter ausarbeiten kannst."
+    },
+    "emptyFiltered": {
+      "title": "Keine Ideen passen zu deinem Filter",
+      "description": "Für deine aktuelle Suche wurden keine Treffer gefunden. Passe den Filter an oder setze ihn zurück.",
+      "resetFilter": "Filter zurücksetzen"
+    },
+    "table": {
+      "title": "Ideenübersicht",
+      "description": "",
+      "empty": "Keine Ideen gefunden",
+      "noDescription": "Keine Beschreibung",
+      "columns": {
+        "title": "Titel",
+        "description": "Beschreibung",
+        "createdAt": "Erstellt am",
+        "updatedAt": "Aktualisiert am",
+        "actions": "Aktionen"
+      }
+    },
+    "delete": {
+      "title": "Geschäftsidee löschen",
+      "description": "Bitte bestätigen Sie, dass Sie diese Idee dauerhaft löschen möchten.",
+      "warning": "Diese Aktion entfernt die Geschäftsidee und alle dazugehörigen Daten dauerhaft. Dieser Schritt kann nicht rückgängig gemacht werden.",
+      "ideaLabel": "Zu löschende Idee",
+      "confirm": "Endgültig löschen",
+      "success": {
+        "title": "Idee gelöscht",
+        "message": "Die Geschäftsidee wurde dauerhaft entfernt."
+      },
+      "error": {
+        "title": "Idee konnte nicht gelöscht werden",
+        "message": "Bitte versuchen Sie es erneut."
+      }
+    }
+  },
+  "createIdeaModal": {
+    "title": "Neue Idee erstellen",
+    "submit": "Idee erstellen",
+    "fields": {
+      "title": {
+        "label": "Titel",
+        "description": "Kurz und eindeutig.",
+        "placeholder": "z. B. KI-gestützter Vertriebsassistent"
+      },
+      "description": {
+        "label": "Beschreibung",
+        "description": "Optional: Nutzen, Zielgruppe oder Problem in 1-2 Sätzen.",
+        "placeholder": "Beschreiben Sie kurz das Problem, die Zielgruppe und den Ansatz."
+      }
+    },
+    "validation": {
+      "titleRequired": "Bitte geben Sie einen Titel ein.",
+      "titleTooLong": "Der Titel darf maximal 200 Zeichen lang sein.",
+      "descriptionTooLong": "Die Beschreibung darf maximal 3000 Zeichen lang sein."
+    },
+    "success": {
+      "title": "Idee erstellt",
+      "message": "Ihre Idee wurde erfolgreich gespeichert."
+    },
+    "error": {
+      "title": "Idee konnte nicht erstellt werden",
+      "message": "Bitte versuchen Sie es erneut."
+    }
+  },
+  "upgradePage": {
+    "title": "Upgrade auf Pro",
+    "description": "Hier können Sie bald Ihren Plan auf Pro upgraden.",
+    "wipBadge": "Work in Progress",
+    "wipText": "Diese Upgrade-Seite ist noch nicht implementiert."
+  },
+  "upgradeToProModal": {
+    "title": "Upgrade auf Pro erforderlich",
+    "description": "Im Free-Plan können Sie eine Geschäftsidee erstellen.",
+    "pitch": "Mit Pro können Sie unbegrenzt Geschäftsideen erstellen und Ihre Validierung ohne Einschränkungen skalieren.",
+    "cta": "Auf Pro upgraden"
+  },
+  "ideaWorkspace": {
+    "title": "Idea Workspace",
+    "description": "Arbeitsbereich für die ausgewählte Geschäftsidee.",
+    "wipBadge": "Work in Progress",
+    "wipText": "Dieser Bereich wird als nächstes ausgebaut.",
+    "navigation": {
+      "overview": "Overview",
+      "canvas": "Canvas",
+      "hypotheses": "Hypothesen",
+      "decision": "Entscheidung",
+      "history": "Verlauf",
+      "settings": "Einstellungen"
+    },
+    "actions": {
+      "backToIdeas": "Alle Ideen",
+      "openNavigation": "Navigation öffnen",
+      "closeNavigation": "Navigation schliessen"
+    },
+    "labels": {
+      "version": "Version"
+    },
+    "status": {
+      "inValidation": "In Validierung"
+    },
+    "placeholders": {
+      "ideaTitle": "Ausgewählte Idee"
+    },
+    "versionSwitcher": {
+      "comingSoon": "Weitere Versionen folgen"
+    },
+    "canvasPage": {
+      "title": "Business Model Canvas",
+      "description": "Erfassen Sie Annahmen pro Canvas-Bereich und speichern Sie den aktuellen Versionsstand.",
+      "bulletHint": "Verwenden Sie einen Bullet-Point pro Zeile (z. B. • Early Adopters)",
+      "unsaved": "Ungespeicherte Änderungen",
+      "actions": {
+        "reset": "Zurücksetzen"
+      },
+      "sectionPlaceholder": "• Einen Punkt pro Zeile erfassen",
+      "sections": {
+        "KEY_PARTNERS": "Schlüsselpartner",
+        "KEY_ACTIVITIES": "Schlüsselaktivitäten",
+        "VALUE_PROPOSITIONS": "Wertangebote",
+        "CUSTOMER_RELATIONSHIPS": "Kundenbeziehungen",
+        "CUSTOMER_SEGMENTS": "Kundensegmente",
+        "KEY_RESOURCES": "Schlüsselressourcen",
+        "CHANNELS": "Kanäle",
+        "COST_STRUCTURE": "Kostenstruktur",
+        "REVENUE_STREAMS": "Einnahmequellen"
+      },
+      "success": {
+        "title": "Canvas gespeichert",
+        "message": "Ihr Business Model Canvas wurde erfolgreich gespeichert."
+      },
+      "error": {
+        "title": "Canvas konnte nicht gespeichert werden",
+        "message": "Bitte versuchen Sie es erneut."
+      }
+    },
+    "hypotheses": {
+      "title": "Hypothesen",
+      "description": "Erfassen, klassifizieren und priorisieren Sie Ihre zentralen Annahmen für diese Ideen-Version.",
+      "count": "{count} Hypothesen",
+      "actions": {
+        "create": "Hypothese erstellen",
+        "update": "Hypothese aktualisieren",
+        "deleteConfirm": "Hypothese löschen"
+      },
+      "status": {
+        "OPEN": "Offen"
+      },
+      "dimensions": {
+        "PROBLEM": "Problem",
+        "SOLUTION": "Lösung",
+        "MARKET": "Markt",
+        "MONETIZATION": "Monetarisierung",
+        "EXECUTION": "Umsetzung"
+      },
+      "priorities": {
+        "HIGH": "Hoch",
+        "MEDIUM": "Mittel",
+        "LOW": "Niedrig"
+      },
+      "table": {
+        "actions": {
+          "expand": "Zeile ausklappen",
+          "collapse": "Zeile einklappen"
+        },
+        "filters": {
+          "placeholder": "Status filtern",
+          "all": "Alle Status"
+        },
+        "columns": {
+          "statement": "Aussage",
+          "dimension": "Dimension",
+          "priority": "Priorität",
+          "sections": "Canvas-Bereiche",
+          "status": "Status",
+          "actions": "Aktionen"
+        },
+        "empty": "Noch keine Hypothesen"
+      },
+      "empty": {
+        "title": "Noch keine Hypothesen",
+        "description": "Starten Sie mit den riskantesten Annahmen und verknüpfen Sie jede mit einem Canvas-Bereich."
+      },
+      "expanded": {
+        "canvas": {
+          "title": "Canvas-Bereiche",
+          "empty": "Noch keine Canvas-Bereiche verknüpft."
+        },
+        "metrics": {
+          "title": "Übersicht Experiment-Metriken",
+          "placeholder": "Metrikdefinitionen und Schwellwerte für diese Hypothese werden hier als Nächstes angezeigt."
+        },
+        "experiments": {
+          "title": "Übersicht Experimente",
+          "placeholder": "Verknüpfte Experimente und letzte Ergebnisse werden hier im nächsten Schritt angezeigt."
+        }
+      },
+      "modal": {
+        "createTitle": "Hypothese erstellen",
+        "editTitle": "Hypothese bearbeiten",
+        "description": "Definieren Sie eine klare Annahme, klassifizieren Sie sie und verknüpfen Sie sie mit relevanten Canvas-Bereichen."
+      },
+      "deleteModal": {
+        "title": "Hypothese löschen",
+        "description": "Bitte bestätigen Sie, dass Sie diese Hypothese entfernen möchten.",
+        "warning": "Diese Aktion löscht die Hypothese inklusive verknüpfter Metriken, Schwellwerte und Experimente dauerhaft."
+      },
+      "form": {
+        "statement": {
+          "label": "Hypothesen-Aussage",
+          "description": "Formulieren Sie eine konkrete und testbare Annahme.",
+          "placeholder": "Beispiel: Freelancer zahlen für wöchentliche KI-generierte Lead-Listen."
+        },
+        "dimension": {
+          "label": "Unsicherheits-Dimension",
+          "placeholder": "Dimension wählen"
+        },
+        "priority": {
+          "label": "Priorität",
+          "placeholder": "Priorität wählen"
+        },
+        "sections": {
+          "label": "Canvas-Bereiche",
+          "description": "Wählen Sie einen oder mehrere Business-Model-Canvas-Bereiche für diese Hypothese.",
+          "placeholder": "Bereiche wählen",
+          "searchPlaceholder": "Bereiche filtern",
+          "confirm": "Fertig"
+        }
+      },
+      "success": {
+        "create": {
+          "title": "Hypothese erstellt",
+          "message": "Die Hypothese wurde erfolgreich gespeichert."
+        },
+        "update": {
+          "title": "Hypothese aktualisiert",
+          "message": "Die Hypothese wurde erfolgreich aktualisiert."
+        },
+        "delete": {
+          "title": "Hypothese gelöscht",
+          "message": "Die Hypothese wurde erfolgreich entfernt."
+        }
+      },
+      "error": {
+        "load": {
+          "title": "Hypothesen konnten nicht geladen werden",
+          "message": "Bitte versuchen Sie es in einem Moment erneut."
+        },
+        "create": {
+          "title": "Hypothese konnte nicht erstellt werden",
+          "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+        },
+        "update": {
+          "title": "Hypothese konnte nicht aktualisiert werden",
+          "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+        },
+        "delete": {
+          "title": "Hypothese konnte nicht gelöscht werden",
+          "message": "Bitte versuchen Sie es erneut."
+        }
+      }
     }
   }
 }

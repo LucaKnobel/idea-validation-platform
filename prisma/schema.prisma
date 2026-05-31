@@ -9,21 +9,25 @@ datasource db {
   provider = "postgresql"
 }
 
+// Better Auth standard model
 model User {
-  id            String    @id
+  id            String        @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean       @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   sessions      Session[]
   accounts      Account[]
+  subscription  Subscription? // not Better Auth standard
+  ideas         Idea[] // not Better Auth standard
 
   @@unique([email])
   @@map("user")
 }
 
+// Better Auth standard model
 model Session {
   id        String   @id
   expiresAt DateTime
@@ -40,6 +44,7 @@ model Session {
   @@map("session")
 }
 
+// Better Auth standard model
 model Account {
   id                    String    @id
   accountId             String
@@ -60,6 +65,7 @@ model Account {
   @@map("account")
 }
 
+// Better Auth standard model
 model Verification {
   id         String   @id
   identifier String
@@ -72,6 +78,7 @@ model Verification {
   @@map("verification")
 }
 
+// Better Auth standard model
 model RateLimit {
   id          String @id
   key         String @unique
@@ -79,4 +86,132 @@ model RateLimit {
   lastRequest BigInt
 
   @@map("rateLimit")
+}
+
+enum SubscriptionPlan {
+  FREE
+  PRO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+}
+
+model Subscription {
+  id                String             @id @default(uuid())
+  userId            String             @unique
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan              SubscriptionPlan
+  status            SubscriptionStatus
+  providerReference String?
+  currentPeriodEnd  DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@map("subscription")
+}
+
+model Idea {
+  id        String        @id @default(uuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  versions  IdeaVersion[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([userId])
+  @@map("idea")
+}
+
+enum IdeaVersionType {
+  INITIAL
+  ITERATION
+  PIVOT
+}
+
+enum CanvasElementType {
+  CUSTOMER_SEGMENTS
+  VALUE_PROPOSITIONS
+  CHANNELS
+  CUSTOMER_RELATIONSHIPS
+  REVENUE_STREAMS
+  KEY_RESOURCES
+  KEY_ACTIVITIES
+  KEY_PARTNERS
+  COST_STRUCTURE
+}
+
+enum HypothesisDimension {
+  PROBLEM
+  SOLUTION
+  MARKET
+  MONETIZATION
+  EXECUTION
+}
+
+enum HypothesisPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+model IdeaVersion {
+  id             String          @id @default(uuid())
+  ideaId         String
+  idea           Idea            @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  canvasElements CanvasElement[]
+  hypotheses     Hypothesis[]
+  versionNumber  Int
+  type           IdeaVersionType
+  title          String
+  description    String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@unique([ideaId, versionNumber])
+  @@index([ideaId])
+  @@map("ideaVersion")
+}
+
+model Hypothesis {
+  id                String                      @id @default(uuid())
+  ideaVersionId     String
+  ideaVersion       IdeaVersion                 @relation(fields: [ideaVersionId], references: [id], onDelete: Cascade)
+  statement         String
+  dimension         HypothesisDimension
+  priority          HypothesisPriority
+  canvasSectionLinks HypothesisCanvasSection[]
+  createdAt         DateTime                    @default(now())
+  updatedAt         DateTime                    @updatedAt
+
+  @@index([ideaVersionId])
+  @@map("hypothesis")
+}
+
+model HypothesisCanvasSection {
+  id                String          @id @default(uuid())
+  hypothesisId      String
+  hypothesis        Hypothesis      @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
+  canvasElementType CanvasElementType
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@unique([hypothesisId, canvasElementType])
+  @@index([canvasElementType])
+  @@map("hypothesisCanvasSection")
+}
+
+model CanvasElement {
+  id            String            @id @default(uuid())
+  ideaVersionId String
+  ideaVersion   IdeaVersion       @relation(fields: [ideaVersionId], references: [id], onDelete: Cascade)
+  type          CanvasElementType
+  content       String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([ideaVersionId])
+  @@index([ideaVersionId, type])
+  @@map("canvasElement")
 }

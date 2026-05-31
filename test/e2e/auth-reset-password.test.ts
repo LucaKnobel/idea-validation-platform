@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { setup } from '@nuxt/test-utils/e2e'
 import { prisma } from '@infrastructure/db/prisma'
 
@@ -16,6 +16,7 @@ import {
 } from './auth-test-helpers'
 
 beforeEach(clearAuthTables)
+afterEach(clearAuthTables)
 
 describe('Reset password flow', async () => {
   await setup(getE2ESetupOptions())

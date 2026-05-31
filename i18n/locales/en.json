@@ -17,7 +17,8 @@
     "remove": "Remove",
     "filter": "Filter",
     "create": "Create",
-    "save": "Save"
+    "save": "Save",
+    "refresh": "Refresh"
   },
   "form": {
     "email": {
@@ -50,6 +51,19 @@
       "confirmMismatch": "Passwords must match",
       "hint": "At least 15 characters including uppercase, lowercase, a number and a special character.",
       "requirements": "Password requirements"
+    },
+    "canvas": {
+      "contentRequired": "Each canvas item must contain text",
+      "contentTooLong": "A canvas item must not exceed 500 characters",
+      "tooManyElements": "A maximum of 500 canvas elements is allowed"
+    },
+    "hypothesis": {
+      "statementRequired": "A hypothesis statement is required",
+      "statementTooLong": "A hypothesis statement must not exceed 3000 characters",
+      "dimensionRequired": "Please select a hypothesis dimension",
+      "priorityRequired": "Please select a hypothesis priority",
+      "canvasSectionMin": "Select at least one canvas section",
+      "canvasSectionMax": "A maximum of 9 canvas sections can be linked"
     }
   },
   "error": {
@@ -93,6 +107,10 @@
       "404": {
         "title": "Page not found",
         "message": "The page you are looking for does not exist or has been moved."
+      },
+      "429": {
+        "title": "Too many requests",
+        "message": "The system is currently under high load. Please wait a moment and try again."
       },
       "500": {
         "title": "Server error",
@@ -263,6 +281,285 @@
     "dangerZone": {
       "title": "Danger zone",
       "placeholder": "Account deletion and destructive actions will be added here."
+    }
+  },
+  "dashboard": {
+    "title": "My Business Ideas",
+    "description": "",
+    "createIdea": "Create idea",
+    "searchPlaceholder": "Search idea",
+    "paginationSummary": "Showing {from}-{to} of {total}",
+    "actionsNotImplemented": {
+      "title": "Action not implemented",
+      "message": "This action will be available soon."
+    },
+    "error": {
+      "title": "Ideas could not be loaded",
+      "message": "Please try again in a moment."
+    },
+    "empty": {
+      "title": "You don't have any ideas yet",
+      "description": "Create your first business idea so you can manage, search, and refine it from here later on."
+    },
+    "emptyFiltered": {
+      "title": "No ideas match your filter",
+      "description": "No results were found for your current search. Adjust or clear the filter and try again.",
+      "resetFilter": "Clear filter"
+    },
+    "table": {
+      "title": "Ideas overview",
+      "description": "",
+      "empty": "No ideas found",
+      "noDescription": "No description",
+      "columns": {
+        "title": "Title",
+        "description": "Description",
+        "createdAt": "Created at",
+        "updatedAt": "Updated at",
+        "actions": "Actions"
+      }
+    },
+    "delete": {
+      "title": "Delete business idea",
+      "description": "Please confirm that you want to permanently delete this idea.",
+      "warning": "This action removes the business idea and all associated data permanently. It cannot be undone.",
+      "ideaLabel": "Idea to delete",
+      "confirm": "Delete permanently",
+      "success": {
+        "title": "Idea deleted",
+        "message": "The business idea was permanently removed."
+      },
+      "error": {
+        "title": "Could not delete idea",
+        "message": "Please try again."
+      }
+    }
+  },
+  "createIdeaModal": {
+    "title": "Create new idea",
+    "submit": "Create idea",
+    "fields": {
+      "title": {
+        "label": "Title",
+        "description": "A short, clear name for the idea.",
+        "placeholder": "e.g. AI-powered sales assistant"
+      },
+      "description": {
+        "label": "Description",
+        "description": "Optional: briefly outline the value, target audience, or problem.",
+        "placeholder": "Briefly describe the problem, target users, and your proposed solution."
+      }
+    },
+    "validation": {
+      "titleRequired": "Please enter a title.",
+      "titleTooLong": "Title must not exceed 200 characters.",
+      "descriptionTooLong": "Description must not exceed 3000 characters."
+    },
+    "success": {
+      "title": "Idea created",
+      "message": "Your idea was saved successfully."
+    },
+    "error": {
+      "title": "Could not create idea",
+      "message": "Please try again."
+    }
+  },
+  "upgradePage": {
+    "title": "Upgrade to Pro",
+    "description": "Soon you will be able to upgrade your plan to Pro here.",
+    "wipBadge": "Work in Progress",
+    "wipText": "This upgrade page is not implemented yet."
+  },
+  "upgradeToProModal": {
+    "title": "Upgrade to Pro required",
+    "description": "On the Free plan, you can create one business idea.",
+    "pitch": "With Pro, you can create unlimited business ideas and scale your validation process without limits.",
+    "cta": "Upgrade to Pro"
+  },
+  "ideaWorkspace": {
+    "title": "Idea Workspace",
+    "description": "Workspace for the selected business idea.",
+    "wipBadge": "Work in Progress",
+    "wipText": "This section will be expanded next.",
+    "navigation": {
+      "overview": "Overview",
+      "canvas": "Canvas",
+      "hypotheses": "Hypotheses",
+      "decision": "Decision",
+      "history": "History",
+      "settings": "Settings"
+    },
+    "actions": {
+      "backToIdeas": "All Ideas",
+      "openNavigation": "Open navigation",
+      "closeNavigation": "Close navigation"
+    },
+    "labels": {
+      "version": "Version"
+    },
+    "status": {
+      "inValidation": "In Validation"
+    },
+    "placeholders": {
+      "ideaTitle": "Selected idea"
+    },
+    "versionSwitcher": {
+      "comingSoon": "More versions coming soon"
+    },
+    "canvasPage": {
+      "title": "Business Model Canvas",
+      "description": "Capture assumptions per canvas section and save the current version snapshot.",
+      "bulletHint": "Use one bullet per line (e.g. • Early adopters)",
+      "unsaved": "Unsaved changes",
+      "actions": {
+        "reset": "Reset"
+      },
+      "sectionPlaceholder": "• Enter one point per line",
+      "sections": {
+        "KEY_PARTNERS": "Key Partnerships",
+        "KEY_ACTIVITIES": "Key Activities",
+        "VALUE_PROPOSITIONS": "Value Propositions",
+        "CUSTOMER_RELATIONSHIPS": "Customer Relationships",
+        "CUSTOMER_SEGMENTS": "Customer Segments",
+        "KEY_RESOURCES": "Key Resources",
+        "CHANNELS": "Channels",
+        "COST_STRUCTURE": "Cost Structure",
+        "REVENUE_STREAMS": "Revenue Streams"
+      },
+      "success": {
+        "title": "Canvas saved",
+        "message": "Your business model canvas was saved successfully."
+      },
+      "error": {
+        "title": "Could not save canvas",
+        "message": "Please try again."
+      }
+    },
+    "hypotheses": {
+      "title": "Hypotheses",
+      "description": "Capture, classify and prioritize your core assumptions for this idea version.",
+      "count": "{count} hypotheses",
+      "actions": {
+        "create": "Create hypothesis",
+        "update": "Update hypothesis",
+        "deleteConfirm": "Delete hypothesis"
+      },
+      "status": {
+        "OPEN": "Open"
+      },
+      "dimensions": {
+        "PROBLEM": "Problem",
+        "SOLUTION": "Solution",
+        "MARKET": "Market",
+        "MONETIZATION": "Monetization",
+        "EXECUTION": "Execution"
+      },
+      "priorities": {
+        "HIGH": "High",
+        "MEDIUM": "Medium",
+        "LOW": "Low"
+      },
+      "table": {
+        "actions": {
+          "expand": "Expand row",
+          "collapse": "Collapse row"
+        },
+        "filters": {
+          "placeholder": "Filter status",
+          "all": "All statuses"
+        },
+        "columns": {
+          "statement": "Statement",
+          "dimension": "Dimension",
+          "priority": "Priority",
+          "sections": "Canvas sections",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "empty": "No hypotheses yet"
+      },
+      "empty": {
+        "title": "No hypotheses yet",
+        "description": "Start with your riskiest assumptions and link each one to a canvas section."
+      },
+      "expanded": {
+        "canvas": {
+          "title": "Canvas areas",
+          "empty": "No canvas areas linked yet."
+        },
+        "metrics": {
+          "title": "Experiment metrics overview",
+          "placeholder": "Metric definitions and thresholds for this hypothesis will appear here next."
+        },
+        "experiments": {
+          "title": "Experiments overview",
+          "placeholder": "Linked experiments and latest outcomes will be shown here in the next step."
+        }
+      },
+      "modal": {
+        "createTitle": "Create hypothesis",
+        "editTitle": "Edit hypothesis",
+        "description": "Define one clear assumption, classify it, and connect it to relevant canvas sections."
+      },
+      "deleteModal": {
+        "title": "Delete hypothesis",
+        "description": "Please confirm that you want to remove this hypothesis.",
+        "warning": "This action permanently deletes the hypothesis including linked metrics, thresholds and experiments."
+      },
+      "form": {
+        "statement": {
+          "label": "Hypothesis statement",
+          "description": "Write one concrete and testable assumption.",
+          "placeholder": "Example: Freelancers will pay for weekly AI-generated lead lists."
+        },
+        "dimension": {
+          "label": "Uncertainty dimension",
+          "placeholder": "Select a dimension"
+        },
+        "priority": {
+          "label": "Priority",
+          "placeholder": "Select a priority"
+        },
+        "sections": {
+          "label": "Canvas sections",
+          "description": "Select one or more Business Model Canvas sections this hypothesis belongs to.",
+          "placeholder": "Select sections",
+          "searchPlaceholder": "Filter sections",
+          "confirm": "Done"
+        }
+      },
+      "success": {
+        "create": {
+          "title": "Hypothesis created",
+          "message": "The hypothesis was saved successfully."
+        },
+        "update": {
+          "title": "Hypothesis updated",
+          "message": "The hypothesis was updated successfully."
+        },
+        "delete": {
+          "title": "Hypothesis deleted",
+          "message": "The hypothesis was removed successfully."
+        }
+      },
+      "error": {
+        "load": {
+          "title": "Could not load hypotheses",
+          "message": "Please try again in a moment."
+        },
+        "create": {
+          "title": "Could not create hypothesis",
+          "message": "Please check your input and try again."
+        },
+        "update": {
+          "title": "Could not update hypothesis",
+          "message": "Please check your input and try again."
+        },
+        "delete": {
+          "title": "Could not delete hypothesis",
+          "message": "Please try again."
+        }
+      }
     }
   }
 }

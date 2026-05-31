@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
+import type { VerifyEmailForm } from '~/types/authForms'
 
 definePageMeta({
   layout: 'auth',

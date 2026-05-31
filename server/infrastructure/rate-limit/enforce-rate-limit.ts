@@ -39,19 +39,19 @@ const getUserId = (event: H3Event): string | undefined => {
 const resolveSubject = (scope: RateLimitScope, userId: string | undefined, ip: string | null): string => {
   if (scope === 'user') {
     if (!userId) {
-      throw createError({ statusCode: 500, statusMessage: 'Rate limit requires authenticated user' })
+      throw createError({ statusCode: 500, statusText: 'Rate limit requires authenticated user' })
     }
     return `user:${userId}`
   }
 
   if (scope === 'user-or-ip') {
     if (userId) return `user:${userId}`
-    if (!ip) throw createError({ statusCode: 403, statusMessage: 'Cannot determine client identity' })
+    if (!ip) throw createError({ statusCode: 403, statusText: 'Cannot determine client identity' })
     return `ip:${ip}`
   }
 
   // scope === 'ip'
-  if (!ip) throw createError({ statusCode: 403, statusMessage: 'Cannot determine client IP' })
+  if (!ip) throw createError({ statusCode: 403, statusText: 'Cannot determine client IP' })
   return `ip:${ip}`
 }
 
@@ -111,7 +111,7 @@ export const enforceRateLimit = async (
         remaining: result.remaining
       })
 
-      throw createError({ statusCode: 429, statusMessage: 'Too Many Requests' })
+      throw createError({ statusCode: 429, statusText: 'Too Many Requests' })
     }
   } catch (error) {
     // Re-throw HTTP errors
