@@ -1,7 +1,8 @@
 import { prisma } from '@infrastructure/db/prisma'
 import type { Prisma, CanvasElement as PrismaCanvasElement } from '@generated/prisma/client'
-import type { CanvasRepository } from '@application/interfaces/canvas-repository'
+import type { CanvasReplaceInput, CanvasRepository } from '@application/interfaces/canvas-repository'
 import type { CanvasElement, CanvasElementType } from '@application/models/canvas-element'
+import type { IdeaVersionOwnerInput } from '@application/interfaces/ownership-inputs'
 import { isIdeaVersionOwnedByUser } from '@infrastructure/db/ownership-helpers'
 
 /**
@@ -21,11 +22,7 @@ const toDomainCanvasElement = (row: PrismaCanvasElement): CanvasElement => {
 /**
  * Builds an ownership filter for canvas entries belonging to a specific idea version.
  */
-const buildOwnedCanvasElementWhere = (input: {
-  userId: string
-  ideaId: string
-  ideaVersionId: string
-}): Prisma.CanvasElementWhereInput => {
+const buildOwnedCanvasElementWhere = (input: IdeaVersionOwnerInput): Prisma.CanvasElementWhereInput => {
   return {
     ideaVersionId: input.ideaVersionId,
     ideaVersion: {
@@ -40,11 +37,7 @@ const buildOwnedCanvasElementWhere = (input: {
 /**
  * Lists all owned canvas entries for a specific idea version in a stable display order.
  */
-const listOwnedCanvasElements = async (input: {
-  userId: string
-  ideaId: string
-  ideaVersionId: string
-}): Promise<CanvasElement[]> => {
+const listOwnedCanvasElements = async (input: IdeaVersionOwnerInput): Promise<CanvasElement[]> => {
   const rows = await prisma.canvasElement.findMany({
     where: buildOwnedCanvasElementWhere(input),
     orderBy: [
@@ -63,11 +56,7 @@ export const canvasRepository: CanvasRepository = {
   /**
    * Loads the persisted canvas entries for a user-owned idea version.
    */
-  async getByIdeaVersionForUser(input: {
-    userId: string
-    ideaId: string
-    ideaVersionId: string
-  }): Promise<CanvasElement[] | null> {
+  async getByIdeaVersionForUser(input: IdeaVersionOwnerInput): Promise<CanvasElement[] | null> {
     const hasAccess = await isIdeaVersionOwnedByUser(input)
 
     if (!hasAccess) {
@@ -80,15 +69,7 @@ export const canvasRepository: CanvasRepository = {
   /**
    * Replaces the complete canvas snapshot for a user-owned idea version inside one transaction.
    */
-  async replaceByIdeaVersionForUser(input: {
-    userId: string
-    ideaId: string
-    ideaVersionId: string
-    elements: Array<{
-      type: CanvasElementType
-      content: string
-    }>
-  }): Promise<CanvasElement[] | null> {
+  async replaceByIdeaVersionForUser(input: CanvasReplaceInput): Promise<CanvasElement[] | null> {
     const hasAccess = await isIdeaVersionOwnedByUser(input)
 
     if (!hasAccess) {

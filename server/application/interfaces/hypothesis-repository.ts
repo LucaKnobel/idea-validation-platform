@@ -1,17 +1,8 @@
 import type { CanvasElementType } from '@application/models/canvas-element'
 import type { Hypothesis, HypothesisDimension, HypothesisPriority } from '@application/models/hypothesis'
+import type { IdeaVersionOwnerInput, HypothesisOwnerInput } from '@application/interfaces/ownership-inputs'
 
-type IdeaVersionOwnerInput = {
-  userId: string
-  ideaId: string
-  ideaVersionId: string
-}
-
-type HypothesisOwnerInput = IdeaVersionOwnerInput & {
-  hypothesisId: string
-}
-
-type HypothesisFieldsInput = {
+export type HypothesisFieldsInput = {
   statement: string
   dimension: HypothesisDimension
   priority: HypothesisPriority
