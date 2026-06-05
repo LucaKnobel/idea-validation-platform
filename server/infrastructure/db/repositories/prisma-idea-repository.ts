@@ -1,5 +1,5 @@
 import { prisma } from '@infrastructure/db/prisma'
-import type { IdeaRepository } from '@application/interfaces/idea-repository'
+import type { IdeaCreateInput, IdeaDeleteInput, IdeaRepository } from '@application/interfaces/idea-repository'
 import type { Prisma } from '@generated/prisma/client'
 import type { Idea } from '@application/models/idea'
 
@@ -46,11 +46,7 @@ export const ideaRepository: IdeaRepository = {
   /**
    * Atomically creates an idea and its initial version.
    */
-  async createWithInitialVersion(input: {
-    userId: string
-    title: string
-    description: string | null
-  }): Promise<Idea> {
+  async createWithInitialVersion(input: IdeaCreateInput): Promise<Idea> {
     const row = await prisma.idea.create({
       data: {
         userId: input.userId,
@@ -77,7 +73,7 @@ export const ideaRepository: IdeaRepository = {
   /**
    * Deletes an idea for a user and returns whether a row was removed.
    */
-  async deleteByIdForUser(input: { userId: string, ideaId: string }): Promise<boolean> {
+  async deleteByIdForUser(input: IdeaDeleteInput): Promise<boolean> {
     const result = await prisma.idea.deleteMany({
       where: {
         id: input.ideaId,
