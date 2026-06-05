@@ -1,7 +1,7 @@
 import { prisma } from '@infrastructure/db/prisma'
 import type { Prisma, CanvasElement as PrismaCanvasElement } from '@generated/prisma/client'
 import type { CanvasReplaceInput, CanvasRepository } from '@application/interfaces/canvas-repository'
-import type { CanvasElement, CanvasElementType } from '@application/models/canvas-element'
+import type { CanvasElement } from '@application/models/canvas-element'
 import type { IdeaVersionOwnerInput } from '@application/interfaces/ownership-inputs'
 import { isIdeaVersionOwnedByUser } from '@infrastructure/db/ownership-helpers'
 

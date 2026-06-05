@@ -2,6 +2,8 @@ import { ideaRepository } from '@infrastructure/db/repositories/prisma-idea-repo
 import { ideaVersionRepository } from '@infrastructure/db/repositories/prisma-idea-version-repository'
 import { canvasRepository } from '@infrastructure/db/repositories/prisma-canvas-repository'
 import { hypothesisRepository } from '@infrastructure/db/repositories/prisma-hypothesis-repository'
+import { metricRepository } from '@infrastructure/db/repositories/prisma-metric-repository'
+import { metricThresholdRepository } from '@infrastructure/db/repositories/prisma-metric-threshold-repository'
 import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
 import { logger } from '@infrastructure/logging/logger'
 
@@ -15,6 +17,12 @@ import { createCreateHypothesis } from '@application/services/create-hypothesis'
 import { createGetIdeaVersionHypotheses } from '@application/services/get-idea-version-hypotheses'
 import { createUpdateHypothesis } from '@application/services/update-hypothesis'
 import { createDeleteHypothesis } from '@application/services/delete-hypothesis'
+import { createGetHypothesisMetrics } from '@application/services/get-hypothesis-metrics'
+import { createCreateMetric } from '@application/services/create-metric'
+import { createUpdateMetric } from '@application/services/update-metric'
+import { createDeleteMetric } from '@application/services/delete-metric'
+import { createUpsertMetricThreshold } from '@application/services/upsert-metric-threshold'
+import { createDeleteMetricThreshold } from '@application/services/delete-metric-threshold'
 
 /**
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
@@ -70,6 +78,36 @@ const deleteHypothesis = createDeleteHypothesis(
   logger
 )
 
+const getHypothesisMetrics = createGetHypothesisMetrics(
+  metricRepository,
+  logger
+)
+
+const createMetric = createCreateMetric(
+  metricRepository,
+  logger
+)
+
+const updateMetric = createUpdateMetric(
+  metricRepository,
+  logger
+)
+
+const deleteMetric = createDeleteMetric(
+  metricRepository,
+  logger
+)
+
+const upsertMetricThreshold = createUpsertMetricThreshold(
+  metricThresholdRepository,
+  logger
+)
+
+const deleteMetricThreshold = createDeleteMetricThreshold(
+  metricThresholdRepository,
+  logger
+)
+
 export {
   subscriptionService,
   createIdea,
@@ -80,5 +118,11 @@ export {
   createHypothesis,
   getIdeaVersionHypotheses,
   updateHypothesis,
-  deleteHypothesis
+  deleteHypothesis,
+  getHypothesisMetrics,
+  createMetric,
+  updateMetric,
+  deleteMetric,
+  upsertMetricThreshold,
+  deleteMetricThreshold
 }
