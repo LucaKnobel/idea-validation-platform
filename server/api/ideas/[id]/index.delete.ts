@@ -1,4 +1,3 @@
-import { setResponseStatus } from 'h3'
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
 import { IdeaRouteParamsSchema } from '@infrastructure/validation/idea-schemas'
 import { deleteIdea } from '@infrastructure/composition'
