@@ -6,6 +6,11 @@ export interface UseHypothesesApiComposable {
     ideaId: string
     versionId: string
   }) => Promise<HypothesesListResponseDto>
+  getHypothesis: (input: {
+    ideaId: string
+    versionId: string
+    hypothesisId: string
+  }) => Promise<HypothesisResponseDto>
   createHypothesis: (input: {
     ideaId: string
     versionId: string
@@ -33,6 +38,14 @@ export const useHypothesesApi = (): UseHypothesesApiComposable => {
     versionId: string
   }): Promise<HypothesesListResponseDto> => {
     return $fetch<HypothesesListResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/hypotheses`)
+  }
+
+  const getHypothesis = async (input: {
+    ideaId: string
+    versionId: string
+    hypothesisId: string
+  }): Promise<HypothesisResponseDto> => {
+    return $fetch<HypothesisResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/hypotheses/${input.hypothesisId}`)
   }
 
   const createHypothesis = async (input: {
@@ -70,6 +83,7 @@ export const useHypothesesApi = (): UseHypothesesApiComposable => {
 
   return {
     listHypotheses,
+    getHypothesis,
     createHypothesis,
     updateHypothesis,
     deleteHypothesis
