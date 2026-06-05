@@ -15,6 +15,7 @@ import { createGetIdeaVersionCanvas } from '@application/services/get-idea-versi
 import { createUpdateIdeaVersionCanvas } from '@application/services/update-idea-version-canvas'
 import { createCreateHypothesis } from '@application/services/create-hypothesis'
 import { createGetIdeaVersionHypotheses } from '@application/services/get-idea-version-hypotheses'
+import { createGetHypothesis } from '@application/services/get-hypothesis'
 import { createUpdateHypothesis } from '@application/services/update-hypothesis'
 import { createDeleteHypothesis } from '@application/services/delete-hypothesis'
 import { createGetHypothesisMetrics } from '@application/services/get-hypothesis-metrics'
@@ -68,6 +69,11 @@ const getIdeaVersionHypotheses = createGetIdeaVersionHypotheses(
   logger
 )
 
+const getHypothesis = createGetHypothesis(
+  hypothesisRepository,
+  logger
+)
+
 const updateHypothesis = createUpdateHypothesis(
   hypothesisRepository,
   logger
@@ -117,6 +123,7 @@ export {
   updateIdeaVersionCanvas,
   createHypothesis,
   getIdeaVersionHypotheses,
+  getHypothesis,
   updateHypothesis,
   deleteHypothesis,
   getHypothesisMetrics,

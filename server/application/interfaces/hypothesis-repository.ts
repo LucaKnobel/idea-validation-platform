@@ -20,6 +20,12 @@ export interface HypothesisRepository {
   listByIdeaVersionForUser(input: IdeaVersionOwnerInput): Promise<Hypothesis[] | null>
 
   /**
+   * Returns one hypothesis owned by the given user.
+   * Returns null when the hypothesis does not exist or is not accessible.
+   */
+  getByIdForUser(input: HypothesisOwnerInput): Promise<Hypothesis | null>
+
+  /**
    * Creates one hypothesis in a version owned by the given user.
    * Returns null when the version does not exist or is not accessible.
    */
