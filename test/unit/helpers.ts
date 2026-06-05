@@ -104,6 +104,7 @@ export const makeHypothesis = (overrides: Partial<Hypothesis> = {}): Hypothesis 
 
 export const makeHypothesisRepository = (): HypothesisRepository => ({
   listByIdeaVersionForUser: vi.fn(),
+  getByIdForUser: vi.fn(),
   createForIdeaVersion: vi.fn(),
   updateByIdForUser: vi.fn(),
   deleteByIdForUser: vi.fn()
