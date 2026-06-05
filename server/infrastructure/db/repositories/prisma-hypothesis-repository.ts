@@ -70,6 +70,28 @@ export const hypothesisRepository: HypothesisRepository = {
   },
 
   /**
+   * Returns one hypothesis for a user-owned idea version.
+   */
+  async getByIdForUser(input: HypothesisOwnerInput): Promise<Hypothesis | null> {
+    const row = await prisma.hypothesis.findFirst({
+      where: buildOwnedHypothesisWhere(input),
+      include: {
+        canvasSectionLinks: {
+          orderBy: {
+            canvasElementType: 'asc'
+          }
+        }
+      }
+    })
+
+    if (row === null) {
+      return null
+    }
+
+    return toDomainHypothesis(row)
+  },
+
+  /**
    * Creates one hypothesis for a user-owned idea version.
    */
   async createForIdeaVersion(input: HypothesisOwnerInput & HypothesisFieldsInput): Promise<Hypothesis | null> {
