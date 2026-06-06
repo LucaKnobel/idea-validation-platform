@@ -7,6 +7,7 @@ definePageMeta({
 })
 
 const { t } = useI18n()
+const localePath = useLocalePath()
 const { showSuccess, showError } = useToastNotification()
 const { createHypothesisFormSchema } = useValidation()
 const { ideaId, versionId, hasIdeaVersionRouteParams } = useIdeaVersionRouteParams()
@@ -95,6 +96,14 @@ const sectionOptions = computed<Array<{ label: string, value: HypothesisCanvasSe
     { label: t('ideaWorkspace.canvasPage.sections.COST_STRUCTURE'), value: 'COST_STRUCTURE' },
     { label: t('ideaWorkspace.canvasPage.sections.REVENUE_STREAMS'), value: 'REVENUE_STREAMS' }
   ]
+})
+
+const hypothesisDetailRoutePrefix = computed(() => {
+  if (!hasIdeaVersionRouteParams.value) {
+    return ''
+  }
+
+  return localePath(`/ideas/${ideaId.value}/versions/${versionId.value}/hypotheses`)
 })
 
 /**
@@ -278,6 +287,7 @@ watch([ideaId, versionId], async () => {
         :hypotheses="hypotheses"
         :is-loading="isLoading"
         :is-deleting-id="isDeletingId"
+        :detail-route-prefix="hypothesisDetailRoutePrefix"
         @create="openCreateModal"
         @edit="openUpdateModal"
         @delete="openDeleteModal"

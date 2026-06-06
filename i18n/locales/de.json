@@ -442,7 +442,8 @@
       "actions": {
         "create": "Hypothese erstellen",
         "update": "Hypothese aktualisieren",
-        "deleteConfirm": "Hypothese löschen"
+        "deleteConfirm": "Hypothese löschen",
+        "openDetails": "Details öffnen"
       },
       "status": {
         "OPEN": "Offen"
@@ -460,19 +461,10 @@
         "LOW": "Niedrig"
       },
       "table": {
-        "actions": {
-          "expand": "Zeile ausklappen",
-          "collapse": "Zeile einklappen"
-        },
-        "filters": {
-          "placeholder": "Status filtern",
-          "all": "Alle Status"
-        },
         "columns": {
           "statement": "Aussage",
           "dimension": "Dimension",
           "priority": "Priorität",
-          "sections": "Canvas-Bereiche",
           "status": "Status",
           "actions": "Aktionen"
         },
@@ -481,20 +473,6 @@
       "empty": {
         "title": "Noch keine Hypothesen",
         "description": "Starten Sie mit den riskantesten Annahmen und verknüpfen Sie jede mit einem Canvas-Bereich."
-      },
-      "expanded": {
-        "canvas": {
-          "title": "Canvas-Bereiche",
-          "empty": "Noch keine Canvas-Bereiche verknüpft."
-        },
-        "metrics": {
-          "title": "Übersicht Experiment-Metriken",
-          "placeholder": "Metrikdefinitionen und Schwellwerte für diese Hypothese werden hier als Nächstes angezeigt."
-        },
-        "experiments": {
-          "title": "Übersicht Experimente",
-          "placeholder": "Verknüpfte Experimente und letzte Ergebnisse werden hier im nächsten Schritt angezeigt."
-        }
       },
       "detail": {
         "title": "Hypothesen-Details",
