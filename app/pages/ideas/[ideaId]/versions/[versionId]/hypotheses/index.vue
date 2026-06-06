@@ -98,13 +98,18 @@ const sectionOptions = computed<Array<{ label: string, value: HypothesisCanvasSe
   ]
 })
 
-const hypothesisDetailRoutePrefix = computed(() => {
+/**
+ * Navigates from list/table context to the dedicated hypothesis detail page.
+ */
+const openHypothesisDetails = async (hypothesis: HypothesisResponseDto): Promise<void> => {
   if (!hasIdeaVersionRouteParams.value) {
-    return ''
+    return
   }
 
-  return localePath(`/ideas/${ideaId.value}/versions/${versionId.value}/hypotheses`)
-})
+  const target = localePath(`/ideas/${ideaId.value}/versions/${versionId.value}/hypotheses/${encodeURIComponent(hypothesis.id)}`)
+
+  await navigateTo(target)
+}
 
 /**
  * Loads hypotheses for the current route once idea and version identifiers are valid.
@@ -287,10 +292,10 @@ watch([ideaId, versionId], async () => {
         :hypotheses="hypotheses"
         :is-loading="isLoading"
         :is-deleting-id="isDeletingId"
-        :detail-route-prefix="hypothesisDetailRoutePrefix"
         @create="openCreateModal"
         @edit="openUpdateModal"
         @delete="openDeleteModal"
+        @open-details="openHypothesisDetails"
       />
     </UCard>
 
