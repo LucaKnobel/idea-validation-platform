@@ -9,29 +9,24 @@ definePageMeta({
 const { resendVerificationEmail, hasError, errorTitle, errorText, resetError } = useAuth()
 const { createVerifyEmailSchema } = useValidation()
 const { showSuccess } = useToastNotification()
+const { isSubmitting: isResending, runWithSubmitGuard } = useAsyncSubmitGuard()
 
 const pendingEmail = useState('pendingVerifyEmail', () => '')
-const isResending = ref(false)
 const schema = createVerifyEmailSchema()
 const formState = reactive<VerifyEmailForm>({
   email: pendingEmail.value
 })
 
 const onResend = async (event: FormSubmitEvent<VerifyEmailForm>): Promise<void> => {
-  if (isResending.value) return
-  isResending.value = true
-  resetError()
-
-  try {
+  await runWithSubmitGuard(async () => {
+    resetError()
     const ok = await resendVerificationEmail(event.data.email)
     if (ok) {
       formState.email = event.data.email
       pendingEmail.value = '' // Clear after successful resend
       showSuccess('auth.verifyEmail.resend.success.title', 'auth.verifyEmail.resend.success.message')
     }
-  } finally {
-    isResending.value = false
-  }
+  })
 }
 </script>
 

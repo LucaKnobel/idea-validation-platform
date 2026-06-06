@@ -9,27 +9,22 @@ definePageMeta({
 
 const { requestPasswordReset, hasError, errorTitle, errorText } = useAuth()
 const { createVerifyEmailSchema } = useValidation()
+const { isSubmitting, runWithSubmitGuard } = useAsyncSubmitGuard()
 
 const schema = createVerifyEmailSchema()
-const isSubmitting = ref(false)
 const isSubmitted = ref(false)
 const formState = reactive<VerifyEmailForm>({
   email: ''
 })
 
 const onSubmit = async (event: FormSubmitEvent<VerifyEmailForm>): Promise<void> => {
-  if (isSubmitting.value) return
-  isSubmitting.value = true
-
-  try {
+  await runWithSubmitGuard(async () => {
     const ok = await requestPasswordReset(event.data.email)
     if (ok) {
       isSubmitted.value = true
       formState.email = ''
     }
-  } finally {
-    isSubmitting.value = false
-  }
+  })
 }
 </script>
 

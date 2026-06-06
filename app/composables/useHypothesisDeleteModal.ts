@@ -13,21 +13,21 @@ export interface UseHypothesisDeleteModalComposable {
  */
 export const useHypothesisDeleteModal = (): UseHypothesisDeleteModalComposable => {
   const deleteCandidate = ref<HypothesisResponseDto | null>(null)
-  const isDeleteModalOpen = ref(false)
+  const { isOpen: isDeleteModalOpen, open: openModal, close: closeModal } = useModalState()
 
   /**
    * Opens the delete confirmation modal for one hypothesis.
    */
   const openDeleteModal = (hypothesis: HypothesisResponseDto): void => {
     deleteCandidate.value = hypothesis
-    isDeleteModalOpen.value = true
+    openModal()
   }
 
   /**
    * Closes and clears the delete confirmation candidate.
    */
   const closeDeleteModal = (): void => {
-    isDeleteModalOpen.value = false
+    closeModal()
     deleteCandidate.value = null
   }
 

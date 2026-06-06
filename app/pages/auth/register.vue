@@ -16,9 +16,9 @@ const { register, hasError, errorTitle, errorText } = useAuth()
 const { createRegisterFormSchema } = useValidation()
 const { t } = useI18n()
 const localePath = useLocalePath()
+const { isSubmitting, runWithSubmitGuard } = useAsyncSubmitGuard()
 
 const schema = createRegisterFormSchema()
-const isSubmitting = ref(false)
 
 /**
  * Static field configuration consumed by `UAuthForm`.
@@ -47,18 +47,13 @@ const fields: AuthFormField[] = [{
  * Creates the account and preserves the email address for the follow-up verification page.
  */
 const onSubmit = async (event: FormSubmitEvent<RegisterForm>): Promise<void> => {
-  if (isSubmitting.value) return
-  isSubmitting.value = true
-
-  try {
+  await runWithSubmitGuard(async () => {
     const ok = await register(event.data.email, event.data.password, '')
     if (ok) {
       useState('pendingVerifyEmail', () => event.data.email).value = event.data.email
       await navigateTo(localePath('/auth/verify-email'))
     }
-  } finally {
-    isSubmitting.value = false
-  }
+  })
 }
 </script>
 
