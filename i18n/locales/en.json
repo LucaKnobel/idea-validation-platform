@@ -496,6 +496,46 @@
           "placeholder": "Linked experiments and latest outcomes will be shown here in the next step."
         }
       },
+      "detail": {
+        "title": "Hypothesis details",
+        "description": "Review one hypothesis with focused context, linked canvas areas, and upcoming execution tabs.",
+        "actions": {
+          "retry": "Retry",
+          "backToList": "Back to hypotheses"
+        },
+        "tabs": {
+          "overview": "Overview",
+          "metrics": "Metrics",
+          "experiments": "Experiments",
+          "evidence": "Evidence"
+        },
+        "overview": {
+          "generalInformation": "General information",
+          "canvasAssignment": "Canvas assignment",
+          "canvasEmpty": "No canvas areas linked yet.",
+          "fields": {
+            "statement": "Statement",
+            "dimension": "Dimension",
+            "priority": "Priority",
+            "status": "Status"
+          }
+        },
+        "placeholders": {
+          "metrics": "Metrics and thresholds will be managed here in the next iteration.",
+          "experiments": "Experiment planning and latest outcomes will be added here in the next iteration.",
+          "evidence": "Collected evidence and validation notes will be shown here in the next iteration."
+        },
+        "error": {
+          "invalidParams": {
+            "title": "Invalid route parameters",
+            "message": "The requested hypothesis route is incomplete."
+          },
+          "load": {
+            "title": "Could not load hypothesis",
+            "message": "Please try again in a moment."
+          }
+        }
+      },
       "modal": {
         "createTitle": "Create hypothesis",
         "editTitle": "Edit hypothesis",
