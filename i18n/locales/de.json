@@ -496,6 +496,46 @@
           "placeholder": "Verknüpfte Experimente und letzte Ergebnisse werden hier im nächsten Schritt angezeigt."
         }
       },
+      "detail": {
+        "title": "Hypothesen-Details",
+        "description": "Prüfen Sie eine Hypothese mit fokussiertem Kontext, verknüpften Canvas-Bereichen und künftigen Execution-Tabs.",
+        "actions": {
+          "retry": "Erneut versuchen",
+          "backToList": "Zurück zu den Hypothesen"
+        },
+        "tabs": {
+          "overview": "Übersicht",
+          "metrics": "Metriken",
+          "experiments": "Experimente",
+          "evidence": "Evidenz"
+        },
+        "overview": {
+          "generalInformation": "Allgemeine Informationen",
+          "canvasAssignment": "Canvas-Zuordnung",
+          "canvasEmpty": "Noch keine Canvas-Bereiche verknüpft.",
+          "fields": {
+            "statement": "Aussage",
+            "dimension": "Dimension",
+            "priority": "Priorität",
+            "status": "Status"
+          }
+        },
+        "placeholders": {
+          "metrics": "Metriken und Schwellwerte werden in der nächsten Iteration hier verwaltet.",
+          "experiments": "Experiment-Planung und letzte Ergebnisse werden in der nächsten Iteration hier ergänzt.",
+          "evidence": "Gesammelte Evidenz und Validierungsnotizen werden in der nächsten Iteration hier angezeigt."
+        },
+        "error": {
+          "invalidParams": {
+            "title": "Ungültige Routenparameter",
+            "message": "Die angeforderte Hypothesen-Route ist unvollständig."
+          },
+          "load": {
+            "title": "Hypothese konnte nicht geladen werden",
+            "message": "Bitte versuchen Sie es in einem Moment erneut."
+          }
+        }
+      },
       "modal": {
         "createTitle": "Hypothese erstellen",
         "editTitle": "Hypothese bearbeiten",
