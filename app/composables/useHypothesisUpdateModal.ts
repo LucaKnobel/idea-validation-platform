@@ -25,7 +25,7 @@ export const useHypothesisUpdateModal = (
 ): UseHypothesisUpdateModalComposable => {
   const formState = reactive<CreateHypothesisBodyDto>(input.createEmptyFormState())
   const formHypothesisId = ref<string | null>(null)
-  const isUpdateModalOpen = ref(false)
+  const { isOpen: isUpdateModalOpen, open: openModal, close: closeModal } = useModalState()
 
   /**
    * Resets editable form values to the baseline create payload.
@@ -47,14 +47,14 @@ export const useHypothesisUpdateModal = (
     formState.dimension = hypothesis.dimension
     formState.priority = hypothesis.priority
     formState.canvasSectionTypes = hypothesis.canvasSectionLinks.map(link => link.canvasElementType)
-    isUpdateModalOpen.value = true
+    openModal()
   }
 
   /**
    * Closes the update form modal.
    */
   const closeUpdateModal = (): void => {
-    isUpdateModalOpen.value = false
+    closeModal()
   }
 
   return {

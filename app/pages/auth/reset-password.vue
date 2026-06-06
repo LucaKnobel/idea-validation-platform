@@ -16,6 +16,7 @@ const { createPasswordSchema } = useValidation()
 const localePath = useLocalePath()
 const route = useRoute()
 const router = useRouter()
+const { isSubmitting, runWithSubmitGuard } = useAsyncSubmitGuard()
 
 /**
  * Extracts the reset token from the query string.
@@ -27,7 +28,6 @@ const token = computed(() => route.query.token as string)
 const isValidToken = computed(() => !!token.value)
 
 const schema = createPasswordSchema()
-const isSubmitting = ref(false)
 const showPassword = ref(false)
 const showPasswordConfirm = ref(false)
 const formState = reactive<PasswordForm>({
@@ -39,10 +39,7 @@ const formState = reactive<PasswordForm>({
  * Submits the new password and redirects back to the login page with a success flag.
  */
 const onSubmit = async (event: FormSubmitEvent<PasswordForm>): Promise<void> => {
-  if (isSubmitting.value) return
-  isSubmitting.value = true
-
-  try {
+  await runWithSubmitGuard(async () => {
     const ok = await resetPassword(event.data.password, token.value)
     if (ok) {
       await navigateTo({
@@ -50,9 +47,7 @@ const onSubmit = async (event: FormSubmitEvent<PasswordForm>): Promise<void> => 
         query: { reset: 'success' }
       })
     }
-  } finally {
-    isSubmitting.value = false
-  }
+  })
 }
 
 /**
