@@ -20,6 +20,9 @@ export interface UseHypothesisModalActionsComposable {
   isCreateModalOpen: Ref<boolean>
   isUpdateModalOpen: Ref<boolean>
   isDeleteModalOpen: Ref<boolean>
+  isCreateActionSubmitting: Ref<boolean>
+  isUpdateActionSubmitting: Ref<boolean>
+  isDeleteActionSubmitting: Ref<boolean>
   openCreateModal: () => void
   openUpdateModal: (hypothesis: HypothesisResponseDto) => void
   openEditModal: (hypothesis: HypothesisResponseDto | null) => void
@@ -41,6 +44,18 @@ export const useHypothesisModalActions = (
 ): UseHypothesisModalActionsComposable => {
   const { t } = useI18n()
   const { showSuccess, showError } = useToastNotification()
+  const {
+    isSubmitting: isCreateActionSubmitting,
+    runWithSubmitGuard: runCreateSubmitGuard
+  } = useAsyncSubmitGuard()
+  const {
+    isSubmitting: isUpdateActionSubmitting,
+    runWithSubmitGuard: runUpdateSubmitGuard
+  } = useAsyncSubmitGuard()
+  const {
+    isSubmitting: isDeleteActionSubmitting,
+    runWithSubmitGuard: runDeleteSubmitGuard
+  } = useAsyncSubmitGuard()
 
   const createModal = useHypothesisCreateModal({
     createEmptyFormState: input.createEmptyFormState
@@ -75,7 +90,11 @@ export const useHypothesisModalActions = (
     action: () => Promise<boolean>,
     onSuccess?: () => Promise<void> | void
   ): Promise<boolean> => {
-    const success = await action()
+    const success = await runCreateSubmitGuard(action)
+
+    if (typeof success === 'undefined') {
+      return false
+    }
 
     if (!success) {
       showError('ideaWorkspace.hypotheses.error.create.title', 'ideaWorkspace.hypotheses.error.create.message')
@@ -92,7 +111,11 @@ export const useHypothesisModalActions = (
     action: () => Promise<boolean>,
     onSuccess?: () => Promise<void> | void
   ): Promise<boolean> => {
-    const success = await action()
+    const success = await runUpdateSubmitGuard(action)
+
+    if (typeof success === 'undefined') {
+      return false
+    }
 
     if (!success) {
       showError('ideaWorkspace.hypotheses.error.update.title', 'ideaWorkspace.hypotheses.error.update.message')
@@ -109,7 +132,11 @@ export const useHypothesisModalActions = (
     action: () => Promise<boolean>,
     onSuccess?: () => Promise<void> | void
   ): Promise<boolean> => {
-    const success = await action()
+    const success = await runDeleteSubmitGuard(action)
+
+    if (typeof success === 'undefined') {
+      return false
+    }
 
     if (!success) {
       showError('ideaWorkspace.hypotheses.error.delete.title', 'ideaWorkspace.hypotheses.error.delete.message')
@@ -134,6 +161,9 @@ export const useHypothesisModalActions = (
     isCreateModalOpen: createModal.isCreateModalOpen,
     isUpdateModalOpen: updateModal.isUpdateModalOpen,
     isDeleteModalOpen: deleteModal.isDeleteModalOpen,
+    isCreateActionSubmitting,
+    isUpdateActionSubmitting,
+    isDeleteActionSubmitting,
     openCreateModal: createModal.openCreateModal,
     openUpdateModal: updateModal.openUpdateModal,
     openEditModal,
