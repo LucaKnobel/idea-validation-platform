@@ -64,6 +64,15 @@
       "priorityRequired": "Please select a hypothesis priority",
       "canvasSectionMin": "Select at least one canvas section",
       "canvasSectionMax": "A maximum of 9 canvas sections can be linked"
+    },
+    "metric": {
+      "nameRequired": "A metric name is required",
+      "nameTooLong": "A metric name must not exceed 200 characters",
+      "descriptionTooLong": "A metric description must not exceed 1000 characters",
+      "unitTooLong": "A metric unit must not exceed 100 characters",
+      "operatorRequired": "Please select a threshold operator",
+      "referenceValueRequired": "A threshold value is required",
+      "referenceValueFinite": "Threshold value must be a finite number"
     }
   },
   "error": {
