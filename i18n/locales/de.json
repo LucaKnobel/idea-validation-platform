@@ -64,6 +64,15 @@
       "priorityRequired": "Bitte wählen Sie eine Priorität",
       "canvasSectionMin": "Wählen Sie mindestens einen Canvas-Bereich",
       "canvasSectionMax": "Es können maximal 9 Canvas-Bereiche verknüpft werden"
+      },
+      "metric": {
+        "nameRequired": "Ein Metrik-Name ist erforderlich",
+        "nameTooLong": "Ein Metrik-Name darf maximal 200 Zeichen enthalten",
+        "descriptionTooLong": "Eine Metrik-Beschreibung darf maximal 1000 Zeichen enthalten",
+        "unitTooLong": "Eine Metrik-Einheit darf maximal 100 Zeichen enthalten",
+        "operatorRequired": "Bitte wählen Sie einen Schwellwert-Operator",
+        "referenceValueRequired": "Ein Schwellwert ist erforderlich",
+        "referenceValueFinite": "Der Schwellwert muss eine endliche Zahl sein"
     }
   },
   "error": {
