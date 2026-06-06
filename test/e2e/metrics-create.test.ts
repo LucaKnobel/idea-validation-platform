@@ -79,9 +79,9 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metri
     })
 
     const response = await createMetricWithCookie(user.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, {
-      name: '  Conversion Rate  ',
-      description: '  Measures sign-up conversion.  ',
-      unit: ' % ',
+      name: 'Conversion Rate',
+      description: 'Measures sign-up conversion.',
+      unit: '%',
       threshold: {
         operator: 'GTE',
         referenceValue: 10

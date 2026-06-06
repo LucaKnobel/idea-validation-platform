@@ -1,4 +1,5 @@
 import type { Metric } from '@application/models/metric'
+import { inferMetricDataType } from '@application/models/metric'
 import {
   MetricResponseSchema,
   MetricsListResponseSchema,
@@ -15,14 +16,14 @@ export const toMetricResponseDto = (metric: Metric): MetricResponseDto => {
     hypothesisId: metric.hypothesisId,
     name: metric.name,
     description: metric.description,
-    dataType: metric.dataType,
+    dataType: metric.dataType ?? inferMetricDataType(metric.unit),
     unit: metric.unit,
     threshold: metric.threshold
       ? {
           id: metric.threshold.id,
           metricId: metric.threshold.metricId,
           operator: metric.threshold.operator,
-          referenceValue: metric.threshold.referenceValue,
+          referenceValue: Number(metric.threshold.referenceValue),
           createdAt: metric.threshold.createdAt.toISOString(),
           updatedAt: metric.threshold.updatedAt.toISOString()
         }
