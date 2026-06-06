@@ -4,13 +4,12 @@ definePageMeta({
   layout: 'idea-workspace'
 })
 
-type HypothesisDetailTab = 'overview' | 'metrics' | 'experiments' | 'evidence'
 type HypothesisDimension = CreateHypothesisBodyDto['dimension']
 type HypothesisPriority = CreateHypothesisBodyDto['priority']
 type HypothesisCanvasSection = CreateHypothesisBodyDto['canvasSectionTypes'][number]
 
 const { t } = useI18n()
-const router = useRouter()
+const localePath = useLocalePath()
 const { showSuccess, showError } = useToastNotification()
 const { createHypothesisFormSchema } = useValidation()
 const {
@@ -34,7 +33,6 @@ const { handleRateLimitError } = useErrorHandler()
 
 const isUpdating = ref(false)
 const isDeleting = ref(false)
-const activeTab = ref<HypothesisDetailTab>('overview')
 
 const createEmptyFormState = (): CreateHypothesisBodyDto => {
   return {
@@ -63,15 +61,6 @@ const {
   openDeleteModal,
   closeDeleteModal
 } = useHypothesisDeleteModal()
-
-const tabs = computed<Array<{ key: HypothesisDetailTab, label: string }>>(() => {
-  return [
-    { key: 'overview', label: t('ideaWorkspace.hypotheses.detail.tabs.overview') },
-    { key: 'metrics', label: t('ideaWorkspace.hypotheses.detail.tabs.metrics') },
-    { key: 'experiments', label: t('ideaWorkspace.hypotheses.detail.tabs.experiments') },
-    { key: 'evidence', label: t('ideaWorkspace.hypotheses.detail.tabs.evidence') }
-  ]
-})
 
 const dimensionOptions = computed<Array<{ label: string, value: HypothesisDimension }>>(() => {
   return [
@@ -109,6 +98,14 @@ const hasValidRouteParams = computed(() => {
   return hasIdeaVersionHypothesisRouteParams.value
 })
 
+const hypothesisStatement = computed(() => {
+  if (isLoading.value) {
+    return ''
+  }
+
+  return hypothesis.value?.statement || '-'
+})
+
 const statusLabel = computed(() => t('ideaWorkspace.hypotheses.status.OPEN'))
 
 const priorityColor = computed(() => {
@@ -124,7 +121,7 @@ const priorityColor = computed(() => {
 })
 
 const listRoute = computed(() => {
-  return `/ideas/${ideaId.value}/versions/${versionId.value}/hypotheses`
+  return localePath(`/ideas/${ideaId.value}/versions/${versionId.value}/hypotheses`)
 })
 
 const loadHypothesisForRoute = async (): Promise<void> => {
@@ -221,11 +218,49 @@ watch([ideaId, versionId, hypothesisId], async () => {
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="space-y-6 pb-8">
     <UPageHeader
       :title="$t('ideaWorkspace.hypotheses.detail.title')"
       :description="$t('ideaWorkspace.hypotheses.detail.description')"
     />
+
+    <div class="flex flex-col gap-4 rounded-xl border border-default bg-default p-4 md:flex-row md:items-start md:justify-between">
+      <div class="min-w-0 flex-1 space-y-2">
+        <USkeleton
+          v-if="isLoading"
+          class="h-8 w-full max-w-2xl"
+        />
+
+        <h1
+          v-else
+          class="text-2xl leading-8 font-semibold text-highlighted md:text-3xl"
+        >
+          {{ hypothesisStatement }}
+        </h1>
+      </div>
+
+      <div class="flex shrink-0 flex-wrap items-center gap-2">
+        <UButton
+          color="primary"
+          variant="soft"
+          icon="i-lucide-pencil"
+          :disabled="isLoading || hypothesis === null"
+          @click="openEditModal"
+        >
+          {{ $t('ideaWorkspace.hypotheses.detail.actions.edit') }}
+        </UButton>
+
+        <UButton
+          color="error"
+          variant="soft"
+          icon="i-lucide-trash-2"
+          :disabled="isLoading || hypothesis === null"
+          @click="openDeleteConfirmation"
+        >
+          {{ $t('ideaWorkspace.hypotheses.detail.actions.delete') }}
+        </UButton>
+      </div>
+    </div>
 
     <UAlert
       v-if="!hasValidRouteParams"
@@ -258,186 +293,104 @@ watch([ideaId, versionId, hypothesisId], async () => {
 
     <UCard>
       <template #header>
-        <div class="flex flex-wrap items-start gap-3">
-          <div class="min-w-0 flex-1 space-y-2">
-            <USkeleton
-              v-if="isLoading"
-              class="h-7 w-2/3"
-            />
+        <h2 class="text-base font-semibold text-highlighted">
+          {{ $t('ideaWorkspace.hypotheses.detail.overview.title') }}
+        </h2>
+      </template>
 
-            <h2
-              v-else
-              class="text-xl leading-7 font-semibold text-highlighted"
-            >
-              {{ hypothesis?.statement || '-' }}
-            </h2>
-
-            <div class="flex flex-wrap items-center gap-2">
-              <UBadge
-                color="neutral"
-                variant="soft"
-              >
-                {{ hypothesis ? $t(`ideaWorkspace.hypotheses.dimensions.${hypothesis.dimension}`) : '-' }}
-              </UBadge>
-
-              <UBadge
-                :color="priorityColor"
-                variant="soft"
-              >
-                {{ hypothesis ? $t(`ideaWorkspace.hypotheses.priorities.${hypothesis.priority}`) : '-' }}
-              </UBadge>
-
+      <dl class="space-y-4 text-sm">
+        <div class="grid grid-cols-1 gap-3 md:flex md:flex-wrap md:items-start md:gap-4">
+          <div class="grid gap-1">
+            <dt class="font-medium text-muted">
+              {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.status') }}
+            </dt>
+            <dd>
               <UBadge
                 color="neutral"
                 variant="soft"
               >
                 {{ statusLabel }}
               </UBadge>
-            </div>
+            </dd>
           </div>
 
-          <div class="ms-auto flex flex-wrap items-center gap-2">
-            <UButton
-              color="neutral"
-              variant="soft"
-              icon="i-lucide-arrow-left"
-              @click="router.push(listRoute)"
-            >
-              {{ $t('ideaWorkspace.hypotheses.detail.actions.backToList') }}
-            </UButton>
-
-            <UButton
-              color="primary"
-              variant="soft"
-              icon="i-lucide-pencil"
-              :disabled="isLoading || hypothesis === null"
-              @click="openEditModal"
-            >
-              {{ $t('actions.edit') }}
-            </UButton>
-
-            <UButton
-              color="error"
-              variant="soft"
-              icon="i-lucide-trash-2"
-              :disabled="isLoading || hypothesis === null"
-              @click="openDeleteConfirmation"
-            >
-              {{ $t('actions.delete') }}
-            </UButton>
-          </div>
-        </div>
-      </template>
-
-      <div class="space-y-4">
-        <div class="flex flex-wrap gap-2">
-          <UButton
-            v-for="tab in tabs"
-            :key="tab.key"
-            color="neutral"
-            :variant="activeTab === tab.key ? 'solid' : 'soft'"
-            size="sm"
-            @click="activeTab = tab.key"
-          >
-            {{ tab.label }}
-          </UButton>
-        </div>
-
-        <div
-          v-if="activeTab === 'overview'"
-          class="grid gap-4 lg:grid-cols-2"
-        >
-          <UCard>
-            <template #header>
-              <h3 class="text-sm font-semibold text-highlighted">
-                {{ $t('ideaWorkspace.hypotheses.detail.overview.generalInformation') }}
-              </h3>
-            </template>
-
-            <dl class="space-y-3 text-sm">
-              <div class="flex items-start justify-between gap-3">
-                <dt class="text-muted">
-                  {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.statement') }}
-                </dt>
-                <dd class="max-w-[70%] text-right text-highlighted">
-                  {{ hypothesis?.statement || '-' }}
-                </dd>
-              </div>
-
-              <div class="flex items-start justify-between gap-3">
-                <dt class="text-muted">
-                  {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.dimension') }}
-                </dt>
-                <dd class="text-highlighted">
-                  {{ hypothesis ? $t(`ideaWorkspace.hypotheses.dimensions.${hypothesis.dimension}`) : '-' }}
-                </dd>
-              </div>
-
-              <div class="flex items-start justify-between gap-3">
-                <dt class="text-muted">
-                  {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.priority') }}
-                </dt>
-                <dd class="text-highlighted">
-                  {{ hypothesis ? $t(`ideaWorkspace.hypotheses.priorities.${hypothesis.priority}`) : '-' }}
-                </dd>
-              </div>
-
-              <div class="flex items-start justify-between gap-3">
-                <dt class="text-muted">
-                  {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.status') }}
-                </dt>
-                <dd class="text-highlighted">
-                  {{ statusLabel }}
-                </dd>
-              </div>
-            </dl>
-          </UCard>
-
-          <UCard>
-            <template #header>
-              <h3 class="text-sm font-semibold text-highlighted">
-                {{ $t('ideaWorkspace.hypotheses.detail.overview.canvasAssignment') }}
-              </h3>
-            </template>
-
-            <div class="flex flex-wrap gap-2">
+          <div class="grid gap-1">
+            <dt class="font-medium text-muted">
+              {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.dimension') }}
+            </dt>
+            <dd>
               <UBadge
-                v-for="section in hypothesis?.canvasSectionLinks || []"
-                :key="section.id"
                 color="neutral"
                 variant="soft"
               >
-                {{ $t(`ideaWorkspace.canvasPage.sections.${section.canvasElementType}`) }}
+                {{ hypothesis ? $t(`ideaWorkspace.hypotheses.dimensions.${hypothesis.dimension}`) : '-' }}
               </UBadge>
+            </dd>
+          </div>
 
-              <p
-                v-if="(hypothesis?.canvasSectionLinks.length || 0) === 0"
-                class="text-sm text-muted"
+          <div class="grid gap-1">
+            <dt class="font-medium text-muted">
+              {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.priority') }}
+            </dt>
+            <dd>
+              <UBadge
+                :color="priorityColor"
+                variant="soft"
               >
-                {{ $t('ideaWorkspace.hypotheses.detail.overview.canvasEmpty') }}
-              </p>
-            </div>
-          </UCard>
+                {{ hypothesis ? $t(`ideaWorkspace.hypotheses.priorities.${hypothesis.priority}`) : '-' }}
+              </UBadge>
+            </dd>
+          </div>
         </div>
 
-        <UCard v-else-if="activeTab === 'metrics'">
-          <p class="text-sm text-muted">
-            {{ $t('ideaWorkspace.hypotheses.detail.placeholders.metrics') }}
-          </p>
-        </UCard>
+        <div class="grid gap-2">
+          <dt class="font-medium text-muted">
+            {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.canvasAssignments') }}
+          </dt>
 
-        <UCard v-else-if="activeTab === 'experiments'">
-          <p class="text-sm text-muted">
-            {{ $t('ideaWorkspace.hypotheses.detail.placeholders.experiments') }}
-          </p>
-        </UCard>
+          <dd class="flex flex-wrap gap-2">
+            <UBadge
+              v-for="section in hypothesis?.canvasSectionLinks || []"
+              :key="section.id"
+              color="neutral"
+              variant="soft"
+            >
+              {{ $t(`ideaWorkspace.canvasPage.sections.${section.canvasElementType}`) }}
+            </UBadge>
 
-        <UCard v-else>
-          <p class="text-sm text-muted">
-            {{ $t('ideaWorkspace.hypotheses.detail.placeholders.evidence') }}
-          </p>
-        </UCard>
-      </div>
+            <p
+              v-if="(hypothesis?.canvasSectionLinks.length || 0) === 0"
+              class="text-sm text-muted"
+            >
+              {{ $t('ideaWorkspace.hypotheses.detail.overview.canvasEmpty') }}
+            </p>
+          </dd>
+        </div>
+      </dl>
+    </UCard>
+
+    <UCard>
+      <template #header>
+        <h2 class="text-base font-semibold text-highlighted">
+          {{ $t('ideaWorkspace.hypotheses.detail.metrics.title') }}
+        </h2>
+      </template>
+    </UCard>
+
+    <UCard>
+      <template #header>
+        <h2 class="text-base font-semibold text-highlighted">
+          {{ $t('ideaWorkspace.hypotheses.detail.experiments.title') }}
+        </h2>
+      </template>
+    </UCard>
+
+    <UCard>
+      <template #header>
+        <h2 class="text-base font-semibold text-highlighted">
+          {{ $t('ideaWorkspace.hypotheses.detail.evidence.title') }}
+        </h2>
+      </template>
     </UCard>
 
     <IdeaWorkspaceHypothesisFormModal

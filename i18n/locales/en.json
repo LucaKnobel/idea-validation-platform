@@ -476,32 +476,30 @@
       },
       "detail": {
         "title": "Hypothesis details",
-        "description": "Review one hypothesis with focused context, linked canvas areas, and upcoming execution tabs.",
+        "description": "The central workspace for one hypothesis and its validation context.",
         "actions": {
           "retry": "Retry",
-          "backToList": "Back to hypotheses"
-        },
-        "tabs": {
-          "overview": "Overview",
-          "metrics": "Metrics",
-          "experiments": "Experiments",
-          "evidence": "Evidence"
+          "edit": "Edit hypothesis",
+          "delete": "Delete hypothesis"
         },
         "overview": {
-          "generalInformation": "General information",
-          "canvasAssignment": "Canvas assignment",
+          "title": "Overview",
           "canvasEmpty": "No canvas areas linked yet.",
           "fields": {
-            "statement": "Statement",
             "dimension": "Dimension",
             "priority": "Priority",
-            "status": "Status"
+            "status": "Status",
+            "canvasAssignments": "Canvas assignments"
           }
         },
-        "placeholders": {
-          "metrics": "Metrics and thresholds will be managed here in the next iteration.",
-          "experiments": "Experiment planning and latest outcomes will be added here in the next iteration.",
-          "evidence": "Collected evidence and validation notes will be shown here in the next iteration."
+        "metrics": {
+          "title": "Metrics"
+        },
+        "experiments": {
+          "title": "Experiments"
+        },
+        "evidence": {
+          "title": "Evidence"
         },
         "error": {
           "invalidParams": {

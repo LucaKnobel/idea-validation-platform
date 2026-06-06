@@ -476,32 +476,30 @@
       },
       "detail": {
         "title": "Hypothesen-Details",
-        "description": "Prüfen Sie eine Hypothese mit fokussiertem Kontext, verknüpften Canvas-Bereichen und künftigen Execution-Tabs.",
+        "description": "Die zentrale Arbeitsfläche für eine Hypothese und ihren Validierungskontext.",
         "actions": {
           "retry": "Erneut versuchen",
-          "backToList": "Zurück zu den Hypothesen"
-        },
-        "tabs": {
-          "overview": "Übersicht",
-          "metrics": "Metriken",
-          "experiments": "Experimente",
-          "evidence": "Evidenz"
+          "edit": "Hypothese bearbeiten",
+          "delete": "Hypothese löschen"
         },
         "overview": {
-          "generalInformation": "Allgemeine Informationen",
-          "canvasAssignment": "Canvas-Zuordnung",
+          "title": "Übersicht",
           "canvasEmpty": "Noch keine Canvas-Bereiche verknüpft.",
           "fields": {
-            "statement": "Aussage",
             "dimension": "Dimension",
             "priority": "Priorität",
-            "status": "Status"
+            "status": "Status",
+            "canvasAssignments": "Canvas-Zuordnungen"
           }
         },
-        "placeholders": {
-          "metrics": "Metriken und Schwellwerte werden in der nächsten Iteration hier verwaltet.",
-          "experiments": "Experiment-Planung und letzte Ergebnisse werden in der nächsten Iteration hier ergänzt.",
-          "evidence": "Gesammelte Evidenz und Validierungsnotizen werden in der nächsten Iteration hier angezeigt."
+        "metrics": {
+          "title": "Metriken"
+        },
+        "experiments": {
+          "title": "Experimente"
+        },
+        "evidence": {
+          "title": "Evidenz"
         },
         "error": {
           "invalidParams": {
