@@ -9,14 +9,13 @@ interface HypothesesTableProps {
   hypotheses: HypothesisResponseDto[]
   isLoading: boolean
   isDeletingId: string | null
-  detailRoutePrefix: string
 }
 
 const props = defineProps<HypothesesTableProps>()
 
 const emit = defineEmits<{
   (event: 'create'): void
-  (event: 'edit' | 'delete', hypothesis: HypothesisResponseDto): void
+  (event: 'edit' | 'delete' | 'open-details', hypothesis: HypothesisResponseDto): void
 }>()
 
 const { t } = useI18n()
@@ -32,24 +31,6 @@ const {
 } = useHypothesesTable()
 
 /**
- * Opens one hypothesis detail page using the provided route prefix.
- */
-const openDetails = async (hypothesis: HypothesisResponseDto): Promise<void> => {
-  if (props.detailRoutePrefix.length === 0) {
-    return
-  }
-
-  const targetPath = `${props.detailRoutePrefix}/${encodeURIComponent(hypothesis.id)}`
-
-  if (import.meta.client) {
-    window.location.assign(targetPath)
-    return
-  }
-
-  await navigateTo(targetPath)
-}
-
-/**
  * Builds table row actions for the dropdown menu.
  */
 const getDesktopRowItems = (row: Row<HypothesisResponseDto>): DropdownMenuItem[][] => {
@@ -57,7 +38,7 @@ const getDesktopRowItems = (row: Row<HypothesisResponseDto>): DropdownMenuItem[]
     {
       label: t('ideaWorkspace.hypotheses.actions.openDetails'),
       onSelect: () => {
-        void openDetails(row.original)
+        emit('open-details', row.original)
       }
     },
     {
@@ -85,7 +66,7 @@ const getMobileRowItems = (hypothesis: HypothesisResponseDto): DropdownMenuItem[
     {
       label: t('ideaWorkspace.hypotheses.actions.openDetails'),
       onSelect: () => {
-        void openDetails(hypothesis)
+        emit('open-details', hypothesis)
       }
     },
     {
@@ -173,7 +154,7 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
             <button
               type="button"
               class="min-w-0 flex-1 text-left"
-              @click="openDetails(hypothesis)"
+              @click="emit('open-details', hypothesis)"
             >
               <p class="overflow-hidden text-ellipsis whitespace-normal wrap-break-word text-sm leading-5 font-medium text-highlighted [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
                 {{ hypothesis.statement }}
@@ -282,7 +263,7 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
         <button
           type="button"
           class="w-full min-h-10 py-1 text-left"
-          @click="openDetails(row.original)"
+          @click="emit('open-details', row.original)"
         >
           <p class="overflow-hidden text-ellipsis whitespace-normal wrap-break-word text-sm leading-5 font-medium text-highlighted [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
             {{ row.original.statement }}
