@@ -1,15 +1,24 @@
-interface SelectOption<T> {
+/**
+ * Select option shape used by hypothesis form fields.
+ */
+export interface HypothesisFormSelectOption<T> {
   label: string
   value: T
 }
 
-interface UseHypothesisFormConfigComposable {
+/**
+ * Public API for reusable hypothesis form defaults and select options.
+ */
+export interface UseHypothesisFormConfigComposable {
   createEmptyFormState: () => CreateHypothesisBodyDto
-  dimensionOptions: ComputedRef<Array<SelectOption<HypothesisDimension>>>
-  priorityOptions: ComputedRef<Array<SelectOption<HypothesisPriority>>>
-  sectionOptions: ComputedRef<Array<SelectOption<HypothesisCanvasSection>>>
+  dimensionOptions: ComputedRef<Array<HypothesisFormSelectOption<HypothesisDimension>>>
+  priorityOptions: ComputedRef<Array<HypothesisFormSelectOption<HypothesisPriority>>>
+  sectionOptions: ComputedRef<Array<HypothesisFormSelectOption<HypothesisCanvasSection>>>
 }
 
+/**
+ * Centralizes baseline hypothesis form state and translated select options.
+ */
 export const useHypothesisFormConfig = (): UseHypothesisFormConfigComposable => {
   const { t } = useI18n()
 
@@ -22,7 +31,7 @@ export const useHypothesisFormConfig = (): UseHypothesisFormConfigComposable => 
     }
   }
 
-  const dimensionOptions = computed<Array<SelectOption<HypothesisDimension>>>(() => {
+  const dimensionOptions = computed<Array<HypothesisFormSelectOption<HypothesisDimension>>>(() => {
     return [
       { label: t('ideaWorkspace.hypotheses.dimensions.PROBLEM'), value: 'PROBLEM' },
       { label: t('ideaWorkspace.hypotheses.dimensions.SOLUTION'), value: 'SOLUTION' },
@@ -32,7 +41,7 @@ export const useHypothesisFormConfig = (): UseHypothesisFormConfigComposable => 
     ]
   })
 
-  const priorityOptions = computed<Array<SelectOption<HypothesisPriority>>>(() => {
+  const priorityOptions = computed<Array<HypothesisFormSelectOption<HypothesisPriority>>>(() => {
     return [
       { label: t('ideaWorkspace.hypotheses.priorities.HIGH'), value: 'HIGH' },
       { label: t('ideaWorkspace.hypotheses.priorities.MEDIUM'), value: 'MEDIUM' },
@@ -40,7 +49,7 @@ export const useHypothesisFormConfig = (): UseHypothesisFormConfigComposable => 
     ]
   })
 
-  const sectionOptions = computed<Array<SelectOption<HypothesisCanvasSection>>>(() => {
+  const sectionOptions = computed<Array<HypothesisFormSelectOption<HypothesisCanvasSection>>>(() => {
     return [
       { label: t('ideaWorkspace.canvasPage.sections.KEY_PARTNERS'), value: 'KEY_PARTNERS' },
       { label: t('ideaWorkspace.canvasPage.sections.KEY_ACTIVITIES'), value: 'KEY_ACTIVITIES' },

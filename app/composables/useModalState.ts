@@ -1,3 +1,6 @@
+/**
+ * Public API for generic modal open/close state.
+ */
 export interface UseModalStateComposable {
   isOpen: Ref<boolean>
   open: () => void
