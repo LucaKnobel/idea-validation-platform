@@ -1,12 +1,14 @@
 import type { TableColumn } from '@nuxt/ui'
+import type {
+  HypothesisDimension,
+  HypothesisPriority,
+  HypothesisResponseDto
+} from '#shared/types/hypothesis'
 
 /**
  * UI-only status placeholder until domain status is implemented.
  */
 export type HypothesisUiStatus = 'OPEN'
-
-type HypothesisDimension = CreateHypothesisBodyDto['dimension']
-type HypothesisPriority = CreateHypothesisBodyDto['priority']
 
 /**
  * Public API for rendering and controlling the hypotheses table.
