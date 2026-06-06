@@ -1,11 +1,10 @@
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
 import {
-  HypothesisResponseSchema,
   HypothesisRouteParamsSchema,
   type HypothesisResponseDto
 } from '@infrastructure/validation/hypothesis-schemas'
-import type { HypothesisCanvasSection } from '@application/models/hypothesis-canvas-section'
 import { getHypothesis } from '@infrastructure/composition'
+import { toHypothesisResponseDto } from '@infrastructure/mappers/hypothesis-mapper'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
 
 /**
@@ -28,20 +27,5 @@ export default defineProtectedHandler(async (event, userId): Promise<HypothesisR
     hypothesisId: params.hypothesisId
   })
 
-  return HypothesisResponseSchema.parse({
-    id: hypothesis.id,
-    ideaVersionId: hypothesis.ideaVersionId,
-    statement: hypothesis.statement,
-    dimension: hypothesis.dimension,
-    priority: hypothesis.priority,
-    canvasSectionLinks: hypothesis.canvasSectionLinks.map((section: HypothesisCanvasSection) => ({
-      id: section.id,
-      hypothesisId: section.hypothesisId,
-      canvasElementType: section.canvasElementType,
-      createdAt: section.createdAt.toISOString(),
-      updatedAt: section.updatedAt.toISOString()
-    })),
-    createdAt: hypothesis.createdAt.toISOString(),
-    updatedAt: hypothesis.updatedAt.toISOString()
-  })
+  return toHypothesisResponseDto(hypothesis)
 })
