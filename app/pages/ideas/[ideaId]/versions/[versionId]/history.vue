@@ -4,37 +4,16 @@ definePageMeta({
   layout: 'idea-workspace'
 })
 
-const route = useRoute()
+const { ideaId, versionId } = useIdeaVersionRouteParams()
 </script>
 
 <template>
-  <div class="space-y-6">
-    <UPageHeader
-      title="Versions"
-      description="Placeholder page for the versioned idea workspace versions overview."
-    />
-
-    <UCard>
-      <div class="space-y-2">
-        <UBadge
-          color="warning"
-          variant="subtle"
-        >
-          Step 2 Placeholder
-        </UBadge>
-
-        <p class="text-sm text-muted">
-          This page is static and API integration is intentionally not implemented yet.
-        </p>
-
-        <p class="text-xs text-toned">
-          Idea ID: {{ route.params.ideaId || '-' }}
-        </p>
-
-        <p class="text-xs text-toned">
-          Version ID: {{ route.params.versionId || '-' }}
-        </p>
-      </div>
-    </UCard>
-  </div>
+  <IdeaWorkspacePlaceholderPage
+    title="Versions"
+    description="Placeholder page for the versioned idea workspace versions overview."
+    badge-label="Step 2 Placeholder"
+    body-text="This page is static and API integration is intentionally not implemented yet."
+    :idea-id="ideaId"
+    :version-id="versionId"
+  />
 </template>

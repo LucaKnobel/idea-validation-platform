@@ -5,11 +5,8 @@ definePageMeta({
 })
 
 const { t } = useI18n()
-const { showSuccess, showError } = useToastNotification()
-const { ideaId, versionId } = useIdeaVersionRouteParams()
-const hasValidRouteParams = computed(() => {
-  return ideaId.value.length > 0 && versionId.value.length > 0
-})
+const { notifyCanvasSaved, notifyCanvasSaveFailed } = useCanvasNotifications()
+const { ideaId, versionId, hasIdeaVersionRouteParams } = useIdeaVersionRouteParams()
 
 const {
   sectionOrder,
@@ -76,7 +73,7 @@ const sectionLayoutClass: Record<CanvasSectionType, string> = {
 }
 
 const loadCanvasForRoute = async (): Promise<void> => {
-  if (!hasValidRouteParams.value) {
+  if (!hasIdeaVersionRouteParams.value) {
     return
   }
 
@@ -91,7 +88,7 @@ const reloadCanvas = async (): Promise<void> => {
 }
 
 const saveCanvas = async (): Promise<void> => {
-  if (!hasValidRouteParams.value) {
+  if (!hasIdeaVersionRouteParams.value) {
     return
   }
 
@@ -101,10 +98,11 @@ const saveCanvas = async (): Promise<void> => {
   })
 
   if (!saved) {
-    showError('ideaWorkspace.canvasPage.error.title', 'ideaWorkspace.canvasPage.error.message')
+    notifyCanvasSaveFailed()
     return
   }
-  showSuccess('ideaWorkspace.canvasPage.success.title', 'ideaWorkspace.canvasPage.success.message')
+
+  notifyCanvasSaved()
 }
 
 watch([ideaId, versionId], async () => {
