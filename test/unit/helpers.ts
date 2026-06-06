@@ -8,6 +8,9 @@ import type { CanvasElement } from '@application/models/canvas-element'
 import type { HypothesisRepository } from '@application/interfaces/hypothesis-repository'
 import type { Hypothesis } from '@application/models/hypothesis'
 import type { HypothesisCanvasSection } from '@application/models/hypothesis-canvas-section'
+import type { MetricRepository } from '@application/interfaces/metric-repository'
+import type { Metric } from '@application/models/metric'
+import type { MetricThreshold } from '@application/models/metric-threshold'
 import type { SubscriptionService } from '@application/interfaces/subscription-service'
 import type { Logger } from '@interfaces/logger'
 
@@ -106,6 +109,36 @@ export const makeHypothesisRepository = (): HypothesisRepository => ({
   listByIdeaVersionForUser: vi.fn(),
   getByIdForUser: vi.fn(),
   createForIdeaVersion: vi.fn(),
+  updateByIdForUser: vi.fn(),
+  deleteByIdForUser: vi.fn()
+})
+
+export const makeMetricThreshold = (overrides: Partial<MetricThreshold> = {}): MetricThreshold => ({
+  id: 'metric-threshold-001',
+  metricId: 'metric-001',
+  operator: 'GTE',
+  referenceValue: 10,
+  createdAt: new Date(VALID_ISO_DATETIME),
+  updatedAt: new Date(VALID_ISO_DATETIME),
+  ...overrides
+})
+
+export const makeMetric = (overrides: Partial<Metric> = {}): Metric => ({
+  id: 'metric-001',
+  hypothesisId: 'hypothesis-001',
+  name: 'Conversion Rate',
+  description: 'Measures sign-up conversion.',
+  dataType: 'PERCENT',
+  unit: '%',
+  threshold: makeMetricThreshold(),
+  createdAt: new Date(VALID_ISO_DATETIME),
+  updatedAt: new Date(VALID_ISO_DATETIME),
+  ...overrides
+})
+
+export const makeMetricRepository = (): MetricRepository => ({
+  listByHypothesisForUser: vi.fn(),
+  createForHypothesis: vi.fn(),
   updateByIdForUser: vi.fn(),
   deleteByIdForUser: vi.fn()
 })

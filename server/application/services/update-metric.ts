@@ -1,5 +1,6 @@
 import type { MetricRepository } from '@application/interfaces/metric-repository'
-import type { Metric, MetricDataType } from '@application/models/metric'
+import { inferMetricDataType, type Metric } from '@application/models/metric'
+import type { ThresholdOperator } from '@application/models/metric-threshold'
 import type { Logger } from '@interfaces/logger'
 import { MetricNotFoundError } from '@application/errors/metric-errors'
 
@@ -11,8 +12,11 @@ export type UpdateMetricInput = {
   metricId: string
   name: string
   description: string | null
-  dataType: MetricDataType
   unit: string | null
+  threshold: {
+    operator: ThresholdOperator
+    referenceValue: number
+  }
 }
 
 /**
@@ -20,6 +24,9 @@ export type UpdateMetricInput = {
  */
 export const createUpdateMetric = (metricRepository: MetricRepository, logger: Logger) => {
   return async (input: UpdateMetricInput): Promise<Metric> => {
+    const normalizedDescription = input.description?.trim() || null
+    const normalizedUnit = input.unit?.trim() || null
+
     const metric = await metricRepository.updateByIdForUser({
       userId: input.userId,
       ideaId: input.ideaId,
@@ -27,9 +34,10 @@ export const createUpdateMetric = (metricRepository: MetricRepository, logger: L
       hypothesisId: input.hypothesisId,
       metricId: input.metricId,
       name: input.name.trim(),
-      description: input.description,
-      dataType: input.dataType,
-      unit: input.unit
+      description: normalizedDescription,
+      dataType: inferMetricDataType(normalizedUnit),
+      unit: normalizedUnit,
+      threshold: input.threshold
     })
 
     if (metric === null) {
