@@ -1,8 +1,8 @@
 import { enforceRateLimit } from '@server/infrastructure/rate-limit/enforce-rate-limit'
-import { CreateIdeaBodySchema, IdeaResponseSchema, type IdeaResponseDto } from '@infrastructure/validation/idea-schemas'
+import { CreateIdeaBodySchema, type IdeaResponseDto } from '@infrastructure/validation/idea-schemas'
 import { createIdea } from '@infrastructure/composition'
+import { toIdeaResponseDto } from '@infrastructure/mappers/idea-mapper'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
-import { getLatestIdeaVersion } from '@application/models/idea'
 
 /**
  * Creates a new idea for the authenticated user.
@@ -23,14 +23,6 @@ export default defineProtectedHandler(async (event, userId): Promise<IdeaRespons
     description: body.description && body.description.length > 0 ? body.description : null
   })
 
-  const latestVersion = getLatestIdeaVersion(createdIdea)
   setResponseStatus(event, 201)
-  return IdeaResponseSchema.parse({
-    id: createdIdea.id,
-    latestVersionId: latestVersion.id,
-    title: latestVersion.title,
-    description: latestVersion.description,
-    createdAt: createdIdea.createdAt.toISOString(),
-    updatedAt: createdIdea.updatedAt.toISOString()
-  })
+  return toIdeaResponseDto(createdIdea)
 })
