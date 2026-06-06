@@ -18,11 +18,14 @@ export interface UseHypothesisDetailsComposable {
  */
 export const useHypothesisDetails = (): UseHypothesisDetailsComposable => {
   const { getHypothesis } = useHypothesesApi()
-  const { handleRateLimitError } = useErrorHandler()
+  const {
+    hasError,
+    resetRequestError,
+    runWithErrorHandling
+  } = useRequestErrorState()
 
   const hypothesis = ref<HypothesisResponseDto | null>(null)
   const isLoading = ref(false)
-  const hasError = ref(false)
 
   const loadHypothesis = async (input: {
     ideaId: string
@@ -30,20 +33,18 @@ export const useHypothesisDetails = (): UseHypothesisDetailsComposable => {
     hypothesisId: string
   }): Promise<HypothesisResponseDto | null> => {
     isLoading.value = true
-    hasError.value = false
 
     try {
-      const response = await getHypothesis(input)
-      hypothesis.value = response
-      return response
-    } catch (error: unknown) {
-      if (handleRateLimitError(error)) {
-        return null
-      }
-
-      hasError.value = true
-      hypothesis.value = null
-      return null
+      return await runWithErrorHandling(async () => {
+        const response = await getHypothesis(input)
+        hypothesis.value = response
+        return response
+      }, {
+        fallback: null,
+        onError: () => {
+          hypothesis.value = null
+        }
+      })
     } finally {
       isLoading.value = false
     }
@@ -51,7 +52,7 @@ export const useHypothesisDetails = (): UseHypothesisDetailsComposable => {
 
   const clearHypothesis = (): void => {
     hypothesis.value = null
-    hasError.value = false
+    resetRequestError()
   }
 
   return {
