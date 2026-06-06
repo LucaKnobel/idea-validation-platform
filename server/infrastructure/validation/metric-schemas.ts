@@ -13,21 +13,27 @@ export const MetricDataTypeSchema = z.enum(metricDataTypes)
 
 export const ThresholdOperatorSchema = z.enum(thresholdOperators)
 
+const NullableMetricStringSchema = (maxLength: number, tooLongMessage: string) => z.string()
+  .trim()
+  .max(maxLength, tooLongMessage)
+  .nullable()
+  .transform(value => value && value.length > 0 ? value : null)
+
+export const MetricThresholdInputSchema = z.object({
+  operator: ThresholdOperatorSchema,
+  referenceValue: z.number().finite('Metric reference value must be a finite number')
+})
+
 export const UpsertMetricBodySchema = z.object({
   name: z.string().trim().min(1, 'Metric name is required').max(200, 'Metric name is too long'),
-  description: z.string().trim().max(1000, 'Metric description is too long').nullable(),
-  dataType: MetricDataTypeSchema,
-  unit: z.string().trim().max(100, 'Metric unit is too long').nullable()
+  description: NullableMetricStringSchema(1000, 'Metric description is too long'),
+  unit: NullableMetricStringSchema(100, 'Metric unit is too long'),
+  threshold: MetricThresholdInputSchema
 })
 
 export const CreateMetricBodySchema = UpsertMetricBodySchema
 
 export const UpdateMetricBodySchema = UpsertMetricBodySchema
-
-export const UpsertMetricThresholdBodySchema = z.object({
-  operator: ThresholdOperatorSchema,
-  referenceValue: z.number()
-})
 
 export const MetricThresholdResponseSchema = z.object({
   id: z.uuid(),
@@ -58,7 +64,6 @@ export type MetricCollectionRouteParamsDto = z.infer<typeof MetricCollectionRout
 export type MetricRouteParamsDto = z.infer<typeof MetricRouteParamsSchema>
 export type CreateMetricBodyDto = z.infer<typeof CreateMetricBodySchema>
 export type UpdateMetricBodyDto = z.infer<typeof UpdateMetricBodySchema>
-export type UpsertMetricThresholdBodyDto = z.infer<typeof UpsertMetricThresholdBodySchema>
 export type MetricThresholdResponseDto = z.infer<typeof MetricThresholdResponseSchema>
 export type MetricResponseDto = z.infer<typeof MetricResponseSchema>
 export type MetricsListResponseDto = z.infer<typeof MetricsListResponseSchema>

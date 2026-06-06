@@ -1,10 +1,10 @@
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
 import {
   MetricRouteParamsSchema,
-  MetricResponseSchema,
   UpdateMetricBodySchema,
   type MetricResponseDto
 } from '@infrastructure/validation/metric-schemas'
+import { toMetricResponseDto } from '@infrastructure/mappers/metric-mapper'
 import { updateMetric } from '@infrastructure/composition'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
 
@@ -30,28 +30,9 @@ export default defineProtectedHandler(async (event, userId): Promise<MetricRespo
     metricId: params.metricId,
     name: body.name,
     description: body.description,
-    dataType: body.dataType,
-    unit: body.unit
+    unit: body.unit,
+    threshold: body.threshold
   })
 
-  return MetricResponseSchema.parse({
-    id: metric.id,
-    hypothesisId: metric.hypothesisId,
-    name: metric.name,
-    description: metric.description,
-    dataType: metric.dataType,
-    unit: metric.unit,
-    threshold: metric.threshold
-      ? {
-          id: metric.threshold.id,
-          metricId: metric.threshold.metricId,
-          operator: metric.threshold.operator,
-          referenceValue: metric.threshold.referenceValue,
-          createdAt: metric.threshold.createdAt.toISOString(),
-          updatedAt: metric.threshold.updatedAt.toISOString()
-        }
-      : null,
-    createdAt: metric.createdAt.toISOString(),
-    updatedAt: metric.updatedAt.toISOString()
-  })
+  return toMetricResponseDto(metric)
 })

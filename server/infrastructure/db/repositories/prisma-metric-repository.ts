@@ -102,7 +102,13 @@ export const metricRepository: MetricRepository = {
         name: input.name,
         description: input.description,
         dataType: input.dataType,
-        unit: input.unit
+        unit: input.unit,
+        threshold: {
+          create: {
+            operator: input.threshold.operator,
+            referenceValue: input.threshold.referenceValue
+          }
+        }
       },
       include: {
         threshold: true
@@ -118,32 +124,45 @@ export const metricRepository: MetricRepository = {
   async updateByIdForUser(input: MetricMutationInput): Promise<Metric | null> {
     const where = buildOwnedMetricWhere(input)
 
-    const updatedRows = await prisma.metric.updateMany({
-      where,
-      data: {
-        name: input.name,
-        description: input.description,
-        dataType: input.dataType,
-        unit: input.unit
+    return prisma.$transaction(async (tx) => {
+      const existingMetric = await tx.metric.findFirst({
+        where,
+        select: { id: true }
+      })
+
+      if (existingMetric === null) {
+        return null
       }
+
+      const row = await tx.metric.update({
+        where: {
+          id: existingMetric.id
+        },
+        data: {
+          name: input.name,
+          description: input.description,
+          dataType: input.dataType,
+          unit: input.unit,
+          threshold: {
+            upsert: {
+              create: {
+                operator: input.threshold.operator,
+                referenceValue: input.threshold.referenceValue
+              },
+              update: {
+                operator: input.threshold.operator,
+                referenceValue: input.threshold.referenceValue
+              }
+            }
+          }
+        },
+        include: {
+          threshold: true
+        }
+      })
+
+      return toDomainMetric(row)
     })
-
-    if (updatedRows.count === 0) {
-      return null
-    }
-
-    const row = await prisma.metric.findFirst({
-      where,
-      include: {
-        threshold: true
-      }
-    })
-
-    if (row === null) {
-      return null
-    }
-
-    return toDomainMetric(row)
   },
 
   /**

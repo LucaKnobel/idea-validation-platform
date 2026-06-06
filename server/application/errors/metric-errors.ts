@@ -9,13 +9,3 @@ export class MetricNotFoundError extends ApplicationError {
     this.name = 'MetricNotFoundError'
   }
 }
-
-/**
- * Raised when a metric threshold cannot be found for the current user.
- */
-export class MetricThresholdNotFoundError extends ApplicationError {
-  constructor() {
-    super('Metric threshold not found.')
-    this.name = 'MetricThresholdNotFoundError'
-  }
-}

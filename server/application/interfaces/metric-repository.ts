@@ -1,11 +1,18 @@
 import type { Metric, MetricDataType } from '@application/models/metric'
 import type { HypothesisOwnerInput, MetricOwnerInput } from '@application/interfaces/ownership-inputs'
+import type { ThresholdOperator } from '@application/models/metric-threshold'
+
+export type MetricThresholdFieldsInput = {
+  operator: ThresholdOperator
+  referenceValue: number
+}
 
 export type MetricFieldsInput = {
   name: string
   description: string | null
   dataType: MetricDataType
   unit: string | null
+  threshold: MetricThresholdFieldsInput
 }
 
 export type MetricWriteInput = HypothesisOwnerInput & MetricFieldsInput
