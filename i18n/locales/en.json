@@ -442,7 +442,8 @@
       "actions": {
         "create": "Create hypothesis",
         "update": "Update hypothesis",
-        "deleteConfirm": "Delete hypothesis"
+        "deleteConfirm": "Delete hypothesis",
+        "openDetails": "Open details"
       },
       "status": {
         "OPEN": "Open"
@@ -460,19 +461,10 @@
         "LOW": "Low"
       },
       "table": {
-        "actions": {
-          "expand": "Expand row",
-          "collapse": "Collapse row"
-        },
-        "filters": {
-          "placeholder": "Filter status",
-          "all": "All statuses"
-        },
         "columns": {
           "statement": "Statement",
           "dimension": "Dimension",
           "priority": "Priority",
-          "sections": "Canvas sections",
           "status": "Status",
           "actions": "Actions"
         },
@@ -481,20 +473,6 @@
       "empty": {
         "title": "No hypotheses yet",
         "description": "Start with your riskiest assumptions and link each one to a canvas section."
-      },
-      "expanded": {
-        "canvas": {
-          "title": "Canvas areas",
-          "empty": "No canvas areas linked yet."
-        },
-        "metrics": {
-          "title": "Experiment metrics overview",
-          "placeholder": "Metric definitions and thresholds for this hypothesis will appear here next."
-        },
-        "experiments": {
-          "title": "Experiments overview",
-          "placeholder": "Linked experiments and latest outcomes will be shown here in the next step."
-        }
       },
       "detail": {
         "title": "Hypothesis details",
