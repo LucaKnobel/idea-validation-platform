@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { CreateHypothesisBodyDto } from '#shared/types/hypothesis'
-
 definePageMeta({
   middleware: ['auth-middleware'],
   layout: 'idea-workspace'
@@ -10,6 +8,12 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 const { showSuccess, showError } = useToastNotification()
 const { createHypothesisFormSchema } = useValidation()
+const {
+  createEmptyFormState,
+  dimensionOptions,
+  priorityOptions,
+  sectionOptions
+} = useHypothesisFormConfig()
 const { ideaId, versionId, hasIdeaVersionRouteParams } = useIdeaVersionRouteParams()
 
 const {
@@ -24,22 +28,6 @@ const {
   updateHypothesis: updateHypothesisData,
   deleteHypothesis: deleteHypothesisData
 } = useHypotheses()
-
-type HypothesisDimension = CreateHypothesisBodyDto['dimension']
-type HypothesisPriority = CreateHypothesisBodyDto['priority']
-type HypothesisCanvasSection = CreateHypothesisBodyDto['canvasSectionTypes'][number]
-
-/**
- * Builds the baseline create payload used when opening the create modal.
- */
-const createEmptyFormState = (): CreateHypothesisBodyDto => {
-  return {
-    statement: '',
-    dimension: 'PROBLEM',
-    priority: 'MEDIUM',
-    canvasSectionTypes: []
-  }
-}
 
 const formSchema = createHypothesisFormSchema()
 const {
@@ -66,38 +54,6 @@ const {
   closeDeleteModal
 } = useHypothesisDeleteModal()
 
-const dimensionOptions = computed<Array<{ label: string, value: HypothesisDimension }>>(() => {
-  return [
-    { label: t('ideaWorkspace.hypotheses.dimensions.PROBLEM'), value: 'PROBLEM' },
-    { label: t('ideaWorkspace.hypotheses.dimensions.SOLUTION'), value: 'SOLUTION' },
-    { label: t('ideaWorkspace.hypotheses.dimensions.MARKET'), value: 'MARKET' },
-    { label: t('ideaWorkspace.hypotheses.dimensions.MONETIZATION'), value: 'MONETIZATION' },
-    { label: t('ideaWorkspace.hypotheses.dimensions.EXECUTION'), value: 'EXECUTION' }
-  ]
-})
-
-const priorityOptions = computed<Array<{ label: string, value: HypothesisPriority }>>(() => {
-  return [
-    { label: t('ideaWorkspace.hypotheses.priorities.HIGH'), value: 'HIGH' },
-    { label: t('ideaWorkspace.hypotheses.priorities.MEDIUM'), value: 'MEDIUM' },
-    { label: t('ideaWorkspace.hypotheses.priorities.LOW'), value: 'LOW' }
-  ]
-})
-
-const sectionOptions = computed<Array<{ label: string, value: HypothesisCanvasSection }>>(() => {
-  return [
-    { label: t('ideaWorkspace.canvasPage.sections.KEY_PARTNERS'), value: 'KEY_PARTNERS' },
-    { label: t('ideaWorkspace.canvasPage.sections.KEY_ACTIVITIES'), value: 'KEY_ACTIVITIES' },
-    { label: t('ideaWorkspace.canvasPage.sections.VALUE_PROPOSITIONS'), value: 'VALUE_PROPOSITIONS' },
-    { label: t('ideaWorkspace.canvasPage.sections.CUSTOMER_RELATIONSHIPS'), value: 'CUSTOMER_RELATIONSHIPS' },
-    { label: t('ideaWorkspace.canvasPage.sections.CUSTOMER_SEGMENTS'), value: 'CUSTOMER_SEGMENTS' },
-    { label: t('ideaWorkspace.canvasPage.sections.KEY_RESOURCES'), value: 'KEY_RESOURCES' },
-    { label: t('ideaWorkspace.canvasPage.sections.CHANNELS'), value: 'CHANNELS' },
-    { label: t('ideaWorkspace.canvasPage.sections.COST_STRUCTURE'), value: 'COST_STRUCTURE' },
-    { label: t('ideaWorkspace.canvasPage.sections.REVENUE_STREAMS'), value: 'REVENUE_STREAMS' }
-  ]
-})
-
 /**
  * Navigates from list/table context to the dedicated hypothesis detail page.
  */
@@ -106,7 +62,7 @@ const openHypothesisDetails = async (hypothesis: HypothesisResponseDto): Promise
     return
   }
 
-  const target = localePath(`/ideas/${ideaId.value}/versions/${versionId.value}/hypotheses/${encodeURIComponent(hypothesis.id)}`)
+  const target = localePath(`/ideas/${ideaId.value}/versions/${versionId.value}/hypotheses/${hypothesis.id}`)
 
   await navigateTo(target)
 }
