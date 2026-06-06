@@ -35,9 +35,6 @@ const {
   statusLabel: getStatusLabel
 } = useHypothesesTable()
 
-const isUpdating = ref(false)
-const isDeleting = ref(false)
-
 const formSchema = createHypothesisFormSchema()
 
 const {
@@ -48,6 +45,8 @@ const {
   deleteCandidate,
   isUpdateModalOpen,
   isDeleteModalOpen,
+  isUpdateActionSubmitting,
+  isDeleteActionSubmitting,
   openEditModal,
   openDeleteConfirmation,
   runUpdateAction,
@@ -104,8 +103,6 @@ const onUpdateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
     return
   }
 
-  isUpdating.value = true
-
   try {
     await runUpdateAction(async () => {
       const updated = await updateHypothesisRequest({
@@ -122,8 +119,6 @@ const onUpdateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
     if (handleRateLimitError(error)) {
       return
     }
-  } finally {
-    isUpdating.value = false
   }
 }
 
@@ -131,8 +126,6 @@ const confirmDeleteHypothesis = async (): Promise<void> => {
   if (!hasValidRouteParams.value || deleteCandidate.value === null) {
     return
   }
-
-  isDeleting.value = true
 
   try {
     const deleteHypothesisId = deleteCandidate.value.id
@@ -152,8 +145,6 @@ const confirmDeleteHypothesis = async (): Promise<void> => {
     if (handleRateLimitError(error)) {
       return
     }
-  } finally {
-    isDeleting.value = false
   }
 }
 
@@ -346,7 +337,7 @@ watch([ideaId, versionId, hypothesisId], async () => {
       :title="updateFormTitle"
       :submit-label="updateSubmitLabel"
       :open="isUpdateModalOpen"
-      :is-submitting="isUpdating"
+      :is-submitting="isUpdateActionSubmitting"
       :dimension-options="dimensionOptions"
       :priority-options="priorityOptions"
       :section-options="sectionOptions"
@@ -357,7 +348,7 @@ watch([ideaId, versionId, hypothesisId], async () => {
     <IdeaWorkspaceHypothesisDeleteModal
       :open="isDeleteModalOpen"
       :delete-candidate="deleteCandidate"
-      :is-submitting="isDeleting"
+      :is-submitting="isDeleteActionSubmitting"
       @update:open="isDeleteModalOpen = $event"
       @confirm-delete="confirmDeleteHypothesis"
     />
