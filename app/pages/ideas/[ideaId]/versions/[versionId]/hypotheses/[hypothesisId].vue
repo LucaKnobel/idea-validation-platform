@@ -4,8 +4,6 @@ definePageMeta({
   layout: 'idea-workspace'
 })
 
-const localePath = useLocalePath()
-const { showSuccess, showError } = useToastNotification()
 const { createHypothesisFormSchema } = useValidation()
 const {
   createEmptyFormState,
@@ -19,6 +17,7 @@ const {
   hypothesisId,
   hasIdeaVersionHypothesisRouteParams
 } = useIdeaVersionRouteParams()
+const { toHypothesesList } = useIdeaWorkspaceLinks()
 const {
   hypothesis,
   isLoading,
@@ -42,21 +41,20 @@ const isDeleting = ref(false)
 const formSchema = createHypothesisFormSchema()
 
 const {
-  formState: updateFormState,
+  updateFormTitle,
+  updateSubmitLabel,
+  updateFormState,
   formHypothesisId,
+  deleteCandidate,
   isUpdateModalOpen,
-  openUpdateModal,
-  closeUpdateModal
-} = useHypothesisUpdateModal({
+  isDeleteModalOpen,
+  openEditModal,
+  openDeleteConfirmation,
+  runUpdateAction,
+  runDeleteAction
+} = useHypothesisModalActions({
   createEmptyFormState
 })
-
-const {
-  deleteCandidate,
-  isDeleteModalOpen,
-  openDeleteModal,
-  closeDeleteModal
-} = useHypothesisDeleteModal()
 
 const hasValidRouteParams = computed(() => {
   return hasIdeaVersionHypothesisRouteParams.value
@@ -77,8 +75,16 @@ const priorityColor = computed(() => {
 })
 
 const listRoute = computed(() => {
-  return localePath(`/ideas/${ideaId.value}/versions/${versionId.value}/hypotheses`)
+  return toHypothesesList()
 })
+
+const openHypothesisEditModal = (): void => {
+  openEditModal(hypothesis.value)
+}
+
+const openHypothesisDeleteConfirmation = (): void => {
+  openDeleteConfirmation(hypothesis.value)
+}
 
 const loadHypothesisForRoute = async (): Promise<void> => {
   if (!hasValidRouteParams.value) {
@@ -93,22 +99,6 @@ const loadHypothesisForRoute = async (): Promise<void> => {
   })
 }
 
-const openEditModal = (): void => {
-  if (hypothesis.value === null) {
-    return
-  }
-
-  openUpdateModal(hypothesis.value)
-}
-
-const openDeleteConfirmation = (): void => {
-  if (hypothesis.value === null) {
-    return
-  }
-
-  openDeleteModal(hypothesis.value)
-}
-
 const onUpdateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
   if (!hasValidRouteParams.value || formHypothesisId.value === null) {
     return
@@ -117,22 +107,21 @@ const onUpdateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
   isUpdating.value = true
 
   try {
-    const updated = await updateHypothesisRequest({
-      ideaId: ideaId.value,
-      versionId: versionId.value,
-      hypothesisId: formHypothesisId.value,
-      body: data
-    })
+    await runUpdateAction(async () => {
+      const updated = await updateHypothesisRequest({
+        ideaId: ideaId.value,
+        versionId: versionId.value,
+        hypothesisId: formHypothesisId.value || '',
+        body: data
+      })
 
-    hypothesis.value = updated
-    showSuccess('ideaWorkspace.hypotheses.success.update.title', 'ideaWorkspace.hypotheses.success.update.message')
-    closeUpdateModal()
+      hypothesis.value = updated
+      return true
+    })
   } catch (error: unknown) {
     if (handleRateLimitError(error)) {
       return
     }
-
-    showError('ideaWorkspace.hypotheses.error.update.title', 'ideaWorkspace.hypotheses.error.update.message')
   } finally {
     isUpdating.value = false
   }
@@ -146,21 +135,23 @@ const confirmDeleteHypothesis = async (): Promise<void> => {
   isDeleting.value = true
 
   try {
-    await deleteHypothesisRequest({
-      ideaId: ideaId.value,
-      versionId: versionId.value,
-      hypothesisId: deleteCandidate.value.id
-    })
+    const deleteHypothesisId = deleteCandidate.value.id
 
-    showSuccess('ideaWorkspace.hypotheses.success.delete.title', 'ideaWorkspace.hypotheses.success.delete.message')
-    closeDeleteModal()
-    await navigateTo(listRoute.value, { replace: true })
+    await runDeleteAction(async () => {
+      await deleteHypothesisRequest({
+        ideaId: ideaId.value,
+        versionId: versionId.value,
+        hypothesisId: deleteHypothesisId
+      })
+
+      return true
+    }, async () => {
+      await navigateTo(listRoute.value, { replace: true })
+    })
   } catch (error: unknown) {
     if (handleRateLimitError(error)) {
       return
     }
-
-    showError('ideaWorkspace.hypotheses.error.delete.title', 'ideaWorkspace.hypotheses.error.delete.message')
   } finally {
     isDeleting.value = false
   }
@@ -201,7 +192,7 @@ watch([ideaId, versionId, hypothesisId], async () => {
           variant="soft"
           icon="i-lucide-pencil"
           :disabled="isLoading || hypothesis === null"
-          @click="openEditModal"
+          @click="openHypothesisEditModal"
         >
           {{ $t('ideaWorkspace.hypotheses.detail.actions.edit') }}
         </UButton>
@@ -211,7 +202,7 @@ watch([ideaId, versionId, hypothesisId], async () => {
           variant="soft"
           icon="i-lucide-trash-2"
           :disabled="isLoading || hypothesis === null"
-          @click="openDeleteConfirmation"
+          @click="openHypothesisDeleteConfirmation"
         >
           {{ $t('ideaWorkspace.hypotheses.detail.actions.delete') }}
         </UButton>
@@ -352,8 +343,8 @@ watch([ideaId, versionId, hypothesisId], async () => {
     <IdeaWorkspaceHypothesisFormModal
       :form-schema="formSchema"
       :initial-state="updateFormState"
-      :title="$t('ideaWorkspace.hypotheses.modal.editTitle')"
-      :submit-label="$t('ideaWorkspace.hypotheses.actions.update')"
+      :title="updateFormTitle"
+      :submit-label="updateSubmitLabel"
       :open="isUpdateModalOpen"
       :is-submitting="isUpdating"
       :dimension-options="dimensionOptions"

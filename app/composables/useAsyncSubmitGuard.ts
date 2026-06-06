@@ -1,3 +1,6 @@
+/**
+ * Public API for guarded async form submission.
+ */
 export interface UseAsyncSubmitGuardComposable {
   isSubmitting: Ref<boolean>
   runWithSubmitGuard: <T>(operation: () => Promise<T>) => Promise<T | undefined>

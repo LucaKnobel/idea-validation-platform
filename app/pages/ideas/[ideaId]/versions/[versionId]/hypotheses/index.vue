@@ -4,9 +4,6 @@ definePageMeta({
   layout: 'idea-workspace'
 })
 
-const { t } = useI18n()
-const localePath = useLocalePath()
-const { showSuccess, showError } = useToastNotification()
 const { createHypothesisFormSchema } = useValidation()
 const {
   createEmptyFormState,
@@ -15,6 +12,7 @@ const {
   sectionOptions
 } = useHypothesisFormConfig()
 const { ideaId, versionId, hasIdeaVersionRouteParams } = useIdeaVersionRouteParams()
+const { toHypothesisDetails } = useIdeaWorkspaceLinks()
 
 const {
   hypotheses,
@@ -31,28 +29,26 @@ const {
 
 const formSchema = createHypothesisFormSchema()
 const {
-  formState: createFormState,
-  isCreateModalOpen,
-  openCreateModal,
-  closeCreateModal
-} = useHypothesisCreateModal({
-  createEmptyFormState
-})
-const {
-  formState: updateFormState,
+  createFormTitle,
+  createSubmitLabel,
+  createFormState,
+  updateFormTitle,
+  updateSubmitLabel,
+  updateFormState,
   formHypothesisId,
+  deleteCandidate,
+  isCreateModalOpen,
   isUpdateModalOpen,
+  isDeleteModalOpen,
+  openCreateModal,
   openUpdateModal,
-  closeUpdateModal
-} = useHypothesisUpdateModal({
+  openDeleteModal,
+  runCreateAction,
+  runUpdateAction,
+  runDeleteAction
+} = useHypothesisModalActions({
   createEmptyFormState
 })
-const {
-  deleteCandidate,
-  isDeleteModalOpen,
-  openDeleteModal,
-  closeDeleteModal
-} = useHypothesisDeleteModal()
 
 /**
  * Navigates from list/table context to the dedicated hypothesis detail page.
@@ -62,7 +58,7 @@ const openHypothesisDetails = async (hypothesis: HypothesisResponseDto): Promise
     return
   }
 
-  const target = localePath(`/ideas/${ideaId.value}/versions/${versionId.value}/hypotheses/${hypothesis.id}`)
+  const target = toHypothesisDetails(hypothesis.id)
 
   await navigateTo(target)
 }
@@ -88,19 +84,16 @@ const onCreateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
   if (!hasIdeaVersionRouteParams.value) {
     return
   }
-  const created = await createHypothesisData({
-    ideaId: ideaId.value,
-    versionId: versionId.value,
-    body: data
+
+  await runCreateAction(async () => {
+    const created = await createHypothesisData({
+      ideaId: ideaId.value,
+      versionId: versionId.value,
+      body: data
+    })
+
+    return created !== null
   })
-
-  if (created === null) {
-    showError('ideaWorkspace.hypotheses.error.create.title', 'ideaWorkspace.hypotheses.error.create.message')
-    return
-  }
-
-  showSuccess('ideaWorkspace.hypotheses.success.create.title', 'ideaWorkspace.hypotheses.success.create.message')
-  closeCreateModal()
 }
 
 /**
@@ -115,20 +108,16 @@ const onUpdateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
     return
   }
 
-  const updated = await updateHypothesisData({
-    ideaId: ideaId.value,
-    versionId: versionId.value,
-    hypothesisId: formHypothesisId.value,
-    body: data
+  await runUpdateAction(async () => {
+    const updated = await updateHypothesisData({
+      ideaId: ideaId.value,
+      versionId: versionId.value,
+      hypothesisId: formHypothesisId.value || '',
+      body: data
+    })
+
+    return updated !== null
   })
-
-  if (updated === null) {
-    showError('ideaWorkspace.hypotheses.error.update.title', 'ideaWorkspace.hypotheses.error.update.message')
-    return
-  }
-
-  showSuccess('ideaWorkspace.hypotheses.success.update.title', 'ideaWorkspace.hypotheses.success.update.message')
-  closeUpdateModal()
 }
 
 /**
@@ -145,36 +134,14 @@ const confirmDeleteHypothesis = async (): Promise<void> => {
 
   const hypothesisId = deleteCandidate.value.id
 
-  const deleted = await deleteHypothesisData({
-    ideaId: ideaId.value,
-    versionId: versionId.value,
-    hypothesisId
+  await runDeleteAction(async () => {
+    return await deleteHypothesisData({
+      ideaId: ideaId.value,
+      versionId: versionId.value,
+      hypothesisId
+    })
   })
-
-  if (!deleted) {
-    showError('ideaWorkspace.hypotheses.error.delete.title', 'ideaWorkspace.hypotheses.error.delete.message')
-    return
-  }
-
-  showSuccess('ideaWorkspace.hypotheses.success.delete.title', 'ideaWorkspace.hypotheses.success.delete.message')
-  closeDeleteModal()
 }
-
-const formTitle = computed(() => {
-  return t('ideaWorkspace.hypotheses.modal.createTitle')
-})
-
-const formSubmitLabel = computed(() => {
-  return t('ideaWorkspace.hypotheses.actions.create')
-})
-
-const updateFormTitle = computed(() => {
-  return t('ideaWorkspace.hypotheses.modal.editTitle')
-})
-
-const updateFormSubmitLabel = computed(() => {
-  return t('ideaWorkspace.hypotheses.actions.update')
-})
 
 /**
  * Maps form mode + active request states to the primary form submit loading state.
@@ -258,8 +225,8 @@ watch([ideaId, versionId], async () => {
     <IdeaWorkspaceHypothesisFormModal
       :form-schema="formSchema"
       :initial-state="createFormState"
-      :title="formTitle"
-      :submit-label="formSubmitLabel"
+      :title="createFormTitle"
+      :submit-label="createSubmitLabel"
       :open="isCreateModalOpen"
       :is-submitting="isCreateFormSubmitting"
       :dimension-options="dimensionOptions"
@@ -273,7 +240,7 @@ watch([ideaId, versionId], async () => {
       :form-schema="formSchema"
       :initial-state="updateFormState"
       :title="updateFormTitle"
-      :submit-label="updateFormSubmitLabel"
+      :submit-label="updateSubmitLabel"
       :open="isUpdateModalOpen"
       :is-submitting="isUpdateFormSubmitting"
       :dimension-options="dimensionOptions"

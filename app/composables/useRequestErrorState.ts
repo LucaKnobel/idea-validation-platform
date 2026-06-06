@@ -1,8 +1,14 @@
+/**
+ * Options for one rate-limit-aware request execution.
+ */
 interface RunWithErrorHandlingOptions<T> {
   fallback: T
   onError?: () => void
 }
 
+/**
+ * Public API for shared request error state and error-aware execution.
+ */
 export interface UseRequestErrorStateComposable {
   hasError: Ref<boolean>
   resetRequestError: () => void
