@@ -597,7 +597,34 @@
           }
         },
         "experiments": {
-          "title": "Experiments"
+          "title": "Experiments",
+          "count": "{count} experiments",
+          "noDescription": "No description",
+          "noTemplate": "Manual experiment",
+          "actions": {
+            "create": "Create experiment",
+            "createFirst": "Add first experiment"
+          },
+          "fields": {
+            "status": "Status",
+            "template": "Template"
+          },
+          "status": {
+            "PLANNED": "Planned",
+            "RUNNING": "Running",
+            "COMPLETED": "Completed",
+            "CANCELLED": "Cancelled"
+          },
+          "empty": {
+            "title": "No experiments yet",
+            "description": "Add your first experiment to test this hypothesis with observable evidence."
+          },
+          "error": {
+            "load": {
+              "title": "Could not load experiments",
+              "message": "Please try again in a moment."
+            }
+          }
         },
         "evidence": {
           "title": "Evidence"

@@ -597,7 +597,34 @@
           }
         },
         "experiments": {
-          "title": "Experimente"
+          "title": "Experimente",
+          "count": "{count} Experimente",
+          "noDescription": "Keine Beschreibung",
+          "noTemplate": "Manuelles Experiment",
+          "actions": {
+            "create": "Experiment erstellen",
+            "createFirst": "Erstes Experiment hinzufügen"
+          },
+          "fields": {
+            "status": "Status",
+            "template": "Template"
+          },
+          "status": {
+            "PLANNED": "Geplant",
+            "RUNNING": "Laufend",
+            "COMPLETED": "Abgeschlossen",
+            "CANCELLED": "Abgebrochen"
+          },
+          "empty": {
+            "title": "Noch keine Experimente",
+            "description": "Fügen Sie Ihr erstes Experiment hinzu, um diese Hypothese mit beobachtbarer Evidenz zu testen."
+          },
+          "error": {
+            "load": {
+              "title": "Experimente konnten nicht geladen werden",
+              "message": "Bitte versuchen Sie es in einem Moment erneut."
+            }
+          }
         },
         "evidence": {
           "title": "Evidenz"

@@ -100,9 +100,33 @@ const {
   hypothesisId,
   hasValidRouteParams
 })
+const {
+  experiments,
+  isLoading: isExperimentsLoading,
+  hasError: hasExperimentsError,
+  loadExperiments,
+  clearExperiments
+} = useHypothesisExperiments()
 
 const reloadMetricsForRoute = async (): Promise<void> => {
   await loadMetricsForRoute()
+}
+
+const loadExperimentsForRoute = async (): Promise<void> => {
+  if (!hasValidRouteParams.value) {
+    clearExperiments()
+    return
+  }
+
+  await loadExperiments({
+    ideaId: ideaId.value,
+    versionId: versionId.value,
+    hypothesisId: hypothesisId.value
+  })
+}
+
+const reloadExperimentsForRoute = async (): Promise<void> => {
+  await loadExperimentsForRoute()
 }
 
 const openHypothesisEditModal = (): void => {
@@ -117,6 +141,7 @@ const loadHypothesisForRoute = async (): Promise<void> => {
   if (!hasValidRouteParams.value) {
     clearHypothesis()
     clearMetrics()
+    clearExperiments()
     return
   }
 
@@ -126,7 +151,8 @@ const loadHypothesisForRoute = async (): Promise<void> => {
       versionId: versionId.value,
       hypothesisId: hypothesisId.value
     }),
-    loadMetricsForRoute()
+    loadMetricsForRoute(),
+    loadExperimentsForRoute()
   ])
 }
 
@@ -247,7 +273,16 @@ watch([ideaId, versionId, hypothesisId], async () => {
       @delete="openMetricDeleteModal"
     />
 
-    <IdeaWorkspaceHypothesisExperimentsSection />
+    <IdeaWorkspaceHypothesisExperimentsSection
+      :experiments="experiments"
+      :is-loading="isExperimentsLoading"
+      :has-error="hasExperimentsError"
+      :has-valid-route-params="hasValidRouteParams"
+      :is-any-action-loading="false"
+      :is-experiment-delete-submitting="false"
+      :experiment-deleting-id="null"
+      @retry="reloadExperimentsForRoute"
+    />
 
     <IdeaWorkspaceHypothesisEvidenceSection />
 
