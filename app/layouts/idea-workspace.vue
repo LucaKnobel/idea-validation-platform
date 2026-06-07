@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
-const localePath = useLocalePath()
 const { t } = useI18n()
+const { toDashboard, toIdeaVersionSection, toHypothesesList } = useIdeaWorkspaceLinks()
 const workspaceIdeaTitleState = useState<string | null>('workspace-idea-title', () => null)
 
 const open = ref(true)
@@ -33,35 +33,35 @@ const workspaceIdeaTitle = computed(() => {
 const navigationItems = computed(() => [
   {
     label: t('ideaWorkspace.navigation.overview'),
-    to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/overview`),
+    to: toIdeaVersionSection('overview'),
     icon: 'i-lucide-layout-dashboard',
     active: route.path.endsWith('/overview'),
     onSelect: closeSidebarOnMobile
   },
   {
     label: t('ideaWorkspace.navigation.canvas'),
-    to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/canvas`),
+    to: toIdeaVersionSection('canvas'),
     icon: 'i-lucide-panels-top-left',
     active: route.path.endsWith('/canvas'),
     onSelect: closeSidebarOnMobile
   },
   {
     label: t('ideaWorkspace.navigation.hypotheses'),
-    to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/hypotheses`),
+    to: toHypothesesList(),
     icon: 'i-lucide-flask-conical',
     active: route.path.includes('/hypotheses'),
     onSelect: closeSidebarOnMobile
   },
   {
     label: t('ideaWorkspace.navigation.decision'),
-    to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/decision`),
+    to: toIdeaVersionSection('decision'),
     icon: 'i-lucide-scale',
     active: route.path.endsWith('/decision'),
     onSelect: closeSidebarOnMobile
   },
   {
     label: t('ideaWorkspace.navigation.history'),
-    to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/history`),
+    to: toIdeaVersionSection('history'),
     icon: 'i-lucide-history',
     active: route.path.endsWith('/history'),
     onSelect: closeSidebarOnMobile
@@ -71,14 +71,14 @@ const navigationItems = computed(() => [
 const footerItems = computed(() => [
   {
     label: t('ideaWorkspace.actions.backToIdeas'),
-    to: localePath('/dashboard'),
+    to: toDashboard(),
     icon: 'i-lucide-arrow-left',
-    active: route.path === localePath('/dashboard'),
+    active: route.path === toDashboard(),
     onSelect: closeSidebarOnMobile
   },
   {
     label: t('ideaWorkspace.navigation.settings'),
-    to: localePath(`/ideas/${route.params.ideaId}/versions/${route.params.versionId}/settings`),
+    to: toIdeaVersionSection('settings'),
     icon: 'i-lucide-settings-2',
     active: route.path.endsWith('/settings'),
     onSelect: closeSidebarOnMobile

@@ -2,10 +2,10 @@ import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
 import {
   CanvasRouteParamsSchema,
   ReplaceIdeaVersionCanvasBodySchema,
-  IdeaVersionCanvasResponseSchema,
   type IdeaVersionCanvasResponseDto
 } from '@infrastructure/validation/canvas-schemas'
 import { updateIdeaVersionCanvas } from '@infrastructure/composition'
+import { toIdeaVersionCanvasResponseDto } from '@infrastructure/mappers/canvas-mapper'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
 
 /**
@@ -29,14 +29,5 @@ export default defineProtectedHandler(async (event, userId): Promise<IdeaVersion
     elements: body.elements
   })
 
-  return IdeaVersionCanvasResponseSchema.parse({
-    elements: canvasElements.map(element => ({
-      id: element.id,
-      ideaVersionId: element.ideaVersionId,
-      type: element.type,
-      content: element.content,
-      createdAt: element.createdAt.toISOString(),
-      updatedAt: element.updatedAt.toISOString()
-    }))
-  })
+  return toIdeaVersionCanvasResponseDto(canvasElements)
 })

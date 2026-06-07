@@ -23,7 +23,10 @@ export interface UseCanvasComposable {
  */
 export const useCanvas = (): UseCanvasComposable => {
   const { getCanvas, replaceCanvas: replaceCanvasRequest } = useCanvasApi()
-  const { handleRateLimitError } = useErrorHandler()
+  const {
+    hasError,
+    runWithErrorHandling
+  } = useRequestErrorState()
   const { createReplaceCanvasSchema } = useValidation()
 
   const sectionOrder = CANVAS_SECTION_ORDER
@@ -33,7 +36,6 @@ export const useCanvas = (): UseCanvasComposable => {
   const persistedSnapshot = ref<string>('')
   const isLoading = ref(false)
   const isSaving = ref(false)
-  const hasError = ref(false)
 
   /**
    * Creates a deterministic snapshot used to detect unsaved draft changes.
@@ -91,24 +93,23 @@ export const useCanvas = (): UseCanvasComposable => {
    */
   const loadCanvas = async (input: { ideaId: string, versionId: string }): Promise<void> => {
     isLoading.value = true
-    hasError.value = false
 
     try {
-      const response = await getCanvas({
-        ideaId: input.ideaId,
-        versionId: input.versionId
+      await runWithErrorHandling(async () => {
+        const response = await getCanvas({
+          ideaId: input.ideaId,
+          versionId: input.versionId
+        })
+
+        elements.value = response.elements
+        syncDraftFromElements()
+      }, {
+        fallback: undefined,
+        onError: () => {
+          elements.value = []
+          syncDraftFromElements()
+        }
       })
-
-      elements.value = response.elements
-      syncDraftFromElements()
-    } catch (error: unknown) {
-      if (handleRateLimitError(error)) {
-        return
-      }
-
-      hasError.value = true
-      elements.value = []
-      syncDraftFromElements()
     } finally {
       isLoading.value = false
     }
@@ -126,42 +127,38 @@ export const useCanvas = (): UseCanvasComposable => {
     elements: ReplaceIdeaVersionCanvasBodyDto['elements']
   }): Promise<boolean> => {
     isSaving.value = true
-    hasError.value = false
 
     try {
-      const normalizedElements = input.elements
-        .map(element => ({
-          type: element.type,
-          content: element.content.trim()
-        }))
-        .filter(element => element.content.length > 0)
+      return await runWithErrorHandling(async () => {
+        const normalizedElements = input.elements
+          .map(element => ({
+            type: element.type,
+            content: element.content.trim()
+          }))
+          .filter(element => element.content.length > 0)
 
-      const replaceCanvasSchema = createReplaceCanvasSchema()
-      const validationResult = replaceCanvasSchema.safeParse({
-        elements: normalizedElements
+        const replaceCanvasSchema = createReplaceCanvasSchema()
+        const validationResult = replaceCanvasSchema.safeParse({
+          elements: normalizedElements
+        })
+
+        if (!validationResult.success) {
+          hasError.value = true
+          return false
+        }
+
+        const response = await replaceCanvasRequest({
+          ideaId: input.ideaId,
+          versionId: input.versionId,
+          elements: validationResult.data.elements
+        })
+
+        elements.value = response.elements
+        syncDraftFromElements()
+        return true
+      }, {
+        fallback: false
       })
-
-      if (!validationResult.success) {
-        hasError.value = true
-        return false
-      }
-
-      const response = await replaceCanvasRequest({
-        ideaId: input.ideaId,
-        versionId: input.versionId,
-        elements: validationResult.data.elements
-      })
-
-      elements.value = response.elements
-      syncDraftFromElements()
-      return true
-    } catch (error: unknown) {
-      if (handleRateLimitError(error)) {
-        return false
-      }
-
-      hasError.value = true
-      return false
     } finally {
       isSaving.value = false
     }

@@ -37,14 +37,16 @@ export const useHypotheses = (): UseHypothesesComposable => {
     updateHypothesis: updateHypothesisRequest,
     deleteHypothesis: deleteHypothesisRequest
   } = useHypothesesApi()
-  const { handleRateLimitError } = useErrorHandler()
+  const {
+    hasError,
+    runWithErrorHandling
+  } = useRequestErrorState()
 
   const hypotheses = ref<HypothesisResponseDto[]>([])
   const isLoading = ref(false)
   const isCreating = ref(false)
   const isUpdatingId = ref<string | null>(null)
   const isDeletingId = ref<string | null>(null)
-  const hasError = ref(false)
 
   const uniqueSectionTypes = <T extends string>(values: T[]): T[] => {
     return [...new Set(values)]
@@ -58,18 +60,17 @@ export const useHypotheses = (): UseHypothesesComposable => {
 
   const loadHypotheses = async (input: { ideaId: string, versionId: string }): Promise<void> => {
     isLoading.value = true
-    hasError.value = false
 
     try {
-      const response = await listHypotheses(input)
-      hypotheses.value = sortByNewest(response.items)
-    } catch (error: unknown) {
-      if (handleRateLimitError(error)) {
-        return
-      }
-
-      hasError.value = true
-      hypotheses.value = []
+      await runWithErrorHandling(async () => {
+        const response = await listHypotheses(input)
+        hypotheses.value = sortByNewest(response.items)
+      }, {
+        fallback: undefined,
+        onError: () => {
+          hypotheses.value = []
+        }
+      })
     } finally {
       isLoading.value = false
     }
@@ -81,29 +82,25 @@ export const useHypotheses = (): UseHypothesesComposable => {
     body: CreateHypothesisBodyDto
   }): Promise<HypothesisResponseDto | null> => {
     isCreating.value = true
-    hasError.value = false
 
     try {
-      const createdHypothesis = await createHypothesisRequest({
-        ideaId: input.ideaId,
-        versionId: input.versionId,
-        body: {
-          statement: input.body.statement,
-          dimension: input.body.dimension,
-          priority: input.body.priority,
-          canvasSectionTypes: uniqueSectionTypes(input.body.canvasSectionTypes)
-        }
+      return await runWithErrorHandling(async () => {
+        const createdHypothesis = await createHypothesisRequest({
+          ideaId: input.ideaId,
+          versionId: input.versionId,
+          body: {
+            statement: input.body.statement,
+            dimension: input.body.dimension,
+            priority: input.body.priority,
+            canvasSectionTypes: uniqueSectionTypes(input.body.canvasSectionTypes)
+          }
+        })
+
+        hypotheses.value = sortByNewest([createdHypothesis, ...hypotheses.value])
+        return createdHypothesis
+      }, {
+        fallback: null
       })
-
-      hypotheses.value = sortByNewest([createdHypothesis, ...hypotheses.value])
-      return createdHypothesis
-    } catch (error: unknown) {
-      if (handleRateLimitError(error)) {
-        return null
-      }
-
-      hasError.value = true
-      return null
     } finally {
       isCreating.value = false
     }
@@ -116,33 +113,29 @@ export const useHypotheses = (): UseHypothesesComposable => {
     body: UpdateHypothesisBodyDto
   }): Promise<HypothesisResponseDto | null> => {
     isUpdatingId.value = input.hypothesisId
-    hasError.value = false
 
     try {
-      const updatedHypothesis = await updateHypothesisRequest({
-        ideaId: input.ideaId,
-        versionId: input.versionId,
-        hypothesisId: input.hypothesisId,
-        body: {
-          statement: input.body.statement,
-          dimension: input.body.dimension,
-          priority: input.body.priority,
-          canvasSectionTypes: uniqueSectionTypes(input.body.canvasSectionTypes)
-        }
+      return await runWithErrorHandling(async () => {
+        const updatedHypothesis = await updateHypothesisRequest({
+          ideaId: input.ideaId,
+          versionId: input.versionId,
+          hypothesisId: input.hypothesisId,
+          body: {
+            statement: input.body.statement,
+            dimension: input.body.dimension,
+            priority: input.body.priority,
+            canvasSectionTypes: uniqueSectionTypes(input.body.canvasSectionTypes)
+          }
+        })
+
+        hypotheses.value = sortByNewest(hypotheses.value.map((hypothesis) => {
+          return hypothesis.id === updatedHypothesis.id ? updatedHypothesis : hypothesis
+        }))
+
+        return updatedHypothesis
+      }, {
+        fallback: null
       })
-
-      hypotheses.value = sortByNewest(hypotheses.value.map((hypothesis) => {
-        return hypothesis.id === updatedHypothesis.id ? updatedHypothesis : hypothesis
-      }))
-
-      return updatedHypothesis
-    } catch (error: unknown) {
-      if (handleRateLimitError(error)) {
-        return null
-      }
-
-      hasError.value = true
-      return null
     } finally {
       isUpdatingId.value = null
     }
@@ -154,19 +147,15 @@ export const useHypotheses = (): UseHypothesesComposable => {
     hypothesisId: string
   }): Promise<boolean> => {
     isDeletingId.value = input.hypothesisId
-    hasError.value = false
 
     try {
-      await deleteHypothesisRequest(input)
-      hypotheses.value = hypotheses.value.filter(hypothesis => hypothesis.id !== input.hypothesisId)
-      return true
-    } catch (error: unknown) {
-      if (handleRateLimitError(error)) {
-        return false
-      }
-
-      hasError.value = true
-      return false
+      return await runWithErrorHandling(async () => {
+        await deleteHypothesisRequest(input)
+        hypotheses.value = hypotheses.value.filter(hypothesis => hypothesis.id !== input.hypothesisId)
+        return true
+      }, {
+        fallback: false
+      })
     } finally {
       isDeletingId.value = null
     }

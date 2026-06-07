@@ -1,6 +1,5 @@
 import * as z from 'zod'
 import { CANVAS_SECTION_ORDER } from '~/types/canvasSections'
-import type { CreateHypothesisBodyDto } from '#shared/types/hypothesis'
 
 const HYPOTHESIS_DIMENSIONS = [
   'PROBLEM',
@@ -15,6 +14,21 @@ const HYPOTHESIS_PRIORITIES = [
   'MEDIUM',
   'LOW'
 ] as const satisfies readonly CreateHypothesisBodyDto['priority'][]
+
+const METRIC_THRESHOLD_OPERATORS = [
+  'GTE',
+  'GT',
+  'LTE',
+  'LT',
+  'EQ'
+] as const satisfies readonly CreateMetricBodyDto['threshold']['operator'][]
+
+const EXPERIMENT_STATUSES = [
+  'PLANNED',
+  'RUNNING',
+  'COMPLETED',
+  'CANCELLED'
+] as const satisfies readonly CreateExperimentBodyDto['status'][]
 
 /**
  * Creates localized Zod schemas used by frontend forms (auth, idea creation, and canvas).
@@ -129,6 +143,61 @@ export const useValidation = () => {
       .max(9, t('validation.hypothesis.canvasSectionMax'))
   })
 
+  /**
+   * Builds the schema for creating and updating metrics in one modal.
+   */
+  const createMetricFormSchema = () => z.object({
+    name: z.string({ error: t('validation.metric.nameRequired') })
+      .trim()
+      .min(1, t('validation.metric.nameRequired'))
+      .max(200, t('validation.metric.nameTooLong')),
+    description: z.string()
+      .trim()
+      .max(1000, t('validation.metric.descriptionTooLong'))
+      .optional()
+      .or(z.literal('')),
+    unit: z.string()
+      .trim()
+      .max(100, t('validation.metric.unitTooLong'))
+      .optional()
+      .or(z.literal('')),
+    threshold: z.object({
+      operator: z.enum(METRIC_THRESHOLD_OPERATORS, { error: t('validation.metric.operatorRequired') }),
+      referenceValue: z.coerce.number({ error: t('validation.metric.referenceValueRequired') })
+    })
+  })
+
+  /**
+   * Builds the schema for creating and updating experiments in one modal.
+   */
+  const createExperimentFormSchema = () => z.object({
+    title: z.string({ error: t('validation.experiment.titleRequired') })
+      .trim()
+      .min(1, t('validation.experiment.titleRequired'))
+      .max(200, t('validation.experiment.titleTooLong')),
+    description: z.string()
+      .trim()
+      .max(4000, t('validation.experiment.descriptionTooLong'))
+      .optional()
+      .or(z.literal('')),
+    status: z.enum(EXPERIMENT_STATUSES, { error: t('validation.experiment.statusRequired') })
+  })
+
+  /**
+   * Builds the schema for creating and updating measurements in one modal.
+   */
+  const createMeasurementFormSchema = () => z.object({
+    metricId: z.string({ error: t('validation.measurement.metricRequired') })
+      .trim()
+      .min(1, t('validation.measurement.metricRequired')),
+    value: z.coerce.number({ error: t('validation.measurement.valueRequired') }),
+    note: z.string()
+      .trim()
+      .max(2000, t('validation.measurement.noteTooLong'))
+      .optional()
+      .or(z.literal(''))
+  })
+
   return {
     createPasswordSchema,
     createRegisterFormSchema,
@@ -137,6 +206,9 @@ export const useValidation = () => {
     createIdeaFormSchema,
     createCanvasElementSchema,
     createReplaceCanvasSchema,
-    createHypothesisFormSchema
+    createHypothesisFormSchema,
+    createMetricFormSchema,
+    createExperimentFormSchema,
+    createMeasurementFormSchema
   }
 }

@@ -23,7 +23,7 @@ export const useHypothesisCreateModal = (
   input: UseHypothesisCreateModalInput
 ): UseHypothesisCreateModalComposable => {
   const formState = reactive<CreateHypothesisBodyDto>(input.createEmptyFormState())
-  const isCreateModalOpen = ref(false)
+  const { isOpen: isCreateModalOpen, open: openModal, close: closeModal } = useModalState()
 
   /**
    * Resets editable form values to the baseline create payload.
@@ -41,14 +41,14 @@ export const useHypothesisCreateModal = (
    */
   const openCreateModal = (): void => {
     resetForm()
-    isCreateModalOpen.value = true
+    openModal()
   }
 
   /**
    * Closes the create form modal.
    */
   const closeCreateModal = (): void => {
-    isCreateModalOpen.value = false
+    closeModal()
   }
 
   return {

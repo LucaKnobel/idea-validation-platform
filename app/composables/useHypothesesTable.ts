@@ -1,24 +1,24 @@
 import type { TableColumn } from '@nuxt/ui'
+import type {
+  HypothesisDimension,
+  HypothesisPriority,
+  HypothesisResponseDto
+} from '#shared/types/hypothesis'
 
 /**
  * UI-only status placeholder until domain status is implemented.
  */
 export type HypothesisUiStatus = 'OPEN'
 
-type HypothesisDimension = CreateHypothesisBodyDto['dimension']
-type HypothesisPriority = CreateHypothesisBodyDto['priority']
-
 /**
  * Public API for rendering and controlling the hypotheses table.
  */
 export interface UseHypothesesTableComposable {
   columns: ComputedRef<TableColumn<HypothesisResponseDto>[]>
-  expanded: Ref<Record<string, boolean>>
   sorting: Ref<Array<{ id: string, desc: boolean }>>
   priorityColor: (priority: HypothesisPriority) => 'error' | 'warning' | 'neutral'
   dimensionLabel: (dimension: HypothesisDimension) => string
   priorityLabel: (priority: HypothesisPriority) => string
-  sectionLabel: (section: CreateHypothesisBodyDto['canvasSectionTypes'][number]) => string
   statusLabel: (status: HypothesisUiStatus) => string
   getHypothesisUiStatus: (hypothesis: HypothesisResponseDto) => HypothesisUiStatus
 }
@@ -29,7 +29,6 @@ export interface UseHypothesesTableComposable {
 export const useHypothesesTable = (
 ): UseHypothesesTableComposable => {
   const { t } = useI18n()
-  const expanded = ref<Record<string, boolean>>({})
   const sorting = ref<Array<{ id: string, desc: boolean }>>([])
 
   const priorityColor = (priority: HypothesisPriority): 'error' | 'warning' | 'neutral' => {
@@ -52,10 +51,6 @@ export const useHypothesesTable = (
     return t(`ideaWorkspace.hypotheses.priorities.${priority}`)
   }
 
-  const sectionLabel = (section: CreateHypothesisBodyDto['canvasSectionTypes'][number]): string => {
-    return t(`ideaWorkspace.canvasPage.sections.${section}`)
-  }
-
   const getHypothesisUiStatus = (_hypothesis: HypothesisResponseDto): HypothesisUiStatus => {
     return 'OPEN'
   }
@@ -65,18 +60,6 @@ export const useHypothesesTable = (
   }
 
   const columns = computed<TableColumn<HypothesisResponseDto>[]>(() => [
-    {
-      id: 'expand',
-      enableSorting: false,
-      enableHiding: false,
-      header: '',
-      meta: {
-        class: {
-          th: 'hidden md:table-cell md:w-12',
-          td: 'hidden md:table-cell md:w-12 align-middle'
-        }
-      }
-    },
     {
       accessorKey: 'statement',
       header: t('ideaWorkspace.hypotheses.table.columns.statement'),
@@ -153,12 +136,10 @@ export const useHypothesesTable = (
 
   return {
     columns,
-    expanded,
     sorting,
     priorityColor,
     dimensionLabel,
     priorityLabel,
-    sectionLabel,
     statusLabel,
     getHypothesisUiStatus
   }

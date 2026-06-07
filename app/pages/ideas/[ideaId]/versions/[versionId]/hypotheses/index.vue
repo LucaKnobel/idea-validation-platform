@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import type { CreateHypothesisBodyDto } from '#shared/types/hypothesis'
-
 definePageMeta({
   middleware: ['auth-middleware'],
   layout: 'idea-workspace'
 })
 
-const { t } = useI18n()
-const { showSuccess, showError } = useToastNotification()
 const { createHypothesisFormSchema } = useValidation()
+const {
+  createEmptyFormState,
+  dimensionOptions,
+  priorityOptions,
+  sectionOptions
+} = useHypothesisFormConfig()
 const { ideaId, versionId, hasIdeaVersionRouteParams } = useIdeaVersionRouteParams()
+const { toHypothesisDetails } = useIdeaWorkspaceLinks()
 
 const {
   hypotheses,
@@ -24,78 +27,41 @@ const {
   deleteHypothesis: deleteHypothesisData
 } = useHypotheses()
 
-type HypothesisDimension = CreateHypothesisBodyDto['dimension']
-type HypothesisPriority = CreateHypothesisBodyDto['priority']
-type HypothesisCanvasSection = CreateHypothesisBodyDto['canvasSectionTypes'][number]
-
-/**
- * Builds the baseline create payload used when opening the create modal.
- */
-const createEmptyFormState = (): CreateHypothesisBodyDto => {
-  return {
-    statement: '',
-    dimension: 'PROBLEM',
-    priority: 'MEDIUM',
-    canvasSectionTypes: []
-  }
-}
-
 const formSchema = createHypothesisFormSchema()
 const {
-  formState: createFormState,
-  isCreateModalOpen,
-  openCreateModal,
-  closeCreateModal
-} = useHypothesisCreateModal({
-  createEmptyFormState
-})
-const {
-  formState: updateFormState,
+  createFormTitle,
+  createSubmitLabel,
+  createFormState,
+  updateFormTitle,
+  updateSubmitLabel,
+  updateFormState,
   formHypothesisId,
+  deleteCandidate,
+  isCreateModalOpen,
   isUpdateModalOpen,
+  isDeleteModalOpen,
+  openCreateModal,
   openUpdateModal,
-  closeUpdateModal
-} = useHypothesisUpdateModal({
+  openDeleteModal,
+  runCreateAction,
+  runUpdateAction,
+  runDeleteAction
+} = useHypothesisModalActions({
   createEmptyFormState
 })
-const {
-  deleteCandidate,
-  isDeleteModalOpen,
-  openDeleteModal,
-  closeDeleteModal
-} = useHypothesisDeleteModal()
 
-const dimensionOptions = computed<Array<{ label: string, value: HypothesisDimension }>>(() => {
-  return [
-    { label: t('ideaWorkspace.hypotheses.dimensions.PROBLEM'), value: 'PROBLEM' },
-    { label: t('ideaWorkspace.hypotheses.dimensions.SOLUTION'), value: 'SOLUTION' },
-    { label: t('ideaWorkspace.hypotheses.dimensions.MARKET'), value: 'MARKET' },
-    { label: t('ideaWorkspace.hypotheses.dimensions.MONETIZATION'), value: 'MONETIZATION' },
-    { label: t('ideaWorkspace.hypotheses.dimensions.EXECUTION'), value: 'EXECUTION' }
-  ]
-})
+/**
+ * Navigates from list/table context to the dedicated hypothesis detail page.
+ */
+const openHypothesisDetails = async (hypothesis: HypothesisResponseDto): Promise<void> => {
+  if (!hasIdeaVersionRouteParams.value) {
+    return
+  }
 
-const priorityOptions = computed<Array<{ label: string, value: HypothesisPriority }>>(() => {
-  return [
-    { label: t('ideaWorkspace.hypotheses.priorities.HIGH'), value: 'HIGH' },
-    { label: t('ideaWorkspace.hypotheses.priorities.MEDIUM'), value: 'MEDIUM' },
-    { label: t('ideaWorkspace.hypotheses.priorities.LOW'), value: 'LOW' }
-  ]
-})
+  const target = toHypothesisDetails(hypothesis.id)
 
-const sectionOptions = computed<Array<{ label: string, value: HypothesisCanvasSection }>>(() => {
-  return [
-    { label: t('ideaWorkspace.canvasPage.sections.KEY_PARTNERS'), value: 'KEY_PARTNERS' },
-    { label: t('ideaWorkspace.canvasPage.sections.KEY_ACTIVITIES'), value: 'KEY_ACTIVITIES' },
-    { label: t('ideaWorkspace.canvasPage.sections.VALUE_PROPOSITIONS'), value: 'VALUE_PROPOSITIONS' },
-    { label: t('ideaWorkspace.canvasPage.sections.CUSTOMER_RELATIONSHIPS'), value: 'CUSTOMER_RELATIONSHIPS' },
-    { label: t('ideaWorkspace.canvasPage.sections.CUSTOMER_SEGMENTS'), value: 'CUSTOMER_SEGMENTS' },
-    { label: t('ideaWorkspace.canvasPage.sections.KEY_RESOURCES'), value: 'KEY_RESOURCES' },
-    { label: t('ideaWorkspace.canvasPage.sections.CHANNELS'), value: 'CHANNELS' },
-    { label: t('ideaWorkspace.canvasPage.sections.COST_STRUCTURE'), value: 'COST_STRUCTURE' },
-    { label: t('ideaWorkspace.canvasPage.sections.REVENUE_STREAMS'), value: 'REVENUE_STREAMS' }
-  ]
-})
+  await navigateTo(target)
+}
 
 /**
  * Loads hypotheses for the current route once idea and version identifiers are valid.
@@ -118,19 +84,16 @@ const onCreateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
   if (!hasIdeaVersionRouteParams.value) {
     return
   }
-  const created = await createHypothesisData({
-    ideaId: ideaId.value,
-    versionId: versionId.value,
-    body: data
+
+  await runCreateAction(async () => {
+    const created = await createHypothesisData({
+      ideaId: ideaId.value,
+      versionId: versionId.value,
+      body: data
+    })
+
+    return created !== null
   })
-
-  if (created === null) {
-    showError('ideaWorkspace.hypotheses.error.create.title', 'ideaWorkspace.hypotheses.error.create.message')
-    return
-  }
-
-  showSuccess('ideaWorkspace.hypotheses.success.create.title', 'ideaWorkspace.hypotheses.success.create.message')
-  closeCreateModal()
 }
 
 /**
@@ -145,20 +108,16 @@ const onUpdateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
     return
   }
 
-  const updated = await updateHypothesisData({
-    ideaId: ideaId.value,
-    versionId: versionId.value,
-    hypothesisId: formHypothesisId.value,
-    body: data
+  await runUpdateAction(async () => {
+    const updated = await updateHypothesisData({
+      ideaId: ideaId.value,
+      versionId: versionId.value,
+      hypothesisId: formHypothesisId.value || '',
+      body: data
+    })
+
+    return updated !== null
   })
-
-  if (updated === null) {
-    showError('ideaWorkspace.hypotheses.error.update.title', 'ideaWorkspace.hypotheses.error.update.message')
-    return
-  }
-
-  showSuccess('ideaWorkspace.hypotheses.success.update.title', 'ideaWorkspace.hypotheses.success.update.message')
-  closeUpdateModal()
 }
 
 /**
@@ -175,36 +134,14 @@ const confirmDeleteHypothesis = async (): Promise<void> => {
 
   const hypothesisId = deleteCandidate.value.id
 
-  const deleted = await deleteHypothesisData({
-    ideaId: ideaId.value,
-    versionId: versionId.value,
-    hypothesisId
+  await runDeleteAction(async () => {
+    return await deleteHypothesisData({
+      ideaId: ideaId.value,
+      versionId: versionId.value,
+      hypothesisId
+    })
   })
-
-  if (!deleted) {
-    showError('ideaWorkspace.hypotheses.error.delete.title', 'ideaWorkspace.hypotheses.error.delete.message')
-    return
-  }
-
-  showSuccess('ideaWorkspace.hypotheses.success.delete.title', 'ideaWorkspace.hypotheses.success.delete.message')
-  closeDeleteModal()
 }
-
-const formTitle = computed(() => {
-  return t('ideaWorkspace.hypotheses.modal.createTitle')
-})
-
-const formSubmitLabel = computed(() => {
-  return t('ideaWorkspace.hypotheses.actions.create')
-})
-
-const updateFormTitle = computed(() => {
-  return t('ideaWorkspace.hypotheses.modal.editTitle')
-})
-
-const updateFormSubmitLabel = computed(() => {
-  return t('ideaWorkspace.hypotheses.actions.update')
-})
 
 /**
  * Maps form mode + active request states to the primary form submit loading state.
@@ -281,14 +218,15 @@ watch([ideaId, versionId], async () => {
         @create="openCreateModal"
         @edit="openUpdateModal"
         @delete="openDeleteModal"
+        @open-details="openHypothesisDetails"
       />
     </UCard>
 
     <IdeaWorkspaceHypothesisFormModal
       :form-schema="formSchema"
       :initial-state="createFormState"
-      :title="formTitle"
-      :submit-label="formSubmitLabel"
+      :title="createFormTitle"
+      :submit-label="createSubmitLabel"
       :open="isCreateModalOpen"
       :is-submitting="isCreateFormSubmitting"
       :dimension-options="dimensionOptions"
@@ -302,7 +240,7 @@ watch([ideaId, versionId], async () => {
       :form-schema="formSchema"
       :initial-state="updateFormState"
       :title="updateFormTitle"
-      :submit-label="updateFormSubmitLabel"
+      :submit-label="updateSubmitLabel"
       :open="isUpdateModalOpen"
       :is-submitting="isUpdateFormSubmitting"
       :dimension-options="dimensionOptions"

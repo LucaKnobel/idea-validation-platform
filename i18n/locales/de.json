@@ -64,6 +64,26 @@
       "priorityRequired": "Bitte wählen Sie eine Priorität",
       "canvasSectionMin": "Wählen Sie mindestens einen Canvas-Bereich",
       "canvasSectionMax": "Es können maximal 9 Canvas-Bereiche verknüpft werden"
+    },
+    "metric": {
+      "nameRequired": "Ein Metrik-Name ist erforderlich",
+      "nameTooLong": "Ein Metrik-Name darf maximal 200 Zeichen enthalten",
+      "descriptionTooLong": "Eine Metrik-Beschreibung darf maximal 1000 Zeichen enthalten",
+      "unitTooLong": "Eine Metrik-Einheit darf maximal 100 Zeichen enthalten",
+      "operatorRequired": "Bitte wählen Sie einen Schwellwert-Operator",
+      "referenceValueRequired": "Ein Schwellwert ist erforderlich",
+      "referenceValueFinite": "Der Schwellwert muss eine endliche Zahl sein"
+    },
+    "experiment": {
+      "titleRequired": "Ein Experiment-Titel ist erforderlich",
+      "titleTooLong": "Ein Experiment-Titel darf maximal 200 Zeichen lang sein",
+      "descriptionTooLong": "Eine Experiment-Beschreibung darf maximal 4000 Zeichen lang sein",
+      "statusRequired": "Bitte wählen Sie einen Experiment-Status"
+    },
+    "measurement": {
+      "metricRequired": "Bitte wählen Sie eine Metrik",
+      "valueRequired": "Ein Messwert ist erforderlich",
+      "noteTooLong": "Eine Notiz darf maximal 2000 Zeichen lang sein"
     }
   },
   "error": {
@@ -442,7 +462,8 @@
       "actions": {
         "create": "Hypothese erstellen",
         "update": "Hypothese aktualisieren",
-        "deleteConfirm": "Hypothese löschen"
+        "deleteConfirm": "Hypothese löschen",
+        "openDetails": "Details öffnen"
       },
       "status": {
         "OPEN": "Offen"
@@ -460,19 +481,10 @@
         "LOW": "Niedrig"
       },
       "table": {
-        "actions": {
-          "expand": "Zeile ausklappen",
-          "collapse": "Zeile einklappen"
-        },
-        "filters": {
-          "placeholder": "Status filtern",
-          "all": "Alle Status"
-        },
         "columns": {
           "statement": "Aussage",
           "dimension": "Dimension",
           "priority": "Priorität",
-          "sections": "Canvas-Bereiche",
           "status": "Status",
           "actions": "Aktionen"
         },
@@ -482,18 +494,286 @@
         "title": "Noch keine Hypothesen",
         "description": "Starten Sie mit den riskantesten Annahmen und verknüpfen Sie jede mit einem Canvas-Bereich."
       },
-      "expanded": {
-        "canvas": {
-          "title": "Canvas-Bereiche",
-          "empty": "Noch keine Canvas-Bereiche verknüpft."
+      "detail": {
+        "title": "Hypothesen-Details",
+        "description": "Die zentrale Arbeitsfläche für eine Hypothese und ihren Validierungskontext.",
+        "actions": {
+          "retry": "Erneut versuchen",
+          "edit": "Hypothese bearbeiten",
+          "delete": "Hypothese löschen"
+        },
+        "overview": {
+          "title": "Übersicht",
+          "canvasEmpty": "Noch keine Canvas-Bereiche verknüpft.",
+          "fields": {
+            "dimension": "Dimension",
+            "priority": "Priorität",
+            "status": "Status",
+            "canvasAssignments": "Canvas-Zuordnungen"
+          }
         },
         "metrics": {
-          "title": "Übersicht Experiment-Metriken",
-          "placeholder": "Metrikdefinitionen und Schwellwerte für diese Hypothese werden hier als Nächstes angezeigt."
+          "title": "Metriken",
+          "noDescription": "Keine Beschreibung",
+          "actions": {
+            "create": "Metrik erstellen",
+            "createFirst": "Erste Metrik hinzufügen",
+            "update": "Metrik aktualisieren",
+            "deleteConfirm": "Metrik löschen"
+          },
+          "fields": {
+            "unit": "Einheit",
+            "threshold": "Schwellwert"
+          },
+          "operators": {
+            "GTE": ">=",
+            "GT": ">",
+            "LTE": "<=",
+            "LT": "<",
+            "EQ": "="
+          },
+          "empty": {
+            "title": "Noch keine Metriken",
+            "description": "Definieren Sie messbare Schwellwerte, um diese Hypothese objektiv zu bewerten."
+          },
+          "modal": {
+            "createTitle": "Metrik erstellen",
+            "editTitle": "Metrik bearbeiten",
+            "description": "Erfassen Sie ein messbares Signal und den Schwellwert, der Erfolg anzeigt."
+          },
+          "deleteModal": {
+            "title": "Metrik löschen",
+            "description": "Bitte bestätigen Sie, dass Sie diese Metrik entfernen möchten.",
+            "warning": "Diese Aktion löscht die Metrik und den verknüpften Schwellwert dauerhaft."
+          },
+          "form": {
+            "name": {
+              "label": "Metrik-Name",
+              "placeholder": "Beispiel: Trial-Conversion-Rate"
+            },
+            "description": {
+              "label": "Beschreibung",
+              "description": "Beschreibt, was gemessen wird.",
+              "placeholder": "Beispiel: Anteil der Trial-Nutzer, die innerhalb von 14 Tagen konvertieren"
+            },
+            "criterion": {
+              "label": "Erfolgskriterium"
+            },
+            "unit": {
+              "label": "Einheit",
+              "description": "z.B. %, CHF, Nutzer",
+              "placeholder": "Beispiel: %"
+            },
+            "operator": {
+              "label": "Erfolgsbedingung",
+              "placeholder": "Operator wählen"
+            },
+            "referenceValue": {
+              "label": "Zielwert",
+              "placeholder": "Beispiel: 15"
+            }
+          },
+          "success": {
+            "create": {
+              "title": "Metrik erstellt",
+              "message": "Die Metrik wurde erfolgreich gespeichert."
+            },
+            "update": {
+              "title": "Metrik aktualisiert",
+              "message": "Die Metrik wurde erfolgreich aktualisiert."
+            },
+            "delete": {
+              "title": "Metrik gelöscht",
+              "message": "Die Metrik wurde erfolgreich entfernt."
+            }
+          },
+          "error": {
+            "load": {
+              "title": "Metriken konnten nicht geladen werden",
+              "message": "Bitte versuchen Sie es in einem Moment erneut."
+            },
+            "create": {
+              "title": "Metrik konnte nicht erstellt werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "update": {
+              "title": "Metrik konnte nicht aktualisiert werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "delete": {
+              "title": "Metrik konnte nicht gelöscht werden",
+              "message": "Bitte versuchen Sie es erneut."
+            }
+          }
         },
         "experiments": {
-          "title": "Übersicht Experimente",
-          "placeholder": "Verknüpfte Experimente und letzte Ergebnisse werden hier im nächsten Schritt angezeigt."
+          "title": "Experimente",
+          "noDescription": "Keine Beschreibung",
+          "actions": {
+            "create": "Experiment erstellen",
+            "createFirst": "Erstes Experiment hinzufügen",
+            "measurements": "Messungen",
+            "update": "Experiment aktualisieren",
+            "deleteConfirm": "Experiment löschen"
+          },
+          "fields": {
+            "status": "Status",
+            "measurements": "Messungen"
+          },
+          "status": {
+            "PLANNED": "Geplant",
+            "RUNNING": "Laufend",
+            "COMPLETED": "Abgeschlossen",
+            "CANCELLED": "Abgebrochen"
+          },
+          "empty": {
+            "title": "Noch keine Experimente",
+            "description": "Fügen Sie Ihr erstes Experiment hinzu, um diese Hypothese mit messbaren Ergebnissen zu testen."
+          },
+          "modal": {
+            "createTitle": "Experiment erstellen",
+            "editTitle": "Experiment bearbeiten",
+            "description": "Erfassen Sie, wie Sie diese Hypothese testen möchten und verfolgen Sie den Fortschritt."
+          },
+          "deleteModal": {
+            "title": "Experiment löschen",
+            "description": "Bitte bestätigen Sie, dass Sie dieses Experiment entfernen möchten.",
+            "warning": "Diese Aktion löscht das Experiment dauerhaft."
+          },
+          "form": {
+            "title": {
+              "label": "Experiment-Titel",
+              "placeholder": "Beispiel: Landingpage Smoke-Test"
+            },
+            "description": {
+              "label": "Beschreibung",
+              "description": "Beschreiben Sie Setup, Zielgruppe und erwartetes Ergebnis.",
+              "placeholder": "Beispiel: Eine Woche Kampagne schalten und die Sign-up-Conversion messen."
+            },
+            "status": {
+              "label": "Status",
+              "placeholder": "Status wählen"
+            }
+          },
+          "success": {
+            "create": {
+              "title": "Experiment erstellt",
+              "message": "Das Experiment wurde erfolgreich gespeichert."
+            },
+            "update": {
+              "title": "Experiment aktualisiert",
+              "message": "Das Experiment wurde erfolgreich aktualisiert."
+            },
+            "delete": {
+              "title": "Experiment gelöscht",
+              "message": "Das Experiment wurde erfolgreich entfernt."
+            }
+          },
+          "error": {
+            "load": {
+              "title": "Experimente konnten nicht geladen werden",
+              "message": "Bitte versuchen Sie es in einem Moment erneut."
+            },
+            "create": {
+              "title": "Experiment konnte nicht erstellt werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "update": {
+              "title": "Experiment konnte nicht aktualisiert werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "delete": {
+              "title": "Experiment konnte nicht gelöscht werden",
+              "message": "Bitte versuchen Sie es erneut."
+            }
+          }
+        },
+        "measurements": {
+          "title": "Messungen",
+          "description": "Erfassen Sie beobachtete Werte für dieses Experiment.",
+          "actions": {
+            "create": "Messung hinzufügen",
+            "update": "Messung aktualisieren",
+            "deleteConfirm": "Messung löschen"
+          },
+          "empty": {
+            "title": "Noch keine Messungen",
+            "description": "Fügen Sie Messungen hinzu, um beobachtete Ergebnisse für dieses Experiment zu dokumentieren."
+          },
+          "modal": {
+            "createTitle": "Messung hinzufügen",
+            "editTitle": "Messung bearbeiten",
+            "description": "Verknüpfen Sie eine Metrik und erfassen Sie den beobachteten Wert."
+          },
+          "deleteModal": {
+            "title": "Messung löschen",
+            "description": "Bitte bestätigen Sie, dass Sie diese Messung entfernen möchten.",
+            "warning": "Diese Aktion löscht die Messung dauerhaft."
+          },
+          "form": {
+            "metric": {
+              "label": "Metrik",
+              "placeholder": "Metrik wählen"
+            },
+            "value": {
+              "label": "Wert",
+              "placeholder": "Beispiel: 14.17"
+            },
+            "note": {
+              "label": "Notiz",
+              "placeholder": "Optional"
+            }
+          },
+          "success": {
+            "create": {
+              "title": "Messung erstellt",
+              "message": "Die Messung wurde erfolgreich gespeichert."
+            },
+            "update": {
+              "title": "Messung aktualisiert",
+              "message": "Die Messung wurde erfolgreich aktualisiert."
+            },
+            "delete": {
+              "title": "Messung gelöscht",
+              "message": "Die Messung wurde erfolgreich entfernt."
+            }
+          },
+          "error": {
+            "load": {
+              "title": "Messungen konnten nicht geladen werden",
+              "message": "Bitte versuchen Sie es in einem Moment erneut."
+            },
+            "conflict": {
+              "title": "Messung existiert bereits",
+              "message": "Für diese Metrik existiert in diesem Experiment bereits eine Messung. Bearbeiten Sie die bestehende Messung stattdessen."
+            },
+            "noAvailableMetric": {
+              "title": "Keine Metrik verfügbar",
+              "message": "Für dieses Experiment haben bereits alle Metriken dieser Hypothese eine Messung."
+            },
+            "create": {
+              "title": "Messung konnte nicht erstellt werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "update": {
+              "title": "Messung konnte nicht aktualisiert werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "delete": {
+              "title": "Messung konnte nicht gelöscht werden",
+              "message": "Bitte versuchen Sie es erneut."
+            }
+          }
+        },
+        "error": {
+          "invalidParams": {
+            "title": "Ungültige Routenparameter",
+            "message": "Die angeforderte Hypothesen-Route ist unvollständig."
+          },
+          "load": {
+            "title": "Hypothese konnte nicht geladen werden",
+            "message": "Bitte versuchen Sie es in einem Moment erneut."
+          }
         }
       },
       "modal": {

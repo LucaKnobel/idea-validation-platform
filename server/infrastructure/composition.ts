@@ -2,6 +2,9 @@ import { ideaRepository } from '@infrastructure/db/repositories/prisma-idea-repo
 import { ideaVersionRepository } from '@infrastructure/db/repositories/prisma-idea-version-repository'
 import { canvasRepository } from '@infrastructure/db/repositories/prisma-canvas-repository'
 import { hypothesisRepository } from '@infrastructure/db/repositories/prisma-hypothesis-repository'
+import { experimentRepository } from '@infrastructure/db/repositories/prisma-experiment-repository'
+import { metricRepository } from '@infrastructure/db/repositories/prisma-metric-repository'
+import { measurementRepository } from '@infrastructure/db/repositories/prisma-measurement-repository'
 import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
 import { logger } from '@infrastructure/logging/logger'
 
@@ -13,8 +16,21 @@ import { createGetIdeaVersionCanvas } from '@application/services/get-idea-versi
 import { createUpdateIdeaVersionCanvas } from '@application/services/update-idea-version-canvas'
 import { createCreateHypothesis } from '@application/services/create-hypothesis'
 import { createGetIdeaVersionHypotheses } from '@application/services/get-idea-version-hypotheses'
+import { createGetHypothesis } from '@application/services/get-hypothesis'
 import { createUpdateHypothesis } from '@application/services/update-hypothesis'
 import { createDeleteHypothesis } from '@application/services/delete-hypothesis'
+import { createGetHypothesisMetrics } from '@application/services/get-hypothesis-metrics'
+import { createCreateMetric } from '@application/services/create-metric'
+import { createUpdateMetric } from '@application/services/update-metric'
+import { createDeleteMetric } from '@application/services/delete-metric'
+import { createGetHypothesisExperiments } from '@application/services/get-hypothesis-experiments'
+import { createCreateExperiment } from '@application/services/create-experiment'
+import { createUpdateExperiment } from '@application/services/update-experiment'
+import { createDeleteExperiment } from '@application/services/delete-experiment'
+import { createGetExperimentMeasurements } from '@application/services/get-experiment-measurements'
+import { createCreateMeasurement } from '@application/services/create-measurement'
+import { createUpdateMeasurement } from '@application/services/update-measurement'
+import { createDeleteMeasurement } from '@application/services/delete-measurement'
 
 /**
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
@@ -60,6 +76,11 @@ const getIdeaVersionHypotheses = createGetIdeaVersionHypotheses(
   logger
 )
 
+const getHypothesis = createGetHypothesis(
+  hypothesisRepository,
+  logger
+)
+
 const updateHypothesis = createUpdateHypothesis(
   hypothesisRepository,
   logger
@@ -67,6 +88,66 @@ const updateHypothesis = createUpdateHypothesis(
 
 const deleteHypothesis = createDeleteHypothesis(
   hypothesisRepository,
+  logger
+)
+
+const getHypothesisMetrics = createGetHypothesisMetrics(
+  metricRepository,
+  logger
+)
+
+const createMetric = createCreateMetric(
+  metricRepository,
+  logger
+)
+
+const updateMetric = createUpdateMetric(
+  metricRepository,
+  logger
+)
+
+const deleteMetric = createDeleteMetric(
+  metricRepository,
+  logger
+)
+
+const getHypothesisExperiments = createGetHypothesisExperiments(
+  experimentRepository,
+  logger
+)
+
+const createExperiment = createCreateExperiment(
+  experimentRepository,
+  logger
+)
+
+const updateExperiment = createUpdateExperiment(
+  experimentRepository,
+  logger
+)
+
+const deleteExperiment = createDeleteExperiment(
+  experimentRepository,
+  logger
+)
+
+const getExperimentMeasurements = createGetExperimentMeasurements(
+  measurementRepository,
+  logger
+)
+
+const createMeasurement = createCreateMeasurement(
+  measurementRepository,
+  logger
+)
+
+const updateMeasurement = createUpdateMeasurement(
+  measurementRepository,
+  logger
+)
+
+const deleteMeasurement = createDeleteMeasurement(
+  measurementRepository,
   logger
 )
 
@@ -79,6 +160,19 @@ export {
   updateIdeaVersionCanvas,
   createHypothesis,
   getIdeaVersionHypotheses,
+  getHypothesis,
   updateHypothesis,
-  deleteHypothesis
+  deleteHypothesis,
+  getHypothesisMetrics,
+  createMetric,
+  updateMetric,
+  deleteMetric,
+  getHypothesisExperiments,
+  createExperiment,
+  updateExperiment,
+  deleteExperiment,
+  getExperimentMeasurements,
+  createMeasurement,
+  updateMeasurement,
+  deleteMeasurement
 }

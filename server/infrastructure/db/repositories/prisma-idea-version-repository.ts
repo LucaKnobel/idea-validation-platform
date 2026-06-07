@@ -1,6 +1,6 @@
 import { prisma } from '@infrastructure/db/prisma'
 import type { Prisma } from '@generated/prisma/client'
-import type { IdeaVersionRepository } from '@application/interfaces/idea-version-repository'
+import type { IdeaVersionListInput, IdeaVersionRepository } from '@application/interfaces/idea-version-repository'
 import type { Idea } from '@application/models/idea'
 
 type PrismaIdeaWithVersions = Prisma.IdeaGetPayload<{
@@ -33,10 +33,7 @@ const toDomainIdea = (row: PrismaIdeaWithVersions): Idea => {
   }
 }
 
-const buildIdeaWhere = (input: {
-  userId: string
-  search: string | null
-}): Prisma.IdeaWhereInput => {
+const buildIdeaWhere = (input: Pick<IdeaVersionListInput, 'userId' | 'search'>): Prisma.IdeaWhereInput => {
   if (!input.search) {
     return {
       userId: input.userId
@@ -57,12 +54,7 @@ const buildIdeaWhere = (input: {
 }
 
 export const ideaVersionRepository: IdeaVersionRepository = {
-  async listIdeasByUser(input: {
-    userId: string
-    search: string | null
-    page: number
-    pageSize: number
-  }): Promise<{ ideas: Idea[], total: number }> {
+  async listIdeasByUser(input: IdeaVersionListInput): Promise<{ ideas: Idea[], total: number }> {
     const skip = (input.page - 1) * input.pageSize
     const where = buildIdeaWhere({
       userId: input.userId,

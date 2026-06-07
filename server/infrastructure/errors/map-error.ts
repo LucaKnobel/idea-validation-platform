@@ -2,6 +2,9 @@ import { createError, type H3Event } from 'h3'
 import { SubscriptionLimitExceededError } from '@application/errors/subscription-errors'
 import { IdeaHasNoVersionsError, IdeaNotFoundError, IdeaVersionNotFoundError } from '@application/errors/idea-errors'
 import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
+import { ExperimentNotFoundError } from '@application/errors/experiment-errors'
+import { MetricNotFoundError } from '@application/errors/metric-errors'
+import { MeasurementMetricAlreadyExistsError, MeasurementNotFoundError } from '@application/errors/measurement-errors'
 import { logger } from '@infrastructure/logging/logger'
 
 /**
@@ -44,6 +47,34 @@ export const mapError = (error: unknown, event?: H3Event): Error => {
     return createError({
       statusCode: 404,
       statusText: 'Hypothesis not found'
+    })
+  }
+
+  if (error instanceof MetricNotFoundError) {
+    return createError({
+      statusCode: 404,
+      statusText: 'Metric not found'
+    })
+  }
+
+  if (error instanceof ExperimentNotFoundError) {
+    return createError({
+      statusCode: 404,
+      statusText: 'Experiment not found'
+    })
+  }
+
+  if (error instanceof MeasurementNotFoundError) {
+    return createError({
+      statusCode: 404,
+      statusText: 'Measurement not found'
+    })
+  }
+
+  if (error instanceof MeasurementMetricAlreadyExistsError) {
+    return createError({
+      statusCode: 409,
+      statusText: 'Measurement for metric already exists in experiment'
     })
   }
 

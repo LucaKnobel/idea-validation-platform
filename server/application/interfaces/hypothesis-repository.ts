@@ -1,17 +1,8 @@
 import type { CanvasElementType } from '@application/models/canvas-element'
 import type { Hypothesis, HypothesisDimension, HypothesisPriority } from '@application/models/hypothesis'
+import type { IdeaVersionOwnerInput, HypothesisOwnerInput } from '@application/interfaces/ownership-inputs'
 
-type IdeaVersionOwnerInput = {
-  userId: string
-  ideaId: string
-  ideaVersionId: string
-}
-
-type HypothesisOwnerInput = IdeaVersionOwnerInput & {
-  hypothesisId: string
-}
-
-type HypothesisFieldsInput = {
+export type HypothesisFieldsInput = {
   statement: string
   dimension: HypothesisDimension
   priority: HypothesisPriority
@@ -27,6 +18,12 @@ export interface HypothesisRepository {
    * Returns null when the version does not exist or is not accessible.
    */
   listByIdeaVersionForUser(input: IdeaVersionOwnerInput): Promise<Hypothesis[] | null>
+
+  /**
+   * Returns one hypothesis owned by the given user.
+   * Returns null when the hypothesis does not exist or is not accessible.
+   */
+  getByIdForUser(input: HypothesisOwnerInput): Promise<Hypothesis | null>
 
   /**
    * Creates one hypothesis in a version owned by the given user.

@@ -156,6 +156,21 @@ enum HypothesisPriority {
   LOW
 }
 
+enum ExperimentStatus {
+  PLANNED
+  RUNNING
+  COMPLETED
+  CANCELLED
+}
+
+enum ThresholdOperator {
+  GTE
+  GT
+  LTE
+  LT
+  EQ
+}
+
 model IdeaVersion {
   id             String          @id @default(uuid())
   ideaId         String
@@ -175,27 +190,29 @@ model IdeaVersion {
 }
 
 model Hypothesis {
-  id                String                      @id @default(uuid())
-  ideaVersionId     String
-  ideaVersion       IdeaVersion                 @relation(fields: [ideaVersionId], references: [id], onDelete: Cascade)
-  statement         String
-  dimension         HypothesisDimension
-  priority          HypothesisPriority
+  id                 String                    @id @default(uuid())
+  ideaVersionId      String
+  ideaVersion        IdeaVersion               @relation(fields: [ideaVersionId], references: [id], onDelete: Cascade)
+  statement          String
+  dimension          HypothesisDimension
+  priority           HypothesisPriority
   canvasSectionLinks HypothesisCanvasSection[]
-  createdAt         DateTime                    @default(now())
-  updatedAt         DateTime                    @updatedAt
+  metrics            Metric[]
+  experiments        Experiment[]
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
 
   @@index([ideaVersionId])
   @@map("hypothesis")
 }
 
 model HypothesisCanvasSection {
-  id                String          @id @default(uuid())
+  id                String            @id @default(uuid())
   hypothesisId      String
-  hypothesis        Hypothesis      @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
+  hypothesis        Hypothesis        @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
   canvasElementType CanvasElementType
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 
   @@unique([hypothesisId, canvasElementType])
   @@index([canvasElementType])
@@ -214,4 +231,64 @@ model CanvasElement {
   @@index([ideaVersionId])
   @@index([ideaVersionId, type])
   @@map("canvasElement")
+}
+
+model Metric {
+  id           String           @id @default(uuid())
+  hypothesisId String
+  hypothesis   Hypothesis       @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
+  measurements Measurement[]
+  name         String
+  description  String?
+  unit         String?
+  threshold    MetricThreshold?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([hypothesisId])
+  @@map("metric")
+}
+
+model Experiment {
+  id           String           @id @default(uuid())
+  hypothesisId String
+  hypothesis   Hypothesis       @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
+  measurements Measurement[]
+  title        String
+  description  String?
+  status       ExperimentStatus
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([hypothesisId])
+  @@map("experiment")
+}
+
+model Measurement {
+  id           String     @id @default(uuid())
+  experimentId String
+  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  metricId     String
+  metric       Metric     @relation(fields: [metricId], references: [id], onDelete: Cascade)
+  value        Decimal
+  note         String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([experimentId, metricId])
+  @@index([experimentId])
+  @@index([metricId])
+  @@map("measurement")
+}
+
+model MetricThreshold {
+  id             String            @id @default(uuid())
+  metricId       String            @unique
+  metric         Metric            @relation(fields: [metricId], references: [id], onDelete: Cascade)
+  operator       ThresholdOperator
+  referenceValue Decimal
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@map("metricThreshold")
 }

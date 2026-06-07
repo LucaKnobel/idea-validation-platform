@@ -1,9 +1,13 @@
 import { prisma } from '@infrastructure/db/prisma'
-import type { HypothesisRepository } from '@application/interfaces/hypothesis-repository'
-import type { CanvasElementType } from '@application/models/canvas-element'
-import type { Hypothesis, HypothesisDimension, HypothesisPriority } from '@application/models/hypothesis'
+import type { HypothesisFieldsInput, HypothesisRepository } from '@application/interfaces/hypothesis-repository'
+import type { Hypothesis } from '@application/models/hypothesis'
 import type { Prisma } from '@generated/prisma/client'
-import { isIdeaVersionOwnedByUser } from '@infrastructure/db/ownership-helpers'
+import type { HypothesisOwnerInput } from '@application/interfaces/ownership-inputs'
+import {
+  buildOwnedHypothesisWhere,
+  buildOwnedHypothesesByIdeaVersionWhere,
+  isIdeaVersionOwnedByUser
+} from '@infrastructure/db/ownership-helpers'
 
 type PrismaHypothesisWithSections = Prisma.HypothesisGetPayload<{
   include: {
@@ -34,24 +38,6 @@ const toDomainHypothesis = (row: PrismaHypothesisWithSections): Hypothesis => {
   }
 }
 
-const buildOwnedHypothesisWhere = (input: {
-  userId: string
-  ideaId: string
-  ideaVersionId: string
-  hypothesisId: string
-}): Prisma.HypothesisWhereInput => {
-  return {
-    id: input.hypothesisId,
-    ideaVersionId: input.ideaVersionId,
-    ideaVersion: {
-      ideaId: input.ideaId,
-      idea: {
-        userId: input.userId
-      }
-    }
-  }
-}
-
 /**
  * Prisma-backed implementation of the hypothesis repository contract.
  */
@@ -59,11 +45,7 @@ export const hypothesisRepository: HypothesisRepository = {
   /**
    * Lists all hypotheses for a user-owned idea version.
    */
-  async listByIdeaVersionForUser(input: {
-    userId: string
-    ideaId: string
-    ideaVersionId: string
-  }): Promise<Hypothesis[] | null> {
+  async listByIdeaVersionForUser(input: HypothesisOwnerInput): Promise<Hypothesis[] | null> {
     const hasAccess = await isIdeaVersionOwnedByUser(input)
 
     if (!hasAccess) {
@@ -71,15 +53,7 @@ export const hypothesisRepository: HypothesisRepository = {
     }
 
     const rows = await prisma.hypothesis.findMany({
-      where: {
-        ideaVersionId: input.ideaVersionId,
-        ideaVersion: {
-          ideaId: input.ideaId,
-          idea: {
-            userId: input.userId
-          }
-        }
-      },
+      where: buildOwnedHypothesesByIdeaVersionWhere(input),
       orderBy: [
         { createdAt: 'asc' }
       ],
@@ -96,17 +70,31 @@ export const hypothesisRepository: HypothesisRepository = {
   },
 
   /**
+   * Returns one hypothesis for a user-owned idea version.
+   */
+  async getByIdForUser(input: HypothesisOwnerInput): Promise<Hypothesis | null> {
+    const row = await prisma.hypothesis.findFirst({
+      where: buildOwnedHypothesisWhere(input),
+      include: {
+        canvasSectionLinks: {
+          orderBy: {
+            canvasElementType: 'asc'
+          }
+        }
+      }
+    })
+
+    if (row === null) {
+      return null
+    }
+
+    return toDomainHypothesis(row)
+  },
+
+  /**
    * Creates one hypothesis for a user-owned idea version.
    */
-  async createForIdeaVersion(input: {
-    userId: string
-    ideaId: string
-    ideaVersionId: string
-    statement: string
-    dimension: HypothesisDimension
-    priority: HypothesisPriority
-    canvasSectionTypes: CanvasElementType[]
-  }): Promise<Hypothesis | null> {
+  async createForIdeaVersion(input: HypothesisOwnerInput & HypothesisFieldsInput): Promise<Hypothesis | null> {
     const hasAccess = await isIdeaVersionOwnedByUser(input)
 
     if (!hasAccess) {
@@ -140,16 +128,7 @@ export const hypothesisRepository: HypothesisRepository = {
   /**
    * Updates one hypothesis and replaces its section links.
    */
-  async updateByIdForUser(input: {
-    userId: string
-    ideaId: string
-    ideaVersionId: string
-    hypothesisId: string
-    statement: string
-    dimension: HypothesisDimension
-    priority: HypothesisPriority
-    canvasSectionTypes: CanvasElementType[]
-  }): Promise<Hypothesis | null> {
+  async updateByIdForUser(input: HypothesisOwnerInput & HypothesisFieldsInput): Promise<Hypothesis | null> {
     const where = buildOwnedHypothesisWhere(input)
 
     const updated = await prisma.$transaction(async (tx) => {
@@ -203,12 +182,9 @@ export const hypothesisRepository: HypothesisRepository = {
   /**
    * Deletes one hypothesis for a user and returns whether a row was removed.
    */
-  async deleteByIdForUser(input: {
-    userId: string
-    ideaId: string
-    ideaVersionId: string
-    hypothesisId: string
-  }): Promise<boolean> {
+  async deleteByIdForUser(
+    input: HypothesisOwnerInput
+  ): Promise<boolean> {
     const result = await prisma.hypothesis.deleteMany({
       where: buildOwnedHypothesisWhere(input)
     })

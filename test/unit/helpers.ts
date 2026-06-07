@@ -8,6 +8,13 @@ import type { CanvasElement } from '@application/models/canvas-element'
 import type { HypothesisRepository } from '@application/interfaces/hypothesis-repository'
 import type { Hypothesis } from '@application/models/hypothesis'
 import type { HypothesisCanvasSection } from '@application/models/hypothesis-canvas-section'
+import type { MetricRepository } from '@application/interfaces/metric-repository'
+import type { Metric } from '@application/models/metric'
+import type { MetricThreshold } from '@application/models/metric-threshold'
+import type { ExperimentRepository } from '@application/interfaces/experiment-repository'
+import type { Experiment } from '@application/models/experiment'
+import type { MeasurementRepository } from '@application/interfaces/measurement-repository'
+import type { Measurement } from '@application/models/measurement'
 import type { SubscriptionService } from '@application/interfaces/subscription-service'
 import type { Logger } from '@interfaces/logger'
 
@@ -104,7 +111,73 @@ export const makeHypothesis = (overrides: Partial<Hypothesis> = {}): Hypothesis 
 
 export const makeHypothesisRepository = (): HypothesisRepository => ({
   listByIdeaVersionForUser: vi.fn(),
+  getByIdForUser: vi.fn(),
   createForIdeaVersion: vi.fn(),
+  updateByIdForUser: vi.fn(),
+  deleteByIdForUser: vi.fn()
+})
+
+export const makeMetricThreshold = (overrides: Partial<MetricThreshold> = {}): MetricThreshold => ({
+  id: 'metric-threshold-001',
+  metricId: 'metric-001',
+  operator: 'GTE',
+  referenceValue: 10,
+  createdAt: new Date(VALID_ISO_DATETIME),
+  updatedAt: new Date(VALID_ISO_DATETIME),
+  ...overrides
+})
+
+export const makeMetric = (overrides: Partial<Metric> = {}): Metric => ({
+  id: 'metric-001',
+  hypothesisId: 'hypothesis-001',
+  name: 'Conversion Rate',
+  description: 'Measures sign-up conversion.',
+  unit: '%',
+  threshold: makeMetricThreshold(),
+  createdAt: new Date(VALID_ISO_DATETIME),
+  updatedAt: new Date(VALID_ISO_DATETIME),
+  ...overrides
+})
+
+export const makeMetricRepository = (): MetricRepository => ({
+  listByHypothesisForUser: vi.fn(),
+  createForHypothesis: vi.fn(),
+  updateByIdForUser: vi.fn(),
+  deleteByIdForUser: vi.fn()
+})
+
+export const makeExperiment = (overrides: Partial<Experiment> = {}): Experiment => ({
+  id: 'experiment-001',
+  hypothesisId: 'hypothesis-001',
+  title: 'Landing Page Test',
+  description: 'Validate the onboarding headline.',
+  status: 'PLANNED',
+  createdAt: new Date(VALID_ISO_DATETIME),
+  updatedAt: new Date(VALID_ISO_DATETIME),
+  ...overrides
+})
+
+export const makeExperimentRepository = (): ExperimentRepository => ({
+  listByHypothesisForUser: vi.fn(),
+  createForHypothesis: vi.fn(),
+  updateByIdForUser: vi.fn(),
+  deleteByIdForUser: vi.fn()
+})
+
+export const makeMeasurement = (overrides: Partial<Measurement> = {}): Measurement => ({
+  id: 'measurement-001',
+  experimentId: 'experiment-001',
+  metricId: 'metric-001',
+  value: 42,
+  note: 'Observed in first cohort',
+  createdAt: new Date(VALID_ISO_DATETIME),
+  updatedAt: new Date(VALID_ISO_DATETIME),
+  ...overrides
+})
+
+export const makeMeasurementRepository = (): MeasurementRepository => ({
+  listByExperimentForUser: vi.fn(),
+  createForExperiment: vi.fn(),
   updateByIdForUser: vi.fn(),
   deleteByIdForUser: vi.fn()
 })
