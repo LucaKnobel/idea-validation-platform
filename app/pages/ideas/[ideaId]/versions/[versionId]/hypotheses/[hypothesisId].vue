@@ -4,7 +4,7 @@ definePageMeta({
   layout: 'idea-workspace'
 })
 
-const { createHypothesisFormSchema, createMetricFormSchema } = useValidation()
+const { createHypothesisFormSchema, createMetricFormSchema, createExperimentFormSchema } = useValidation()
 const {
   createEmptyFormState,
   dimensionOptions,
@@ -36,6 +36,7 @@ const {
 
 const formSchema = createHypothesisFormSchema()
 const metricFormSchema = createMetricFormSchema()
+const experimentFormSchema = createExperimentFormSchema()
 
 const {
   updateFormTitle,
@@ -102,31 +103,38 @@ const {
 })
 const {
   experiments,
-  isLoading: isExperimentsLoading,
-  hasError: hasExperimentsError,
-  loadExperiments,
-  clearExperiments
-} = useHypothesisExperiments()
+  isExperimentsLoading,
+  isExperimentDeletingId: experimentDeletingId,
+  hasExperimentsError,
+  isExperimentModalOpen,
+  isExperimentDeleteModalOpen,
+  experimentDeleteCandidate,
+  experimentFormState,
+  experimentFormTitle,
+  experimentSubmitLabel,
+  experimentStatusOptions,
+  isAnyExperimentActionLoading,
+  isExperimentDeleteSubmitting,
+  loadExperimentsForRoute: loadExperimentsForRouteFromDetail,
+  clearExperiments,
+  openCreateExperimentModal,
+  openEditExperimentModal,
+  openExperimentDeleteModal,
+  submitExperimentForm: onExperimentSubmit,
+  confirmDeleteExperiment
+} = useHypothesisExperimentsDetail({
+  ideaId,
+  versionId,
+  hypothesisId,
+  hasValidRouteParams
+})
 
 const reloadMetricsForRoute = async (): Promise<void> => {
   await loadMetricsForRoute()
 }
 
-const loadExperimentsForRoute = async (): Promise<void> => {
-  if (!hasValidRouteParams.value) {
-    clearExperiments()
-    return
-  }
-
-  await loadExperiments({
-    ideaId: ideaId.value,
-    versionId: versionId.value,
-    hypothesisId: hypothesisId.value
-  })
-}
-
 const reloadExperimentsForRoute = async (): Promise<void> => {
-  await loadExperimentsForRoute()
+  await loadExperimentsForRouteFromDetail()
 }
 
 const openHypothesisEditModal = (): void => {
@@ -152,7 +160,7 @@ const loadHypothesisForRoute = async (): Promise<void> => {
       hypothesisId: hypothesisId.value
     }),
     loadMetricsForRoute(),
-    loadExperimentsForRoute()
+    loadExperimentsForRouteFromDetail()
   ])
 }
 
@@ -278,10 +286,13 @@ watch([ideaId, versionId, hypothesisId], async () => {
       :is-loading="isExperimentsLoading"
       :has-error="hasExperimentsError"
       :has-valid-route-params="hasValidRouteParams"
-      :is-any-action-loading="false"
-      :is-experiment-delete-submitting="false"
-      :experiment-deleting-id="null"
+      :is-any-action-loading="isAnyExperimentActionLoading"
+      :is-experiment-delete-submitting="isExperimentDeleteSubmitting"
+      :experiment-deleting-id="experimentDeletingId"
       @retry="reloadExperimentsForRoute"
+      @create="openCreateExperimentModal"
+      @edit="openEditExperimentModal"
+      @delete="openExperimentDeleteModal"
     />
 
     <IdeaWorkspaceHypothesisEvidenceSection />
@@ -326,6 +337,26 @@ watch([ideaId, versionId, hypothesisId], async () => {
       :is-submitting="isMetricDeleteSubmitting"
       @update:open="isMetricDeleteModalOpen = $event"
       @confirm-delete="confirmDeleteMetric"
+    />
+
+    <IdeaWorkspaceExperimentFormModal
+      :open="isExperimentModalOpen"
+      :form-schema="experimentFormSchema"
+      :initial-state="experimentFormState"
+      :title="experimentFormTitle"
+      :submit-label="experimentSubmitLabel"
+      :is-submitting="isAnyExperimentActionLoading"
+      :status-options="experimentStatusOptions"
+      @update:open="isExperimentModalOpen = $event"
+      @submit="onExperimentSubmit"
+    />
+
+    <IdeaWorkspaceExperimentDeleteModal
+      :open="isExperimentDeleteModalOpen"
+      :delete-candidate="experimentDeleteCandidate"
+      :is-submitting="isExperimentDeleteSubmitting"
+      @update:open="isExperimentDeleteModalOpen = $event"
+      @confirm-delete="confirmDeleteExperiment"
     />
   </div>
 </template>

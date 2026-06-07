@@ -1,7 +1,5 @@
 import * as z from 'zod'
 import { CANVAS_SECTION_ORDER } from '~/types/canvasSections'
-import type { CreateHypothesisBodyDto } from '#shared/types/hypothesis'
-import type { CreateMetricBodyDto } from '#shared/types/metric'
 
 const HYPOTHESIS_DIMENSIONS = [
   'PROBLEM',
@@ -24,6 +22,13 @@ const METRIC_THRESHOLD_OPERATORS = [
   'LT',
   'EQ'
 ] as const satisfies readonly CreateMetricBodyDto['threshold']['operator'][]
+
+const EXPERIMENT_STATUSES = [
+  'PLANNED',
+  'RUNNING',
+  'COMPLETED',
+  'CANCELLED'
+] as const satisfies readonly CreateExperimentBodyDto['status'][]
 
 /**
  * Creates localized Zod schemas used by frontend forms (auth, idea creation, and canvas).
@@ -162,6 +167,22 @@ export const useValidation = () => {
     })
   })
 
+  /**
+   * Builds the schema for creating and updating experiments in one modal.
+   */
+  const createExperimentFormSchema = () => z.object({
+    title: z.string({ error: t('validation.experiment.titleRequired') })
+      .trim()
+      .min(1, t('validation.experiment.titleRequired'))
+      .max(200, t('validation.experiment.titleTooLong')),
+    description: z.string()
+      .trim()
+      .max(4000, t('validation.experiment.descriptionTooLong'))
+      .optional()
+      .or(z.literal('')),
+    status: z.enum(EXPERIMENT_STATUSES, { error: t('validation.experiment.statusRequired') })
+  })
+
   return {
     createPasswordSchema,
     createRegisterFormSchema,
@@ -171,6 +192,7 @@ export const useValidation = () => {
     createCanvasElementSchema,
     createReplaceCanvasSchema,
     createHypothesisFormSchema,
-    createMetricFormSchema
+    createMetricFormSchema,
+    createExperimentFormSchema
   }
 }
