@@ -153,16 +153,7 @@ const emit = defineEmits<{
           </div>
         </div>
 
-        <div class="mt-3 grid gap-2 text-sm md:grid-cols-2">
-          <div class="rounded-md bg-elevated px-3 py-2">
-            <p class="text-xs text-muted">
-              {{ $t('ideaWorkspace.hypotheses.detail.metrics.fields.unit') }}
-            </p>
-            <p class="font-medium text-highlighted">
-              {{ metric.unit || '-' }}
-            </p>
-          </div>
-
+        <div class="mt-3 grid gap-2 text-sm md:grid-cols-1">
           <div class="rounded-md bg-elevated px-3 py-2">
             <p class="text-xs text-muted">
               {{ $t('ideaWorkspace.hypotheses.detail.metrics.fields.threshold') }}

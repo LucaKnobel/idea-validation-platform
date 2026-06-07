@@ -611,7 +611,6 @@
           "title": "Experimente",
           "count": "{count} Experimente",
           "noDescription": "Keine Beschreibung",
-          "noTemplate": "Manuelles Experiment",
           "actions": {
             "create": "Experiment erstellen",
             "createFirst": "Erstes Experiment hinzufügen",
@@ -621,7 +620,6 @@
           },
           "fields": {
             "status": "Status",
-            "template": "Template",
             "measurements": "Messungen"
           },
           "status": {

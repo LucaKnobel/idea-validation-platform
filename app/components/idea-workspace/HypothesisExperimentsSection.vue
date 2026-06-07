@@ -164,22 +164,13 @@ const emit = defineEmits<{
           </div>
         </div>
 
-        <div class="mt-3 grid gap-2 text-sm md:grid-cols-3">
+        <div class="mt-3 grid gap-2 text-sm md:grid-cols-2">
           <div class="rounded-md bg-elevated px-3 py-2">
             <p class="text-xs text-muted">
               {{ $t('ideaWorkspace.hypotheses.detail.experiments.fields.status') }}
             </p>
             <p class="font-medium text-highlighted">
               {{ $t(`ideaWorkspace.hypotheses.detail.experiments.status.${experiment.status}`) }}
-            </p>
-          </div>
-
-          <div class="rounded-md bg-elevated px-3 py-2">
-            <p class="text-xs text-muted">
-              {{ $t('ideaWorkspace.hypotheses.detail.experiments.fields.template') }}
-            </p>
-            <p class="font-medium text-highlighted break-all">
-              {{ experiment.templateId || $t('ideaWorkspace.hypotheses.detail.experiments.noTemplate') }}
             </p>
           </div>
 
