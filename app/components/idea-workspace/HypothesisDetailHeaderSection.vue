@@ -22,8 +22,8 @@ const emit = defineEmits<{
     :description="$t('ideaWorkspace.hypotheses.detail.description')"
   />
 
-  <div class="flex flex-col gap-4 rounded-xl border border-default bg-default p-4 md:flex-row md:items-start md:justify-between">
-    <div class="min-w-0 flex-1 space-y-2">
+  <div class="flex flex-col gap-3 rounded-xl border border-default bg-default p-3 md:flex-row md:items-start md:justify-between">
+    <div class="min-w-0 flex-1 space-y-1.5">
       <USkeleton
         v-if="isLoading"
         class="h-8 w-full max-w-2xl"
@@ -31,7 +31,7 @@ const emit = defineEmits<{
 
       <h1
         v-else
-        class="text-2xl leading-8 font-semibold text-highlighted md:text-3xl"
+        class="text-xl leading-7 font-semibold text-highlighted md:text-2xl md:leading-8"
       >
         {{ hypothesisStatement }}
       </h1>
@@ -40,23 +40,23 @@ const emit = defineEmits<{
     <div class="flex shrink-0 flex-wrap items-center gap-2">
       <UButton
         color="primary"
-        variant="soft"
+        variant="ghost"
         icon="i-lucide-pencil"
         :disabled="isLoading || hypothesis === null"
+        :aria-label="$t('ideaWorkspace.hypotheses.detail.actions.edit')"
+        :title="$t('ideaWorkspace.hypotheses.detail.actions.edit')"
         @click="emit('edit')"
-      >
-        {{ $t('ideaWorkspace.hypotheses.detail.actions.edit') }}
-      </UButton>
+      />
 
       <UButton
         color="error"
-        variant="soft"
+        variant="ghost"
         icon="i-lucide-trash-2"
         :disabled="isLoading || hypothesis === null"
+        :aria-label="$t('ideaWorkspace.hypotheses.detail.actions.delete')"
+        :title="$t('ideaWorkspace.hypotheses.detail.actions.delete')"
         @click="emit('delete')"
-      >
-        {{ $t('ideaWorkspace.hypotheses.detail.actions.delete') }}
-      </UButton>
+      />
     </div>
   </div>
 </template>

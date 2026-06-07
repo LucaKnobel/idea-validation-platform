@@ -21,8 +21,8 @@ const props = defineProps<HypothesisOverviewSectionProps>()
       </h2>
     </template>
 
-    <dl class="space-y-4 text-sm">
-      <div class="grid grid-cols-1 gap-3 md:flex md:flex-wrap md:items-start md:gap-4">
+    <dl class="space-y-2.5 text-sm">
+      <div class="grid grid-cols-1 gap-2 md:flex md:flex-wrap md:items-start md:gap-3">
         <div class="grid gap-1">
           <dt class="font-medium text-muted">
             {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.status') }}
@@ -66,12 +66,12 @@ const props = defineProps<HypothesisOverviewSectionProps>()
         </div>
       </div>
 
-      <div class="grid gap-2">
+      <div class="grid gap-1.5">
         <dt class="font-medium text-muted">
           {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.canvasAssignments') }}
         </dt>
 
-        <dd class="flex flex-wrap gap-2">
+        <dd class="flex flex-wrap gap-1.5">
           <UBadge
             v-for="section in props.hypothesis?.canvasSectionLinks || []"
             :key="section.id"

@@ -113,15 +113,15 @@ const emit = defineEmits<{
 
     <div
       v-else
-      class="space-y-3"
+      class="space-y-2.5"
     >
       <article
         v-for="experiment in experiments"
         :key="experiment.id"
-        class="rounded-lg border border-default bg-default p-4"
+        class="rounded-lg border border-default bg-default p-3"
       >
-        <div class="flex flex-wrap items-start gap-3">
-          <div class="min-w-0 flex-1 space-y-1">
+        <div class="flex flex-wrap items-start gap-2.5">
+          <div class="min-w-0 flex-1 space-y-0.5">
             <h3 class="text-sm font-semibold text-highlighted">
               {{ experiment.title }}
             </h3>
@@ -136,10 +136,10 @@ const emit = defineEmits<{
               variant="ghost"
               icon="i-lucide-pencil"
               :disabled="isAnyActionLoading"
+              :aria-label="$t('actions.edit')"
+              :title="$t('actions.edit')"
               @click="emit('edit', experiment)"
-            >
-              {{ $t('actions.edit') }}
-            </UButton>
+            />
 
             <UButton
               color="error"
@@ -147,14 +147,14 @@ const emit = defineEmits<{
               icon="i-lucide-trash-2"
               :loading="experimentDeletingId === experiment.id"
               :disabled="isExperimentDeleteSubmitting"
+              :aria-label="$t('actions.delete')"
+              :title="$t('actions.delete')"
               @click="emit('delete', experiment)"
-            >
-              {{ $t('actions.delete') }}
-            </UButton>
+            />
           </div>
         </div>
 
-        <div class="mt-3 space-y-2 text-sm">
+        <div class="mt-2 space-y-2 text-sm">
           <div class="rounded-md bg-elevated px-3 py-2">
             <p class="text-xs text-muted">
               {{ $t('ideaWorkspace.hypotheses.detail.experiments.fields.status') }}
@@ -164,7 +164,7 @@ const emit = defineEmits<{
             </p>
           </div>
 
-          <div class="rounded-md bg-elevated px-3 py-2 space-y-2">
+          <div class="rounded-md bg-elevated px-3 py-2 space-y-1.5">
             <p class="text-xs text-muted">
               {{ $t('ideaWorkspace.hypotheses.detail.measurements.title') }}
             </p>
@@ -197,7 +197,7 @@ const emit = defineEmits<{
 
             <div
               v-else
-              class="space-y-2"
+              class="space-y-1.5"
             >
               <article
                 v-for="measurement in props.measurementsByExperiment[experiment.id]"
@@ -223,10 +223,10 @@ const emit = defineEmits<{
                     variant="ghost"
                     icon="i-lucide-pencil"
                     :disabled="isAnyActionLoading"
+                    :aria-label="$t('ideaWorkspace.hypotheses.detail.measurements.actions.update')"
+                    :title="$t('ideaWorkspace.hypotheses.detail.measurements.actions.update')"
                     @click="emit('editMeasurement', experiment, measurement)"
-                  >
-                    {{ $t('ideaWorkspace.hypotheses.detail.measurements.actions.update') }}
-                  </UButton>
+                  />
 
                   <UButton
                     color="error"
@@ -234,10 +234,10 @@ const emit = defineEmits<{
                     icon="i-lucide-trash-2"
                     :loading="measurementDeletingId === measurement.id"
                     :disabled="isMeasurementDeleteSubmitting"
+                    :aria-label="$t('actions.delete')"
+                    :title="$t('actions.delete')"
                     @click="emit('deleteMeasurement', experiment, measurement)"
-                  >
-                    {{ $t('actions.delete') }}
-                  </UButton>
+                  />
                 </div>
               </article>
 
