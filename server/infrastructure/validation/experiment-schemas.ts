@@ -1,14 +1,9 @@
 import * as z from 'zod'
 import { experimentStatuses } from '@application/models/experiment'
 import { HypothesisRouteParamsSchema } from '@infrastructure/validation/hypothesis-schemas'
+import { createNullableTrimmedStringSchema } from '@infrastructure/validation/string-schemas'
 
 const EXPERIMENT_TEMPLATE_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
-
-const NullableExperimentStringSchema = (maxLength: number, tooLongMessage: string) => z.string()
-  .trim()
-  .max(maxLength, tooLongMessage)
-  .nullable()
-  .transform(value => value && value.length > 0 ? value : null)
 
 export const ExperimentCollectionRouteParamsSchema = HypothesisRouteParamsSchema
 
@@ -37,7 +32,7 @@ export const ExperimentTemplateIdSchema = z.union([
 
 export const UpsertExperimentBodySchema = z.object({
   title: z.string().trim().min(1, 'Experiment title is required').max(200, 'Experiment title is too long'),
-  description: NullableExperimentStringSchema(4000, 'Experiment description is too long'),
+  description: createNullableTrimmedStringSchema(4000, 'Experiment description is too long'),
   templateId: ExperimentTemplateIdSchema,
   status: ExperimentStatusSchema
 })
