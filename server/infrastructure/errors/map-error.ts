@@ -4,6 +4,7 @@ import { IdeaHasNoVersionsError, IdeaNotFoundError, IdeaVersionNotFoundError } f
 import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
 import { ExperimentNotFoundError } from '@application/errors/experiment-errors'
 import { MetricNotFoundError } from '@application/errors/metric-errors'
+import { MeasurementNotFoundError } from '@application/errors/measurement-errors'
 import { logger } from '@infrastructure/logging/logger'
 
 /**
@@ -60,6 +61,13 @@ export const mapError = (error: unknown, event?: H3Event): Error => {
     return createError({
       statusCode: 404,
       statusText: 'Experiment not found'
+    })
+  }
+
+  if (error instanceof MeasurementNotFoundError) {
+    return createError({
+      statusCode: 404,
+      statusText: 'Measurement not found'
     })
   }
 
