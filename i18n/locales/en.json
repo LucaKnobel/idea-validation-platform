@@ -502,7 +502,99 @@
           }
         },
         "metrics": {
-          "title": "Metrics"
+          "title": "Metrics",
+          "count": "{count} metrics",
+          "noDescription": "No description",
+          "actions": {
+            "create": "Create metric",
+            "createFirst": "Add first metric",
+            "update": "Update metric",
+            "deleteConfirm": "Delete metric"
+          },
+          "fields": {
+            "unit": "Unit",
+            "threshold": "Threshold"
+          },
+          "operators": {
+            "GTE": ">=",
+            "GT": ">",
+            "LTE": "<=",
+            "LT": "<",
+            "EQ": "="
+          },
+          "empty": {
+            "title": "No metrics yet",
+            "description": "Define measurable thresholds so you can evaluate this hypothesis objectively."
+          },
+          "modal": {
+            "createTitle": "Create metric",
+            "editTitle": "Edit metric",
+            "description": "Capture one measurable signal and the threshold that indicates success."
+          },
+          "deleteModal": {
+            "title": "Delete metric",
+            "description": "Please confirm that you want to remove this metric.",
+            "warning": "This action permanently deletes the metric and its linked threshold."
+          },
+          "form": {
+            "name": {
+              "label": "Metric name",
+              "placeholder": "Example: Trial conversion rate"
+            },
+            "description": {
+              "label": "Description",
+              "description": "Describes what is being measured.",
+              "placeholder": "Example: Share of trial users that convert within 14 days"
+            },
+            "criterion": {
+              "label": "Success Criterion"
+            },
+            "unit": {
+              "label": "Unit",
+              "description": "e.g. %, CHF, users",
+              "placeholder": "Example: %"
+            },
+            "operator": {
+              "label": "Success Condition",
+              "placeholder": "Select an operator"
+            },
+            "referenceValue": {
+              "label": "Target Value",
+              "placeholder": "Example: 15"
+            }
+          },
+          "success": {
+            "create": {
+              "title": "Metric created",
+              "message": "The metric was saved successfully."
+            },
+            "update": {
+              "title": "Metric updated",
+              "message": "The metric was updated successfully."
+            },
+            "delete": {
+              "title": "Metric deleted",
+              "message": "The metric was removed successfully."
+            }
+          },
+          "error": {
+            "load": {
+              "title": "Could not load metrics",
+              "message": "Please try again in a moment."
+            },
+            "create": {
+              "title": "Could not create metric",
+              "message": "Please check your input and try again."
+            },
+            "update": {
+              "title": "Could not update metric",
+              "message": "Please check your input and try again."
+            },
+            "delete": {
+              "title": "Could not delete metric",
+              "message": "Please try again."
+            }
+          }
         },
         "experiments": {
           "title": "Experiments"

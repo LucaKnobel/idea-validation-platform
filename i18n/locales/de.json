@@ -502,7 +502,99 @@
           }
         },
         "metrics": {
-          "title": "Metriken"
+          "title": "Metriken",
+          "count": "{count} Metriken",
+          "noDescription": "Keine Beschreibung",
+          "actions": {
+            "create": "Metrik erstellen",
+            "createFirst": "Erste Metrik hinzufügen",
+            "update": "Metrik aktualisieren",
+            "deleteConfirm": "Metrik löschen"
+          },
+          "fields": {
+            "unit": "Einheit",
+            "threshold": "Schwellwert"
+          },
+          "operators": {
+            "GTE": ">=",
+            "GT": ">",
+            "LTE": "<=",
+            "LT": "<",
+            "EQ": "="
+          },
+          "empty": {
+            "title": "Noch keine Metriken",
+            "description": "Definieren Sie messbare Schwellwerte, um diese Hypothese objektiv zu bewerten."
+          },
+          "modal": {
+            "createTitle": "Metrik erstellen",
+            "editTitle": "Metrik bearbeiten",
+            "description": "Erfassen Sie ein messbares Signal und den Schwellwert, der Erfolg anzeigt."
+          },
+          "deleteModal": {
+            "title": "Metrik löschen",
+            "description": "Bitte bestätigen Sie, dass Sie diese Metrik entfernen möchten.",
+            "warning": "Diese Aktion löscht die Metrik und den verknüpften Schwellwert dauerhaft."
+          },
+          "form": {
+            "name": {
+              "label": "Metrik-Name",
+              "placeholder": "Beispiel: Trial-Conversion-Rate"
+            },
+            "description": {
+              "label": "Beschreibung",
+              "description": "Beschreibt, was gemessen wird.",
+              "placeholder": "Beispiel: Anteil der Trial-Nutzer, die innerhalb von 14 Tagen konvertieren"
+            },
+            "criterion": {
+              "label": "Erfolgskriterium"
+            },
+            "unit": {
+              "label": "Einheit",
+              "description": "z.B. %, CHF, Nutzer",
+              "placeholder": "Beispiel: %"
+            },
+            "operator": {
+              "label": "Erfolgsbedingung",
+              "placeholder": "Operator wählen"
+            },
+            "referenceValue": {
+              "label": "Zielwert",
+              "placeholder": "Beispiel: 15"
+            }
+          },
+          "success": {
+            "create": {
+              "title": "Metrik erstellt",
+              "message": "Die Metrik wurde erfolgreich gespeichert."
+            },
+            "update": {
+              "title": "Metrik aktualisiert",
+              "message": "Die Metrik wurde erfolgreich aktualisiert."
+            },
+            "delete": {
+              "title": "Metrik gelöscht",
+              "message": "Die Metrik wurde erfolgreich entfernt."
+            }
+          },
+          "error": {
+            "load": {
+              "title": "Metriken konnten nicht geladen werden",
+              "message": "Bitte versuchen Sie es in einem Moment erneut."
+            },
+            "create": {
+              "title": "Metrik konnte nicht erstellt werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "update": {
+              "title": "Metrik konnte nicht aktualisiert werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "delete": {
+              "title": "Metrik konnte nicht gelöscht werden",
+              "message": "Bitte versuchen Sie es erneut."
+            }
+          }
         },
         "experiments": {
           "title": "Experimente"

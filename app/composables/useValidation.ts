@@ -158,8 +158,7 @@ export const useValidation = () => {
       .or(z.literal('')),
     threshold: z.object({
       operator: z.enum(METRIC_THRESHOLD_OPERATORS, { error: t('validation.metric.operatorRequired') }),
-      referenceValue: z.number({ error: t('validation.metric.referenceValueRequired') })
-        .finite(t('validation.metric.referenceValueFinite'))
+      referenceValue: z.coerce.number({ error: t('validation.metric.referenceValueRequired') })
     })
   })
 
