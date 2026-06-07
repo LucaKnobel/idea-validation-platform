@@ -4,6 +4,7 @@ import { canvasRepository } from '@infrastructure/db/repositories/prisma-canvas-
 import { hypothesisRepository } from '@infrastructure/db/repositories/prisma-hypothesis-repository'
 import { experimentRepository } from '@infrastructure/db/repositories/prisma-experiment-repository'
 import { metricRepository } from '@infrastructure/db/repositories/prisma-metric-repository'
+import { measurementRepository } from '@infrastructure/db/repositories/prisma-measurement-repository'
 import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
 import { logger } from '@infrastructure/logging/logger'
 
@@ -26,6 +27,10 @@ import { createGetHypothesisExperiments } from '@application/services/get-hypoth
 import { createCreateExperiment } from '@application/services/create-experiment'
 import { createUpdateExperiment } from '@application/services/update-experiment'
 import { createDeleteExperiment } from '@application/services/delete-experiment'
+import { createGetExperimentMeasurements } from '@application/services/get-experiment-measurements'
+import { createCreateMeasurement } from '@application/services/create-measurement'
+import { createUpdateMeasurement } from '@application/services/update-measurement'
+import { createDeleteMeasurement } from '@application/services/delete-measurement'
 
 /**
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
@@ -126,6 +131,26 @@ const deleteExperiment = createDeleteExperiment(
   logger
 )
 
+const getExperimentMeasurements = createGetExperimentMeasurements(
+  measurementRepository,
+  logger
+)
+
+const createMeasurement = createCreateMeasurement(
+  measurementRepository,
+  logger
+)
+
+const updateMeasurement = createUpdateMeasurement(
+  measurementRepository,
+  logger
+)
+
+const deleteMeasurement = createDeleteMeasurement(
+  measurementRepository,
+  logger
+)
+
 export {
   subscriptionService,
   createIdea,
@@ -145,5 +170,9 @@ export {
   getHypothesisExperiments,
   createExperiment,
   updateExperiment,
-  deleteExperiment
+  deleteExperiment,
+  getExperimentMeasurements,
+  createMeasurement,
+  updateMeasurement,
+  deleteMeasurement
 }

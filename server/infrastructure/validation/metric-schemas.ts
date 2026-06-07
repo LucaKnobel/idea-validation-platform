@@ -16,7 +16,7 @@ export const ThresholdOperatorSchema = z.enum(thresholdOperators)
 
 export const MetricThresholdInputSchema = z.object({
   operator: ThresholdOperatorSchema,
-  referenceValue: z.number().finite('Metric reference value must be a finite number')
+  referenceValue: z.number()
 })
 
 export const UpsertMetricBodySchema = z.object({
