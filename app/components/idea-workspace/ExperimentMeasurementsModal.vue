@@ -41,13 +41,6 @@ const { t } = useI18n()
   >
     <template #body>
       <div class="flex flex-wrap items-center gap-2">
-        <UBadge
-          color="neutral"
-          variant="subtle"
-        >
-          {{ t('ideaWorkspace.hypotheses.detail.measurements.count', { count: measurements.length }) }}
-        </UBadge>
-
         <div class="ms-auto">
           <UButton
             icon="i-lucide-plus"

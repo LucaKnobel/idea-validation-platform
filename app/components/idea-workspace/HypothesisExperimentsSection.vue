@@ -32,13 +32,6 @@ const emit = defineEmits<{
           {{ $t('ideaWorkspace.hypotheses.detail.experiments.title') }}
         </h2>
 
-        <UBadge
-          color="neutral"
-          variant="subtle"
-        >
-          {{ $t('ideaWorkspace.hypotheses.detail.experiments.count', { count: experiments.length }) }}
-        </UBadge>
-
         <div class="ms-auto">
           <UButton
             icon="i-lucide-plus"
