@@ -1,5 +1,6 @@
 import type {
   MeasurementMutationInput,
+  MeasurementMutationResult,
   MeasurementRepository,
   MeasurementWriteInput
 } from '@application/interfaces/measurement-repository'
@@ -14,6 +15,14 @@ import {
 } from '@infrastructure/db/ownership-helpers'
 
 type PrismaMeasurement = Prisma.MeasurementGetPayload<Record<string, never>>
+
+const isPrismaUniqueConstraintViolation = (error: unknown): boolean => {
+  if (!error || typeof error !== 'object') {
+    return false
+  }
+
+  return (error as { code?: string }).code === 'P2002'
+}
 
 const toDomainMeasurement = (row: PrismaMeasurement): Measurement => {
   return {
@@ -57,7 +66,7 @@ export const measurementRepository: MeasurementRepository = {
   /**
    * Creates one measurement in an experiment owned by the current user.
    */
-  async createForExperiment(input: MeasurementWriteInput): Promise<Measurement | null> {
+  async createForExperiment(input: MeasurementWriteInput): Promise<MeasurementMutationResult> {
     const experiment = await prisma.experiment.findFirst({
       where: buildOwnedExperimentWhere(input),
       select: {
@@ -67,7 +76,7 @@ export const measurementRepository: MeasurementRepository = {
     })
 
     if (experiment === null) {
-      return null
+      return { kind: 'notFound' }
     }
 
     const metric = await prisma.metric.findFirst({
@@ -79,25 +88,38 @@ export const measurementRepository: MeasurementRepository = {
     })
 
     if (metric === null) {
-      return null
+      return { kind: 'notFound' }
     }
 
-    const row = await prisma.measurement.create({
-      data: {
-        experimentId: input.experimentId,
-        metricId: input.metricId,
-        value: input.value,
-        note: input.note
-      }
-    })
+    let row: PrismaMeasurement
 
-    return toDomainMeasurement(row)
+    try {
+      row = await prisma.measurement.create({
+        data: {
+          experimentId: input.experimentId,
+          metricId: input.metricId,
+          value: input.value,
+          note: input.note
+        }
+      })
+    } catch (error) {
+      if (isPrismaUniqueConstraintViolation(error)) {
+        return { kind: 'conflict' }
+      }
+
+      throw error
+    }
+
+    return {
+      kind: 'success',
+      measurement: toDomainMeasurement(row)
+    }
   },
 
   /**
    * Updates one measurement owned by the current user.
    */
-  async updateByIdForUser(input: MeasurementMutationInput): Promise<Measurement | null> {
+  async updateByIdForUser(input: MeasurementMutationInput): Promise<MeasurementMutationResult> {
     const where = buildOwnedMeasurementWhere(input)
 
     return prisma.$transaction(async (tx) => {
@@ -114,7 +136,7 @@ export const measurementRepository: MeasurementRepository = {
       })
 
       if (existingMeasurement === null) {
-        return null
+        return { kind: 'notFound' }
       }
 
       const metric = await tx.metric.findFirst({
@@ -126,21 +148,34 @@ export const measurementRepository: MeasurementRepository = {
       })
 
       if (metric === null) {
-        return null
+        return { kind: 'notFound' }
       }
 
-      const row = await tx.measurement.update({
-        where: {
-          id: existingMeasurement.id
-        },
-        data: {
-          metricId: input.metricId,
-          value: input.value,
-          note: input.note
-        }
-      })
+      let row: PrismaMeasurement
 
-      return toDomainMeasurement(row)
+      try {
+        row = await tx.measurement.update({
+          where: {
+            id: existingMeasurement.id
+          },
+          data: {
+            metricId: input.metricId,
+            value: input.value,
+            note: input.note
+          }
+        })
+      } catch (error) {
+        if (isPrismaUniqueConstraintViolation(error)) {
+          return { kind: 'conflict' }
+        }
+
+        throw error
+      }
+
+      return {
+        kind: 'success',
+        measurement: toDomainMeasurement(row)
+      }
     })
   },
 

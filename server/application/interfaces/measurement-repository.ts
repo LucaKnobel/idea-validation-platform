@@ -11,6 +11,15 @@ export type MeasurementWriteInput = ExperimentOwnerInput & MeasurementFieldsInpu
 
 export type MeasurementMutationInput = MeasurementOwnerInput & MeasurementFieldsInput
 
+export type MeasurementMutationResult = {
+  kind: 'success'
+  measurement: Measurement
+} | {
+  kind: 'notFound'
+} | {
+  kind: 'conflict'
+}
+
 /**
  * Persistence contract for reading and mutating measurements in one owned experiment.
  */
@@ -23,15 +32,15 @@ export interface MeasurementRepository {
 
   /**
    * Creates one measurement in an experiment owned by the given user.
-   * Returns null when experiment or metric access constraints are violated.
+    * Returns operation result including conflict state for unique-constraint collisions.
    */
-  createForExperiment(input: MeasurementWriteInput): Promise<Measurement | null>
+  createForExperiment(input: MeasurementWriteInput): Promise<MeasurementMutationResult>
 
   /**
    * Updates one measurement owned by the given user.
-   * Returns null when the measurement does not exist or access constraints are violated.
+    * Returns operation result including conflict state for unique-constraint collisions.
    */
-  updateByIdForUser(input: MeasurementMutationInput): Promise<Measurement | null>
+  updateByIdForUser(input: MeasurementMutationInput): Promise<MeasurementMutationResult>
 
   /**
    * Deletes one measurement owned by the given user.
