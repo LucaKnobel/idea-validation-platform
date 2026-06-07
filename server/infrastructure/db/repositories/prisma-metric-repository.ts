@@ -26,7 +26,6 @@ const toDomainMetric = (row: PrismaMetricWithThreshold): Metric => {
     hypothesisId: row.hypothesisId,
     name: row.name,
     description: row.description,
-    dataType: row.dataType,
     unit: row.unit,
     threshold: row.threshold
       ? {
@@ -101,7 +100,6 @@ export const metricRepository: MetricRepository = {
         hypothesisId: input.hypothesisId,
         name: input.name,
         description: input.description,
-        dataType: input.dataType,
         unit: input.unit,
         threshold: {
           create: {
@@ -141,7 +139,6 @@ export const metricRepository: MetricRepository = {
         data: {
           name: input.name,
           description: input.description,
-          dataType: input.dataType,
           unit: input.unit,
           threshold: {
             upsert: {

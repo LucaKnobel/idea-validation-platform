@@ -24,7 +24,7 @@ describe('createUpdateMetric', () => {
     vi.mocked(metricRepository.updateByIdForUser).mockResolvedValue(makeMetric())
   })
 
-  it('trims text fields, derives currency data type from unit and forwards threshold data', async () => {
+  it('trims text fields and forwards threshold data', async () => {
     await updateMetric({
       userId: VALID_USER_ID,
       ideaId: VALID_IDEA_ID,
@@ -48,7 +48,6 @@ describe('createUpdateMetric', () => {
       metricId: 'metric-001',
       name: 'Willingness To Pay',
       description: 'Average amount users are willing to pay.',
-      dataType: 'CURRENCY',
       unit: 'chf',
       threshold: {
         operator: 'GTE',

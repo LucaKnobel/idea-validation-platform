@@ -156,12 +156,6 @@ enum HypothesisPriority {
   LOW
 }
 
-enum MetricDataType {
-  NUMBER
-  PERCENT
-  CURRENCY
-}
-
 enum ExperimentStatus {
   PLANNED
   RUNNING
@@ -246,7 +240,6 @@ model Metric {
   measurements Measurement[]
   name         String
   description  String?
-  dataType     MetricDataType
   unit         String?
   threshold    MetricThreshold?
   createdAt    DateTime         @default(now())
@@ -272,15 +265,15 @@ model Experiment {
 }
 
 model Measurement {
-  id           String      @id @default(uuid())
+  id           String     @id @default(uuid())
   experimentId String
-  experiment   Experiment  @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
   metricId     String
-  metric       Metric      @relation(fields: [metricId], references: [id], onDelete: Cascade)
+  metric       Metric     @relation(fields: [metricId], references: [id], onDelete: Cascade)
   value        Decimal
   note         String?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 
   @@unique([experimentId, metricId])
   @@index([experimentId])

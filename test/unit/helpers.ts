@@ -128,7 +128,6 @@ export const makeMetric = (overrides: Partial<Metric> = {}): Metric => ({
   hypothesisId: 'hypothesis-001',
   name: 'Conversion Rate',
   description: 'Measures sign-up conversion.',
-  dataType: 'PERCENT',
   unit: '%',
   threshold: makeMetricThreshold(),
   createdAt: new Date(VALID_ISO_DATETIME),

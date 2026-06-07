@@ -56,7 +56,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metri
     expect(response.status).toBe(401)
   })
 
-  it('creates a metric with its threshold and derives the data type from unit', async () => {
+  it('creates a metric with its threshold', async () => {
     const sessionResult = await createAuthenticatedSession({
       emailPrefix: 'metrics-create-owner',
       name: 'Metrics Create Owner'
@@ -94,7 +94,6 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metri
     expect(payload.name).toBe('Conversion Rate')
     expect(payload.description).toBe('Measures sign-up conversion.')
     expect(payload.unit).toBe('%')
-    expect(payload.dataType).toBe('PERCENT')
     expect(payload.threshold).not.toBeNull()
     expect(payload.threshold?.operator).toBe('GTE')
     expect(payload.threshold?.referenceValue).toBe(10)
@@ -105,7 +104,6 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metri
     })
 
     expect(storedMetric).not.toBeNull()
-    expect(storedMetric?.dataType).toBe('PERCENT')
     expect(storedMetric?.threshold?.operator).toBe('GTE')
     expect(Number(storedMetric?.threshold?.referenceValue)).toBe(10)
   })

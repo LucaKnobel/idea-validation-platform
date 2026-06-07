@@ -63,7 +63,6 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
         hypothesisId: hypothesis.id,
         name: 'Willingness To Pay',
         description: 'Initial description',
-        dataType: 'NUMBER',
         unit: null
       },
       include: {
@@ -87,7 +86,6 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
     expect(payload.name).toBe('Willingness To Pay')
     expect(payload.description).toBe('Average amount users are willing to pay.')
     expect(payload.unit).toBe('CHF')
-    expect(payload.dataType).toBe('CURRENCY')
     expect(payload.threshold?.operator).toBe('GTE')
     expect(payload.threshold?.referenceValue).toBe(19)
 
@@ -97,7 +95,6 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
     })
 
     expect(storedMetric?.name).toBe('Willingness To Pay')
-    expect(storedMetric?.dataType).toBe('CURRENCY')
     expect(storedMetric?.threshold).not.toBeNull()
     expect(storedMetric?.threshold?.operator).toBe('GTE')
     expect(Number(storedMetric?.threshold?.referenceValue)).toBe(19)
@@ -136,7 +133,6 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
         hypothesisId: hypothesis.id,
         name: 'Protected Metric',
         description: null,
-        dataType: 'NUMBER',
         unit: null,
         threshold: {
           create: {
