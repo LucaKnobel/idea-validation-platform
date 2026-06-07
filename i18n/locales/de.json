@@ -514,7 +514,6 @@
         },
         "metrics": {
           "title": "Metriken",
-          "count": "{count} Metriken",
           "noDescription": "Keine Beschreibung",
           "actions": {
             "create": "Metrik erstellen",
@@ -609,7 +608,6 @@
         },
         "experiments": {
           "title": "Experimente",
-          "count": "{count} Experimente",
           "noDescription": "Keine Beschreibung",
           "actions": {
             "create": "Experiment erstellen",
@@ -693,7 +691,6 @@
         "measurements": {
           "title": "Messungen",
           "description": "Erfassen Sie beobachtete Werte für dieses Experiment.",
-          "count": "{count} Messungen",
           "actions": {
             "create": "Messung hinzufügen",
             "update": "Messung aktualisieren",
