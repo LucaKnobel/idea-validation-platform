@@ -295,8 +295,6 @@ watch([ideaId, versionId, hypothesisId], async () => {
       @delete="openExperimentDeleteModal"
     />
 
-    <IdeaWorkspaceHypothesisEvidenceSection />
-
     <IdeaWorkspaceHypothesisFormModal
       :form-schema="formSchema"
       :initial-state="updateFormState"

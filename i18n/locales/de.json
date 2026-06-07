@@ -685,13 +685,6 @@
             }
           }
         },
-        "evidence": {
-          "title": "Evidenz",
-          "empty": {
-            "title": "Noch keine Evidenz erfasst",
-            "description": "Hinterlegen Sie hier Erkenntnisse aus Interviews, Prototypen und Experimenten, um zu dokumentieren, was diese Hypothese stützt oder widerlegt."
-          }
-        },
         "error": {
           "invalidParams": {
             "title": "Ungültige Routenparameter",
