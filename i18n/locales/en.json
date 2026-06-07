@@ -73,6 +73,12 @@
       "operatorRequired": "Please select a threshold operator",
       "referenceValueRequired": "A threshold value is required",
       "referenceValueFinite": "Threshold value must be a finite number"
+    },
+    "experiment": {
+      "titleRequired": "An experiment title is required",
+      "titleTooLong": "An experiment title must not exceed 200 characters",
+      "descriptionTooLong": "An experiment description must not exceed 4000 characters",
+      "statusRequired": "Please select an experiment status"
     }
   },
   "error": {
@@ -603,7 +609,9 @@
           "noTemplate": "Manual experiment",
           "actions": {
             "create": "Create experiment",
-            "createFirst": "Add first experiment"
+            "createFirst": "Add first experiment",
+            "update": "Update experiment",
+            "deleteConfirm": "Delete experiment"
           },
           "fields": {
             "status": "Status",
@@ -619,10 +627,61 @@
             "title": "No experiments yet",
             "description": "Add your first experiment to test this hypothesis with observable evidence."
           },
+          "modal": {
+            "createTitle": "Create experiment",
+            "editTitle": "Edit experiment",
+            "description": "Capture how you want to test this hypothesis and track its progress."
+          },
+          "deleteModal": {
+            "title": "Delete experiment",
+            "description": "Please confirm that you want to remove this experiment.",
+            "warning": "This action permanently deletes the experiment."
+          },
+          "form": {
+            "title": {
+              "label": "Experiment title",
+              "placeholder": "Example: Landing page smoke test"
+            },
+            "description": {
+              "label": "Description",
+              "description": "Describe setup, audience, and expected outcome.",
+              "placeholder": "Example: Run a one-week campaign and track sign-up conversion."
+            },
+            "status": {
+              "label": "Status",
+              "placeholder": "Select a status"
+            }
+          },
+          "success": {
+            "create": {
+              "title": "Experiment created",
+              "message": "The experiment was saved successfully."
+            },
+            "update": {
+              "title": "Experiment updated",
+              "message": "The experiment was updated successfully."
+            },
+            "delete": {
+              "title": "Experiment deleted",
+              "message": "The experiment was removed successfully."
+            }
+          },
           "error": {
             "load": {
               "title": "Could not load experiments",
               "message": "Please try again in a moment."
+            },
+            "create": {
+              "title": "Could not create experiment",
+              "message": "Please check your input and try again."
+            },
+            "update": {
+              "title": "Could not update experiment",
+              "message": "Please check your input and try again."
+            },
+            "delete": {
+              "title": "Could not delete experiment",
+              "message": "Please try again."
             }
           }
         },

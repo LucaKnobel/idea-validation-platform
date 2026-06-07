@@ -64,15 +64,21 @@
       "priorityRequired": "Bitte wählen Sie eine Priorität",
       "canvasSectionMin": "Wählen Sie mindestens einen Canvas-Bereich",
       "canvasSectionMax": "Es können maximal 9 Canvas-Bereiche verknüpft werden"
-      },
-      "metric": {
-        "nameRequired": "Ein Metrik-Name ist erforderlich",
-        "nameTooLong": "Ein Metrik-Name darf maximal 200 Zeichen enthalten",
-        "descriptionTooLong": "Eine Metrik-Beschreibung darf maximal 1000 Zeichen enthalten",
-        "unitTooLong": "Eine Metrik-Einheit darf maximal 100 Zeichen enthalten",
-        "operatorRequired": "Bitte wählen Sie einen Schwellwert-Operator",
-        "referenceValueRequired": "Ein Schwellwert ist erforderlich",
-        "referenceValueFinite": "Der Schwellwert muss eine endliche Zahl sein"
+    },
+    "metric": {
+      "nameRequired": "Ein Metrik-Name ist erforderlich",
+      "nameTooLong": "Ein Metrik-Name darf maximal 200 Zeichen enthalten",
+      "descriptionTooLong": "Eine Metrik-Beschreibung darf maximal 1000 Zeichen enthalten",
+      "unitTooLong": "Eine Metrik-Einheit darf maximal 100 Zeichen enthalten",
+      "operatorRequired": "Bitte wählen Sie einen Schwellwert-Operator",
+      "referenceValueRequired": "Ein Schwellwert ist erforderlich",
+      "referenceValueFinite": "Der Schwellwert muss eine endliche Zahl sein"
+    },
+    "experiment": {
+      "titleRequired": "Ein Experiment-Titel ist erforderlich",
+      "titleTooLong": "Ein Experiment-Titel darf maximal 200 Zeichen lang sein",
+      "descriptionTooLong": "Eine Experiment-Beschreibung darf maximal 4000 Zeichen lang sein",
+      "statusRequired": "Bitte wählen Sie einen Experiment-Status"
     }
   },
   "error": {
@@ -603,7 +609,9 @@
           "noTemplate": "Manuelles Experiment",
           "actions": {
             "create": "Experiment erstellen",
-            "createFirst": "Erstes Experiment hinzufügen"
+            "createFirst": "Erstes Experiment hinzufügen",
+            "update": "Experiment aktualisieren",
+            "deleteConfirm": "Experiment löschen"
           },
           "fields": {
             "status": "Status",
@@ -619,10 +627,61 @@
             "title": "Noch keine Experimente",
             "description": "Fügen Sie Ihr erstes Experiment hinzu, um diese Hypothese mit beobachtbarer Evidenz zu testen."
           },
+          "modal": {
+            "createTitle": "Experiment erstellen",
+            "editTitle": "Experiment bearbeiten",
+            "description": "Erfassen Sie, wie Sie diese Hypothese testen möchten und verfolgen Sie den Fortschritt."
+          },
+          "deleteModal": {
+            "title": "Experiment löschen",
+            "description": "Bitte bestätigen Sie, dass Sie dieses Experiment entfernen möchten.",
+            "warning": "Diese Aktion löscht das Experiment dauerhaft."
+          },
+          "form": {
+            "title": {
+              "label": "Experiment-Titel",
+              "placeholder": "Beispiel: Landingpage Smoke-Test"
+            },
+            "description": {
+              "label": "Beschreibung",
+              "description": "Beschreiben Sie Setup, Zielgruppe und erwartetes Ergebnis.",
+              "placeholder": "Beispiel: Eine Woche Kampagne schalten und die Sign-up-Conversion messen."
+            },
+            "status": {
+              "label": "Status",
+              "placeholder": "Status wählen"
+            }
+          },
+          "success": {
+            "create": {
+              "title": "Experiment erstellt",
+              "message": "Das Experiment wurde erfolgreich gespeichert."
+            },
+            "update": {
+              "title": "Experiment aktualisiert",
+              "message": "Das Experiment wurde erfolgreich aktualisiert."
+            },
+            "delete": {
+              "title": "Experiment gelöscht",
+              "message": "Das Experiment wurde erfolgreich entfernt."
+            }
+          },
           "error": {
             "load": {
               "title": "Experimente konnten nicht geladen werden",
               "message": "Bitte versuchen Sie es in einem Moment erneut."
+            },
+            "create": {
+              "title": "Experiment konnte nicht erstellt werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "update": {
+              "title": "Experiment konnte nicht aktualisiert werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "delete": {
+              "title": "Experiment konnte nicht gelöscht werden",
+              "message": "Bitte versuchen Sie es erneut."
             }
           }
         },
