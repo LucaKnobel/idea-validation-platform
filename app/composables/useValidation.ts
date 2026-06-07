@@ -183,6 +183,21 @@ export const useValidation = () => {
     status: z.enum(EXPERIMENT_STATUSES, { error: t('validation.experiment.statusRequired') })
   })
 
+  /**
+   * Builds the schema for creating and updating measurements in one modal.
+   */
+  const createMeasurementFormSchema = () => z.object({
+    metricId: z.string({ error: t('validation.measurement.metricRequired') })
+      .trim()
+      .min(1, t('validation.measurement.metricRequired')),
+    value: z.coerce.number({ error: t('validation.measurement.valueRequired') }),
+    note: z.string()
+      .trim()
+      .max(2000, t('validation.measurement.noteTooLong'))
+      .optional()
+      .or(z.literal(''))
+  })
+
   return {
     createPasswordSchema,
     createRegisterFormSchema,
@@ -193,6 +208,7 @@ export const useValidation = () => {
     createReplaceCanvasSchema,
     createHypothesisFormSchema,
     createMetricFormSchema,
-    createExperimentFormSchema
+    createExperimentFormSchema,
+    createMeasurementFormSchema
   }
 }

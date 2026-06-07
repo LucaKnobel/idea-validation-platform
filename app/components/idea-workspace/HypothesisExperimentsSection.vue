@@ -4,6 +4,7 @@
  */
 interface HypothesisExperimentsSectionProps {
   experiments: ExperimentResponseDto[]
+  measurementCountsByExperiment: Record<string, number>
   isLoading: boolean
   hasError: boolean
   hasValidRouteParams: boolean
@@ -17,6 +18,7 @@ defineProps<HypothesisExperimentsSectionProps>()
 const emit = defineEmits<{
   retry: []
   create: []
+  measurements: [experiment: ExperimentResponseDto]
   edit: [experiment: ExperimentResponseDto]
   delete: [experiment: ExperimentResponseDto]
 }>()
@@ -130,6 +132,16 @@ const emit = defineEmits<{
 
           <div class="flex shrink-0 items-center gap-2">
             <UButton
+              color="primary"
+              variant="soft"
+              icon="i-lucide-ruler"
+              :disabled="isAnyActionLoading"
+              @click="emit('measurements', experiment)"
+            >
+              {{ $t('ideaWorkspace.hypotheses.detail.experiments.actions.measurements') }}
+            </UButton>
+
+            <UButton
               color="neutral"
               variant="ghost"
               icon="i-lucide-pencil"
@@ -152,7 +164,7 @@ const emit = defineEmits<{
           </div>
         </div>
 
-        <div class="mt-3 grid gap-2 text-sm md:grid-cols-2">
+        <div class="mt-3 grid gap-2 text-sm md:grid-cols-3">
           <div class="rounded-md bg-elevated px-3 py-2">
             <p class="text-xs text-muted">
               {{ $t('ideaWorkspace.hypotheses.detail.experiments.fields.status') }}
@@ -168,6 +180,15 @@ const emit = defineEmits<{
             </p>
             <p class="font-medium text-highlighted break-all">
               {{ experiment.templateId || $t('ideaWorkspace.hypotheses.detail.experiments.noTemplate') }}
+            </p>
+          </div>
+
+          <div class="rounded-md bg-elevated px-3 py-2">
+            <p class="text-xs text-muted">
+              {{ $t('ideaWorkspace.hypotheses.detail.experiments.fields.measurements') }}
+            </p>
+            <p class="font-medium text-highlighted">
+              {{ measurementCountsByExperiment[experiment.id] ?? 0 }}
             </p>
           </div>
         </div>

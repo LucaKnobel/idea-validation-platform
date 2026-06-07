@@ -79,6 +79,11 @@
       "titleTooLong": "Ein Experiment-Titel darf maximal 200 Zeichen lang sein",
       "descriptionTooLong": "Eine Experiment-Beschreibung darf maximal 4000 Zeichen lang sein",
       "statusRequired": "Bitte wählen Sie einen Experiment-Status"
+    },
+    "measurement": {
+      "metricRequired": "Bitte wählen Sie eine Metrik",
+      "valueRequired": "Ein Messwert ist erforderlich",
+      "noteTooLong": "Eine Notiz darf maximal 2000 Zeichen lang sein"
     }
   },
   "error": {
@@ -610,12 +615,14 @@
           "actions": {
             "create": "Experiment erstellen",
             "createFirst": "Erstes Experiment hinzufügen",
+            "measurements": "Messungen",
             "update": "Experiment aktualisieren",
             "deleteConfirm": "Experiment löschen"
           },
           "fields": {
             "status": "Status",
-            "template": "Template"
+            "template": "Template",
+            "measurements": "Messungen"
           },
           "status": {
             "PLANNED": "Geplant",
@@ -625,7 +632,7 @@
           },
           "empty": {
             "title": "Noch keine Experimente",
-            "description": "Fügen Sie Ihr erstes Experiment hinzu, um diese Hypothese mit beobachtbarer Evidenz zu testen."
+            "description": "Fügen Sie Ihr erstes Experiment hinzu, um diese Hypothese mit messbaren Ergebnissen zu testen."
           },
           "modal": {
             "createTitle": "Experiment erstellen",
@@ -681,6 +688,76 @@
             },
             "delete": {
               "title": "Experiment konnte nicht gelöscht werden",
+              "message": "Bitte versuchen Sie es erneut."
+            }
+          }
+        },
+        "measurements": {
+          "title": "Messungen",
+          "description": "Erfassen Sie beobachtete Werte für dieses Experiment.",
+          "count": "{count} Messungen",
+          "actions": {
+            "create": "Messung hinzufügen",
+            "update": "Messung aktualisieren",
+            "deleteConfirm": "Messung löschen"
+          },
+          "empty": {
+            "title": "Noch keine Messungen",
+            "description": "Fügen Sie Messungen hinzu, um beobachtete Ergebnisse für dieses Experiment zu dokumentieren."
+          },
+          "modal": {
+            "createTitle": "Messung hinzufügen",
+            "editTitle": "Messung bearbeiten",
+            "description": "Verknüpfen Sie eine Metrik und erfassen Sie den beobachteten Wert."
+          },
+          "deleteModal": {
+            "title": "Messung löschen",
+            "description": "Bitte bestätigen Sie, dass Sie diese Messung entfernen möchten.",
+            "warning": "Diese Aktion löscht die Messung dauerhaft."
+          },
+          "form": {
+            "metric": {
+              "label": "Metrik",
+              "placeholder": "Metrik wählen"
+            },
+            "value": {
+              "label": "Wert",
+              "placeholder": "Beispiel: 14.17"
+            },
+            "note": {
+              "label": "Notiz",
+              "placeholder": "Optional"
+            }
+          },
+          "success": {
+            "create": {
+              "title": "Messung erstellt",
+              "message": "Die Messung wurde erfolgreich gespeichert."
+            },
+            "update": {
+              "title": "Messung aktualisiert",
+              "message": "Die Messung wurde erfolgreich aktualisiert."
+            },
+            "delete": {
+              "title": "Messung gelöscht",
+              "message": "Die Messung wurde erfolgreich entfernt."
+            }
+          },
+          "error": {
+            "load": {
+              "title": "Messungen konnten nicht geladen werden",
+              "message": "Bitte versuchen Sie es in einem Moment erneut."
+            },
+            "create": {
+              "title": "Messung konnte nicht erstellt werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "update": {
+              "title": "Messung konnte nicht aktualisiert werden",
+              "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+            },
+            "delete": {
+              "title": "Messung konnte nicht gelöscht werden",
               "message": "Bitte versuchen Sie es erneut."
             }
           }
