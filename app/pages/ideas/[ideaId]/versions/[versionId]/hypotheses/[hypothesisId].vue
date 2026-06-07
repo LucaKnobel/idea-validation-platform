@@ -4,7 +4,7 @@ definePageMeta({
   layout: 'idea-workspace'
 })
 
-const { createHypothesisFormSchema } = useValidation()
+const { createHypothesisFormSchema, createMetricFormSchema } = useValidation()
 const {
   createEmptyFormState,
   dimensionOptions,
@@ -31,11 +31,11 @@ const {
 } = useHypothesesApi()
 const { handleRateLimitError } = useErrorHandler()
 const {
-  priorityColor: getPriorityColor,
   statusLabel: getStatusLabel
 } = useHypothesesTable()
 
 const formSchema = createHypothesisFormSchema()
+const metricFormSchema = createMetricFormSchema()
 
 const {
   updateFormTitle,
@@ -69,13 +69,41 @@ const hypothesisStatement = computed(() => {
 
 const statusLabel = computed(() => getStatusLabel('OPEN'))
 
-const priorityColor = computed(() => {
-  return getPriorityColor(hypothesis.value?.priority || 'LOW')
-})
-
 const listRoute = computed(() => {
   return toHypothesesList()
 })
+const {
+  metrics,
+  isMetricsLoading,
+  isMetricDeletingId: metricDeletingId,
+  hasMetricsError,
+  isMetricModalOpen,
+  isMetricDeleteModalOpen,
+  metricDeleteCandidate,
+  metricFormState,
+  metricFormTitle,
+  metricSubmitLabel,
+  metricOperatorOptions,
+  isAnyMetricActionLoading,
+  isMetricDeleteSubmitting,
+  loadMetricsForRoute,
+  clearMetrics,
+  openCreateMetricModal,
+  openEditMetricModal,
+  openMetricDeleteModal,
+  formatMetricThreshold,
+  submitMetricForm: onMetricSubmit,
+  confirmDeleteMetric
+} = useHypothesisMetricsDetail({
+  ideaId,
+  versionId,
+  hypothesisId,
+  hasValidRouteParams
+})
+
+const reloadMetricsForRoute = async (): Promise<void> => {
+  await loadMetricsForRoute()
+}
 
 const openHypothesisEditModal = (): void => {
   openEditModal(hypothesis.value)
@@ -88,14 +116,18 @@ const openHypothesisDeleteConfirmation = (): void => {
 const loadHypothesisForRoute = async (): Promise<void> => {
   if (!hasValidRouteParams.value) {
     clearHypothesis()
+    clearMetrics()
     return
   }
 
-  await loadHypothesis({
-    ideaId: ideaId.value,
-    versionId: versionId.value,
-    hypothesisId: hypothesisId.value
-  })
+  await Promise.all([
+    loadHypothesis({
+      ideaId: ideaId.value,
+      versionId: versionId.value,
+      hypothesisId: hypothesisId.value
+    }),
+    loadMetricsForRoute()
+  ])
 }
 
 const onUpdateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
@@ -157,48 +189,13 @@ watch([ideaId, versionId, hypothesisId], async () => {
 
 <template>
   <div class="space-y-6 pb-8">
-    <UPageHeader
-      :title="$t('ideaWorkspace.hypotheses.detail.title')"
-      :description="$t('ideaWorkspace.hypotheses.detail.description')"
+    <IdeaWorkspaceHypothesisDetailHeaderSection
+      :is-loading="isLoading"
+      :hypothesis="hypothesis"
+      :hypothesis-statement="hypothesisStatement"
+      @edit="openHypothesisEditModal"
+      @delete="openHypothesisDeleteConfirmation"
     />
-
-    <div class="flex flex-col gap-4 rounded-xl border border-default bg-default p-4 md:flex-row md:items-start md:justify-between">
-      <div class="min-w-0 flex-1 space-y-2">
-        <USkeleton
-          v-if="isLoading"
-          class="h-8 w-full max-w-2xl"
-        />
-
-        <h1
-          v-else
-          class="text-2xl leading-8 font-semibold text-highlighted md:text-3xl"
-        >
-          {{ hypothesisStatement }}
-        </h1>
-      </div>
-
-      <div class="flex shrink-0 flex-wrap items-center gap-2">
-        <UButton
-          color="primary"
-          variant="soft"
-          icon="i-lucide-pencil"
-          :disabled="isLoading || hypothesis === null"
-          @click="openHypothesisEditModal"
-        >
-          {{ $t('ideaWorkspace.hypotheses.detail.actions.edit') }}
-        </UButton>
-
-        <UButton
-          color="error"
-          variant="soft"
-          icon="i-lucide-trash-2"
-          :disabled="isLoading || hypothesis === null"
-          @click="openHypothesisDeleteConfirmation"
-        >
-          {{ $t('ideaWorkspace.hypotheses.detail.actions.delete') }}
-        </UButton>
-      </div>
-    </div>
 
     <UAlert
       v-if="!hasValidRouteParams"
@@ -229,107 +226,30 @@ watch([ideaId, versionId, hypothesisId], async () => {
       </template>
     </UAlert>
 
-    <UCard>
-      <template #header>
-        <h2 class="text-base font-semibold text-highlighted">
-          {{ $t('ideaWorkspace.hypotheses.detail.overview.title') }}
-        </h2>
-      </template>
+    <IdeaWorkspaceHypothesisOverviewSection
+      :hypothesis="hypothesis"
+      :is-loading="isLoading"
+      :status-label="statusLabel"
+    />
 
-      <dl class="space-y-4 text-sm">
-        <div class="grid grid-cols-1 gap-3 md:flex md:flex-wrap md:items-start md:gap-4">
-          <div class="grid gap-1">
-            <dt class="font-medium text-muted">
-              {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.status') }}
-            </dt>
-            <dd>
-              <UBadge
-                color="neutral"
-                variant="soft"
-              >
-                {{ statusLabel }}
-              </UBadge>
-            </dd>
-          </div>
+    <IdeaWorkspaceHypothesisMetricsSection
+      :metrics="metrics"
+      :is-loading="isMetricsLoading"
+      :has-error="hasMetricsError"
+      :has-valid-route-params="hasValidRouteParams"
+      :is-any-action-loading="isAnyMetricActionLoading"
+      :is-metric-delete-submitting="isMetricDeleteSubmitting"
+      :metric-deleting-id="metricDeletingId"
+      :format-metric-threshold="formatMetricThreshold"
+      @retry="reloadMetricsForRoute"
+      @create="openCreateMetricModal"
+      @edit="openEditMetricModal"
+      @delete="openMetricDeleteModal"
+    />
 
-          <div class="grid gap-1">
-            <dt class="font-medium text-muted">
-              {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.dimension') }}
-            </dt>
-            <dd>
-              <UBadge
-                color="neutral"
-                variant="soft"
-              >
-                {{ hypothesis ? $t(`ideaWorkspace.hypotheses.dimensions.${hypothesis.dimension}`) : '-' }}
-              </UBadge>
-            </dd>
-          </div>
+    <IdeaWorkspaceHypothesisExperimentsSection />
 
-          <div class="grid gap-1">
-            <dt class="font-medium text-muted">
-              {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.priority') }}
-            </dt>
-            <dd>
-              <UBadge
-                :color="priorityColor"
-                variant="soft"
-              >
-                {{ hypothesis ? $t(`ideaWorkspace.hypotheses.priorities.${hypothesis.priority}`) : '-' }}
-              </UBadge>
-            </dd>
-          </div>
-        </div>
-
-        <div class="grid gap-2">
-          <dt class="font-medium text-muted">
-            {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.canvasAssignments') }}
-          </dt>
-
-          <dd class="flex flex-wrap gap-2">
-            <UBadge
-              v-for="section in hypothesis?.canvasSectionLinks || []"
-              :key="section.id"
-              color="neutral"
-              variant="soft"
-            >
-              {{ $t(`ideaWorkspace.canvasPage.sections.${section.canvasElementType}`) }}
-            </UBadge>
-
-            <p
-              v-if="(hypothesis?.canvasSectionLinks.length || 0) === 0"
-              class="text-sm text-muted"
-            >
-              {{ $t('ideaWorkspace.hypotheses.detail.overview.canvasEmpty') }}
-            </p>
-          </dd>
-        </div>
-      </dl>
-    </UCard>
-
-    <UCard>
-      <template #header>
-        <h2 class="text-base font-semibold text-highlighted">
-          {{ $t('ideaWorkspace.hypotheses.detail.metrics.title') }}
-        </h2>
-      </template>
-    </UCard>
-
-    <UCard>
-      <template #header>
-        <h2 class="text-base font-semibold text-highlighted">
-          {{ $t('ideaWorkspace.hypotheses.detail.experiments.title') }}
-        </h2>
-      </template>
-    </UCard>
-
-    <UCard>
-      <template #header>
-        <h2 class="text-base font-semibold text-highlighted">
-          {{ $t('ideaWorkspace.hypotheses.detail.evidence.title') }}
-        </h2>
-      </template>
-    </UCard>
+    <IdeaWorkspaceHypothesisEvidenceSection />
 
     <IdeaWorkspaceHypothesisFormModal
       :form-schema="formSchema"
@@ -351,6 +271,26 @@ watch([ideaId, versionId, hypothesisId], async () => {
       :is-submitting="isDeleteActionSubmitting"
       @update:open="isDeleteModalOpen = $event"
       @confirm-delete="confirmDeleteHypothesis"
+    />
+
+    <IdeaWorkspaceMetricFormModal
+      :open="isMetricModalOpen"
+      :form-schema="metricFormSchema"
+      :initial-state="metricFormState"
+      :title="metricFormTitle"
+      :submit-label="metricSubmitLabel"
+      :is-submitting="isAnyMetricActionLoading"
+      :operator-options="metricOperatorOptions"
+      @update:open="isMetricModalOpen = $event"
+      @submit="onMetricSubmit"
+    />
+
+    <IdeaWorkspaceMetricDeleteModal
+      :open="isMetricDeleteModalOpen"
+      :delete-candidate="metricDeleteCandidate"
+      :is-submitting="isMetricDeleteSubmitting"
+      @update:open="isMetricDeleteModalOpen = $event"
+      @confirm-delete="confirmDeleteMetric"
     />
   </div>
 </template>
