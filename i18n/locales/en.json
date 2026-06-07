@@ -743,6 +743,14 @@
               "title": "Could not load measurements",
               "message": "Please try again in a moment."
             },
+            "conflict": {
+              "title": "Measurement already exists",
+              "message": "A measurement for this metric already exists in this experiment. Edit the existing one instead."
+            },
+            "noAvailableMetric": {
+              "title": "No metric available",
+              "message": "All metrics for this hypothesis already have a measurement in this experiment."
+            },
             "create": {
               "title": "Could not create measurement",
               "message": "Please check your input and try again."

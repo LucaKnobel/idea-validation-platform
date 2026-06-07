@@ -2,6 +2,7 @@ import type { MeasurementRepository } from '@application/interfaces/measurement-
 import type { Measurement } from '@application/models/measurement'
 import type { Logger } from '@interfaces/logger'
 import { ExperimentNotFoundError } from '@application/errors/experiment-errors'
+import { MeasurementMetricAlreadyExistsError } from '@application/errors/measurement-errors'
 
 export type CreateMeasurementInput = {
   userId: string
@@ -19,7 +20,7 @@ export type CreateMeasurementInput = {
  */
 export const createCreateMeasurement = (measurementRepository: MeasurementRepository, logger: Logger) => {
   return async (input: CreateMeasurementInput): Promise<Measurement> => {
-    const measurement = await measurementRepository.createForExperiment({
+    const result = await measurementRepository.createForExperiment({
       userId: input.userId,
       ideaId: input.ideaId,
       ideaVersionId: input.ideaVersionId,
@@ -30,9 +31,15 @@ export const createCreateMeasurement = (measurementRepository: MeasurementReposi
       note: input.note?.trim() || null
     })
 
-    if (measurement === null) {
+    if (result.kind === 'notFound') {
       throw new ExperimentNotFoundError()
     }
+
+    if (result.kind === 'conflict') {
+      throw new MeasurementMetricAlreadyExistsError()
+    }
+
+    const measurement = result.measurement
 
     logger.debug('Measurement created', {
       userId: input.userId,

@@ -186,14 +186,22 @@ export const useHypothesisExperimentsDetail = (
   })
 
   const measurementMetricOptions = computed(() => {
-    return input.metrics.value.map((metric) => {
-      const unit = metric.unit ? ` (${metric.unit})` : ''
+    const usedMetricIds = new Set(
+      measurements.value
+        .filter(measurement => measurement.id !== activeMeasurementId.value)
+        .map(measurement => measurement.metricId)
+    )
 
-      return {
-        label: `${metric.name}${unit}`,
-        value: metric.id
-      }
-    })
+    return input.metrics.value
+      .filter(metric => !usedMetricIds.has(metric.id))
+      .map((metric) => {
+        const unit = metric.unit ? ` (${metric.unit})` : ''
+
+        return {
+          label: `${metric.name}${unit}`,
+          value: metric.id
+        }
+      })
   })
 
   /**
@@ -313,6 +321,11 @@ export const useHypothesisExperimentsDetail = (
    * Opens create mode with a clean measurement form.
    */
   const openCreateMeasurementModal = (): void => {
+    if (measurementMetricOptions.value.length === 0) {
+      showError('ideaWorkspace.hypotheses.detail.measurements.error.noAvailableMetric.title', 'ideaWorkspace.hypotheses.detail.measurements.error.noAvailableMetric.message')
+      return
+    }
+
     measurementFormMode.value = 'create'
     activeMeasurementId.value = null
     resetMeasurementForm()
@@ -513,6 +526,21 @@ export const useHypothesisExperimentsDetail = (
       if (handleRateLimitError(error)) {
         return
       }
+
+      if (extractStatusCode(error) === 409) {
+        showError('ideaWorkspace.hypotheses.detail.measurements.error.conflict.title', 'ideaWorkspace.hypotheses.detail.measurements.error.conflict.message')
+        await loadMeasurementsForExperiment(experimentId)
+        return
+      }
+
+      showError(
+        measurementFormMode.value === 'create'
+          ? 'ideaWorkspace.hypotheses.detail.measurements.error.create.title'
+          : 'ideaWorkspace.hypotheses.detail.measurements.error.update.title',
+        measurementFormMode.value === 'create'
+          ? 'ideaWorkspace.hypotheses.detail.measurements.error.create.message'
+          : 'ideaWorkspace.hypotheses.detail.measurements.error.update.message'
+      )
     } finally {
       isMeasurementCreating.value = false
       measurementUpdatingId.value = null

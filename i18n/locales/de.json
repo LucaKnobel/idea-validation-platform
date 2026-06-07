@@ -743,6 +743,14 @@
               "title": "Messungen konnten nicht geladen werden",
               "message": "Bitte versuchen Sie es in einem Moment erneut."
             },
+            "conflict": {
+              "title": "Messung existiert bereits",
+              "message": "Für diese Metrik existiert in diesem Experiment bereits eine Messung. Bearbeiten Sie die bestehende Messung stattdessen."
+            },
+            "noAvailableMetric": {
+              "title": "Keine Metrik verfügbar",
+              "message": "Für dieses Experiment haben bereits alle Metriken dieser Hypothese eine Messung."
+            },
             "create": {
               "title": "Messung konnte nicht erstellt werden",
               "message": "Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
