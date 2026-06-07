@@ -2,6 +2,7 @@ import * as z from 'zod'
 import { metricDataTypes } from '@application/models/metric'
 import { thresholdOperators } from '@application/models/metric-threshold'
 import { HypothesisRouteParamsSchema } from '@infrastructure/validation/hypothesis-schemas'
+import { createNullableTrimmedStringSchema } from '@infrastructure/validation/string-schemas'
 
 export const MetricCollectionRouteParamsSchema = HypothesisRouteParamsSchema
 
@@ -13,12 +14,6 @@ export const MetricDataTypeSchema = z.enum(metricDataTypes)
 
 export const ThresholdOperatorSchema = z.enum(thresholdOperators)
 
-const NullableMetricStringSchema = (maxLength: number, tooLongMessage: string) => z.string()
-  .trim()
-  .max(maxLength, tooLongMessage)
-  .nullable()
-  .transform(value => value && value.length > 0 ? value : null)
-
 export const MetricThresholdInputSchema = z.object({
   operator: ThresholdOperatorSchema,
   referenceValue: z.number().finite('Metric reference value must be a finite number')
@@ -26,8 +21,8 @@ export const MetricThresholdInputSchema = z.object({
 
 export const UpsertMetricBodySchema = z.object({
   name: z.string().trim().min(1, 'Metric name is required').max(200, 'Metric name is too long'),
-  description: NullableMetricStringSchema(1000, 'Metric description is too long'),
-  unit: NullableMetricStringSchema(100, 'Metric unit is too long'),
+  description: createNullableTrimmedStringSchema(1000, 'Metric description is too long'),
+  unit: createNullableTrimmedStringSchema(100, 'Metric unit is too long'),
   threshold: MetricThresholdInputSchema
 })
 
