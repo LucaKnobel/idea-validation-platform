@@ -21,7 +21,6 @@ export type Experiment = {
   hypothesisId: string
   title: string
   description: string | null
-  templateId: string | null
   status: ExperimentStatus
   createdAt: Date
   updatedAt: Date

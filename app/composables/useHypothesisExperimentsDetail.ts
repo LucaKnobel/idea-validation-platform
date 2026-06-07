@@ -375,14 +375,12 @@ export const useHypothesisExperimentsDetail = (
    * Normalizes form values to the API payload shape.
    */
   const normalizeExperimentBody = (
-    state: ExperimentFormState,
-    currentExperiment?: ExperimentResponseDto
+    state: ExperimentFormState
   ): CreateExperimentBodyDto => {
     return {
       title: state.title,
       description: state.description.trim().length > 0 ? state.description.trim() : null,
-      status: state.status,
-      templateId: currentExperiment?.templateId || null
+      status: state.status
     }
   }
 
@@ -405,10 +403,7 @@ export const useHypothesisExperimentsDetail = (
       return
     }
 
-    const activeExperiment = activeExperimentId.value
-      ? experiments.value.find(experiment => experiment.id === activeExperimentId.value)
-      : undefined
-    const body = normalizeExperimentBody(state, activeExperiment)
+    const body = normalizeExperimentBody(state)
 
     try {
       await runExperimentFormAction(async () => {

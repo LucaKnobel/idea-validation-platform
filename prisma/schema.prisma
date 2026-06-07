@@ -263,7 +263,6 @@ model Experiment {
   measurements Measurement[]
   title        String
   description  String?
-  templateId   String?
   status       ExperimentStatus
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
