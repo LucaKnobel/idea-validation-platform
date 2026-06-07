@@ -611,7 +611,6 @@
           "title": "Experiments",
           "count": "{count} experiments",
           "noDescription": "No description",
-          "noTemplate": "Manual experiment",
           "actions": {
             "create": "Create experiment",
             "createFirst": "Add first experiment",
@@ -621,7 +620,6 @@
           },
           "fields": {
             "status": "Status",
-            "template": "Template",
             "measurements": "Measurements"
           },
           "status": {
