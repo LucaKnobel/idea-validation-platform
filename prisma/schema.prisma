@@ -162,6 +162,13 @@ enum MetricDataType {
   CURRENCY
 }
 
+enum ExperimentStatus {
+  PLANNED
+  RUNNING
+  COMPLETED
+  CANCELLED
+}
+
 enum ThresholdOperator {
   GTE
   GT
@@ -197,6 +204,7 @@ model Hypothesis {
   priority           HypothesisPriority
   canvasSectionLinks HypothesisCanvasSection[]
   metrics            Metric[]
+  experiments        Experiment[]
   createdAt          DateTime                  @default(now())
   updatedAt          DateTime                  @updatedAt
 
@@ -245,6 +253,21 @@ model Metric {
 
   @@index([hypothesisId])
   @@map("metric")
+}
+
+model Experiment {
+  id           String           @id @default(uuid())
+  hypothesisId String
+  hypothesis   Hypothesis       @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
+  title        String
+  description  String?
+  templateId   String?
+  status       ExperimentStatus
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([hypothesisId])
+  @@map("experiment")
 }
 
 model MetricThreshold {
