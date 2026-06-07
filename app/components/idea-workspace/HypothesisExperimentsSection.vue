@@ -4,21 +4,28 @@
  */
 interface HypothesisExperimentsSectionProps {
   experiments: ExperimentResponseDto[]
-  measurementCountsByExperiment: Record<string, number>
+  measurementsByExperiment: Record<string, MeasurementResponseDto[]>
   isLoading: boolean
   hasError: boolean
   hasValidRouteParams: boolean
   isAnyActionLoading: boolean
+  isMeasurementLoading: boolean
   isExperimentDeleteSubmitting: boolean
+  isMeasurementDeleteSubmitting: boolean
   experimentDeletingId: string | null
+  measurementDeletingId: string | null
+  resolveMetricName: (metricId: string) => string
+  formatMeasurementValue: (measurement: MeasurementResponseDto) => string
 }
 
-defineProps<HypothesisExperimentsSectionProps>()
+const props = defineProps<HypothesisExperimentsSectionProps>()
 
 const emit = defineEmits<{
   retry: []
   create: []
-  measurements: [experiment: ExperimentResponseDto]
+  createMeasurement: [experiment: ExperimentResponseDto]
+  editMeasurement: [experiment: ExperimentResponseDto, measurement: MeasurementResponseDto]
+  deleteMeasurement: [experiment: ExperimentResponseDto, measurement: MeasurementResponseDto]
   edit: [experiment: ExperimentResponseDto]
   delete: [experiment: ExperimentResponseDto]
 }>()
@@ -125,16 +132,6 @@ const emit = defineEmits<{
 
           <div class="flex shrink-0 items-center gap-2">
             <UButton
-              color="primary"
-              variant="soft"
-              icon="i-lucide-ruler"
-              :disabled="isAnyActionLoading"
-              @click="emit('measurements', experiment)"
-            >
-              {{ $t('ideaWorkspace.hypotheses.detail.experiments.actions.measurements') }}
-            </UButton>
-
-            <UButton
               color="neutral"
               variant="ghost"
               icon="i-lucide-pencil"
@@ -157,7 +154,7 @@ const emit = defineEmits<{
           </div>
         </div>
 
-        <div class="mt-3 grid gap-2 text-sm md:grid-cols-2">
+        <div class="mt-3 space-y-2 text-sm">
           <div class="rounded-md bg-elevated px-3 py-2">
             <p class="text-xs text-muted">
               {{ $t('ideaWorkspace.hypotheses.detail.experiments.fields.status') }}
@@ -167,13 +164,93 @@ const emit = defineEmits<{
             </p>
           </div>
 
-          <div class="rounded-md bg-elevated px-3 py-2">
+          <div class="rounded-md bg-elevated px-3 py-2 space-y-2">
             <p class="text-xs text-muted">
-              {{ $t('ideaWorkspace.hypotheses.detail.experiments.fields.measurements') }}
+              {{ $t('ideaWorkspace.hypotheses.detail.measurements.title') }}
             </p>
-            <p class="font-medium text-highlighted">
-              {{ measurementCountsByExperiment[experiment.id] ?? 0 }}
-            </p>
+
+            <div
+              v-if="isMeasurementLoading"
+              class="space-y-2"
+            >
+              <USkeleton class="h-10 w-full" />
+            </div>
+
+            <div
+              v-else-if="(props.measurementsByExperiment[experiment.id] || []).length === 0"
+              class="space-y-2"
+            >
+              <p class="text-xs text-muted">
+                {{ $t('ideaWorkspace.hypotheses.detail.measurements.empty.title') }}
+              </p>
+
+              <UButton
+                color="primary"
+                variant="soft"
+                icon="i-lucide-plus"
+                :disabled="isAnyActionLoading"
+                @click="emit('createMeasurement', experiment)"
+              >
+                {{ $t('ideaWorkspace.hypotheses.detail.measurements.actions.create') }}
+              </UButton>
+            </div>
+
+            <div
+              v-else
+              class="space-y-2"
+            >
+              <article
+                v-for="measurement in props.measurementsByExperiment[experiment.id]"
+                :key="measurement.id"
+                class="rounded border border-default bg-default p-2"
+              >
+                <p class="text-xs font-semibold text-highlighted">
+                  {{ resolveMetricName(measurement.metricId) }}
+                </p>
+                <p class="text-xs text-muted">
+                  {{ formatMeasurementValue(measurement) }}
+                </p>
+                <p
+                  v-if="measurement.note"
+                  class="text-xs text-muted"
+                >
+                  {{ measurement.note }}
+                </p>
+
+                <div class="mt-2 flex items-center gap-2">
+                  <UButton
+                    color="neutral"
+                    variant="ghost"
+                    icon="i-lucide-pencil"
+                    :disabled="isAnyActionLoading"
+                    @click="emit('editMeasurement', experiment, measurement)"
+                  >
+                    {{ $t('ideaWorkspace.hypotheses.detail.measurements.actions.update') }}
+                  </UButton>
+
+                  <UButton
+                    color="error"
+                    variant="ghost"
+                    icon="i-lucide-trash-2"
+                    :loading="measurementDeletingId === measurement.id"
+                    :disabled="isMeasurementDeleteSubmitting"
+                    @click="emit('deleteMeasurement', experiment, measurement)"
+                  >
+                    {{ $t('actions.delete') }}
+                  </UButton>
+                </div>
+              </article>
+
+              <UButton
+                color="primary"
+                variant="soft"
+                icon="i-lucide-plus"
+                :disabled="isAnyActionLoading"
+                @click="emit('createMeasurement', experiment)"
+              >
+                {{ $t('ideaWorkspace.hypotheses.detail.measurements.actions.create') }}
+              </UButton>
+            </div>
           </div>
         </div>
       </article>

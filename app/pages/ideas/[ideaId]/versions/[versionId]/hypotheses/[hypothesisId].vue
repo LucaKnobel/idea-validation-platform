@@ -109,16 +109,13 @@ const {
 })
 const {
   experiments,
-  measurements,
-  measurementCountsByExperiment,
+  measurementsByExperiment,
   isExperimentsLoading,
   isMeasurementsLoading,
   isExperimentDeletingId: experimentDeletingId,
   measurementDeletingId,
   hasExperimentsError,
-  hasMeasurementsError,
   isExperimentModalOpen,
-  isExperimentMeasurementsModalOpen,
   isMeasurementModalOpen,
   isMeasurementDeleteModalOpen,
   isExperimentDeleteModalOpen,
@@ -138,10 +135,8 @@ const {
   isExperimentDeleteSubmitting,
   isMeasurementDeleteSubmitting,
   loadExperimentsForRoute: loadExperimentsForRouteFromDetail,
-  reloadMeasurements,
   clearExperiments,
   openCreateExperimentModal,
-  openExperimentMeasurementsModal,
   openCreateMeasurementModal,
   openEditMeasurementModal,
   openMeasurementDeleteModal,
@@ -315,36 +310,25 @@ watch([ideaId, versionId, hypothesisId], async () => {
 
     <IdeaWorkspaceHypothesisExperimentsSection
       :experiments="experiments"
-      :measurement-counts-by-experiment="measurementCountsByExperiment"
+      :measurements-by-experiment="measurementsByExperiment"
       :is-loading="isExperimentsLoading"
+      :is-measurement-loading="isMeasurementsLoading"
       :has-error="hasExperimentsError"
       :has-valid-route-params="hasValidRouteParams"
       :is-any-action-loading="isAnyExperimentActionLoading"
       :is-experiment-delete-submitting="isExperimentDeleteSubmitting"
+      :is-measurement-delete-submitting="isMeasurementDeleteSubmitting"
       :experiment-deleting-id="experimentDeletingId"
-      @retry="reloadExperimentsForRoute"
-      @create="openCreateExperimentModal"
-      @measurements="openExperimentMeasurementsModal"
-      @edit="openEditExperimentModal"
-      @delete="openExperimentDeleteModal"
-    />
-
-    <IdeaWorkspaceExperimentMeasurementsModal
-      :open="isExperimentMeasurementsModalOpen"
-      :experiment="activeMeasurementsExperiment"
-      :measurements="measurements"
-      :is-loading="isMeasurementsLoading"
-      :has-error="hasMeasurementsError"
-      :is-any-action-loading="isAnyMeasurementActionLoading"
-      :is-delete-submitting="isMeasurementDeleteSubmitting"
-      :deleting-measurement-id="measurementDeletingId"
+      :measurement-deleting-id="measurementDeletingId"
       :resolve-metric-name="resolveMetricName"
       :format-measurement-value="formatMeasurementValue"
-      @update:open="isExperimentMeasurementsModalOpen = $event"
-      @retry="reloadMeasurements"
-      @create="openCreateMeasurementModal"
-      @edit="openEditMeasurementModal"
-      @delete="openMeasurementDeleteModal"
+      @retry="reloadExperimentsForRoute"
+      @create="openCreateExperimentModal"
+      @create-measurement="openCreateMeasurementModal"
+      @edit-measurement="openEditMeasurementModal"
+      @delete-measurement="openMeasurementDeleteModal"
+      @edit="openEditExperimentModal"
+      @delete="openExperimentDeleteModal"
     />
 
     <IdeaWorkspaceHypothesisFormModal
