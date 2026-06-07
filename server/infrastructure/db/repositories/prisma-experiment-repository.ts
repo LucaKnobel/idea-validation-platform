@@ -18,7 +18,6 @@ const toDomainExperiment = (row: PrismaExperiment): Experiment => {
     hypothesisId: row.hypothesisId,
     title: row.title,
     description: row.description,
-    templateId: row.templateId,
     status: row.status,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt
@@ -80,7 +79,6 @@ export const experimentRepository: ExperimentRepository = {
         hypothesisId: input.hypothesisId,
         title: input.title,
         description: input.description,
-        templateId: input.templateId,
         status: input.status
       }
     })
@@ -111,7 +109,6 @@ export const experimentRepository: ExperimentRepository = {
         data: {
           title: input.title,
           description: input.description,
-          templateId: input.templateId,
           status: input.status
         }
       })

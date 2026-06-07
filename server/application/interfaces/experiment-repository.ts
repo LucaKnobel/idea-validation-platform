@@ -4,7 +4,6 @@ import type { ExperimentOwnerInput, HypothesisOwnerInput } from '@application/in
 export type ExperimentFieldsInput = {
   title: string
   description: string | null
-  templateId: string | null
   status: ExperimentStatus
 }
 

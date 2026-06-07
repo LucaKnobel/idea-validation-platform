@@ -10,7 +10,6 @@ export type CreateExperimentInput = {
   hypothesisId: string
   title: string
   description: string | null
-  templateId: string | null
   status: ExperimentStatus
 }
 
@@ -26,7 +25,6 @@ export const createCreateExperiment = (experimentRepository: ExperimentRepositor
       hypothesisId: input.hypothesisId,
       title: input.title.trim(),
       description: input.description?.trim() || null,
-      templateId: input.templateId?.trim() || null,
       status: input.status
     })
 

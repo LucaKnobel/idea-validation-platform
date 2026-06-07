@@ -30,7 +30,6 @@ export default defineProtectedHandler(async (event, userId): Promise<ExperimentR
     experimentId: params.experimentId,
     title: body.title,
     description: body.description,
-    templateId: body.templateId,
     status: body.status
   })
 

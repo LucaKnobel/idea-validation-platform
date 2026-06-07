@@ -15,7 +15,6 @@ export const toExperimentResponseDto = (experiment: Experiment): ExperimentRespo
     hypothesisId: experiment.hypothesisId,
     title: experiment.title,
     description: experiment.description,
-    templateId: experiment.templateId,
     status: experiment.status,
     createdAt: experiment.createdAt.toISOString(),
     updatedAt: experiment.updatedAt.toISOString()
