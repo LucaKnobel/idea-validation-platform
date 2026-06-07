@@ -15,3 +15,7 @@ export type MetricOwnerInput = HypothesisOwnerInput & {
 export type ExperimentOwnerInput = HypothesisOwnerInput & {
   experimentId: string
 }
+
+export type MeasurementOwnerInput = ExperimentOwnerInput & {
+  measurementId: string
+}
