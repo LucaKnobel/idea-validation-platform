@@ -119,7 +119,6 @@ const {
   isMeasurementModalOpen,
   isMeasurementDeleteModalOpen,
   isExperimentDeleteModalOpen,
-  activeMeasurementsExperiment,
   measurementDeleteCandidate,
   experimentDeleteCandidate,
   experimentFormState,
@@ -249,7 +248,7 @@ watch([ideaId, versionId, hypothesisId], async () => {
 </script>
 
 <template>
-  <div class="space-y-6 pb-8">
+  <div class="mx-auto w-full max-w-270 space-y-3 pb-4 lg:space-y-2.5 lg:pb-3">
     <IdeaWorkspaceHypothesisDetailHeaderSection
       :is-loading="isLoading"
       :hypothesis="hypothesis"

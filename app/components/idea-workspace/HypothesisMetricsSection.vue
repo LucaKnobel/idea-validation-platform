@@ -105,15 +105,15 @@ const emit = defineEmits<{
 
     <div
       v-else
-      class="space-y-3"
+      class="space-y-2.5"
     >
       <article
         v-for="metric in metrics"
         :key="metric.id"
-        class="rounded-lg border border-default bg-default p-4"
+        class="rounded-lg border border-default bg-default p-3"
       >
-        <div class="flex flex-wrap items-start gap-3">
-          <div class="min-w-0 flex-1 space-y-1">
+        <div class="flex flex-wrap items-start gap-2.5">
+          <div class="min-w-0 flex-1 space-y-0.5">
             <h3 class="text-sm font-semibold text-highlighted">
               {{ metric.name }}
             </h3>
@@ -128,10 +128,10 @@ const emit = defineEmits<{
               variant="ghost"
               icon="i-lucide-pencil"
               :disabled="isAnyActionLoading"
+              :aria-label="$t('actions.edit')"
+              :title="$t('actions.edit')"
               @click="emit('edit', metric)"
-            >
-              {{ $t('actions.edit') }}
-            </UButton>
+            />
 
             <UButton
               color="error"
@@ -139,14 +139,14 @@ const emit = defineEmits<{
               icon="i-lucide-trash-2"
               :loading="metricDeletingId === metric.id"
               :disabled="isMetricDeleteSubmitting"
+              :aria-label="$t('actions.delete')"
+              :title="$t('actions.delete')"
               @click="emit('delete', metric)"
-            >
-              {{ $t('actions.delete') }}
-            </UButton>
+            />
           </div>
         </div>
 
-        <div class="mt-3 grid gap-2 text-sm md:grid-cols-1">
+        <div class="mt-2 grid gap-2 text-sm md:grid-cols-1">
           <div class="rounded-md bg-elevated px-3 py-2">
             <p class="text-xs text-muted">
               {{ $t('ideaWorkspace.hypotheses.detail.metrics.fields.threshold') }}
