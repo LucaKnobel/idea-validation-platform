@@ -11,6 +11,8 @@ import type { HypothesisCanvasSection } from '@application/models/hypothesis-can
 import type { MetricRepository } from '@application/interfaces/metric-repository'
 import type { Metric } from '@application/models/metric'
 import type { MetricThreshold } from '@application/models/metric-threshold'
+import type { ExperimentRepository } from '@application/interfaces/experiment-repository'
+import type { Experiment } from '@application/models/experiment'
 import type { SubscriptionService } from '@application/interfaces/subscription-service'
 import type { Logger } from '@interfaces/logger'
 
@@ -136,6 +138,24 @@ export const makeMetric = (overrides: Partial<Metric> = {}): Metric => ({
 })
 
 export const makeMetricRepository = (): MetricRepository => ({
+  listByHypothesisForUser: vi.fn(),
+  createForHypothesis: vi.fn(),
+  updateByIdForUser: vi.fn(),
+  deleteByIdForUser: vi.fn()
+})
+
+export const makeExperiment = (overrides: Partial<Experiment> = {}): Experiment => ({
+  id: 'experiment-001',
+  hypothesisId: 'hypothesis-001',
+  title: 'Landing Page Test',
+  description: 'Validate the onboarding headline.',
+  status: 'PLANNED',
+  createdAt: new Date(VALID_ISO_DATETIME),
+  updatedAt: new Date(VALID_ISO_DATETIME),
+  ...overrides
+})
+
+export const makeExperimentRepository = (): ExperimentRepository => ({
   listByHypothesisForUser: vi.fn(),
   createForHypothesis: vi.fn(),
   updateByIdForUser: vi.fn(),
