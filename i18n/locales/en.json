@@ -625,7 +625,7 @@
           },
           "empty": {
             "title": "No experiments yet",
-            "description": "Add your first experiment to test this hypothesis with observable evidence."
+            "description": "Add your first experiment to test this hypothesis with measurable results."
           },
           "modal": {
             "createTitle": "Create experiment",
@@ -683,13 +683,6 @@
               "title": "Could not delete experiment",
               "message": "Please try again."
             }
-          }
-        },
-        "evidence": {
-          "title": "Evidence",
-          "empty": {
-            "title": "No evidence captured yet",
-            "description": "Attach findings from interviews, prototypes, and experiments here to document what supports or invalidates this hypothesis."
           }
         },
         "error": {
