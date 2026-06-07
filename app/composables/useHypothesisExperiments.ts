@@ -1,20 +1,20 @@
 /**
  * Public contract for loading and exposing hypothesis experiments.
  */
-export interface LoadExperimentsInput {
+export interface LoadHypothesisExperimentsInput {
   ideaId: string
   versionId: string
   hypothesisId: string
 }
 
-export interface CreateExperimentInput {
+export interface CreateHypothesisExperimentInput {
   ideaId: string
   versionId: string
   hypothesisId: string
   body: CreateExperimentBodyDto
 }
 
-export interface UpdateExperimentInput {
+export interface UpdateHypothesisExperimentInput {
   ideaId: string
   versionId: string
   hypothesisId: string
@@ -22,7 +22,7 @@ export interface UpdateExperimentInput {
   body: UpdateExperimentBodyDto
 }
 
-export interface DeleteExperimentInput {
+export interface DeleteHypothesisExperimentInput {
   ideaId: string
   versionId: string
   hypothesisId: string
@@ -36,10 +36,10 @@ export interface UseHypothesisExperimentsComposable {
   isDeletingId: Ref<string | null>
   isUpdatingId: Ref<string | null>
   hasError: Ref<boolean>
-  loadExperiments: (input: LoadExperimentsInput) => Promise<void>
-  createExperiment: (input: CreateExperimentInput) => Promise<ExperimentResponseDto | null>
-  updateExperiment: (input: UpdateExperimentInput) => Promise<ExperimentResponseDto | null>
-  deleteExperiment: (input: DeleteExperimentInput) => Promise<boolean>
+  loadExperiments: (input: LoadHypothesisExperimentsInput) => Promise<void>
+  createExperiment: (input: CreateHypothesisExperimentInput) => Promise<ExperimentResponseDto | null>
+  updateExperiment: (input: UpdateHypothesisExperimentInput) => Promise<ExperimentResponseDto | null>
+  deleteExperiment: (input: DeleteHypothesisExperimentInput) => Promise<boolean>
   clearExperiments: () => void
 }
 
@@ -70,7 +70,7 @@ export const useHypothesisExperiments = (): UseHypothesisExperimentsComposable =
     })
   }
 
-  const loadExperiments = async (input: LoadExperimentsInput): Promise<void> => {
+  const loadExperiments = async (input: LoadHypothesisExperimentsInput): Promise<void> => {
     isLoading.value = true
 
     try {
@@ -88,7 +88,7 @@ export const useHypothesisExperiments = (): UseHypothesisExperimentsComposable =
     }
   }
 
-  const createExperiment = async (input: CreateExperimentInput): Promise<ExperimentResponseDto | null> => {
+  const createExperiment = async (input: CreateHypothesisExperimentInput): Promise<ExperimentResponseDto | null> => {
     isCreating.value = true
 
     try {
@@ -104,7 +104,7 @@ export const useHypothesisExperiments = (): UseHypothesisExperimentsComposable =
     }
   }
 
-  const updateExperiment = async (input: UpdateExperimentInput): Promise<ExperimentResponseDto | null> => {
+  const updateExperiment = async (input: UpdateHypothesisExperimentInput): Promise<ExperimentResponseDto | null> => {
     isUpdatingId.value = input.experimentId
 
     try {
@@ -122,7 +122,7 @@ export const useHypothesisExperiments = (): UseHypothesisExperimentsComposable =
     }
   }
 
-  const deleteExperiment = async (input: DeleteExperimentInput): Promise<boolean> => {
+  const deleteExperiment = async (input: DeleteHypothesisExperimentInput): Promise<boolean> => {
     isDeletingId.value = input.experimentId
 
     try {

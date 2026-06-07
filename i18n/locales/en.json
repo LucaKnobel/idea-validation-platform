@@ -686,7 +686,11 @@
           }
         },
         "evidence": {
-          "title": "Evidence"
+          "title": "Evidence",
+          "empty": {
+            "title": "No evidence captured yet",
+            "description": "Attach findings from interviews, prototypes, and experiments here to document what supports or invalidates this hypothesis."
+          }
         },
         "error": {
           "invalidParams": {
