@@ -4,7 +4,12 @@ definePageMeta({
   layout: 'idea-workspace'
 })
 
-const { createHypothesisFormSchema, createMetricFormSchema, createExperimentFormSchema } = useValidation()
+const {
+  createHypothesisFormSchema,
+  createMetricFormSchema,
+  createExperimentFormSchema,
+  createMeasurementFormSchema
+} = useValidation()
 const {
   createEmptyFormState,
   dimensionOptions,
@@ -37,6 +42,7 @@ const {
 const formSchema = createHypothesisFormSchema()
 const metricFormSchema = createMetricFormSchema()
 const experimentFormSchema = createExperimentFormSchema()
+const measurementFormSchema = createMeasurementFormSchema()
 
 const {
   updateFormTitle,
@@ -103,29 +109,55 @@ const {
 })
 const {
   experiments,
+  measurements,
+  measurementCountsByExperiment,
   isExperimentsLoading,
+  isMeasurementsLoading,
   isExperimentDeletingId: experimentDeletingId,
+  measurementDeletingId,
   hasExperimentsError,
+  hasMeasurementsError,
   isExperimentModalOpen,
+  isExperimentMeasurementsModalOpen,
+  isMeasurementModalOpen,
+  isMeasurementDeleteModalOpen,
   isExperimentDeleteModalOpen,
+  activeMeasurementsExperiment,
+  measurementDeleteCandidate,
   experimentDeleteCandidate,
   experimentFormState,
+  measurementFormState,
   experimentFormTitle,
+  measurementFormTitle,
   experimentSubmitLabel,
+  measurementSubmitLabel,
   experimentStatusOptions,
+  measurementMetricOptions,
   isAnyExperimentActionLoading,
+  isAnyMeasurementActionLoading,
   isExperimentDeleteSubmitting,
+  isMeasurementDeleteSubmitting,
   loadExperimentsForRoute: loadExperimentsForRouteFromDetail,
+  reloadMeasurements,
   clearExperiments,
   openCreateExperimentModal,
+  openExperimentMeasurementsModal,
+  openCreateMeasurementModal,
+  openEditMeasurementModal,
+  openMeasurementDeleteModal,
   openEditExperimentModal,
   openExperimentDeleteModal,
   submitExperimentForm: onExperimentSubmit,
-  confirmDeleteExperiment
+  submitMeasurementForm,
+  confirmDeleteExperiment,
+  confirmDeleteMeasurement,
+  resolveMetricName,
+  formatMeasurementValue
 } = useHypothesisExperimentsDetail({
   ideaId,
   versionId,
   hypothesisId,
+  metrics,
   hasValidRouteParams
 })
 
@@ -283,6 +315,7 @@ watch([ideaId, versionId, hypothesisId], async () => {
 
     <IdeaWorkspaceHypothesisExperimentsSection
       :experiments="experiments"
+      :measurement-counts-by-experiment="measurementCountsByExperiment"
       :is-loading="isExperimentsLoading"
       :has-error="hasExperimentsError"
       :has-valid-route-params="hasValidRouteParams"
@@ -291,8 +324,27 @@ watch([ideaId, versionId, hypothesisId], async () => {
       :experiment-deleting-id="experimentDeletingId"
       @retry="reloadExperimentsForRoute"
       @create="openCreateExperimentModal"
+      @measurements="openExperimentMeasurementsModal"
       @edit="openEditExperimentModal"
       @delete="openExperimentDeleteModal"
+    />
+
+    <IdeaWorkspaceExperimentMeasurementsModal
+      :open="isExperimentMeasurementsModalOpen"
+      :experiment="activeMeasurementsExperiment"
+      :measurements="measurements"
+      :is-loading="isMeasurementsLoading"
+      :has-error="hasMeasurementsError"
+      :is-any-action-loading="isAnyMeasurementActionLoading"
+      :is-delete-submitting="isMeasurementDeleteSubmitting"
+      :deleting-measurement-id="measurementDeletingId"
+      :resolve-metric-name="resolveMetricName"
+      :format-measurement-value="formatMeasurementValue"
+      @update:open="isExperimentMeasurementsModalOpen = $event"
+      @retry="reloadMeasurements"
+      @create="openCreateMeasurementModal"
+      @edit="openEditMeasurementModal"
+      @delete="openMeasurementDeleteModal"
     />
 
     <IdeaWorkspaceHypothesisFormModal
@@ -355,6 +407,27 @@ watch([ideaId, versionId, hypothesisId], async () => {
       :is-submitting="isExperimentDeleteSubmitting"
       @update:open="isExperimentDeleteModalOpen = $event"
       @confirm-delete="confirmDeleteExperiment"
+    />
+
+    <IdeaWorkspaceMeasurementFormModal
+      :open="isMeasurementModalOpen"
+      :form-schema="measurementFormSchema"
+      :initial-state="measurementFormState"
+      :title="measurementFormTitle"
+      :submit-label="measurementSubmitLabel"
+      :is-submitting="isAnyMeasurementActionLoading"
+      :metric-options="measurementMetricOptions"
+      @update:open="isMeasurementModalOpen = $event"
+      @submit="submitMeasurementForm"
+    />
+
+    <IdeaWorkspaceMeasurementDeleteModal
+      :open="isMeasurementDeleteModalOpen"
+      :delete-candidate="measurementDeleteCandidate"
+      :is-submitting="isMeasurementDeleteSubmitting"
+      :resolve-metric-name="resolveMetricName"
+      @update:open="isMeasurementDeleteModalOpen = $event"
+      @confirm-delete="confirmDeleteMeasurement"
     />
   </div>
 </template>

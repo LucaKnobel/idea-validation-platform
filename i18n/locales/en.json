@@ -79,6 +79,11 @@
       "titleTooLong": "An experiment title must not exceed 200 characters",
       "descriptionTooLong": "An experiment description must not exceed 4000 characters",
       "statusRequired": "Please select an experiment status"
+    },
+    "measurement": {
+      "metricRequired": "Please select a metric",
+      "valueRequired": "A measurement value is required",
+      "noteTooLong": "A measurement note must not exceed 2000 characters"
     }
   },
   "error": {
@@ -610,12 +615,14 @@
           "actions": {
             "create": "Create experiment",
             "createFirst": "Add first experiment",
+            "measurements": "Measurements",
             "update": "Update experiment",
             "deleteConfirm": "Delete experiment"
           },
           "fields": {
             "status": "Status",
-            "template": "Template"
+            "template": "Template",
+            "measurements": "Measurements"
           },
           "status": {
             "PLANNED": "Planned",
@@ -681,6 +688,76 @@
             },
             "delete": {
               "title": "Could not delete experiment",
+              "message": "Please try again."
+            }
+          }
+        },
+        "measurements": {
+          "title": "Measurements",
+          "description": "Capture observed values for this experiment.",
+          "count": "{count} measurements",
+          "actions": {
+            "create": "Add measurement",
+            "update": "Update measurement",
+            "deleteConfirm": "Delete measurement"
+          },
+          "empty": {
+            "title": "No measurements yet",
+            "description": "Add measurements to document observed outcomes for this experiment."
+          },
+          "modal": {
+            "createTitle": "Add measurement",
+            "editTitle": "Edit measurement",
+            "description": "Link one metric and capture the observed value."
+          },
+          "deleteModal": {
+            "title": "Delete measurement",
+            "description": "Please confirm that you want to remove this measurement.",
+            "warning": "This action permanently deletes the measurement."
+          },
+          "form": {
+            "metric": {
+              "label": "Metric",
+              "placeholder": "Select a metric"
+            },
+            "value": {
+              "label": "Value",
+              "placeholder": "Example: 14.17"
+            },
+            "note": {
+              "label": "Note",
+              "placeholder": "Optional"
+            }
+          },
+          "success": {
+            "create": {
+              "title": "Measurement created",
+              "message": "The measurement was saved successfully."
+            },
+            "update": {
+              "title": "Measurement updated",
+              "message": "The measurement was updated successfully."
+            },
+            "delete": {
+              "title": "Measurement deleted",
+              "message": "The measurement was removed successfully."
+            }
+          },
+          "error": {
+            "load": {
+              "title": "Could not load measurements",
+              "message": "Please try again in a moment."
+            },
+            "create": {
+              "title": "Could not create measurement",
+              "message": "Please check your input and try again."
+            },
+            "update": {
+              "title": "Could not update measurement",
+              "message": "Please check your input and try again."
+            },
+            "delete": {
+              "title": "Could not delete measurement",
               "message": "Please try again."
             }
           }
