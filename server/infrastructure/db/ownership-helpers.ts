@@ -1,6 +1,11 @@
 import { prisma } from '@infrastructure/db/prisma'
 import type { Prisma } from '@generated/prisma/client'
-import type { IdeaVersionOwnerInput, HypothesisOwnerInput, MetricOwnerInput } from '@application/interfaces/ownership-inputs'
+import type {
+  ExperimentOwnerInput,
+  IdeaVersionOwnerInput,
+  HypothesisOwnerInput,
+  MetricOwnerInput
+} from '@application/interfaces/ownership-inputs'
 
 /**
  * Builds a Prisma where filter that constrains an idea version to its owning user.
@@ -70,6 +75,43 @@ export const buildOwnedMetricsByHypothesisWhere = (input: HypothesisOwnerInput):
 export const buildOwnedMetricWhere = (input: MetricOwnerInput): Prisma.MetricWhereInput => {
   return {
     id: input.metricId,
+    hypothesisId: input.hypothesisId,
+    hypothesis: {
+      ideaVersionId: input.ideaVersionId,
+      ideaVersion: {
+        ideaId: input.ideaId,
+        idea: {
+          userId: input.userId
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Builds a Prisma where filter that constrains experiments to one owned hypothesis.
+ */
+export const buildOwnedExperimentsByHypothesisWhere = (input: HypothesisOwnerInput): Prisma.ExperimentWhereInput => {
+  return {
+    hypothesisId: input.hypothesisId,
+    hypothesis: {
+      ideaVersionId: input.ideaVersionId,
+      ideaVersion: {
+        ideaId: input.ideaId,
+        idea: {
+          userId: input.userId
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Builds a Prisma where filter that constrains one experiment to its owning user.
+ */
+export const buildOwnedExperimentWhere = (input: ExperimentOwnerInput): Prisma.ExperimentWhereInput => {
+  return {
+    id: input.experimentId,
     hypothesisId: input.hypothesisId,
     hypothesis: {
       ideaVersionId: input.ideaVersionId,
