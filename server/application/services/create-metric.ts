@@ -1,5 +1,5 @@
 import type { MetricRepository } from '@application/interfaces/metric-repository'
-import { inferMetricDataType, type Metric } from '@application/models/metric'
+import type { Metric } from '@application/models/metric'
 import type { ThresholdOperator } from '@application/models/metric-threshold'
 import type { Logger } from '@interfaces/logger'
 import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
@@ -33,7 +33,6 @@ export const createCreateMetric = (metricRepository: MetricRepository, logger: L
       hypothesisId: input.hypothesisId,
       name: input.name.trim(),
       description: normalizedDescription,
-      dataType: inferMetricDataType(normalizedUnit),
       unit: normalizedUnit,
       threshold: input.threshold
     })

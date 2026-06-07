@@ -1,5 +1,4 @@
 import type { Metric } from '@application/models/metric'
-import { inferMetricDataType } from '@application/models/metric'
 import {
   MetricResponseSchema,
   MetricsListResponseSchema,
@@ -16,7 +15,6 @@ export const toMetricResponseDto = (metric: Metric): MetricResponseDto => {
     hypothesisId: metric.hypothesisId,
     name: metric.name,
     description: metric.description,
-    dataType: metric.dataType ?? inferMetricDataType(metric.unit),
     unit: metric.unit,
     threshold: metric.threshold
       ? {

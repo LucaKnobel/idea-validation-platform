@@ -24,7 +24,7 @@ describe('createCreateMetric', () => {
     vi.mocked(metricRepository.createForHypothesis).mockResolvedValue(makeMetric())
   })
 
-  it('trims text fields, derives percent data type from unit and forwards threshold data', async () => {
+  it('trims text fields and forwards threshold data', async () => {
     await createMetric({
       userId: VALID_USER_ID,
       ideaId: VALID_IDEA_ID,
@@ -46,7 +46,6 @@ describe('createCreateMetric', () => {
       hypothesisId: 'hypothesis-001',
       name: 'Conversion Rate',
       description: 'Measures sign-up conversion.',
-      dataType: 'PERCENT',
       unit: '%',
       threshold: {
         operator: 'GTE',
@@ -55,7 +54,7 @@ describe('createCreateMetric', () => {
     })
   })
 
-  it('normalizes empty optional fields to null and infers NUMBER as the default data type', async () => {
+  it('normalizes empty optional fields to null', async () => {
     await createMetric({
       userId: VALID_USER_ID,
       ideaId: VALID_IDEA_ID,
@@ -72,7 +71,6 @@ describe('createCreateMetric', () => {
 
     expect(metricRepository.createForHypothesis).toHaveBeenCalledWith(expect.objectContaining({
       description: null,
-      dataType: 'NUMBER',
       unit: null
     }))
   })

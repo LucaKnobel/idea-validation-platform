@@ -1,4 +1,4 @@
-import type { Metric, MetricDataType } from '@application/models/metric'
+import type { Metric } from '@application/models/metric'
 import type { HypothesisOwnerInput, MetricOwnerInput } from '@application/interfaces/ownership-inputs'
 import type { ThresholdOperator } from '@application/models/metric-threshold'
 
@@ -10,7 +10,6 @@ export type MetricThresholdFieldsInput = {
 export type MetricFieldsInput = {
   name: string
   description: string | null
-  dataType: MetricDataType
   unit: string | null
   threshold: MetricThresholdFieldsInput
 }

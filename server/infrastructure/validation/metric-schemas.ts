@@ -1,5 +1,4 @@
 import * as z from 'zod'
-import { metricDataTypes } from '@application/models/metric'
 import { thresholdOperators } from '@application/models/metric-threshold'
 import { HypothesisRouteParamsSchema } from '@infrastructure/validation/hypothesis-schemas'
 import { createNullableTrimmedStringSchema } from '@infrastructure/validation/string-schemas'
@@ -9,8 +8,6 @@ export const MetricCollectionRouteParamsSchema = HypothesisRouteParamsSchema
 export const MetricRouteParamsSchema = MetricCollectionRouteParamsSchema.extend({
   metricId: z.uuid()
 })
-
-export const MetricDataTypeSchema = z.enum(metricDataTypes)
 
 export const ThresholdOperatorSchema = z.enum(thresholdOperators)
 
@@ -44,7 +41,6 @@ export const MetricResponseSchema = z.object({
   hypothesisId: z.uuid(),
   name: z.string(),
   description: z.string().nullable(),
-  dataType: MetricDataTypeSchema,
   unit: z.string().nullable(),
   threshold: MetricThresholdResponseSchema.nullable(),
   createdAt: z.iso.datetime(),

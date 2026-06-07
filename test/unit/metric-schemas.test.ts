@@ -7,9 +7,9 @@ import {
   MetricThresholdInputSchema,
   MetricThresholdResponseSchema,
   MetricsListResponseSchema,
+  ThresholdOperatorSchema,
   UpdateMetricBodySchema
 } from '@infrastructure/validation/metric-schemas'
-import { metricDataTypes } from '@application/models/metric'
 import { thresholdOperators } from '@application/models/metric-threshold'
 import { VALID_ISO_DATETIME, VALID_UUID } from './helpers'
 
@@ -44,8 +44,13 @@ describe('Metric route schemas', () => {
 describe('Metric threshold input schema', () => {
   it('accepts every supported threshold operator', () => {
     for (const operator of thresholdOperators) {
+      expect(ThresholdOperatorSchema.safeParse(operator).success).toBe(true)
       expect(MetricThresholdInputSchema.safeParse({ operator, referenceValue: 10 }).success).toBe(true)
     }
+  })
+
+  it('rejects unsupported threshold operators', () => {
+    expect(ThresholdOperatorSchema.safeParse('NOT_AN_OPERATOR').success).toBe(false)
   })
 
   it('rejects non-finite reference values', () => {
@@ -129,7 +134,6 @@ describe('Metric response schemas', () => {
     hypothesisId: VALID_UUID,
     name: 'Conversion Rate',
     description: 'Measures sign-up conversion.',
-    dataType: metricDataTypes[1],
     unit: '%',
     threshold: validThresholdResponse,
     createdAt: VALID_ISO_DATETIME,
@@ -142,6 +146,13 @@ describe('Metric response schemas', () => {
 
   it('accepts a valid metric response', () => {
     expect(MetricResponseSchema.safeParse(validMetricResponse).success).toBe(true)
+  })
+
+  it('accepts metric responses without threshold', () => {
+    expect(MetricResponseSchema.safeParse({
+      ...validMetricResponse,
+      threshold: null
+    }).success).toBe(true)
   })
 
   it('accepts a valid metric list response', () => {
