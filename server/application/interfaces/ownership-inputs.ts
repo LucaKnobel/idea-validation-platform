@@ -11,3 +11,7 @@ export type HypothesisOwnerInput = IdeaVersionOwnerInput & {
 export type MetricOwnerInput = HypothesisOwnerInput & {
   metricId: string
 }
+
+export type ExperimentOwnerInput = HypothesisOwnerInput & {
+  experimentId: string
+}

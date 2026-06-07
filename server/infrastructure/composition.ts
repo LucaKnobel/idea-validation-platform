@@ -2,6 +2,7 @@ import { ideaRepository } from '@infrastructure/db/repositories/prisma-idea-repo
 import { ideaVersionRepository } from '@infrastructure/db/repositories/prisma-idea-version-repository'
 import { canvasRepository } from '@infrastructure/db/repositories/prisma-canvas-repository'
 import { hypothesisRepository } from '@infrastructure/db/repositories/prisma-hypothesis-repository'
+import { experimentRepository } from '@infrastructure/db/repositories/prisma-experiment-repository'
 import { metricRepository } from '@infrastructure/db/repositories/prisma-metric-repository'
 import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
 import { logger } from '@infrastructure/logging/logger'
@@ -21,6 +22,10 @@ import { createGetHypothesisMetrics } from '@application/services/get-hypothesis
 import { createCreateMetric } from '@application/services/create-metric'
 import { createUpdateMetric } from '@application/services/update-metric'
 import { createDeleteMetric } from '@application/services/delete-metric'
+import { createGetHypothesisExperiments } from '@application/services/get-hypothesis-experiments'
+import { createCreateExperiment } from '@application/services/create-experiment'
+import { createUpdateExperiment } from '@application/services/update-experiment'
+import { createDeleteExperiment } from '@application/services/delete-experiment'
 
 /**
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
@@ -101,6 +106,26 @@ const deleteMetric = createDeleteMetric(
   logger
 )
 
+const getHypothesisExperiments = createGetHypothesisExperiments(
+  experimentRepository,
+  logger
+)
+
+const createExperiment = createCreateExperiment(
+  experimentRepository,
+  logger
+)
+
+const updateExperiment = createUpdateExperiment(
+  experimentRepository,
+  logger
+)
+
+const deleteExperiment = createDeleteExperiment(
+  experimentRepository,
+  logger
+)
+
 export {
   subscriptionService,
   createIdea,
@@ -116,5 +141,9 @@ export {
   getHypothesisMetrics,
   createMetric,
   updateMetric,
-  deleteMetric
+  deleteMetric,
+  getHypothesisExperiments,
+  createExperiment,
+  updateExperiment,
+  deleteExperiment
 }
