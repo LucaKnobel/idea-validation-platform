@@ -13,6 +13,8 @@ import type { Metric } from '@application/models/metric'
 import type { MetricThreshold } from '@application/models/metric-threshold'
 import type { ExperimentRepository } from '@application/interfaces/experiment-repository'
 import type { Experiment } from '@application/models/experiment'
+import type { MeasurementRepository } from '@application/interfaces/measurement-repository'
+import type { Measurement } from '@application/models/measurement'
 import type { SubscriptionService } from '@application/interfaces/subscription-service'
 import type { Logger } from '@interfaces/logger'
 
@@ -158,6 +160,24 @@ export const makeExperiment = (overrides: Partial<Experiment> = {}): Experiment 
 export const makeExperimentRepository = (): ExperimentRepository => ({
   listByHypothesisForUser: vi.fn(),
   createForHypothesis: vi.fn(),
+  updateByIdForUser: vi.fn(),
+  deleteByIdForUser: vi.fn()
+})
+
+export const makeMeasurement = (overrides: Partial<Measurement> = {}): Measurement => ({
+  id: 'measurement-001',
+  experimentId: 'experiment-001',
+  metricId: 'metric-001',
+  value: 42,
+  note: 'Observed in first cohort',
+  createdAt: new Date(VALID_ISO_DATETIME),
+  updatedAt: new Date(VALID_ISO_DATETIME),
+  ...overrides
+})
+
+export const makeMeasurementRepository = (): MeasurementRepository => ({
+  listByExperimentForUser: vi.fn(),
+  createForExperiment: vi.fn(),
   updateByIdForUser: vi.fn(),
   deleteByIdForUser: vi.fn()
 })
