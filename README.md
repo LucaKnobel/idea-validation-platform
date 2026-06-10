@@ -16,6 +16,8 @@ It helps users:
 
 ## Status
 
+**Diploma Thesis Project**
+
 Work in Progress
 
 - under active development
@@ -38,10 +40,6 @@ Work in Progress
 
 Based on Clean Architecture (3 layers):
 
-- Application
-- API (Adapters)
-- Infrastructure
-
 See:
 
 - [Architecture Docs](/docs/architecture.md)
@@ -52,3 +50,15 @@ See:
 ## Goal
 
 Enable evidence-based decision making for business ideas.
+
+---
+
+## License
+
+This project is source-available.
+
+The source code is provided for viewing and educational purposes only.
+
+Commercial use, redistribution, modification, and deployment of derivative works are prohibited without explicit written permission.
+
+See [LICENSE](LICENSE) for details.
