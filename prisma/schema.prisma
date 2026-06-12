@@ -156,11 +156,24 @@ enum HypothesisPriority {
   LOW
 }
 
+enum HypothesisStatus {
+  NOT_TESTED
+  VALIDATED
+  INVALIDATED
+}
+
 enum ExperimentStatus {
   PLANNED
   RUNNING
   COMPLETED
   CANCELLED
+}
+
+enum EvidenceType {
+  QUALITATIVE
+  QUANTITATIVE
+  BEHAVIORAL
+  MONETARY
 }
 
 enum ThresholdOperator {
@@ -196,9 +209,11 @@ model Hypothesis {
   statement          String
   dimension          HypothesisDimension
   priority           HypothesisPriority
+  evidenceType       EvidenceType
+  status             HypothesisStatus          @default(NOT_TESTED)
   canvasSectionLinks HypothesisCanvasSection[]
-  metrics            Metric[]
-  experiments        Experiment[]
+  metric             Metric?
+  experiment         Experiment?
   createdAt          DateTime                  @default(now())
   updatedAt          DateTime                  @updatedAt
 
@@ -237,7 +252,7 @@ model Metric {
   id           String           @id @default(uuid())
   hypothesisId String
   hypothesis   Hypothesis       @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
-  measurements Measurement[]
+  measurement  Measurement?
   name         String
   description  String?
   unit         String?
@@ -245,7 +260,7 @@ model Metric {
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
 
-  @@index([hypothesisId])
+  @@unique([hypothesisId])
   @@map("metric")
 }
 
@@ -253,14 +268,14 @@ model Experiment {
   id           String           @id @default(uuid())
   hypothesisId String
   hypothesis   Hypothesis       @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
-  measurements Measurement[]
+  measurement  Measurement?
   title        String
   description  String?
   status       ExperimentStatus
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
 
-  @@index([hypothesisId])
+  @@unique([hypothesisId])
   @@map("experiment")
 }
 
@@ -275,9 +290,8 @@ model Measurement {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
-  @@unique([experimentId, metricId])
-  @@index([experimentId])
-  @@index([metricId])
+  @@unique([experimentId])
+  @@unique([metricId])
   @@map("measurement")
 }
 
