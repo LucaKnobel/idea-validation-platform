@@ -1,37 +1,37 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { createGetIdeaVersionHypotheses } from '@application/services/get-idea-version-hypotheses'
+import { buildGetIdeaVersionHypotheses } from '@application/services/build-get-idea-version-hypotheses'
 import { IdeaVersionNotFoundError } from '@application/errors/idea-errors'
 import type { HypothesisRepository } from '@application/interfaces/hypothesis-repository'
 import type { Logger } from '@interfaces/logger'
 import {
-  VALID_IDEA_ID,
-  VALID_IDEA_VERSION_ID,
-  VALID_USER_ID,
   makeHypothesis,
   makeHypothesisRepository,
-  makeLogger
+  makeLogger,
+  VALID_IDEA_ID,
+  VALID_IDEA_VERSION_ID,
+  VALID_USER_ID
 } from './helpers'
 
-describe('createGetIdeaVersionHypotheses', () => {
+describe('buildGetIdeaVersionHypotheses', () => {
   let hypothesisRepository: HypothesisRepository
   let logger: Logger
-  let getIdeaVersionHypotheses: ReturnType<typeof createGetIdeaVersionHypotheses>
+  let getIdeaVersionHypotheses: ReturnType<typeof buildGetIdeaVersionHypotheses>
 
   beforeEach(() => {
     hypothesisRepository = makeHypothesisRepository()
     logger = makeLogger()
-    getIdeaVersionHypotheses = createGetIdeaVersionHypotheses(hypothesisRepository, logger)
-    vi.mocked(hypothesisRepository.listByIdeaVersionForUser).mockResolvedValue([makeHypothesis()])
+    getIdeaVersionHypotheses = buildGetIdeaVersionHypotheses(hypothesisRepository, logger)
+    vi.mocked(hypothesisRepository.listByIdeaVersion).mockResolvedValue([makeHypothesis()])
   })
 
-  it('loads hypotheses for the requested user and idea version', async () => {
+  it('calls listByIdeaVersion with the correct input', async () => {
     await getIdeaVersionHypotheses({
       userId: VALID_USER_ID,
       ideaId: VALID_IDEA_ID,
       ideaVersionId: VALID_IDEA_VERSION_ID
     })
 
-    expect(hypothesisRepository.listByIdeaVersionForUser).toHaveBeenCalledWith({
+    expect(hypothesisRepository.listByIdeaVersion).toHaveBeenCalledWith({
       userId: VALID_USER_ID,
       ideaId: VALID_IDEA_ID,
       ideaVersionId: VALID_IDEA_VERSION_ID
@@ -40,7 +40,7 @@ describe('createGetIdeaVersionHypotheses', () => {
 
   it('returns the repository result unchanged', async () => {
     const hypotheses = [makeHypothesis(), makeHypothesis({ id: 'hypothesis-002' })]
-    vi.mocked(hypothesisRepository.listByIdeaVersionForUser).mockResolvedValueOnce(hypotheses)
+    vi.mocked(hypothesisRepository.listByIdeaVersion).mockResolvedValue(hypotheses)
 
     const result = await getIdeaVersionHypotheses({
       userId: VALID_USER_ID,
@@ -52,8 +52,7 @@ describe('createGetIdeaVersionHypotheses', () => {
   })
 
   it('logs the loaded hypothesis count', async () => {
-    const hypotheses = [makeHypothesis(), makeHypothesis({ id: 'hypothesis-002' })]
-    vi.mocked(hypothesisRepository.listByIdeaVersionForUser).mockResolvedValueOnce(hypotheses)
+    vi.mocked(hypothesisRepository.listByIdeaVersion).mockResolvedValue([makeHypothesis(), makeHypothesis({ id: 'hypothesis-002' })])
 
     await getIdeaVersionHypotheses({
       userId: VALID_USER_ID,
@@ -70,14 +69,10 @@ describe('createGetIdeaVersionHypotheses', () => {
   })
 
   it('throws IdeaVersionNotFoundError when the version is not accessible', async () => {
-    vi.mocked(hypothesisRepository.listByIdeaVersionForUser).mockResolvedValueOnce(null)
+    vi.mocked(hypothesisRepository.listByIdeaVersion).mockResolvedValue(null)
 
     await expect(
-      getIdeaVersionHypotheses({
-        userId: VALID_USER_ID,
-        ideaId: VALID_IDEA_ID,
-        ideaVersionId: VALID_IDEA_VERSION_ID
-      })
+      getIdeaVersionHypotheses({ userId: VALID_USER_ID, ideaId: VALID_IDEA_ID, ideaVersionId: VALID_IDEA_VERSION_ID })
     ).rejects.toThrow(IdeaVersionNotFoundError)
 
     expect(logger.debug).not.toHaveBeenCalled()
