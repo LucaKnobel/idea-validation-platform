@@ -5,20 +5,16 @@ import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
 
 export type GetHypothesisInput = {
   userId: string
-  ideaId: string
-  ideaVersionId: string
   hypothesisId: string
 }
 
 /**
- * Builds the use case that loads one hypothesis for a specific idea version.
+ * Builds the use case that loads one owned hypothesis.
  */
-export const createGetHypothesis = (hypothesisRepository: HypothesisRepository, logger: Logger) => {
+export const buildGetHypothesis = (hypothesisRepository: HypothesisRepository, logger: Logger) => {
   return async (input: GetHypothesisInput): Promise<Hypothesis> => {
-    const hypothesis = await hypothesisRepository.getByIdForUser({
+    const hypothesis = await hypothesisRepository.getById({
       userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
       hypothesisId: input.hypothesisId
     })
 
@@ -28,8 +24,6 @@ export const createGetHypothesis = (hypothesisRepository: HypothesisRepository, 
 
     logger.debug('Hypothesis loaded', {
       userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
       hypothesisId: input.hypothesisId
     })
 

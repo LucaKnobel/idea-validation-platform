@@ -91,6 +91,18 @@ describe('Hypothesis body schemas', () => {
     }
   })
 
+  it('deduplicates canvasElementTypes in upsert input', () => {
+    const result = UpsertHypothesisBodySchema.safeParse({
+      ...validBody,
+      canvasElementTypes: ['CHANNELS', 'CHANNELS', 'VALUE_PROPOSITIONS']
+    })
+
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.canvasElementTypes).toEqual(['CHANNELS', 'VALUE_PROPOSITIONS'])
+    }
+  })
+
   it('rejects empty statements after trimming', () => {
     expect(UpsertHypothesisBodySchema.safeParse({
       ...validBody,

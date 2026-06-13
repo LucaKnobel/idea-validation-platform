@@ -8,11 +8,11 @@ export type DeleteIdeaInput = {
 }
 
 /**
- * Builds the use case that deletes an idea owned by the current user.
+ * Builds the use case that deletes one owned idea.
  */
-export const createDeleteIdea = (ideaRepository: IdeaRepository, logger: Logger) => {
+export const buildDeleteIdea = (ideaRepository: IdeaRepository, logger: Logger) => {
   return async (input: DeleteIdeaInput): Promise<void> => {
-    const deleted = await ideaRepository.deleteByIdForUser({
+    const deleted = await ideaRepository.delete({
       userId: input.userId,
       ideaId: input.ideaId
     })

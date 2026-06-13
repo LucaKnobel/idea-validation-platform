@@ -3,10 +3,8 @@ import type { ExperimentRepository } from '@application/interfaces/experiment-re
 import type { Experiment, ExperimentStatus } from '@application/models/experiment'
 import type { Logger } from '@interfaces/logger'
 
-export type CreateExperimentInput = {
+export type UpsertExperimentInput = {
   userId: string
-  ideaId: string
-  ideaVersionId: string
   hypothesisId: string
   title: string
   description: string | null
@@ -14,17 +12,15 @@ export type CreateExperimentInput = {
 }
 
 /**
- * Builds the use case that creates one experiment in a specific hypothesis.
+ * Builds the use case that creates or updates the experiment singleton of one owned hypothesis.
  */
-export const createCreateExperiment = (experimentRepository: ExperimentRepository, logger: Logger) => {
-  return async (input: CreateExperimentInput): Promise<Experiment> => {
-    const experiment = await experimentRepository.createForHypothesis({
+export const buildUpsertExperiment = (experimentRepository: ExperimentRepository, logger: Logger) => {
+  return async (input: UpsertExperimentInput): Promise<Experiment> => {
+    const experiment = await experimentRepository.upsertByHypothesis({
       userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
       hypothesisId: input.hypothesisId,
-      title: input.title.trim(),
-      description: input.description?.trim() || null,
+      title: input.title,
+      description: input.description,
       status: input.status
     })
 
@@ -32,10 +28,8 @@ export const createCreateExperiment = (experimentRepository: ExperimentRepositor
       throw new HypothesisNotFoundError()
     }
 
-    logger.debug('Experiment created', {
+    logger.debug('Experiment upserted', {
       userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
       hypothesisId: input.hypothesisId,
       experimentId: experiment.id
     })

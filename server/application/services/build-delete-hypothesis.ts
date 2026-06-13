@@ -4,20 +4,16 @@ import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
 
 export type DeleteHypothesisInput = {
   userId: string
-  ideaId: string
-  ideaVersionId: string
   hypothesisId: string
 }
 
 /**
- * Builds the use case that deletes one hypothesis owned by the current user.
+ * Builds the use case that deletes one owned hypothesis.
  */
-export const createDeleteHypothesis = (hypothesisRepository: HypothesisRepository, logger: Logger) => {
+export const buildDeleteHypothesis = (hypothesisRepository: HypothesisRepository, logger: Logger) => {
   return async (input: DeleteHypothesisInput): Promise<void> => {
-    const deleted = await hypothesisRepository.deleteByIdForUser({
+    const deleted = await hypothesisRepository.delete({
       userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
       hypothesisId: input.hypothesisId
     })
 
@@ -27,8 +23,6 @@ export const createDeleteHypothesis = (hypothesisRepository: HypothesisRepositor
 
     logger.debug('Hypothesis deleted', {
       userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
       hypothesisId: input.hypothesisId
     })
   }

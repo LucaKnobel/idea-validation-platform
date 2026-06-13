@@ -4,17 +4,17 @@ import { MeasurementNotFoundError } from '@application/errors/measurement-errors
 
 export type DeleteMeasurementInput = {
   userId: string
-  measurementId: string
+  hypothesisId: string
 }
 
 /**
- * Builds the use case that deletes one measurement owned by the current user.
+ * Builds the use case that deletes the measurement singleton for one owned hypothesis.
  */
-export const createDeleteMeasurement = (measurementRepository: MeasurementRepository, logger: Logger) => {
+export const buildDeleteMeasurement = (measurementRepository: MeasurementRepository, logger: Logger) => {
   return async (input: DeleteMeasurementInput): Promise<void> => {
-    const deleted = await measurementRepository.deleteByIdForUser({
+    const deleted = await measurementRepository.deleteByHypothesis({
       userId: input.userId,
-      measurementId: input.measurementId
+      hypothesisId: input.hypothesisId
     })
 
     if (!deleted) {
@@ -23,7 +23,7 @@ export const createDeleteMeasurement = (measurementRepository: MeasurementReposi
 
     logger.debug('Measurement deleted', {
       userId: input.userId,
-      measurementId: input.measurementId
+      hypothesisId: input.hypothesisId
     })
   }
 }

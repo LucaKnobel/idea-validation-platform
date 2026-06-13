@@ -5,7 +5,6 @@ import type {
   HypothesisEvidenceType,
   HypothesisPriority
 } from '@application/models/hypothesis'
-import { uniqueCanvasSectionTypes } from '@application/models/hypothesis-canvas-section'
 import type { CanvasElementType } from '@application/models/canvas-element'
 import type { Logger } from '@interfaces/logger'
 import { IdeaVersionNotFoundError } from '@application/errors/idea-errors'
@@ -18,23 +17,23 @@ export type CreateHypothesisInput = {
   dimension: HypothesisDimension
   priority: HypothesisPriority
   evidenceType: HypothesisEvidenceType
-  canvasSectionTypes: CanvasElementType[]
+  canvasElementTypes: CanvasElementType[]
 }
 
 /**
- * Builds the use case that creates one hypothesis in a specific idea version.
+ * Builds the use case that creates one hypothesis in one owned idea version.
  */
-export const createCreateHypothesis = (hypothesisRepository: HypothesisRepository, logger: Logger) => {
+export const buildCreateHypothesis = (hypothesisRepository: HypothesisRepository, logger: Logger) => {
   return async (input: CreateHypothesisInput): Promise<Hypothesis> => {
-    const createdHypothesis = await hypothesisRepository.createForIdeaVersion({
+    const createdHypothesis = await hypothesisRepository.create({
       userId: input.userId,
       ideaId: input.ideaId,
       ideaVersionId: input.ideaVersionId,
-      statement: input.statement.trim(),
+      statement: input.statement,
       dimension: input.dimension,
       priority: input.priority,
       evidenceType: input.evidenceType,
-      canvasSectionTypes: uniqueCanvasSectionTypes(input.canvasSectionTypes)
+      canvasElementTypes: input.canvasElementTypes
     })
 
     if (createdHypothesis === null) {
