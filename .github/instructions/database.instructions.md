@@ -150,3 +150,262 @@ Rules:
 - mapping is mandatory
 - no direct DB usage outside repositories
 - domain models must stay independent
+
+
+# Repository Design Guidelines
+
+## Responsibility Boundaries
+
+### Repository Layer
+
+Repositories are responsible only for:
+
+* Database access
+* Prisma queries
+* Ownership filtering inside queries
+* Returning entities
+
+Repositories must not contain:
+
+* Business rules
+* HTTP concerns
+* Validation logic
+* Conflict handling
+* Authorization responses
+* NotFound responses
+
+---
+
+## Ownership Checks
+
+Ownership must be enforced directly in repository queries.
+
+Example:
+
+```ts
+async findOwnedHypothesis(
+  hypothesisId: string,
+  userId: string
+): Promise<Hypothesis | null>
+```
+
+Example Prisma query:
+
+```ts
+where: {
+  id: hypothesisId,
+  ideaVersion: {
+    idea: {
+      userId
+    }
+  }
+}
+```
+
+If:
+
+* the entity does not exist
+* the entity belongs to another user
+
+the repository returns:
+
+```ts
+null
+```
+
+The repository should not distinguish between "not found" and "not owned".
+
+---
+
+## Repository Return Types
+
+### Read Operations
+
+```ts
+Promise<Entity | null>
+```
+
+Examples:
+
+```ts
+Promise<Idea | null>
+Promise<IdeaVersion | null>
+Promise<Hypothesis | null>
+Promise<Experiment | null>
+Promise<Metric | null>
+Promise<Measurement | null>
+```
+
+---
+
+### Update Operations
+
+```ts
+Promise<Entity | null>
+```
+
+If the entity cannot be found or is not owned:
+
+```ts
+return null
+```
+
+---
+
+### Delete Operations
+
+Preferred:
+
+```ts
+Promise<boolean>
+```
+
+Example:
+
+```ts
+true
+```
+
+Entity deleted successfully.
+
+```ts
+false
+```
+
+Entity not found or not owned.
+
+---
+
+## Unexpected Errors
+
+Repositories may throw only unexpected technical errors:
+
+* Database connection failures
+* Prisma exceptions
+* Infrastructure failures
+
+Example:
+
+```ts
+throw error
+```
+
+Repositories must not throw:
+
+```ts
+NotFoundError
+ConflictError
+ForbiddenError
+ValidationError
+```
+
+---
+
+# Service Layer Responsibilities
+
+Services contain business logic.
+
+Services decide:
+
+* Success
+* NotFound
+* Conflict
+* Validation failures
+
+Example:
+
+```ts
+const hypothesis =
+  await repository.findOwnedHypothesis(
+    hypothesisId,
+    userId
+  )
+
+if (!hypothesis) {
+  return {
+    kind: 'notFound'
+  }
+}
+```
+
+---
+
+## Conflict Handling
+
+Conflicts belong to the service layer.
+
+Example:
+
+A hypothesis may only have one experiment.
+
+```ts
+const existingExperiment =
+  await repository.findExperimentByHypothesis(
+    hypothesisId
+  )
+
+if (existingExperiment) {
+  return {
+    kind: 'conflict'
+  }
+}
+```
+
+The repository should not know what a conflict means.
+
+---
+
+# API Handler Responsibilities
+
+API handlers translate service results into HTTP responses.
+
+Example mapping:
+
+```text
+success          -> 200 / 201 / 204
+validationError  -> 400
+notFound         -> 404
+conflict         -> 409
+unexpectedError  -> 500
+```
+
+---
+
+# Recommended Flow
+
+```text
+API Handler
+    ↓
+Service
+    ↓
+Repository
+    ↓
+Prisma
+```
+
+Responsibilities:
+
+```text
+Repository
+    Entity | null
+
+Service
+    Business decisions
+
+API Handler
+    HTTP responses
+```
+
+---
+
+# Design Principle
+
+Repositories should return only:
+
+```text
+Entity
+null
+Unexpected exception
+```
+
+Everything else belongs to higher layers.
