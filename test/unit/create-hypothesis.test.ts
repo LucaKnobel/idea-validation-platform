@@ -32,6 +32,7 @@ describe('createCreateHypothesis', () => {
       statement: '  Validate direct sales  ',
       dimension: 'PROBLEM',
       priority: 'HIGH',
+      evidenceType: 'QUALITATIVE',
       canvasSectionTypes: ['CHANNELS', 'CHANNELS', 'VALUE_PROPOSITIONS']
     })
 
@@ -42,6 +43,7 @@ describe('createCreateHypothesis', () => {
       statement: 'Validate direct sales',
       dimension: 'PROBLEM',
       priority: 'HIGH',
+      evidenceType: 'QUALITATIVE',
       canvasSectionTypes: ['CHANNELS', 'VALUE_PROPOSITIONS']
     })
   })
@@ -57,6 +59,7 @@ describe('createCreateHypothesis', () => {
       statement: 'Validate direct sales',
       dimension: 'PROBLEM',
       priority: 'HIGH',
+      evidenceType: 'QUALITATIVE',
       canvasSectionTypes: ['CHANNELS']
     })
 
@@ -75,6 +78,7 @@ describe('createCreateHypothesis', () => {
       statement: 'Validate direct sales',
       dimension: 'PROBLEM',
       priority: 'HIGH',
+      evidenceType: 'QUALITATIVE',
       canvasSectionTypes: ['CHANNELS']
     })
 
@@ -97,6 +101,7 @@ describe('createCreateHypothesis', () => {
         statement: 'Validate direct sales',
         dimension: 'PROBLEM',
         priority: 'HIGH',
+        evidenceType: 'QUALITATIVE',
         canvasSectionTypes: ['CHANNELS']
       })
     ).rejects.toThrow(IdeaVersionNotFoundError)

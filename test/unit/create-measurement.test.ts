@@ -2,11 +2,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createCreateMeasurement } from '@application/services/create-measurement'
 import { ExperimentNotFoundError } from '@application/errors/experiment-errors'
 import { MeasurementMetricAlreadyExistsError } from '@application/errors/measurement-errors'
+import { UniqueConstraintViolationError } from '@application/errors/persistence-errors'
 import type { MeasurementRepository } from '@application/interfaces/measurement-repository'
 import type { Logger } from '@interfaces/logger'
 import {
-  VALID_IDEA_ID,
-  VALID_IDEA_VERSION_ID,
   VALID_USER_ID,
   makeLogger,
   makeMeasurement,
@@ -22,18 +21,12 @@ describe('createCreateMeasurement', () => {
     measurementRepository = makeMeasurementRepository()
     logger = makeLogger()
     createMeasurement = createCreateMeasurement(measurementRepository, logger)
-    vi.mocked(measurementRepository.createForExperiment).mockResolvedValue({
-      kind: 'success',
-      measurement: makeMeasurement()
-    })
+    vi.mocked(measurementRepository.createForExperiment).mockResolvedValue(makeMeasurement())
   })
 
   it('trims note and forwards all measurement fields', async () => {
     await createMeasurement({
       userId: VALID_USER_ID,
-      ideaId: VALID_IDEA_ID,
-      ideaVersionId: VALID_IDEA_VERSION_ID,
-      hypothesisId: 'hypothesis-001',
       experimentId: 'experiment-001',
       metricId: 'metric-001',
       value: 12.5,
@@ -42,9 +35,6 @@ describe('createCreateMeasurement', () => {
 
     expect(measurementRepository.createForExperiment).toHaveBeenCalledWith({
       userId: VALID_USER_ID,
-      ideaId: VALID_IDEA_ID,
-      ideaVersionId: VALID_IDEA_VERSION_ID,
-      hypothesisId: 'hypothesis-001',
       experimentId: 'experiment-001',
       metricId: 'metric-001',
       value: 12.5,
@@ -55,9 +45,6 @@ describe('createCreateMeasurement', () => {
   it('normalizes an empty note to null', async () => {
     await createMeasurement({
       userId: VALID_USER_ID,
-      ideaId: VALID_IDEA_ID,
-      ideaVersionId: VALID_IDEA_VERSION_ID,
-      hypothesisId: 'hypothesis-001',
       experimentId: 'experiment-001',
       metricId: 'metric-001',
       value: 12.5,
@@ -71,16 +58,10 @@ describe('createCreateMeasurement', () => {
 
   it('returns the created measurement unchanged', async () => {
     const measurement = makeMeasurement({ id: 'measurement-xyz' })
-    vi.mocked(measurementRepository.createForExperiment).mockResolvedValueOnce({
-      kind: 'success',
-      measurement
-    })
+    vi.mocked(measurementRepository.createForExperiment).mockResolvedValueOnce(measurement)
 
     const result = await createMeasurement({
       userId: VALID_USER_ID,
-      ideaId: VALID_IDEA_ID,
-      ideaVersionId: VALID_IDEA_VERSION_ID,
-      hypothesisId: 'hypothesis-001',
       experimentId: 'experiment-001',
       metricId: 'metric-001',
       value: 12.5,
@@ -91,16 +72,10 @@ describe('createCreateMeasurement', () => {
   })
 
   it('logs the created measurement id after success', async () => {
-    vi.mocked(measurementRepository.createForExperiment).mockResolvedValueOnce({
-      kind: 'success',
-      measurement: makeMeasurement({ id: 'measurement-xyz' })
-    })
+    vi.mocked(measurementRepository.createForExperiment).mockResolvedValueOnce(makeMeasurement({ id: 'measurement-xyz' }))
 
     await createMeasurement({
       userId: VALID_USER_ID,
-      ideaId: VALID_IDEA_ID,
-      ideaVersionId: VALID_IDEA_VERSION_ID,
-      hypothesisId: 'hypothesis-001',
       experimentId: 'experiment-001',
       metricId: 'metric-001',
       value: 12.5,
@@ -109,9 +84,6 @@ describe('createCreateMeasurement', () => {
 
     expect(logger.debug).toHaveBeenCalledWith('Measurement created', {
       userId: VALID_USER_ID,
-      ideaId: VALID_IDEA_ID,
-      ideaVersionId: VALID_IDEA_VERSION_ID,
-      hypothesisId: 'hypothesis-001',
       experimentId: 'experiment-001',
       measurementId: 'measurement-xyz',
       metricId: 'metric-001'
@@ -119,14 +91,11 @@ describe('createCreateMeasurement', () => {
   })
 
   it('throws ExperimentNotFoundError when experiment access fails', async () => {
-    vi.mocked(measurementRepository.createForExperiment).mockResolvedValueOnce({ kind: 'notFound' })
+    vi.mocked(measurementRepository.createForExperiment).mockResolvedValueOnce(null)
 
     await expect(
       createMeasurement({
         userId: VALID_USER_ID,
-        ideaId: VALID_IDEA_ID,
-        ideaVersionId: VALID_IDEA_VERSION_ID,
-        hypothesisId: 'hypothesis-001',
         experimentId: 'experiment-001',
         metricId: 'metric-001',
         value: 12.5,
@@ -138,14 +107,11 @@ describe('createCreateMeasurement', () => {
   })
 
   it('throws MeasurementMetricAlreadyExistsError on duplicate metric within the experiment', async () => {
-    vi.mocked(measurementRepository.createForExperiment).mockResolvedValueOnce({ kind: 'conflict' })
+    vi.mocked(measurementRepository.createForExperiment).mockRejectedValueOnce(new UniqueConstraintViolationError())
 
     await expect(
       createMeasurement({
         userId: VALID_USER_ID,
-        ideaId: VALID_IDEA_ID,
-        ideaVersionId: VALID_IDEA_VERSION_ID,
-        hypothesisId: 'hypothesis-001',
         experimentId: 'experiment-001',
         metricId: 'metric-001',
         value: 12.5,

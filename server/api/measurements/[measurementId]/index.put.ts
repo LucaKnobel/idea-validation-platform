@@ -24,7 +24,7 @@ export default defineProtectedHandler(async (event, userId): Promise<Measurement
 
   const measurement = await updateMeasurement({
     userId,
-    measurementId: params.measurementId,
+    measurementId: params.id,
     metricId: body.metricId,
     value: body.value,
     note: body.note

@@ -92,6 +92,7 @@ export const useHypotheses = (): UseHypothesesComposable => {
             statement: input.body.statement,
             dimension: input.body.dimension,
             priority: input.body.priority,
+            evidenceType: input.body.evidenceType,
             canvasSectionTypes: uniqueSectionTypes(input.body.canvasSectionTypes)
           }
         })

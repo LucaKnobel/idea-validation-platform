@@ -31,6 +31,19 @@ export const hypothesisPriorities = [
 export type HypothesisPriority = (typeof hypothesisPriorities)[number]
 
 /**
+ * Supported evidence types used to classify one hypothesis.
+ */
+export const hypothesisEvidenceTypes = [
+  'QUALITATIVE',
+  'QUANTITATIVE'
+] as const
+
+/**
+ * Union type for supported evidence types.
+ */
+export type HypothesisEvidenceType = (typeof hypothesisEvidenceTypes)[number]
+
+/**
  * Represents one persisted hypothesis in a specific idea version.
  */
 export type Hypothesis = {

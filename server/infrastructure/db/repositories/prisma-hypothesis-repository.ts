@@ -1,5 +1,9 @@
 import { prisma } from '@infrastructure/db/prisma'
-import type { HypothesisFieldsInput, HypothesisRepository } from '@application/interfaces/hypothesis-repository'
+import type {
+  HypothesisCreateFieldsInput,
+  HypothesisRepository,
+  HypothesisUpdateFieldsInput
+} from '@application/interfaces/hypothesis-repository'
 import type { Hypothesis } from '@application/models/hypothesis'
 import type { Prisma } from '@generated/prisma/client'
 import type { HypothesisOwnerInput } from '@application/interfaces/ownership-inputs'
@@ -94,7 +98,7 @@ export const hypothesisRepository: HypothesisRepository = {
   /**
    * Creates one hypothesis for a user-owned idea version.
    */
-  async createForIdeaVersion(input: HypothesisOwnerInput & HypothesisFieldsInput): Promise<Hypothesis | null> {
+  async createForIdeaVersion(input: HypothesisOwnerInput & HypothesisCreateFieldsInput): Promise<Hypothesis | null> {
     const hasAccess = await isIdeaVersionOwnedByUser(input)
 
     if (!hasAccess) {
@@ -107,6 +111,7 @@ export const hypothesisRepository: HypothesisRepository = {
         statement: input.statement,
         dimension: input.dimension,
         priority: input.priority,
+        evidenceType: input.evidenceType,
         canvasSectionLinks: {
           create: input.canvasSectionTypes.map(canvasElementType => ({
             canvasElementType
@@ -128,7 +133,7 @@ export const hypothesisRepository: HypothesisRepository = {
   /**
    * Updates one hypothesis and replaces its section links.
    */
-  async updateByIdForUser(input: HypothesisOwnerInput & HypothesisFieldsInput): Promise<Hypothesis | null> {
+  async updateByIdForUser(input: HypothesisOwnerInput & HypothesisUpdateFieldsInput): Promise<Hypothesis | null> {
     const where = buildOwnedHypothesisWhere(input)
 
     const updated = await prisma.$transaction(async (tx) => {

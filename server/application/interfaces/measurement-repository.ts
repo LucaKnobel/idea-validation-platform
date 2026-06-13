@@ -1,4 +1,4 @@
-import type { ExperimentOwnerInput, MeasurementOwnerInput } from '@application/interfaces/ownership-inputs'
+import type { ExperimentIdOwnerInput, MeasurementIdOwnerInput } from '@application/interfaces/ownership-inputs'
 import type { Measurement } from '@application/models/measurement'
 
 export type MeasurementFieldsInput = {
@@ -7,44 +7,35 @@ export type MeasurementFieldsInput = {
   note: string | null
 }
 
-export type MeasurementWriteInput = ExperimentOwnerInput & MeasurementFieldsInput
+export type MeasurementCreateInput = ExperimentIdOwnerInput & MeasurementFieldsInput
 
-export type MeasurementMutationInput = MeasurementOwnerInput & MeasurementFieldsInput
-
-export type MeasurementMutationResult = {
-  kind: 'success'
-  measurement: Measurement
-} | {
-  kind: 'notFound'
-} | {
-  kind: 'conflict'
-}
+export type MeasurementUpdateInput = MeasurementIdOwnerInput & MeasurementFieldsInput
 
 /**
- * Persistence contract for reading and mutating measurements in one owned experiment.
+ * Persistence contract for reading and mutating owned measurements.
  */
 export interface MeasurementRepository {
   /**
-   * Returns all measurements for an experiment owned by the given user.
-   * Returns null when the experiment does not exist or is not accessible.
+   * Returns one measurement owned by the given user.
+   * Returns null when the measurement does not exist or is not accessible.
    */
-  listByExperimentForUser(input: ExperimentOwnerInput): Promise<Measurement[] | null>
+  getByIdForUser(input: MeasurementIdOwnerInput): Promise<Measurement | null>
 
   /**
-   * Creates one measurement in an experiment owned by the given user.
-    * Returns operation result including conflict state for unique-constraint collisions.
+   * Creates one measurement for an experiment owned by the given user.
+   * Returns null when the experiment, metric, or ownership preconditions are not met.
    */
-  createForExperiment(input: MeasurementWriteInput): Promise<MeasurementMutationResult>
+  createForExperiment(input: MeasurementCreateInput): Promise<Measurement | null>
 
   /**
    * Updates one measurement owned by the given user.
-    * Returns operation result including conflict state for unique-constraint collisions.
+    * Returns null when the measurement or metric preconditions are not met.
    */
-  updateByIdForUser(input: MeasurementMutationInput): Promise<MeasurementMutationResult>
+  updateByIdForUser(input: MeasurementUpdateInput): Promise<Measurement | null>
 
   /**
    * Deletes one measurement owned by the given user.
    * Returns true when a row was deleted.
    */
-  deleteByIdForUser(input: MeasurementOwnerInput): Promise<boolean>
+  deleteByIdForUser(input: MeasurementIdOwnerInput): Promise<boolean>
 }

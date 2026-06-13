@@ -27,6 +27,7 @@ export const useHypothesisFormConfig = (): UseHypothesisFormConfigComposable => 
       statement: '',
       dimension: 'PROBLEM',
       priority: 'MEDIUM',
+      evidenceType: 'QUALITATIVE',
       canvasSectionTypes: []
     }
   }

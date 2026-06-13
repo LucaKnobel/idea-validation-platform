@@ -1,5 +1,10 @@
 import type { HypothesisRepository } from '@application/interfaces/hypothesis-repository'
-import type { Hypothesis, HypothesisDimension, HypothesisPriority } from '@application/models/hypothesis'
+import type {
+  Hypothesis,
+  HypothesisDimension,
+  HypothesisEvidenceType,
+  HypothesisPriority
+} from '@application/models/hypothesis'
 import { uniqueCanvasSectionTypes } from '@application/models/hypothesis-canvas-section'
 import type { CanvasElementType } from '@application/models/canvas-element'
 import type { Logger } from '@interfaces/logger'
@@ -12,6 +17,7 @@ export type CreateHypothesisInput = {
   statement: string
   dimension: HypothesisDimension
   priority: HypothesisPriority
+  evidenceType: HypothesisEvidenceType
   canvasSectionTypes: CanvasElementType[]
 }
 
@@ -27,6 +33,7 @@ export const createCreateHypothesis = (hypothesisRepository: HypothesisRepositor
       statement: input.statement.trim(),
       dimension: input.dimension,
       priority: input.priority,
+      evidenceType: input.evidenceType,
       canvasSectionTypes: uniqueCanvasSectionTypes(input.canvasSectionTypes)
     })
 

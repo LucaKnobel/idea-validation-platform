@@ -1,12 +1,21 @@
 import type { CanvasElementType } from '@application/models/canvas-element'
-import type { Hypothesis, HypothesisDimension, HypothesisPriority } from '@application/models/hypothesis'
+import type {
+  Hypothesis,
+  HypothesisDimension,
+  HypothesisEvidenceType,
+  HypothesisPriority
+} from '@application/models/hypothesis'
 import type { IdeaVersionOwnerInput, HypothesisOwnerInput } from '@application/interfaces/ownership-inputs'
 
-export type HypothesisFieldsInput = {
+export type HypothesisUpdateFieldsInput = {
   statement: string
   dimension: HypothesisDimension
   priority: HypothesisPriority
   canvasSectionTypes: CanvasElementType[]
+}
+
+export type HypothesisCreateFieldsInput = HypothesisUpdateFieldsInput & {
+  evidenceType: HypothesisEvidenceType
 }
 
 /**
@@ -29,13 +38,13 @@ export interface HypothesisRepository {
    * Creates one hypothesis in a version owned by the given user.
    * Returns null when the version does not exist or is not accessible.
    */
-  createForIdeaVersion(input: IdeaVersionOwnerInput & HypothesisFieldsInput): Promise<Hypothesis | null>
+  createForIdeaVersion(input: IdeaVersionOwnerInput & HypothesisCreateFieldsInput): Promise<Hypothesis | null>
 
   /**
    * Updates one hypothesis owned by the given user.
    * Returns null when the hypothesis does not exist or is not accessible.
    */
-  updateByIdForUser(input: HypothesisOwnerInput & HypothesisFieldsInput): Promise<Hypothesis | null>
+  updateByIdForUser(input: HypothesisOwnerInput & HypothesisUpdateFieldsInput): Promise<Hypothesis | null>
 
   /**
    * Deletes one hypothesis owned by the given user.

@@ -18,7 +18,7 @@ export default defineProtectedHandler(async (event, userId): Promise<void> => {
 
   await deleteMeasurement({
     userId,
-    measurementId: params.measurementId
+    measurementId: params.id
   })
 
   setResponseStatus(event, 204)

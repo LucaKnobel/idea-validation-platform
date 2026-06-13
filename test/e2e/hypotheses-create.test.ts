@@ -46,6 +46,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses integration', async
         statement: 'Test hypothesis',
         dimension: 'PROBLEM',
         priority: 'HIGH',
+        evidenceType: 'QUALITATIVE',
         canvasSectionTypes: ['CHANNELS']
       })
     })
@@ -70,6 +71,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses integration', async
       statement: '  Validate our channels  ',
       dimension: 'PROBLEM',
       priority: 'MEDIUM',
+      evidenceType: 'QUALITATIVE',
       canvasSectionTypes: ['CHANNELS', 'CHANNELS', 'VALUE_PROPOSITIONS']
     })
 
@@ -107,6 +109,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses integration', async
       statement: 'Invalid route test',
       dimension: 'PROBLEM',
       priority: 'HIGH',
+      evidenceType: 'QUALITATIVE',
       canvasSectionTypes: ['CHANNELS']
     })
 
@@ -136,6 +139,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses integration', async
       statement: 'Attack hypothesis',
       dimension: 'PROBLEM',
       priority: 'HIGH',
+      evidenceType: 'QUALITATIVE',
       canvasSectionTypes: ['CHANNELS']
     })
 

@@ -93,6 +93,7 @@ describe('CreateHypothesisBodySchema', () => {
     statement: '  Validate our channel assumptions  ',
     dimension: 'PROBLEM' as const,
     priority: 'MEDIUM' as const,
+    evidenceType: 'QUALITATIVE' as const,
     canvasSectionTypes: ['CHANNELS', 'VALUE_PROPOSITIONS'] as const
   }
 

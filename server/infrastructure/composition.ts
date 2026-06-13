@@ -27,7 +27,7 @@ import { createGetHypothesisExperiments } from '@application/services/get-hypoth
 import { createCreateExperiment } from '@application/services/create-experiment'
 import { createUpdateExperiment } from '@application/services/update-experiment'
 import { createDeleteExperiment } from '@application/services/delete-experiment'
-import { createGetExperimentMeasurements } from '@application/services/get-experiment-measurements'
+import { createGetMeasurement } from '@application/services/get-measurement'
 import { createCreateMeasurement } from '@application/services/create-measurement'
 import { createUpdateMeasurement } from '@application/services/update-measurement'
 import { createDeleteMeasurement } from '@application/services/delete-measurement'
@@ -131,7 +131,7 @@ const deleteExperiment = createDeleteExperiment(
   logger
 )
 
-const getExperimentMeasurements = createGetExperimentMeasurements(
+const getMeasurement = createGetMeasurement(
   measurementRepository,
   logger
 )
@@ -171,7 +171,7 @@ export {
   createExperiment,
   updateExperiment,
   deleteExperiment,
-  getExperimentMeasurements,
+  getMeasurement,
   createMeasurement,
   updateMeasurement,
   deleteMeasurement

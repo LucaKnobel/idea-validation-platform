@@ -37,6 +37,7 @@ const editableState = reactive<CreateHypothesisBodyDto>({
   statement: '',
   dimension: 'PROBLEM',
   priority: 'MEDIUM',
+  evidenceType: 'QUALITATIVE',
   canvasSectionTypes: []
 })
 
@@ -47,6 +48,7 @@ const syncFromProps = (source: CreateHypothesisBodyDto): void => {
   editableState.statement = source.statement
   editableState.dimension = source.dimension
   editableState.priority = source.priority
+  editableState.evidenceType = source.evidenceType
   editableState.canvasSectionTypes = [...source.canvasSectionTypes]
 }
 

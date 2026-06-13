@@ -214,6 +214,7 @@ model Hypothesis {
   canvasSectionLinks HypothesisCanvasSection[]
   metric             Metric?
   experiment         Experiment?
+  measurement        Measurement?
   createdAt          DateTime                  @default(now())
   updatedAt          DateTime                  @updatedAt
 
@@ -252,7 +253,6 @@ model Metric {
   id           String           @id @default(uuid())
   hypothesisId String
   hypothesis   Hypothesis       @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
-  measurement  Measurement?
   name         String
   description  String?
   unit         String?
@@ -268,7 +268,6 @@ model Experiment {
   id           String           @id @default(uuid())
   hypothesisId String
   hypothesis   Hypothesis       @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
-  measurement  Measurement?
   title        String
   description  String?
   status       ExperimentStatus
@@ -281,17 +280,13 @@ model Experiment {
 
 model Measurement {
   id           String     @id @default(uuid())
-  experimentId String
-  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
-  metricId     String
-  metric       Metric     @relation(fields: [metricId], references: [id], onDelete: Cascade)
+  hypothesisId String     @unique
+  hypothesis   Hypothesis @relation(fields: [hypothesisId], references: [id], onDelete: Cascade)
   value        Decimal
   note         String?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
-  @@unique([experimentId])
-  @@unique([metricId])
   @@map("measurement")
 }
 
