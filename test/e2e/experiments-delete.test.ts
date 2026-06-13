@@ -60,7 +60,8 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Delete experiment hypothesis',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -120,7 +121,8 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Protected experiment hypothesis',
         dimension: 'MONETIZATION',
-        priority: 'MEDIUM'
+        priority: 'MEDIUM',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 

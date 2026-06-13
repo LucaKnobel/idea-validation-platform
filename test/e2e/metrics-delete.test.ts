@@ -60,7 +60,8 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/met
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Delete metric hypothesis',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -126,7 +127,8 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/met
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Protected metric hypothesis',
         dimension: 'MONETIZATION',
-        priority: 'MEDIUM'
+        priority: 'MEDIUM',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 

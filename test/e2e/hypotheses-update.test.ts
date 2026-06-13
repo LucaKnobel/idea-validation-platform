@@ -73,6 +73,7 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId integr
         statement: 'Old statement',
         dimension: 'PROBLEM',
         priority: 'LOW',
+        evidenceType: 'QUALITATIVE',
         canvasSectionLinks: {
           create: [
             {
@@ -154,7 +155,8 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId integr
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Protected statement',
         dimension: 'EXECUTION',
-        priority: 'LOW'
+        priority: 'LOW',
+        evidenceType: 'QUALITATIVE'
       }
     })
 

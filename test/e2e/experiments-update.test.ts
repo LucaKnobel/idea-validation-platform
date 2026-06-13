@@ -55,7 +55,8 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Users will convert better with experiments.',
         dimension: 'MONETIZATION',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -133,7 +134,8 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Protected experiment hypothesis',
         dimension: 'PROBLEM',
-        priority: 'LOW'
+        priority: 'LOW',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
