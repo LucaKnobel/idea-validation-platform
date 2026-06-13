@@ -19,7 +19,6 @@ export type ExperimentStatus = (typeof experimentStatuses)[number]
 export type Experiment = {
   id: string
   hypothesisId: string
-  measurementId: string | null
   title: string
   description: string | null
   status: ExperimentStatus

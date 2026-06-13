@@ -54,9 +54,9 @@ const listOwnedCanvasElements = async (input: IdeaVersionOwnerInput): Promise<Ca
  */
 export const canvasRepository: CanvasRepository = {
   /**
-   * Loads the persisted canvas entries for a user-owned idea version.
+   * Lists the persisted canvas entries for a user-owned idea version.
    */
-  async getByIdeaVersionForUser(input: IdeaVersionOwnerInput): Promise<CanvasElement[] | null> {
+  async listByIdeaVersion(input: IdeaVersionOwnerInput): Promise<CanvasElement[] | null> {
     const hasAccess = await isIdeaVersionOwnedByUser(input)
 
     if (!hasAccess) {
@@ -69,7 +69,7 @@ export const canvasRepository: CanvasRepository = {
   /**
    * Replaces the complete canvas snapshot for a user-owned idea version inside one transaction.
    */
-  async replaceByIdeaVersionForUser(input: CanvasReplaceInput): Promise<CanvasElement[] | null> {
+  async replaceByIdeaVersion(input: CanvasReplaceInput): Promise<CanvasElement[] | null> {
     const hasAccess = await isIdeaVersionOwnedByUser(input)
 
     if (!hasAccess) {

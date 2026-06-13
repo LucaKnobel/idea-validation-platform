@@ -1,17 +1,14 @@
 import { prisma } from '@infrastructure/db/prisma'
 import type { Prisma } from '@generated/prisma/client'
 import type {
-  MetricMutationInput,
-  MetricRepository,
-  MetricWriteInput
+  MetricUpsertInput,
+  MetricRepository
 } from '@application/interfaces/metric-repository'
-import type { HypothesisOwnerInput, MetricOwnerInput } from '@application/interfaces/ownership-inputs'
+import type { HypothesisIdOwnerInput } from '@application/interfaces/ownership-inputs'
 import type { Metric } from '@application/models/metric'
 import {
   buildOwnedHypothesisWhere,
-  buildOwnedMetricWhere,
-  buildOwnedMetricsByHypothesisWhere,
-  isIdeaVersionOwnedByUser
+  buildOwnedMetricWhere
 } from '@infrastructure/db/ownership-helpers'
 
 type PrismaMetricWithThreshold = Prisma.MetricGetPayload<{
@@ -47,96 +44,42 @@ const toDomainMetric = (row: PrismaMetricWithThreshold): Metric => {
  */
 export const metricRepository: MetricRepository = {
   /**
-   * Lists all metrics for a hypothesis owned by the current user.
+   * Returns the metric singleton of one owned hypothesis.
    */
-  async listByHypothesisForUser(input: HypothesisOwnerInput): Promise<Metric[] | null> {
-    const hasIdeaVersionAccess = await isIdeaVersionOwnedByUser({
-      userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId
-    })
-
-    if (!hasIdeaVersionAccess) {
-      return null
-    }
-
-    const hasHypothesisAccess = await prisma.hypothesis.findFirst({
-      where: buildOwnedHypothesisWhere(input),
-      select: { id: true }
-    })
-
-    if (hasHypothesisAccess === null) {
-      return null
-    }
-
-    const rows = await prisma.metric.findMany({
-      where: buildOwnedMetricsByHypothesisWhere(input),
-      orderBy: [
-        { createdAt: 'asc' }
-      ],
+  async getByHypothesis(input: HypothesisIdOwnerInput): Promise<Metric | null> {
+    const row = await prisma.metric.findFirst({
+      where: buildOwnedMetricWhere(input),
       include: {
         threshold: true
       }
     })
 
-    return rows.map(toDomainMetric)
-  },
-
-  /**
-   * Creates one metric for a hypothesis owned by the current user.
-   */
-  async createForHypothesis(input: MetricWriteInput): Promise<Metric | null> {
-    const hypothesis = await prisma.hypothesis.findFirst({
-      where: buildOwnedHypothesisWhere(input),
-      select: { id: true }
-    })
-
-    if (hypothesis === null) {
+    if (row === null) {
       return null
     }
-
-    const row = await prisma.metric.create({
-      data: {
-        hypothesisId: input.hypothesisId,
-        name: input.name,
-        description: input.description,
-        unit: input.unit,
-        threshold: {
-          create: {
-            operator: input.threshold.operator,
-            referenceValue: input.threshold.referenceValue
-          }
-        }
-      },
-      include: {
-        threshold: true
-      }
-    })
 
     return toDomainMetric(row)
   },
 
   /**
-   * Updates one metric owned by the current user.
+   * Creates or updates the metric singleton for one owned hypothesis.
    */
-  async updateByIdForUser(input: MetricMutationInput): Promise<Metric | null> {
-    const where = buildOwnedMetricWhere(input)
-
+  async upsertByHypothesis(input: MetricUpsertInput): Promise<Metric | null> {
     return prisma.$transaction(async (tx) => {
-      const existingMetric = await tx.metric.findFirst({
-        where,
+      const ownedHypothesis = await tx.hypothesis.findFirst({
+        where: buildOwnedHypothesisWhere(input),
         select: { id: true }
       })
 
-      if (existingMetric === null) {
+      if (ownedHypothesis === null) {
         return null
       }
 
-      const row = await tx.metric.update({
+      const row = await tx.metric.upsert({
         where: {
-          id: existingMetric.id
+          hypothesisId: input.hypothesisId
         },
-        data: {
+        update: {
           name: input.name,
           description: input.description,
           unit: input.unit,
@@ -153,6 +96,18 @@ export const metricRepository: MetricRepository = {
             }
           }
         },
+        create: {
+          hypothesisId: input.hypothesisId,
+          name: input.name,
+          description: input.description,
+          unit: input.unit,
+          threshold: {
+            create: {
+              operator: input.threshold.operator,
+              referenceValue: input.threshold.referenceValue
+            }
+          }
+        },
         include: {
           threshold: true
         }
@@ -163,9 +118,9 @@ export const metricRepository: MetricRepository = {
   },
 
   /**
-   * Deletes one metric owned by the current user.
+   * Deletes the metric singleton of one owned hypothesis.
    */
-  async deleteByIdForUser(input: MetricOwnerInput): Promise<boolean> {
+  async deleteByHypothesis(input: HypothesisIdOwnerInput): Promise<boolean> {
     const result = await prisma.metric.deleteMany({
       where: buildOwnedMetricWhere(input)
     })

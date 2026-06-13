@@ -1,10 +1,9 @@
 /**
- * Represents one persisted measured value for a metric within one experiment.
+ * Represents one persisted measurement singleton in a specific hypothesis.
  */
 export type Measurement = {
   id: string
-  experimentId: string
-  metricId: string
+  hypothesisId: string
   value: number
   note: string | null
   createdAt: Date
