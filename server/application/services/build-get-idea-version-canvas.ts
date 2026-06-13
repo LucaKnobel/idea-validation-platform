@@ -10,11 +10,11 @@ export type GetIdeaVersionCanvasInput = {
 }
 
 /**
- * Builds the use case that loads the canvas entries for a specific idea version.
+ * Builds the use case that loads canvas elements for one owned idea version.
  */
-export const createGetIdeaVersionCanvas = (canvasRepository: CanvasRepository, logger: Logger) => {
+export const buildGetIdeaVersionCanvas = (canvasRepository: CanvasRepository, logger: Logger) => {
   return async (input: GetIdeaVersionCanvasInput): Promise<CanvasElement[]> => {
-    const canvasElements = await canvasRepository.getByIdeaVersionForUser({
+    const canvasElements = await canvasRepository.listByIdeaVersion({
       userId: input.userId,
       ideaId: input.ideaId,
       ideaVersionId: input.ideaVersionId

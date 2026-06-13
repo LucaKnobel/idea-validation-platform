@@ -25,7 +25,7 @@ const hasEffectiveProAccess = (
   )
 }
 
-export const createSubscriptionService = (
+export const buildSubscriptionService = (
   subscriptionRepository: SubscriptionRepository,
   logger: Logger
 ): SubscriptionService => {

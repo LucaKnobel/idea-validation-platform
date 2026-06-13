@@ -3,18 +3,18 @@ import type { Hypothesis } from '@application/models/hypothesis'
 import type { Logger } from '@interfaces/logger'
 import { IdeaVersionNotFoundError } from '@application/errors/idea-errors'
 
-export type GetIdeaVersionHypothesesInput = {
+export type ListIdeaVersionHypothesesInput = {
   userId: string
   ideaId: string
   ideaVersionId: string
 }
 
 /**
- * Builds the use case that lists all hypotheses in one specific idea version.
+ * Builds the use case that lists hypotheses for one owned idea version.
  */
-export const createGetIdeaVersionHypotheses = (hypothesisRepository: HypothesisRepository, logger: Logger) => {
-  return async (input: GetIdeaVersionHypothesesInput): Promise<Hypothesis[]> => {
-    const hypotheses = await hypothesisRepository.listByIdeaVersionForUser({
+export const buildGetIdeaVersionHypotheses = (hypothesisRepository: HypothesisRepository, logger: Logger) => {
+  return async (input: ListIdeaVersionHypothesesInput): Promise<Hypothesis[]> => {
+    const hypotheses = await hypothesisRepository.listByIdeaVersion({
       userId: input.userId,
       ideaId: input.ideaId,
       ideaVersionId: input.ideaVersionId

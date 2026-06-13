@@ -1,5 +1,5 @@
 import { getLatestIdeaVersion, type Idea } from '@application/models/idea'
-import type { GetIdeasOutput } from '@application/services/get-ideas'
+import type { GetIdeasOutput } from '@application/services/build-get-ideas'
 import {
   IdeaResponseSchema,
   IdeasListResponseSchema,

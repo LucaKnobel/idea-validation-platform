@@ -24,8 +24,9 @@ export const UpsertHypothesisBodySchema = z.object({
   priority: HypothesisPrioritySchema,
   evidenceType: HypothesisEvidenceTypeSchema,
   canvasElementTypes: z.array(HypothesisCanvasElementTypeSchema)
-    .min(1, 'At least one canvas section link is required')
-    .max(9, 'Too many canvas section links')
+    .transform(values => Array.from(new Set(values)))
+    .refine(values => values.length >= 1, 'At least one canvas section link is required')
+    .refine(values => values.length <= 9, 'Too many canvas section links')
 })
 
 export const HypothesisResponseSchema = z.object({

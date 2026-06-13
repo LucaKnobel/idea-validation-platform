@@ -3,19 +3,19 @@ import type { Measurement } from '@application/models/measurement'
 import type { Logger } from '@interfaces/logger'
 import { MeasurementNotFoundError } from '@application/errors/measurement-errors'
 
-export type GetMeasurementInput = {
+export type GetHypothesisMeasurementInput = {
   userId: string
-  measurementId: string
+  hypothesisId: string
 }
 
 /**
- * Builds the use case that returns one owned measurement.
+ * Builds the use case that loads the measurement singleton for one owned hypothesis.
  */
-export const createGetMeasurement = (measurementRepository: MeasurementRepository, logger: Logger) => {
-  return async (input: GetMeasurementInput): Promise<Measurement> => {
-    const measurement = await measurementRepository.getByIdForUser({
+export const buildGetHypothesisMeasurement = (measurementRepository: MeasurementRepository, logger: Logger) => {
+  return async (input: GetHypothesisMeasurementInput): Promise<Measurement> => {
+    const measurement = await measurementRepository.getByHypothesis({
       userId: input.userId,
-      measurementId: input.measurementId
+      hypothesisId: input.hypothesisId
     })
 
     if (measurement === null) {
@@ -24,7 +24,8 @@ export const createGetMeasurement = (measurementRepository: MeasurementRepositor
 
     logger.debug('Measurement loaded', {
       userId: input.userId,
-      measurementId: input.measurementId
+      hypothesisId: input.hypothesisId,
+      measurementId: measurement.id
     })
 
     return measurement

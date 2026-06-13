@@ -4,10 +4,8 @@ import type { ThresholdOperator } from '@application/models/metric-threshold'
 import type { Logger } from '@interfaces/logger'
 import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
 
-export type CreateMetricInput = {
+export type UpsertMetricInput = {
   userId: string
-  ideaId: string
-  ideaVersionId: string
   hypothesisId: string
   name: string
   description: string | null
@@ -19,21 +17,16 @@ export type CreateMetricInput = {
 }
 
 /**
- * Builds the use case that creates one metric in a specific hypothesis.
+ * Builds the use case that creates or updates the metric singleton for one owned hypothesis.
  */
-export const createCreateMetric = (metricRepository: MetricRepository, logger: Logger) => {
-  return async (input: CreateMetricInput): Promise<Metric> => {
-    const normalizedDescription = input.description?.trim() || null
-    const normalizedUnit = input.unit?.trim() || null
-
-    const metric = await metricRepository.createForHypothesis({
+export const buildUpsertMetric = (metricRepository: MetricRepository, logger: Logger) => {
+  return async (input: UpsertMetricInput): Promise<Metric> => {
+    const metric = await metricRepository.upsertByHypothesis({
       userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
       hypothesisId: input.hypothesisId,
-      name: input.name.trim(),
-      description: normalizedDescription,
-      unit: normalizedUnit,
+      name: input.name,
+      description: input.description,
+      unit: input.unit,
       threshold: input.threshold
     })
 
@@ -41,10 +34,8 @@ export const createCreateMetric = (metricRepository: MetricRepository, logger: L
       throw new HypothesisNotFoundError()
     }
 
-    logger.debug('Metric created', {
+    logger.debug('Metric upserted', {
       userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
       hypothesisId: input.hypothesisId,
       metricId: metric.id
     })

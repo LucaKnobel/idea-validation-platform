@@ -19,15 +19,13 @@ export type GetIdeasOutput = {
 }
 
 /**
- * Builds the use case that lists a user's ideas with search and pagination metadata.
+ * Builds the use case that lists ideas with pagination metadata.
  */
-export const createGetIdeas = (ideaVersionRepository: IdeaVersionRepository, logger: Logger) => {
+export const buildGetIdeas = (ideaVersionRepository: IdeaVersionRepository, logger: Logger) => {
   return async (input: GetIdeasInput): Promise<GetIdeasOutput> => {
-    const normalizedSearch = input.search && input.search.trim().length > 0
-      ? input.search.trim()
-      : null
+    const normalizedSearch = input.search
 
-    const result = await ideaVersionRepository.listIdeasByUser({
+    const result = await ideaVersionRepository.listByUser({
       userId: input.userId,
       search: normalizedSearch,
       page: input.page,

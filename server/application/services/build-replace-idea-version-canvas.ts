@@ -3,7 +3,7 @@ import type { CanvasElement, CanvasElementType } from '@application/models/canva
 import type { Logger } from '@interfaces/logger'
 import { IdeaVersionNotFoundError } from '@application/errors/idea-errors'
 
-export type UpdateIdeaVersionCanvasInput = {
+export type ReplaceIdeaVersionCanvasInput = {
   userId: string
   ideaId: string
   ideaVersionId: string
@@ -14,11 +14,11 @@ export type UpdateIdeaVersionCanvasInput = {
 }
 
 /**
- * Builds the use case that replaces the complete canvas snapshot of a specific idea version.
+ * Builds the use case that replaces all canvas elements for one owned idea version.
  */
-export const createUpdateIdeaVersionCanvas = (canvasRepository: CanvasRepository, logger: Logger) => {
-  return async (input: UpdateIdeaVersionCanvasInput): Promise<CanvasElement[]> => {
-    const canvasElements = await canvasRepository.replaceByIdeaVersionForUser({
+export const buildReplaceIdeaVersionCanvas = (canvasRepository: CanvasRepository, logger: Logger) => {
+  return async (input: ReplaceIdeaVersionCanvasInput): Promise<CanvasElement[]> => {
+    const canvasElements = await canvasRepository.replaceByIdeaVersion({
       userId: input.userId,
       ideaId: input.ideaId,
       ideaVersionId: input.ideaVersionId,
@@ -29,7 +29,7 @@ export const createUpdateIdeaVersionCanvas = (canvasRepository: CanvasRepository
       throw new IdeaVersionNotFoundError()
     }
 
-    logger.debug('Idea version canvas updated', {
+    logger.debug('Idea version canvas replaced', {
       userId: input.userId,
       ideaId: input.ideaId,
       ideaVersionId: input.ideaVersionId,

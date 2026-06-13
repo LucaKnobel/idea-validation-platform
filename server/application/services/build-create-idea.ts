@@ -10,19 +10,19 @@ export type CreateIdeaInput = {
 }
 
 /**
- * Builds the use case that creates a new idea after enforcing subscription limits.
+ * Builds the use case that creates one idea after subscription-limit checks.
  */
-export const createCreateIdea = (
+export const buildCreateIdea = (
   ideaRepository: IdeaRepository,
   subscriptionService: SubscriptionService,
   logger: Logger
 ) => {
   return async (input: CreateIdeaInput): Promise<Idea> => {
-    const currentIdeaCount = await ideaRepository.countByUserId(input.userId)
+    const currentIdeaCount = await ideaRepository.countByUser(input.userId)
 
     await subscriptionService.assertCanCreateBusinessIdea(input.userId, currentIdeaCount)
 
-    const createdIdea = await ideaRepository.createWithInitialVersion({
+    const createdIdea = await ideaRepository.create({
       userId: input.userId,
       title: input.title,
       description: input.description
