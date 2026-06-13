@@ -1,9 +1,7 @@
 import type { Measurement } from '@application/models/measurement'
 import {
   MeasurementResponseSchema,
-  MeasurementsListResponseSchema,
-  type MeasurementResponseDto,
-  type MeasurementsListResponseDto
+  type MeasurementResponseDto
 } from '@infrastructure/validation/measurement-schemas'
 
 /**
@@ -18,14 +16,5 @@ export const toMeasurementResponseDto = (measurement: Measurement): MeasurementR
     note: measurement.note,
     createdAt: measurement.createdAt.toISOString(),
     updatedAt: measurement.updatedAt.toISOString()
-  })
-}
-
-/**
- * Maps a list of domain measurements to the public collection DTO.
- */
-export const toMeasurementsListResponseDto = (measurements: Measurement[]): MeasurementsListResponseDto => {
-  return MeasurementsListResponseSchema.parse({
-    items: measurements.map(toMeasurementResponseDto)
   })
 }

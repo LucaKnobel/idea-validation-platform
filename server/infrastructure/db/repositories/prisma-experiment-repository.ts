@@ -10,12 +10,21 @@ import {
   isIdeaVersionOwnedByUser
 } from '@infrastructure/db/ownership-helpers'
 
-type PrismaExperiment = Prisma.ExperimentGetPayload<Record<string, never>>
+type PrismaExperiment = Prisma.ExperimentGetPayload<{
+  include: {
+    measurement: {
+      select: {
+        id: true
+      }
+    }
+  }
+}>
 
 const toDomainExperiment = (row: PrismaExperiment): Experiment => {
   return {
     id: row.id,
     hypothesisId: row.hypothesisId,
+    measurementId: row.measurement?.id ?? null,
     title: row.title,
     description: row.description,
     status: row.status,
@@ -55,7 +64,14 @@ export const experimentRepository: ExperimentRepository = {
       where: buildOwnedExperimentsByHypothesisWhere(input),
       orderBy: [
         { createdAt: 'asc' }
-      ]
+      ],
+      include: {
+        measurement: {
+          select: {
+            id: true
+          }
+        }
+      }
     })
 
     return rows.map(toDomainExperiment)
@@ -80,6 +96,13 @@ export const experimentRepository: ExperimentRepository = {
         title: input.title,
         description: input.description,
         status: input.status
+      },
+      include: {
+        measurement: {
+          select: {
+            id: true
+          }
+        }
       }
     })
 
@@ -110,6 +133,13 @@ export const experimentRepository: ExperimentRepository = {
           title: input.title,
           description: input.description,
           status: input.status
+        },
+        include: {
+          measurement: {
+            select: {
+              id: true
+            }
+          }
         }
       })
 

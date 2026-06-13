@@ -24,6 +24,7 @@ export const UpdateExperimentBodySchema = UpsertExperimentBodySchema
 export const ExperimentResponseSchema = z.object({
   id: z.uuid(),
   hypothesisId: z.uuid(),
+  measurementId: z.uuid().nullable(),
   title: z.string(),
   description: z.string().nullable(),
   status: ExperimentStatusSchema,

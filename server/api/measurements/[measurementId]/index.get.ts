@@ -22,7 +22,7 @@ export default defineProtectedHandler(async (event, userId): Promise<Measurement
 
   const measurement = await getMeasurement({
     userId,
-    measurementId: params.measurementId
+    measurementId: params.id
   })
 
   return toMeasurementResponseDto(measurement)

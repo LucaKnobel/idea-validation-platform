@@ -2,13 +2,10 @@ import type { MeasurementRepository } from '@application/interfaces/measurement-
 import type { Measurement } from '@application/models/measurement'
 import type { Logger } from '@interfaces/logger'
 import { MeasurementMetricAlreadyExistsError, MeasurementNotFoundError } from '@application/errors/measurement-errors'
+import { UniqueConstraintViolationError } from '@application/errors/persistence-errors'
 
 export type UpdateMeasurementInput = {
   userId: string
-  ideaId: string
-  ideaVersionId: string
-  hypothesisId: string
-  experimentId: string
   measurementId: string
   metricId: string
   value: number
@@ -20,34 +17,30 @@ export type UpdateMeasurementInput = {
  */
 export const createUpdateMeasurement = (measurementRepository: MeasurementRepository, logger: Logger) => {
   return async (input: UpdateMeasurementInput): Promise<Measurement> => {
-    const result = await measurementRepository.updateByIdForUser({
-      userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
-      hypothesisId: input.hypothesisId,
-      experimentId: input.experimentId,
-      measurementId: input.measurementId,
-      metricId: input.metricId,
-      value: input.value,
-      note: input.note?.trim() || null
-    })
+    let measurement: Measurement | null
 
-    if (result.kind === 'notFound') {
+    try {
+      measurement = await measurementRepository.updateByIdForUser({
+        userId: input.userId,
+        measurementId: input.measurementId,
+        metricId: input.metricId,
+        value: input.value,
+        note: input.note?.trim() || null
+      })
+    } catch (error) {
+      if (error instanceof UniqueConstraintViolationError) {
+        throw new MeasurementMetricAlreadyExistsError()
+      }
+
+      throw error
+    }
+
+    if (measurement === null) {
       throw new MeasurementNotFoundError()
     }
 
-    if (result.kind === 'conflict') {
-      throw new MeasurementMetricAlreadyExistsError()
-    }
-
-    const measurement = result.measurement
-
     logger.debug('Measurement updated', {
       userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
-      hypothesisId: input.hypothesisId,
-      experimentId: input.experimentId,
       measurementId: input.measurementId,
       metricId: input.metricId
     })

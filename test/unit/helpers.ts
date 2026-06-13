@@ -149,6 +149,7 @@ export const makeMetricRepository = (): MetricRepository => ({
 export const makeExperiment = (overrides: Partial<Experiment> = {}): Experiment => ({
   id: 'experiment-001',
   hypothesisId: 'hypothesis-001',
+  measurementId: null,
   title: 'Landing Page Test',
   description: 'Validate the onboarding headline.',
   status: 'PLANNED',
@@ -176,7 +177,7 @@ export const makeMeasurement = (overrides: Partial<Measurement> = {}): Measureme
 })
 
 export const makeMeasurementRepository = (): MeasurementRepository => ({
-  listByExperimentForUser: vi.fn(),
+  getByIdForUser: vi.fn(),
   createForExperiment: vi.fn(),
   updateByIdForUser: vi.fn(),
   deleteByIdForUser: vi.fn()

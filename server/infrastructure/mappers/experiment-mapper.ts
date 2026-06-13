@@ -13,6 +13,7 @@ export const toExperimentResponseDto = (experiment: Experiment): ExperimentRespo
   return ExperimentResponseSchema.parse({
     id: experiment.id,
     hypothesisId: experiment.hypothesisId,
+    measurementId: experiment.measurementId,
     title: experiment.title,
     description: experiment.description,
     status: experiment.status,

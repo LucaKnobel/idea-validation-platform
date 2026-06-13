@@ -1,11 +1,8 @@
 import * as z from 'zod'
-import { ExperimentRouteParamsSchema } from '@infrastructure/validation/experiment-schemas'
 import { createNullableTrimmedStringSchema } from '@infrastructure/validation/string-schemas'
 
-export const MeasurementCollectionRouteParamsSchema = ExperimentRouteParamsSchema
-
-export const MeasurementRouteParamsSchema = MeasurementCollectionRouteParamsSchema.extend({
-  measurementId: z.uuid()
+export const MeasurementRouteParamsSchema = z.object({
+  id: z.uuid()
 })
 
 export const UpsertMeasurementBodySchema = z.object({
@@ -28,13 +25,7 @@ export const MeasurementResponseSchema = z.object({
   updatedAt: z.iso.datetime()
 })
 
-export const MeasurementsListResponseSchema = z.object({
-  items: z.array(MeasurementResponseSchema)
-})
-
-export type MeasurementCollectionRouteParamsDto = z.infer<typeof MeasurementCollectionRouteParamsSchema>
 export type MeasurementRouteParamsDto = z.infer<typeof MeasurementRouteParamsSchema>
 export type CreateMeasurementBodyDto = z.infer<typeof CreateMeasurementBodySchema>
 export type UpdateMeasurementBodyDto = z.infer<typeof UpdateMeasurementBodySchema>
 export type MeasurementResponseDto = z.infer<typeof MeasurementResponseSchema>
-export type MeasurementsListResponseDto = z.infer<typeof MeasurementsListResponseSchema>

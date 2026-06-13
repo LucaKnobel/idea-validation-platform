@@ -16,18 +16,15 @@ import { createIdeaVersionForUser } from './ideas-test-helpers'
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
-describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experiments/:experimentId/measurements integration', async () => {
+describe('POST /api/experiments/:id/measurements integration', async () => {
   await setup(getE2ESetupOptions())
 
   const createMeasurementWithCookie = async (
     cookieHeader: string,
-    ideaId: string,
-    versionId: string,
-    hypothesisId: string,
     experimentId: string,
     body: Record<string, unknown>
   ): Promise<Response> => {
-    return fetch(url(`/api/ideas/${ideaId}/versions/${versionId}/hypotheses/${hypothesisId}/experiments/${experimentId}/measurements`), {
+    return fetch(url(`/api/experiments/${experimentId}/measurements`), {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -39,7 +36,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exper
   }
 
   it('requires authentication for measurement creation', async () => {
-    const response = await fetch(url(`/api/ideas/${randomUUID()}/versions/${randomUUID()}/hypotheses/${randomUUID()}/experiments/${randomUUID()}/measurements`), {
+    const response = await fetch(url(`/api/experiments/${randomUUID()}/measurements`), {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
@@ -72,7 +69,8 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exper
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Users will convert better with measurements.',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -100,7 +98,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exper
       }
     })
 
-    const response = await createMeasurementWithCookie(user.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, experiment.id, {
+    const response = await createMeasurementWithCookie(user.cookieHeader, experiment.id, {
       metricId: metric.id,
       value: 12.5,
       note: '  First cohort  '
@@ -133,7 +131,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exper
     })
     const user = expectAuthenticatedSessionCreated(sessionResult)
 
-    const response = await createMeasurementWithCookie(user.cookieHeader, 'not-a-uuid', 'also-not-a-uuid', 'still-not-a-uuid', 'nope-not-a-uuid', {
+    const response = await createMeasurementWithCookie(user.cookieHeader, 'not-a-uuid', {
       metricId: randomUUID(),
       value: 12.5,
       note: null
@@ -166,16 +164,8 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exper
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Protected measurement hypothesis',
         dimension: 'MARKET',
-        priority: 'MEDIUM'
-      }
-    })
-
-    const experiment = await prisma.experiment.create({
-      data: {
-        hypothesisId: hypothesis.id,
-        title: 'Protected Experiment',
-        description: null,
-        status: 'RUNNING'
+        priority: 'MEDIUM',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -194,7 +184,16 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exper
       }
     })
 
-    const response = await createMeasurementWithCookie(attacker.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, experiment.id, {
+    const experiment = await prisma.experiment.create({
+      data: {
+        hypothesisId: hypothesis.id,
+        title: 'Protected Experiment',
+        description: null,
+        status: 'RUNNING'
+      }
+    })
+
+    const response = await createMeasurementWithCookie(attacker.cookieHeader, experiment.id, {
       metricId: metric.id,
       value: 7,
       note: null
@@ -221,7 +220,8 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exper
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Measurement conflict hypothesis',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -258,7 +258,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exper
       }
     })
 
-    const response = await createMeasurementWithCookie(user.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, experiment.id, {
+    const response = await createMeasurementWithCookie(user.cookieHeader, experiment.id, {
       metricId: metric.id,
       value: 11,
       note: 'Duplicate metric measurement'

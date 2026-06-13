@@ -1,41 +1,22 @@
 import { describe, expect, it } from 'vitest'
 import {
   CreateMeasurementBodySchema,
-  MeasurementCollectionRouteParamsSchema,
   MeasurementResponseSchema,
   MeasurementRouteParamsSchema,
-  MeasurementsListResponseSchema,
   UpdateMeasurementBodySchema
 } from '@infrastructure/validation/measurement-schemas'
 import { VALID_ISO_DATETIME, VALID_UUID } from './helpers'
 
 describe('Measurement route schemas', () => {
-  it('accepts valid measurement collection params', () => {
-    expect(MeasurementCollectionRouteParamsSchema.safeParse({
-      id: VALID_UUID,
-      versionId: VALID_UUID,
-      hypothesisId: VALID_UUID,
-      experimentId: VALID_UUID
-    }).success).toBe(true)
-  })
-
-  it('accepts valid measurement route params including measurementId', () => {
+  it('accepts valid measurement route params', () => {
     expect(MeasurementRouteParamsSchema.safeParse({
-      id: VALID_UUID,
-      versionId: VALID_UUID,
-      hypothesisId: VALID_UUID,
-      experimentId: VALID_UUID,
-      measurementId: VALID_UUID
+      id: VALID_UUID
     }).success).toBe(true)
   })
 
   it('rejects invalid route identifiers', () => {
     expect(MeasurementRouteParamsSchema.safeParse({
-      id: VALID_UUID,
-      versionId: VALID_UUID,
-      hypothesisId: VALID_UUID,
-      experimentId: 'not-a-uuid',
-      measurementId: VALID_UUID
+      id: 'not-a-uuid'
     }).success).toBe(false)
   })
 })
@@ -106,10 +87,6 @@ describe('Measurement response schemas', () => {
 
   it('accepts a valid measurement response', () => {
     expect(MeasurementResponseSchema.safeParse(validMeasurementResponse).success).toBe(true)
-  })
-
-  it('accepts a valid measurements list response', () => {
-    expect(MeasurementsListResponseSchema.safeParse({ items: [validMeasurementResponse] }).success).toBe(true)
   })
 
   it('accepts responses without notes', () => {

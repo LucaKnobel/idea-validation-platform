@@ -68,11 +68,11 @@ export const useHypothesisExperimentsDetail = (
   const { handleRateLimitError } = useErrorHandler()
   const { showSuccess, showError } = useToastNotification()
   const {
-    listMeasurements,
     createMeasurement,
+    getMeasurement,
     updateMeasurement,
     deleteMeasurement
-  } = useMeasurementsApi()
+  } = useMeasurementApi()
   const {
     experiments,
     isLoading: isExperimentsLoading,
@@ -230,14 +230,19 @@ export const useHypothesisExperimentsDetail = (
     isMeasurementsLoading.value = true
 
     try {
-      const response = await listMeasurements({
-        ideaId: input.ideaId.value,
-        versionId: input.versionId.value,
-        hypothesisId: input.hypothesisId.value,
-        experimentId
-      })
+      const experiment = experiments.value.find(item => item.id === experimentId)
+      if (!experiment?.measurementId) {
+        const emptyMeasurements: MeasurementResponseDto[] = []
+        measurements.value = emptyMeasurements
+        measurementsByExperiment.value = {
+          ...measurementsByExperiment.value,
+          [experimentId]: emptyMeasurements
+        }
+        return
+      }
 
-      const sortedMeasurements = [...response.items].sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt))
+      const measurement = await getMeasurement({ measurementId: experiment.measurementId })
+      const sortedMeasurements = [measurement]
       measurements.value = sortedMeasurements
       measurementsByExperiment.value = {
         ...measurementsByExperiment.value,
@@ -265,14 +270,12 @@ export const useHypothesisExperimentsDetail = (
 
     const entries = await Promise.all(items.map(async (experiment) => {
       try {
-        const response = await listMeasurements({
-          ideaId: input.ideaId.value,
-          versionId: input.versionId.value,
-          hypothesisId: input.hypothesisId.value,
-          experimentId: experiment.id
-        })
+        if (!experiment.measurementId) {
+          return [experiment.id, []] as const
+        }
 
-        const sortedMeasurements = [...response.items].sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt))
+        const measurement = await getMeasurement({ measurementId: experiment.measurementId })
+        const sortedMeasurements = [measurement]
         return [experiment.id, sortedMeasurements] as const
       } catch {
         return [experiment.id, []] as const
@@ -474,9 +477,6 @@ export const useHypothesisExperimentsDetail = (
           isMeasurementCreating.value = true
 
           const createdMeasurement = await createMeasurement({
-            ideaId: input.ideaId.value,
-            versionId: input.versionId.value,
-            hypothesisId: input.hypothesisId.value,
             experimentId,
             body
           })
@@ -498,10 +498,6 @@ export const useHypothesisExperimentsDetail = (
 
         measurementUpdatingId.value = activeMeasurementId.value
         const updatedMeasurement = await updateMeasurement({
-          ideaId: input.ideaId.value,
-          versionId: input.versionId.value,
-          hypothesisId: input.hypothesisId.value,
-          experimentId,
           measurementId: activeMeasurementId.value,
           body
         })
@@ -604,10 +600,6 @@ export const useHypothesisExperimentsDetail = (
         measurementDeletingId.value = candidate.id
 
         await deleteMeasurement({
-          ideaId: input.ideaId.value,
-          versionId: input.versionId.value,
-          hypothesisId: input.hypothesisId.value,
-          experimentId,
           measurementId: candidate.id
         })
 

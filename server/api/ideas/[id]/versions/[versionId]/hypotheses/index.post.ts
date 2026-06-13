@@ -30,6 +30,7 @@ export default defineProtectedHandler(async (event, userId): Promise<HypothesisR
     statement: body.statement,
     dimension: body.dimension,
     priority: body.priority,
+    evidenceType: body.evidenceType,
     canvasSectionTypes: body.canvasSectionTypes
   })
 

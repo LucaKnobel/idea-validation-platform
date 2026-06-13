@@ -1,6 +1,10 @@
 import * as z from 'zod'
 import { canvasElementTypes } from '@application/models/canvas-element'
-import { hypothesisDimensions, hypothesisPriorities } from '@application/models/hypothesis'
+import {
+  hypothesisDimensions,
+  hypothesisEvidenceTypes,
+  hypothesisPriorities
+} from '@application/models/hypothesis'
 
 export const HypothesisVersionRouteParamsSchema = z.object({
   id: z.uuid(),
@@ -15,6 +19,8 @@ export const HypothesisDimensionSchema = z.enum(hypothesisDimensions)
 
 export const HypothesisPrioritySchema = z.enum(hypothesisPriorities)
 
+export const HypothesisEvidenceTypeSchema = z.enum(hypothesisEvidenceTypes)
+
 export const HypothesisCanvasElementTypeSchema = z.enum(canvasElementTypes)
 
 export const UpsertHypothesisBodySchema = z.object({
@@ -27,7 +33,9 @@ export const UpsertHypothesisBodySchema = z.object({
     .max(9, 'Too many canvas section links')
 })
 
-export const CreateHypothesisBodySchema = UpsertHypothesisBodySchema
+export const CreateHypothesisBodySchema = UpsertHypothesisBodySchema.extend({
+  evidenceType: HypothesisEvidenceTypeSchema
+})
 
 export const UpdateHypothesisBodySchema = UpsertHypothesisBodySchema
 

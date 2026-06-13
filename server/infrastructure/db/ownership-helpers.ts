@@ -1,9 +1,12 @@
 import { prisma } from '@infrastructure/db/prisma'
 import type { Prisma } from '@generated/prisma/client'
 import type {
+  ExperimentIdOwnerInput,
   ExperimentOwnerInput,
+  HypothesisIdOwnerInput,
   IdeaVersionOwnerInput,
   HypothesisOwnerInput,
+  MeasurementIdOwnerInput,
   MeasurementOwnerInput,
   MetricOwnerInput
 } from '@application/interfaces/ownership-inputs'
@@ -30,6 +33,20 @@ export const buildOwnedHypothesisWhere = (input: HypothesisOwnerInput): Prisma.H
     ideaVersionId: input.ideaVersionId,
     ideaVersion: {
       ideaId: input.ideaId,
+      idea: {
+        userId: input.userId
+      }
+    }
+  }
+}
+
+/**
+ * Builds a Prisma where filter that constrains one hypothesis id to its owning user.
+ */
+export const buildOwnedHypothesisByIdWhere = (input: HypothesisIdOwnerInput): Prisma.HypothesisWhereInput => {
+  return {
+    id: input.hypothesisId,
+    ideaVersion: {
       idea: {
         userId: input.userId
       }
@@ -127,6 +144,22 @@ export const buildOwnedExperimentWhere = (input: ExperimentOwnerInput): Prisma.E
 }
 
 /**
+ * Builds a Prisma where filter that constrains one experiment id to its owning user.
+ */
+export const buildOwnedExperimentByIdWhere = (input: ExperimentIdOwnerInput): Prisma.ExperimentWhereInput => {
+  return {
+    id: input.experimentId,
+    hypothesis: {
+      ideaVersion: {
+        idea: {
+          userId: input.userId
+        }
+      }
+    }
+  }
+}
+
+/**
  * Builds a Prisma where filter that constrains measurements to one owned experiment.
  */
 export const buildOwnedMeasurementsByExperimentWhere = (input: ExperimentOwnerInput): Prisma.MeasurementWhereInput => {
@@ -160,6 +193,24 @@ export const buildOwnedMeasurementWhere = (input: MeasurementOwnerInput): Prisma
         ideaVersionId: input.ideaVersionId,
         ideaVersion: {
           ideaId: input.ideaId,
+          idea: {
+            userId: input.userId
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Builds a Prisma where filter that constrains one measurement id to its owning user.
+ */
+export const buildOwnedMeasurementByIdWhere = (input: MeasurementIdOwnerInput): Prisma.MeasurementWhereInput => {
+  return {
+    id: input.measurementId,
+    experiment: {
+      hypothesis: {
+        ideaVersion: {
           idea: {
             userId: input.userId
           }

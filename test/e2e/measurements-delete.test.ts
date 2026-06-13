@@ -15,18 +15,14 @@ import { createIdeaVersionForUser } from './ideas-test-helpers'
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
-describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experiments/:experimentId/measurements/:measurementId integration', async () => {
+describe('DELETE /api/measurements/:measurementId integration', async () => {
   await setup(getE2ESetupOptions())
 
   const deleteMeasurementWithCookie = async (
     cookieHeader: string,
-    ideaId: string,
-    versionId: string,
-    hypothesisId: string,
-    experimentId: string,
     measurementId: string
   ): Promise<Response> => {
-    return fetch(url(`/api/ideas/${ideaId}/versions/${versionId}/hypotheses/${hypothesisId}/experiments/${experimentId}/measurements/${measurementId}`), {
+    return fetch(url(`/api/measurements/${measurementId}`), {
       method: 'DELETE',
       headers: {
         'cookie': cookieHeader,
@@ -36,7 +32,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
   }
 
   it('requires authentication for measurement deletion', async () => {
-    const response = await fetch(url(`/api/ideas/${randomUUID()}/versions/${randomUUID()}/hypotheses/${randomUUID()}/experiments/${randomUUID()}/measurements/${randomUUID()}`), {
+    const response = await fetch(url(`/api/measurements/${randomUUID()}`), {
       method: 'DELETE'
     })
 
@@ -61,7 +57,8 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Delete measurement hypothesis',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -98,14 +95,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
       }
     })
 
-    const response = await deleteMeasurementWithCookie(
-      user.cookieHeader,
-      createdVersion.ideaId,
-      createdVersion.ideaVersionId,
-      hypothesis.id,
-      experiment.id,
-      measurement.id
-    )
+    const response = await deleteMeasurementWithCookie(user.cookieHeader, measurement.id)
 
     expect(response.status).toBe(204)
 
@@ -123,14 +113,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
     })
     const user = expectAuthenticatedSessionCreated(sessionResult)
 
-    const response = await deleteMeasurementWithCookie(
-      user.cookieHeader,
-      'not-a-uuid',
-      'also-not-a-uuid',
-      'still-not-a-uuid',
-      'nope-not-a-uuid',
-      'again-not-a-uuid'
-    )
+    const response = await deleteMeasurementWithCookie(user.cookieHeader, 'again-not-a-uuid')
 
     expect(response.status).toBe(400)
   })
@@ -159,7 +142,8 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Protected measurement delete hypothesis',
         dimension: 'MARKET',
-        priority: 'MEDIUM'
+        priority: 'MEDIUM',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -196,14 +180,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
       }
     })
 
-    const response = await deleteMeasurementWithCookie(
-      attacker.cookieHeader,
-      createdVersion.ideaId,
-      createdVersion.ideaVersionId,
-      hypothesis.id,
-      experiment.id,
-      measurement.id
-    )
+    const response = await deleteMeasurementWithCookie(attacker.cookieHeader, measurement.id)
 
     expect(response.status).toBe(404)
 

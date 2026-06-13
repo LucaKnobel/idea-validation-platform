@@ -15,19 +15,15 @@ import { createIdeaVersionForUser } from './ideas-test-helpers'
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
-describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experiments/:experimentId/measurements/:measurementId integration', async () => {
+describe('PUT /api/measurements/:measurementId integration', async () => {
   await setup(getE2ESetupOptions())
 
   const updateMeasurementWithCookie = async (
     cookieHeader: string,
-    ideaId: string,
-    versionId: string,
-    hypothesisId: string,
-    experimentId: string,
     measurementId: string,
     body: Record<string, unknown>
   ): Promise<Response> => {
-    return fetch(url(`/api/ideas/${ideaId}/versions/${versionId}/hypotheses/${hypothesisId}/experiments/${experimentId}/measurements/${measurementId}`), {
+    return fetch(url(`/api/measurements/${measurementId}`), {
       method: 'PUT',
       headers: {
         'content-type': 'application/json',
@@ -94,7 +90,7 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
       }
     })
 
-    const response = await updateMeasurementWithCookie(user.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, experiment.id, measurement.id, {
+    const response = await updateMeasurementWithCookie(user.cookieHeader, measurement.id, {
       metricId: metric.id,
       value: 9.5,
       note: '  After update  '
@@ -125,7 +121,7 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
     })
     const user = expectAuthenticatedSessionCreated(sessionResult)
 
-    const response = await updateMeasurementWithCookie(user.cookieHeader, 'not-a-uuid', 'also-not-a-uuid', 'still-not-a-uuid', 'nope-not-a-uuid', 'yet-again-not-a-uuid', {
+    const response = await updateMeasurementWithCookie(user.cookieHeader, 'yet-again-not-a-uuid', {
       metricId: 'still-not-a-uuid',
       value: 9.5,
       note: null
@@ -196,7 +192,7 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
       }
     })
 
-    const response = await updateMeasurementWithCookie(attacker.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, experiment.id, measurement.id, {
+    const response = await updateMeasurementWithCookie(attacker.cookieHeader, measurement.id, {
       metricId: metric.id,
       value: 8,
       note: 'Attack update'
@@ -261,7 +257,7 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
       }
     })
 
-    const response = await updateMeasurementWithCookie(user.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, experiment.id, measurement.id, {
+    const response = await updateMeasurementWithCookie(user.cookieHeader, measurement.id, {
       metricId: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
       value: 12,
       note: 'Unknown metric in hypothesis'

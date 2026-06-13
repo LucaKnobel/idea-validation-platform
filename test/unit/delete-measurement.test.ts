@@ -4,8 +4,6 @@ import { MeasurementNotFoundError } from '@application/errors/measurement-errors
 import type { MeasurementRepository } from '@application/interfaces/measurement-repository'
 import type { Logger } from '@interfaces/logger'
 import {
-  VALID_IDEA_ID,
-  VALID_IDEA_VERSION_ID,
   VALID_USER_ID,
   makeLogger,
   makeMeasurementRepository
@@ -26,19 +24,11 @@ describe('createDeleteMeasurement', () => {
   it('deletes the requested measurement for the current user', async () => {
     await deleteMeasurement({
       userId: VALID_USER_ID,
-      ideaId: VALID_IDEA_ID,
-      ideaVersionId: VALID_IDEA_VERSION_ID,
-      hypothesisId: 'hypothesis-001',
-      experimentId: 'experiment-001',
       measurementId: 'measurement-001'
     })
 
     expect(measurementRepository.deleteByIdForUser).toHaveBeenCalledWith({
       userId: VALID_USER_ID,
-      ideaId: VALID_IDEA_ID,
-      ideaVersionId: VALID_IDEA_VERSION_ID,
-      hypothesisId: 'hypothesis-001',
-      experimentId: 'experiment-001',
       measurementId: 'measurement-001'
     })
   })
@@ -46,10 +36,6 @@ describe('createDeleteMeasurement', () => {
   it('resolves without a return value on success', async () => {
     const result = await deleteMeasurement({
       userId: VALID_USER_ID,
-      ideaId: VALID_IDEA_ID,
-      ideaVersionId: VALID_IDEA_VERSION_ID,
-      hypothesisId: 'hypothesis-001',
-      experimentId: 'experiment-001',
       measurementId: 'measurement-001'
     })
 
@@ -59,19 +45,11 @@ describe('createDeleteMeasurement', () => {
   it('logs the deleted measurement id after success', async () => {
     await deleteMeasurement({
       userId: VALID_USER_ID,
-      ideaId: VALID_IDEA_ID,
-      ideaVersionId: VALID_IDEA_VERSION_ID,
-      hypothesisId: 'hypothesis-001',
-      experimentId: 'experiment-001',
       measurementId: 'measurement-001'
     })
 
     expect(logger.debug).toHaveBeenCalledWith('Measurement deleted', {
       userId: VALID_USER_ID,
-      ideaId: VALID_IDEA_ID,
-      ideaVersionId: VALID_IDEA_VERSION_ID,
-      hypothesisId: 'hypothesis-001',
-      experimentId: 'experiment-001',
       measurementId: 'measurement-001'
     })
   })
@@ -82,10 +60,6 @@ describe('createDeleteMeasurement', () => {
     await expect(
       deleteMeasurement({
         userId: VALID_USER_ID,
-        ideaId: VALID_IDEA_ID,
-        ideaVersionId: VALID_IDEA_VERSION_ID,
-        hypothesisId: 'hypothesis-001',
-        experimentId: 'experiment-001',
         measurementId: 'measurement-001'
       })
     ).rejects.toThrow(MeasurementNotFoundError)
