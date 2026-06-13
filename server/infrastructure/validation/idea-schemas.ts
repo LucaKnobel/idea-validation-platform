@@ -11,10 +11,6 @@ export const GetIdeasQuerySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(50).default(10)
 })
 
-export const IdeaRouteParamsSchema = z.object({
-  id: z.uuid()
-})
-
 export const IdeaResponseSchema = z.object({
   id: z.uuid(),
   latestVersionId: z.uuid(),
@@ -35,6 +31,5 @@ export const IdeasListResponseSchema = z.object({
 
 export type CreateIdeaBodyDto = z.infer<typeof CreateIdeaBodySchema>
 export type GetIdeasQueryDto = z.infer<typeof GetIdeasQuerySchema>
-export type IdeaRouteParamsDto = z.infer<typeof IdeaRouteParamsSchema>
 export type IdeaResponseDto = z.infer<typeof IdeaResponseSchema>
 export type IdeasListResponseDto = z.infer<typeof IdeasListResponseSchema>

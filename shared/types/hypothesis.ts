@@ -1,13 +1,11 @@
-import type { CreateHypothesisBodyDto } from '@infrastructure/validation/hypothesis-schemas'
+import type { UpsertHypothesisBodyDto } from '@infrastructure/validation/hypothesis-schemas'
 
 export type {
-  CreateHypothesisBodyDto,
-  UpdateHypothesisBodyDto,
-  HypothesisCanvasSectionResponseDto,
+  UpsertHypothesisBodyDto,
   HypothesisResponseDto,
   HypothesesListResponseDto
 } from '@infrastructure/validation/hypothesis-schemas'
 
-export type HypothesisDimension = CreateHypothesisBodyDto['dimension']
-export type HypothesisPriority = CreateHypothesisBodyDto['priority']
-export type HypothesisCanvasSection = CreateHypothesisBodyDto['canvasSectionTypes'][number]
+export type HypothesisDimension = UpsertHypothesisBodyDto['dimension']
+export type HypothesisPriority = UpsertHypothesisBodyDto['priority']
+export type HypothesisCanvasSection = UpsertHypothesisBodyDto['canvasElementTypes'][number]

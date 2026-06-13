@@ -2,8 +2,8 @@ import { updateExperiment } from '@infrastructure/composition'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
 import { toExperimentResponseDto } from '@infrastructure/mappers/experiment-mapper'
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
+import { HypothesisIdRouteParamsSchema } from '@infrastructure/validation/route-params-schemas'
 import {
-  ExperimentRouteParamsSchema,
   UpdateExperimentBodySchema,
   type ExperimentResponseDto
 } from '@infrastructure/validation/experiment-schemas'
@@ -19,7 +19,7 @@ export default defineProtectedHandler(async (event, userId): Promise<ExperimentR
     scope: 'user'
   })
 
-  const params = await getValidatedRouterParams(event, ExperimentRouteParamsSchema.parse)
+  const params = await getValidatedRouterParams(event, HypothesisIdRouteParamsSchema.parse)
   const body = await readValidatedBody(event, UpdateExperimentBodySchema.parse)
 
   const experiment = await updateExperiment({
