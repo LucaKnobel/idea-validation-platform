@@ -12,7 +12,7 @@ export type IdeaDeleteInput = {
 }
 
 export interface IdeaRepository {
-  countByUserId(userId: string): Promise<number>
-  createWithInitialVersion(input: IdeaCreateInput): Promise<Idea>
-  deleteByIdForUser(input: IdeaDeleteInput): Promise<boolean>
+  countByUser(userId: string): Promise<number>
+  create(input: IdeaCreateInput): Promise<Idea>
+  delete(input: IdeaDeleteInput): Promise<boolean>
 }

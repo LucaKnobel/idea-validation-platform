@@ -8,5 +8,5 @@ export type IdeaVersionListInput = {
 }
 
 export interface IdeaVersionRepository {
-  listIdeasByUser(input: IdeaVersionListInput): Promise<{ ideas: Idea[], total: number }>
+  listByUser(input: IdeaVersionListInput): Promise<{ ideas: Idea[], total: number }>
 }

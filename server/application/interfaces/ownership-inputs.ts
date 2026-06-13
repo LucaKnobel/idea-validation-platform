@@ -1,36 +1,24 @@
+/**
+ * Ownership scope for one idea owned by one user.
+ */
+export type IdeaOwnerInput = {
+  userId: string
+  ideaId: string
+}
+
+/**
+ * Ownership scope for one specific idea version owned by one user.
+ */
 export type IdeaVersionOwnerInput = {
   userId: string
   ideaId: string
   ideaVersionId: string
 }
 
-export type HypothesisOwnerInput = IdeaVersionOwnerInput & {
-  hypothesisId: string
-}
-
+/**
+ * Ownership scope for one hypothesis identified by hypothesisId and userId.
+ */
 export type HypothesisIdOwnerInput = {
   userId: string
   hypothesisId: string
-}
-
-export type MetricOwnerInput = HypothesisOwnerInput & {
-  metricId: string
-}
-
-export type ExperimentOwnerInput = HypothesisOwnerInput & {
-  experimentId: string
-}
-
-export type ExperimentIdOwnerInput = {
-  userId: string
-  experimentId: string
-}
-
-export type MeasurementOwnerInput = ExperimentOwnerInput & {
-  measurementId: string
-}
-
-export type MeasurementIdOwnerInput = {
-  userId: string
-  measurementId: string
 }

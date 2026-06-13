@@ -1,41 +1,32 @@
-import type { ExperimentIdOwnerInput, MeasurementIdOwnerInput } from '@application/interfaces/ownership-inputs'
+import type { HypothesisIdOwnerInput } from '@application/interfaces/ownership-inputs'
 import type { Measurement } from '@application/models/measurement'
 
 export type MeasurementFieldsInput = {
-  metricId: string
   value: number
   note: string | null
 }
 
-export type MeasurementCreateInput = ExperimentIdOwnerInput & MeasurementFieldsInput
-
-export type MeasurementUpdateInput = MeasurementIdOwnerInput & MeasurementFieldsInput
+export type MeasurementUpsertInput = HypothesisIdOwnerInput & MeasurementFieldsInput
 
 /**
- * Persistence contract for reading and mutating owned measurements.
+ * Persistence contract for measurement singleton operations in one owned hypothesis.
  */
 export interface MeasurementRepository {
   /**
-   * Returns one measurement owned by the given user.
-   * Returns null when the measurement does not exist or is not accessible.
+   * Returns the measurement singleton owned by the given user.
+   * Returns null when the hypothesis does not exist, is not accessible, or has no measurement.
    */
-  getByIdForUser(input: MeasurementIdOwnerInput): Promise<Measurement | null>
+  getByHypothesis(input: HypothesisIdOwnerInput): Promise<Measurement | null>
 
   /**
-   * Creates one measurement for an experiment owned by the given user.
-   * Returns null when the experiment, metric, or ownership preconditions are not met.
+   * Creates or updates the measurement singleton in a hypothesis owned by the given user.
+   * Returns null when the hypothesis does not exist or is not accessible.
    */
-  createForExperiment(input: MeasurementCreateInput): Promise<Measurement | null>
+  upsertByHypothesis(input: MeasurementUpsertInput): Promise<Measurement | null>
 
   /**
-   * Updates one measurement owned by the given user.
-    * Returns null when the measurement or metric preconditions are not met.
-   */
-  updateByIdForUser(input: MeasurementUpdateInput): Promise<Measurement | null>
-
-  /**
-   * Deletes one measurement owned by the given user.
+   * Deletes the measurement singleton owned by the given user.
    * Returns true when a row was deleted.
    */
-  deleteByIdForUser(input: MeasurementIdOwnerInput): Promise<boolean>
+  deleteByHypothesis(input: HypothesisIdOwnerInput): Promise<boolean>
 }
