@@ -1,42 +1,25 @@
 import { describe, expect, it } from 'vitest'
 import {
-  CreateMetricBodySchema,
-  MetricCollectionRouteParamsSchema,
   MetricResponseSchema,
-  MetricRouteParamsSchema,
   MetricThresholdInputSchema,
   MetricThresholdResponseSchema,
-  MetricsListResponseSchema,
   ThresholdOperatorSchema,
-  UpdateMetricBodySchema
+  UpsertMetricBodySchema
 } from '@infrastructure/validation/metric-schemas'
+import { HypothesisIdRouteParamsSchema } from '@infrastructure/validation/route-params-schemas'
 import { thresholdOperators } from '@application/models/metric-threshold'
 import { VALID_ISO_DATETIME, VALID_UUID } from './helpers'
 
 describe('Metric route schemas', () => {
-  it('accepts valid metric collection params', () => {
-    expect(MetricCollectionRouteParamsSchema.safeParse({
-      id: VALID_UUID,
-      versionId: VALID_UUID,
+  it('accepts canonical singleton metric params', () => {
+    expect(HypothesisIdRouteParamsSchema.safeParse({
       hypothesisId: VALID_UUID
     }).success).toBe(true)
   })
 
-  it('accepts valid metric route params including metricId', () => {
-    expect(MetricRouteParamsSchema.safeParse({
-      id: VALID_UUID,
-      versionId: VALID_UUID,
-      hypothesisId: VALID_UUID,
-      metricId: VALID_UUID
-    }).success).toBe(true)
-  })
-
   it('rejects invalid route identifiers', () => {
-    expect(MetricRouteParamsSchema.safeParse({
-      id: 'not-a-uuid',
-      versionId: VALID_UUID,
-      hypothesisId: VALID_UUID,
-      metricId: VALID_UUID
+    expect(HypothesisIdRouteParamsSchema.safeParse({
+      hypothesisId: 'not-a-uuid'
     }).success).toBe(false)
   })
 })
@@ -61,7 +44,7 @@ describe('Metric threshold input schema', () => {
   })
 })
 
-describe('CreateMetricBodySchema', () => {
+describe('UpsertMetricBodySchema', () => {
   const validBody = {
     name: '  Conversion Rate  ',
     description: '  Measures sign-up conversion.  ',
@@ -73,7 +56,7 @@ describe('CreateMetricBodySchema', () => {
   }
 
   it('accepts and normalizes valid input', () => {
-    const result = CreateMetricBodySchema.safeParse(validBody)
+    const result = UpsertMetricBodySchema.safeParse(validBody)
 
     expect(result.success).toBe(true)
     if (result.success) {
@@ -84,14 +67,14 @@ describe('CreateMetricBodySchema', () => {
   })
 
   it('rejects empty names after trimming', () => {
-    expect(CreateMetricBodySchema.safeParse({
+    expect(UpsertMetricBodySchema.safeParse({
       ...validBody,
       name: '   '
     }).success).toBe(false)
   })
 
   it('normalizes empty optional text fields to null', () => {
-    const result = CreateMetricBodySchema.safeParse({
+    const result = UpsertMetricBodySchema.safeParse({
       ...validBody,
       description: '   ',
       unit: '   '
@@ -103,11 +86,8 @@ describe('CreateMetricBodySchema', () => {
       expect(result.data.unit).toBeNull()
     }
   })
-})
-
-describe('UpdateMetricBodySchema', () => {
-  it('shares the same validation rules as the create schema', () => {
-    expect(UpdateMetricBodySchema.safeParse({
+  it('accepts a valid upsert body', () => {
+    expect(UpsertMetricBodySchema.safeParse({
       name: 'Interview Count',
       description: null,
       unit: null,
@@ -121,17 +101,12 @@ describe('UpdateMetricBodySchema', () => {
 
 describe('Metric response schemas', () => {
   const validThresholdResponse = {
-    id: VALID_UUID,
-    metricId: VALID_UUID,
     operator: 'GTE' as const,
-    referenceValue: 10,
-    createdAt: VALID_ISO_DATETIME,
-    updatedAt: VALID_ISO_DATETIME
+    referenceValue: 10
   }
 
   const validMetricResponse = {
     id: VALID_UUID,
-    hypothesisId: VALID_UUID,
     name: 'Conversion Rate',
     description: 'Measures sign-up conversion.',
     unit: '%',
@@ -155,7 +130,10 @@ describe('Metric response schemas', () => {
     }).success).toBe(true)
   })
 
-  it('accepts a valid metric list response', () => {
-    expect(MetricsListResponseSchema.safeParse({ items: [validMetricResponse] }).success).toBe(true)
+  it('rejects invalid timestamps in responses', () => {
+    expect(MetricResponseSchema.safeParse({
+      ...validMetricResponse,
+      createdAt: 'not-a-date'
+    }).success).toBe(false)
   })
 })

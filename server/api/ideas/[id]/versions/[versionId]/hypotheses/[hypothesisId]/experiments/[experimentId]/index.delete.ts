@@ -1,7 +1,7 @@
 import { deleteExperiment } from '@infrastructure/composition'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
-import { ExperimentRouteParamsSchema } from '@infrastructure/validation/experiment-schemas'
+import { HypothesisIdRouteParamsSchema } from '@infrastructure/validation/route-params-schemas'
 
 /**
  * Deletes one experiment owned by the current user.
@@ -14,7 +14,7 @@ export default defineProtectedHandler(async (event, userId): Promise<void> => {
     scope: 'user'
   })
 
-  const params = await getValidatedRouterParams(event, ExperimentRouteParamsSchema.parse)
+  const params = await getValidatedRouterParams(event, HypothesisIdRouteParamsSchema.parse)
 
   await deleteExperiment({
     userId,

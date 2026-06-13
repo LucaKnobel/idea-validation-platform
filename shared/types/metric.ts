@@ -1,7 +1,5 @@
 export type {
-  CreateMetricBodyDto,
-  UpdateMetricBodyDto,
+  UpsertMetricBodyDto,
   MetricThresholdResponseDto,
-  MetricResponseDto,
-  MetricsListResponseDto
+  MetricResponseDto
 } from '@infrastructure/validation/metric-schemas'

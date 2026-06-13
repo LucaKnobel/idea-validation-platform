@@ -1,35 +1,33 @@
 import { describe, expect, it } from 'vitest'
 import {
-  CreateMeasurementBodySchema,
   MeasurementResponseSchema,
-  MeasurementRouteParamsSchema,
-  UpdateMeasurementBodySchema
+  UpsertMeasurementBodySchema
 } from '@infrastructure/validation/measurement-schemas'
+import { HypothesisIdRouteParamsSchema } from '@infrastructure/validation/route-params-schemas'
 import { VALID_ISO_DATETIME, VALID_UUID } from './helpers'
 
 describe('Measurement route schemas', () => {
-  it('accepts valid measurement route params', () => {
-    expect(MeasurementRouteParamsSchema.safeParse({
-      id: VALID_UUID
+  it('accepts canonical singleton measurement params', () => {
+    expect(HypothesisIdRouteParamsSchema.safeParse({
+      hypothesisId: VALID_UUID
     }).success).toBe(true)
   })
 
-  it('rejects invalid route identifiers', () => {
-    expect(MeasurementRouteParamsSchema.safeParse({
-      id: 'not-a-uuid'
+  it('rejects invalid hypothesis ids', () => {
+    expect(HypothesisIdRouteParamsSchema.safeParse({
+      hypothesisId: 'not-a-uuid'
     }).success).toBe(false)
   })
 })
 
-describe('CreateMeasurementBodySchema', () => {
-  const validBody = {
-    metricId: VALID_UUID,
+describe('Measurement body schemas', () => {
+  const validUpsertBody = {
     value: 42.5,
     note: '  Baseline from first experiment run.  '
   }
 
-  it('accepts and normalizes valid input', () => {
-    const result = CreateMeasurementBodySchema.safeParse(validBody)
+  it('accepts and normalizes valid upsert input', () => {
+    const result = UpsertMeasurementBodySchema.safeParse(validUpsertBody)
 
     expect(result.success).toBe(true)
     if (result.success) {
@@ -37,23 +35,16 @@ describe('CreateMeasurementBodySchema', () => {
     }
   })
 
-  it('rejects invalid metric ids', () => {
-    expect(CreateMeasurementBodySchema.safeParse({
-      ...validBody,
-      metricId: 'not-a-uuid'
-    }).success).toBe(false)
-  })
-
   it('rejects non-finite values', () => {
-    expect(CreateMeasurementBodySchema.safeParse({
-      ...validBody,
+    expect(UpsertMeasurementBodySchema.safeParse({
+      ...validUpsertBody,
       value: Number.NaN
     }).success).toBe(false)
   })
 
   it('normalizes empty notes to null', () => {
-    const result = CreateMeasurementBodySchema.safeParse({
-      ...validBody,
+    const result = UpsertMeasurementBodySchema.safeParse({
+      ...validUpsertBody,
       note: '   '
     })
 
@@ -62,23 +53,15 @@ describe('CreateMeasurementBodySchema', () => {
       expect(result.data.note).toBeNull()
     }
   })
-})
 
-describe('UpdateMeasurementBodySchema', () => {
-  it('shares the same validation rules as the create schema', () => {
-    expect(UpdateMeasurementBodySchema.safeParse({
-      metricId: VALID_UUID,
-      value: 0,
-      note: null
-    }).success).toBe(true)
+  it('accepts a valid upsert body', () => {
+    expect(UpsertMeasurementBodySchema.safeParse(validUpsertBody).success).toBe(true)
   })
 })
 
 describe('Measurement response schemas', () => {
   const validMeasurementResponse = {
     id: VALID_UUID,
-    experimentId: VALID_UUID,
-    metricId: VALID_UUID,
     value: 10,
     note: 'Collected after campaign launch.',
     createdAt: VALID_ISO_DATETIME,
