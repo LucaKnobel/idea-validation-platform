@@ -13,7 +13,7 @@ import {
  */
 export default defineProtectedHandler(async (event, userId): Promise<MeasurementResponseDto> => {
   await enforceRateLimit(event, {
-    name: 'ideas.hypotheses.experiments.measurements.update',
+    name: 'measurements.update',
     maxRequests: 60,
     windowSeconds: 60,
     scope: 'user'
@@ -24,10 +24,6 @@ export default defineProtectedHandler(async (event, userId): Promise<Measurement
 
   const measurement = await updateMeasurement({
     userId,
-    ideaId: params.id,
-    ideaVersionId: params.versionId,
-    hypothesisId: params.hypothesisId,
-    experimentId: params.experimentId,
     measurementId: params.measurementId,
     metricId: body.metricId,
     value: body.value,

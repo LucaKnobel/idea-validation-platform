@@ -4,10 +4,6 @@ import { MeasurementNotFoundError } from '@application/errors/measurement-errors
 
 export type DeleteMeasurementInput = {
   userId: string
-  ideaId: string
-  ideaVersionId: string
-  hypothesisId: string
-  experimentId: string
   measurementId: string
 }
 
@@ -18,10 +14,6 @@ export const createDeleteMeasurement = (measurementRepository: MeasurementReposi
   return async (input: DeleteMeasurementInput): Promise<void> => {
     const deleted = await measurementRepository.deleteByIdForUser({
       userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
-      hypothesisId: input.hypothesisId,
-      experimentId: input.experimentId,
       measurementId: input.measurementId
     })
 
@@ -31,10 +23,6 @@ export const createDeleteMeasurement = (measurementRepository: MeasurementReposi
 
     logger.debug('Measurement deleted', {
       userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId,
-      hypothesisId: input.hypothesisId,
-      experimentId: input.experimentId,
       measurementId: input.measurementId
     })
   }

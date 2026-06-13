@@ -8,7 +8,7 @@ import { MeasurementRouteParamsSchema } from '@infrastructure/validation/measure
  */
 export default defineProtectedHandler(async (event, userId): Promise<void> => {
   await enforceRateLimit(event, {
-    name: 'ideas.hypotheses.experiments.measurements.delete',
+    name: 'measurements.delete',
     maxRequests: 30,
     windowSeconds: 60,
     scope: 'user'
@@ -18,10 +18,6 @@ export default defineProtectedHandler(async (event, userId): Promise<void> => {
 
   await deleteMeasurement({
     userId,
-    ideaId: params.id,
-    ideaVersionId: params.versionId,
-    hypothesisId: params.hypothesisId,
-    experimentId: params.experimentId,
     measurementId: params.measurementId
   })
 
