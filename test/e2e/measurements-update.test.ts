@@ -56,7 +56,8 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Users will convert better with updated measurements.',
         dimension: 'MONETIZATION',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -69,25 +70,10 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
       }
     })
 
-    const metricA = await prisma.metric.create({
+    const metric = await prisma.metric.create({
       data: {
         hypothesisId: hypothesis.id,
-        name: 'Metric A',
-        description: null,
-        unit: null,
-        threshold: {
-          create: {
-            operator: 'GTE',
-            referenceValue: 1
-          }
-        }
-      }
-    })
-
-    const metricB = await prisma.metric.create({
-      data: {
-        hypothesisId: hypothesis.id,
-        name: 'Metric B',
+        name: 'Metric',
         description: null,
         unit: null,
         threshold: {
@@ -102,14 +88,14 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
     const measurement = await prisma.measurement.create({
       data: {
         experimentId: experiment.id,
-        metricId: metricA.id,
+        metricId: metric.id,
         value: 6,
         note: 'Before update'
       }
     })
 
     const response = await updateMeasurementWithCookie(user.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, experiment.id, measurement.id, {
-      metricId: metricB.id,
+      metricId: metric.id,
       value: 9.5,
       note: '  After update  '
     })
@@ -119,7 +105,7 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
     const payload = await response.json() as MeasurementResponseDto
     expect(payload.id).toBe(measurement.id)
     expect(payload.experimentId).toBe(experiment.id)
-    expect(payload.metricId).toBe(metricB.id)
+    expect(payload.metricId).toBe(metric.id)
     expect(payload.value).toBe(9.5)
     expect(payload.note).toBe('After update')
 
@@ -127,7 +113,7 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
       where: { id: measurement.id }
     })
 
-    expect(storedMeasurement?.metricId).toBe(metricB.id)
+    expect(storedMeasurement?.metricId).toBe(metric.id)
     expect(Number(storedMeasurement?.value)).toBe(9.5)
     expect(storedMeasurement?.note).toBe('After update')
   })
@@ -172,7 +158,8 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Protected measurement update hypothesis',
         dimension: 'PROBLEM',
-        priority: 'LOW'
+        priority: 'LOW',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -218,7 +205,7 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
     expect(response.status).toBe(404)
   })
 
-  it('returns 409 when reassigning to a metric that already has a measurement in the same experiment', async () => {
+  it('returns 404 when updating a measurement with a metric outside the hypothesis', async () => {
     const sessionResult = await createAuthenticatedSession({
       emailPrefix: 'measurements-update-conflict',
       name: 'Measurements Update Conflict'
@@ -236,7 +223,8 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Measurement update conflict hypothesis',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -249,10 +237,10 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
       }
     })
 
-    const metricA = await prisma.metric.create({
+    const metric = await prisma.metric.create({
       data: {
         hypothesisId: hypothesis.id,
-        name: 'Conflict Metric A',
+        name: 'Conflict Metric',
         description: null,
         unit: null,
         threshold: {
@@ -264,55 +252,27 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
       }
     })
 
-    const metricB = await prisma.metric.create({
-      data: {
-        hypothesisId: hypothesis.id,
-        name: 'Conflict Metric B',
-        description: null,
-        unit: null,
-        threshold: {
-          create: {
-            operator: 'GTE',
-            referenceValue: 1
-          }
-        }
-      }
-    })
-
-    const measurementA = await prisma.measurement.create({
+    const measurement = await prisma.measurement.create({
       data: {
         experimentId: experiment.id,
-        metricId: metricA.id,
+        metricId: metric.id,
         value: 10,
         note: null
       }
     })
 
-    const measurementB = await prisma.measurement.create({
-      data: {
-        experimentId: experiment.id,
-        metricId: metricB.id,
-        value: 11,
-        note: null
-      }
-    })
-
-    const response = await updateMeasurementWithCookie(user.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, experiment.id, measurementB.id, {
-      metricId: metricA.id,
+    const response = await updateMeasurementWithCookie(user.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, experiment.id, measurement.id, {
+      metricId: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
       value: 12,
-      note: 'Conflict by duplicate metric'
+      note: 'Unknown metric in hypothesis'
     })
 
-    expect(response.status).toBe(409)
+    expect(response.status).toBe(404)
 
-    const unchangedMeasurementA = await prisma.measurement.findUnique({
-      where: { id: measurementA.id }
-    })
-    const unchangedMeasurementB = await prisma.measurement.findUnique({
-      where: { id: measurementB.id }
+    const unchangedMeasurement = await prisma.measurement.findUnique({
+      where: { id: measurement.id }
     })
 
-    expect(unchangedMeasurementA?.metricId).toBe(metricA.id)
-    expect(unchangedMeasurementB?.metricId).toBe(metricB.id)
+    expect(unchangedMeasurement?.metricId).toBe(metric.id)
   })
 })

@@ -54,7 +54,8 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Users will pay for concierge onboarding.',
         dimension: 'MONETIZATION',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -124,7 +125,8 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Protected hypothesis',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 

@@ -67,7 +67,8 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses integration', async 
         ideaVersionId: ownerVersion.ideaVersionId,
         statement: 'Owner hypothesis',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUALITATIVE'
       }
     })
 
@@ -76,7 +77,8 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses integration', async 
         ideaVersionId: attackerVersion.ideaVersionId,
         statement: 'Attacker hypothesis',
         dimension: 'SOLUTION',
-        priority: 'LOW'
+        priority: 'LOW',
+        evidenceType: 'QUALITATIVE'
       }
     })
 
@@ -127,7 +129,8 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses integration', async 
         ideaVersionId: ownerVersion.ideaVersionId,
         statement: 'Private owner hypothesis',
         dimension: 'MARKET',
-        priority: 'MEDIUM'
+        priority: 'MEDIUM',
+        evidenceType: 'QUALITATIVE'
       }
     })
 

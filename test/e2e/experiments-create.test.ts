@@ -71,7 +71,8 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exper
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Users will convert better with experiments.',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -140,7 +141,8 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exper
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Protected experiment hypothesis',
         dimension: 'MARKET',
-        priority: 'MEDIUM'
+        priority: 'MEDIUM',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 

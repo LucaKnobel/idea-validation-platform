@@ -72,7 +72,8 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
         ideaVersionId: ownerVersion.ideaVersionId,
         statement: 'Owner hypothesis for metrics',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -81,7 +82,8 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
         ideaVersionId: attackerVersion.ideaVersionId,
         statement: 'Attacker hypothesis for metrics',
         dimension: 'SOLUTION',
-        priority: 'LOW'
+        priority: 'LOW',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -168,7 +170,8 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
         ideaVersionId: ownerVersion.ideaVersionId,
         statement: 'Private metrics hypothesis',
         dimension: 'MARKET',
-        priority: 'MEDIUM'
+        priority: 'MEDIUM',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 

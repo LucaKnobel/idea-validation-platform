@@ -72,7 +72,8 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
         ideaVersionId: ownerVersion.ideaVersionId,
         statement: 'Owner hypothesis for experiments',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -81,7 +82,8 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
         ideaVersionId: attackerVersion.ideaVersionId,
         statement: 'Attacker hypothesis for experiments',
         dimension: 'SOLUTION',
-        priority: 'LOW'
+        priority: 'LOW',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
@@ -152,7 +154,8 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experi
         ideaVersionId: ownerVersion.ideaVersionId,
         statement: 'Private experiments hypothesis',
         dimension: 'MARKET',
-        priority: 'MEDIUM'
+        priority: 'MEDIUM',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 

@@ -61,6 +61,7 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId integr
         statement: 'Owned single hypothesis',
         dimension: 'MARKET',
         priority: 'MEDIUM',
+        evidenceType: 'QUALITATIVE',
         canvasSectionLinks: {
           create: [
             { canvasElementType: 'CHANNELS' },
@@ -120,7 +121,8 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId integr
         ideaVersionId: version.ideaVersionId,
         statement: 'Private hypothesis',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUALITATIVE'
       }
     })
 

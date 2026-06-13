@@ -74,7 +74,8 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metri
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Users will convert better with a shorter form.',
         dimension: 'PROBLEM',
-        priority: 'HIGH'
+        priority: 'HIGH',
+        evidenceType: 'QUANTITATIVE'
       }
     })
 
