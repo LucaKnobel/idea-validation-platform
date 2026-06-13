@@ -1,5 +1,5 @@
 import type { Metric } from '@application/models/metric'
-import type { HypothesisOwnerInput, MetricOwnerInput } from '@application/interfaces/ownership-inputs'
+import type { HypothesisIdOwnerInput } from '@application/interfaces/ownership-inputs'
 import type { ThresholdOperator } from '@application/models/metric-threshold'
 
 export type MetricThresholdFieldsInput = {
@@ -14,35 +14,27 @@ export type MetricFieldsInput = {
   threshold: MetricThresholdFieldsInput
 }
 
-export type MetricWriteInput = HypothesisOwnerInput & MetricFieldsInput
-
-export type MetricMutationInput = MetricOwnerInput & MetricFieldsInput
+export type MetricUpsertInput = HypothesisIdOwnerInput & MetricFieldsInput
 
 /**
- * Persistence contract for reading and mutating metrics in one owned hypothesis.
+ * Persistence contract for metric singleton operations in one owned hypothesis.
  */
 export interface MetricRepository {
   /**
-   * Returns all metrics for a hypothesis owned by the given user.
+   * Returns the metric singleton for a hypothesis owned by the given user.
    * Returns null when the hypothesis does not exist or is not accessible.
    */
-  listByHypothesisForUser(input: HypothesisOwnerInput): Promise<Metric[] | null>
+  getByHypothesis(input: HypothesisIdOwnerInput): Promise<Metric | null>
 
   /**
-   * Creates one metric in a hypothesis owned by the given user.
+   * Creates or updates the metric singleton in a hypothesis owned by the given user.
    * Returns null when the hypothesis does not exist or is not accessible.
    */
-  createForHypothesis(input: MetricWriteInput): Promise<Metric | null>
+  upsertByHypothesis(input: MetricUpsertInput): Promise<Metric | null>
 
   /**
-   * Updates one metric owned by the given user.
-   * Returns null when the metric does not exist or is not accessible.
-   */
-  updateByIdForUser(input: MetricMutationInput): Promise<Metric | null>
-
-  /**
-   * Deletes one metric owned by the given user.
+   * Deletes the metric singleton owned by the given user.
    * Returns true when a row was deleted.
    */
-  deleteByIdForUser(input: MetricOwnerInput): Promise<boolean>
+  deleteByHypothesis(input: HypothesisIdOwnerInput): Promise<boolean>
 }

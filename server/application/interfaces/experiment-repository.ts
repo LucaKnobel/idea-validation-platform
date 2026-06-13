@@ -1,5 +1,5 @@
 import type { Experiment, ExperimentStatus } from '@application/models/experiment'
-import type { ExperimentOwnerInput, HypothesisOwnerInput } from '@application/interfaces/ownership-inputs'
+import type { HypothesisIdOwnerInput } from '@application/interfaces/ownership-inputs'
 
 export type ExperimentFieldsInput = {
   title: string
@@ -7,35 +7,27 @@ export type ExperimentFieldsInput = {
   status: ExperimentStatus
 }
 
-export type ExperimentWriteInput = HypothesisOwnerInput & ExperimentFieldsInput
-
-export type ExperimentMutationInput = ExperimentOwnerInput & ExperimentFieldsInput
+export type ExperimentUpsertInput = HypothesisIdOwnerInput & ExperimentFieldsInput
 
 /**
- * Persistence contract for reading and mutating experiments in one owned hypothesis.
+ * Persistence contract for experiment singleton operations in one owned hypothesis.
  */
 export interface ExperimentRepository {
   /**
-   * Returns all experiments for a hypothesis owned by the given user.
+   * Returns the experiment singleton for a hypothesis owned by the given user.
    * Returns null when the hypothesis does not exist or is not accessible.
    */
-  listByHypothesisForUser(input: HypothesisOwnerInput): Promise<Experiment[] | null>
+  getByHypothesis(input: HypothesisIdOwnerInput): Promise<Experiment | null>
 
   /**
-   * Creates one experiment in a hypothesis owned by the given user.
+   * Creates or updates the experiment singleton in a hypothesis owned by the given user.
    * Returns null when the hypothesis does not exist or is not accessible.
    */
-  createForHypothesis(input: ExperimentWriteInput): Promise<Experiment | null>
+  upsertByHypothesis(input: ExperimentUpsertInput): Promise<Experiment | null>
 
   /**
-   * Updates one experiment owned by the given user.
-   * Returns null when the experiment does not exist or is not accessible.
-   */
-  updateByIdForUser(input: ExperimentMutationInput): Promise<Experiment | null>
-
-  /**
-   * Deletes one experiment owned by the given user.
+   * Deletes the experiment singleton owned by the given user.
    * Returns true when a row was deleted.
    */
-  deleteByIdForUser(input: ExperimentOwnerInput): Promise<boolean>
+  deleteByHypothesis(input: HypothesisIdOwnerInput): Promise<boolean>
 }
