@@ -129,8 +129,8 @@ const {
   isAnyMeasurementActionLoading,
   isExperimentDeleteSubmitting,
   isMeasurementDeleteSubmitting,
-  loadExperimentsForRoute: loadExperimentsForRouteFromDetail,
-  clearExperiments,
+  loadExperimentForRoute: loadExperimentForRouteFromDetail,
+  clearExperiment,
   openCreateExperimentModal,
   openCreateMeasurementModal,
   openEditMeasurementModal,
@@ -147,14 +147,6 @@ const {
   hasValidRouteParams
 })
 
-const reloadMetricsForRoute = async (): Promise<void> => {
-  await loadMetricsForRoute()
-}
-
-const reloadExperimentsForRoute = async (): Promise<void> => {
-  await loadExperimentsForRouteFromDetail()
-}
-
 const openHypothesisEditModal = (): void => {
   openEditModal(hypothesis.value)
 }
@@ -167,7 +159,7 @@ const loadHypothesisForRoute = async (): Promise<void> => {
   if (!hasValidRouteParams.value) {
     clearHypothesis()
     clearMetrics()
-    clearExperiments()
+    clearExperiment()
     return
   }
 
@@ -176,7 +168,7 @@ const loadHypothesisForRoute = async (): Promise<void> => {
       hypothesisId: hypothesisId.value
     }),
     loadMetricsForRoute(),
-    loadExperimentsForRouteFromDetail()
+    loadExperimentForRouteFromDetail()
   ])
 }
 
@@ -287,7 +279,7 @@ watch([hypothesisId], async () => {
       :is-metric-delete-submitting="isMetricDeleteSubmitting"
       :metric-deleting-id="metricDeletingId"
       :format-metric-threshold="formatMetricThreshold"
-      @retry="reloadMetricsForRoute"
+      @retry="loadMetricsForRoute"
       @create="openCreateMetricModal"
       @edit="openEditMetricModal"
       @delete="openMetricDeleteModal"
@@ -306,7 +298,7 @@ watch([hypothesisId], async () => {
       :experiment-deleting-id="experimentDeletingId"
       :measurement-deleting-id="measurementDeletingId"
       :format-measurement-value="formatMeasurementValue"
-      @retry="reloadExperimentsForRoute"
+      @retry="loadExperimentForRouteFromDetail"
       @create="openCreateExperimentModal"
       @create-measurement="openCreateMeasurementModal"
       @edit-measurement="openEditMeasurementModal"
