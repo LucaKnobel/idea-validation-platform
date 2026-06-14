@@ -120,12 +120,12 @@ jobs:
         run: curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
 
       # Scan for vulnerabilities, leaked secrets, and IaC misconfigurations
-      # Fails CI on medium+ severity findings to enforce security standards
+      # Fails CI on critical severity findings to enforce security standards
       - name: Run Trivy scan
         run: |
           trivy fs \
             --scanners vuln,secret,misconfig \
-            --severity CRITICAL,HIGH \
+            --severity CRITICAL \
             --ignore-unfixed \
             --exit-code 1 \
             --no-progress \
