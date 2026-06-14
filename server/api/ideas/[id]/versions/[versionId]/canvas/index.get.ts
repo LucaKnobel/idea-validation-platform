@@ -1,8 +1,6 @@
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
-import {
-  CanvasRouteParamsSchema,
-  type IdeaVersionCanvasResponseDto
-} from '@infrastructure/validation/canvas-schemas'
+import type { IdeaVersionCanvasResponseDto } from '@infrastructure/validation/canvas-schemas'
+import { IdeaVersionRouteParamsSchema } from '@infrastructure/validation/route-params-schemas'
 import { getIdeaVersionCanvas } from '@infrastructure/composition'
 import { toIdeaVersionCanvasResponseDto } from '@infrastructure/mappers/canvas-mapper'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
@@ -18,7 +16,7 @@ export default defineProtectedHandler(async (event, userId): Promise<IdeaVersion
     scope: 'user'
   })
 
-  const params = await getValidatedRouterParams(event, CanvasRouteParamsSchema.parse)
+  const params = await getValidatedRouterParams(event, IdeaVersionRouteParamsSchema.parse)
 
   const canvasElements = await getIdeaVersionCanvas({
     userId,

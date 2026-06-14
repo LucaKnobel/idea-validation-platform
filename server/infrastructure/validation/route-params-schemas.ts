@@ -9,13 +9,21 @@ const UuidSchema = z.uuid()
  * Route params for endpoints addressing a single idea by ID.
  */
 export const IdeaIdParamsSchema = z.object({
-  ideaId: UuidSchema
+  id: UuidSchema
 })
 
 /**
  * Route params for endpoints scoped to a single idea version.
  */
 export const IdeaVersionIdRouteParamsSchema = z.object({
+  versionId: UuidSchema
+})
+
+/**
+ * Route params for endpoints scoped to one idea version inside one idea.
+ */
+export const IdeaVersionRouteParamsSchema = z.object({
+  id: UuidSchema,
   versionId: UuidSchema
 })
 
@@ -49,6 +57,7 @@ export const MeasurementIdRouteParamsSchema = z.object({
 
 export type IdeaIdParamsDto = z.infer<typeof IdeaIdParamsSchema>
 export type IdeaVersionIdRouteParamsDto = z.infer<typeof IdeaVersionIdRouteParamsSchema>
+export type IdeaVersionRouteParamsDto = z.infer<typeof IdeaVersionRouteParamsSchema>
 export type HypothesisIdRouteParamsDto = z.infer<typeof HypothesisIdRouteParamsSchema>
 export type ExperimentIdRouteParamsDto = z.infer<typeof ExperimentIdRouteParamsSchema>
 export type MetricIdRouteParamsDto = z.infer<typeof MetricIdRouteParamsSchema>

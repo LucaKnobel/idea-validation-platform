@@ -47,7 +47,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses integration', async
         dimension: 'PROBLEM',
         priority: 'HIGH',
         evidenceType: 'QUALITATIVE',
-        canvasSectionTypes: ['CHANNELS']
+        canvasElementTypes: ['CHANNELS']
       })
     })
 
@@ -72,7 +72,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses integration', async
       dimension: 'PROBLEM',
       priority: 'MEDIUM',
       evidenceType: 'QUALITATIVE',
-      canvasSectionTypes: ['CHANNELS', 'CHANNELS', 'VALUE_PROPOSITIONS']
+      canvasElementTypes: ['CHANNELS', 'CHANNELS', 'VALUE_PROPOSITIONS']
     })
 
     expect(response.status).toBe(201)
@@ -80,8 +80,8 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses integration', async
     const payload = await response.json() as HypothesisResponseDto
 
     expect(payload.statement).toBe('Validate our channels')
-    expect(payload.canvasSectionLinks).toHaveLength(2)
-    expect(new Set(payload.canvasSectionLinks.map(link => link.canvasElementType))).toEqual(
+    expect(payload.canvasSections).toHaveLength(2)
+    expect(new Set(payload.canvasSections)).toEqual(
       new Set(['CHANNELS', 'VALUE_PROPOSITIONS'])
     )
 
@@ -110,7 +110,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses integration', async
       dimension: 'PROBLEM',
       priority: 'HIGH',
       evidenceType: 'QUALITATIVE',
-      canvasSectionTypes: ['CHANNELS']
+      canvasElementTypes: ['CHANNELS']
     })
 
     expect(response.status).toBe(400)
@@ -140,7 +140,7 @@ describe('POST /api/ideas/:id/versions/:versionId/hypotheses integration', async
       dimension: 'PROBLEM',
       priority: 'HIGH',
       evidenceType: 'QUALITATIVE',
-      canvasSectionTypes: ['CHANNELS']
+      canvasElementTypes: ['CHANNELS']
     })
 
     expect(response.status).toBe(404)
