@@ -99,7 +99,6 @@ export const useHypothesisExperimentsDetail = (
   const isMeasurementDeleteModalOpen = ref(false)
   const experimentFormMode = ref<'create' | 'update'>('create')
   const measurementFormMode = ref<'create' | 'update'>('create')
-  const activeExperimentId = ref<string | null>(null)
   const experimentDeleteCandidate = ref<ExperimentResponseDto | null>(null)
   const measurementDeleteCandidate = ref<MeasurementResponseDto | null>(null)
   const isExperimentDeleteModalOpen = ref(false)
@@ -209,7 +208,7 @@ export const useHypothesisExperimentsDetail = (
   }
 
   /**
-  * Loads the experiment for the currently active idea/version/hypothesis route.
+   * Loads the experiment for the currently active idea/version/hypothesis route.
    */
   const loadExperimentForRoute = async (): Promise<void> => {
     if (!input.hasValidRouteParams.value) {
@@ -249,7 +248,6 @@ export const useHypothesisExperimentsDetail = (
     }
 
     experimentFormMode.value = 'create'
-    activeExperimentId.value = null
     resetExperimentForm()
     isExperimentModalOpen.value = true
   }
@@ -294,7 +292,6 @@ export const useHypothesisExperimentsDetail = (
     }
 
     experimentFormMode.value = 'update'
-    activeExperimentId.value = experiment.value.id
     experimentFormState.title = experiment.value.title
     experimentFormState.description = experiment.value.description || ''
     experimentFormState.status = experiment.value.status

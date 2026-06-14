@@ -1,15 +1,17 @@
 /**
  * Public contract for loading and mutating the hypothesis metric.
  */
+export interface LoadHypothesisMetricInput {
+  hypothesisId: string
+}
+
 export interface UseHypothesisMetricsComposable {
   metric: Ref<MetricResponseDto | null>
   isLoading: Ref<boolean>
   isCreating: Ref<boolean>
   isDeletingId: Ref<string | null>
   hasError: Ref<boolean>
-  loadMetrics: (input: {
-    hypothesisId: string
-  }) => Promise<void>
+  loadMetric: (input: LoadHypothesisMetricInput) => Promise<void>
   upsertMetric: (input: {
     hypothesisId: string
     body: UpsertMetricBodyDto
@@ -17,6 +19,7 @@ export interface UseHypothesisMetricsComposable {
   deleteMetric: (input: {
     hypothesisId: string
   }) => Promise<boolean>
+  clearMetric: () => void
 }
 
 /**
@@ -38,26 +41,20 @@ export const useHypothesisMetrics = (): UseHypothesisMetricsComposable => {
   const isCreating = ref(false)
   const isDeletingId = ref<string | null>(null)
 
-  const loadMetrics = async (input: {
-    hypothesisId: string
-  }): Promise<void> => {
+  const loadMetric = async (input: LoadHypothesisMetricInput): Promise<void> => {
     isLoading.value = true
 
     try {
       await runWithErrorHandling(async () => {
-        let nextMetric: MetricResponseDto | null = null
-
         try {
-          nextMetric = await getMetric(input)
+          metric.value = await getMetric(input)
         } catch (error: unknown) {
           if (extractStatusCode(error) === 404) {
-            nextMetric = null
+            metric.value = null
           } else {
             throw error
           }
         }
-
-        metric.value = nextMetric
       }, {
         fallback: undefined,
         onError: () => {
@@ -106,14 +103,19 @@ export const useHypothesisMetrics = (): UseHypothesisMetricsComposable => {
     }
   }
 
+  const clearMetric = (): void => {
+    metric.value = null
+  }
+
   return {
     metric,
     isLoading,
     isCreating,
     isDeletingId,
     hasError,
-    loadMetrics,
+    loadMetric,
     upsertMetric,
-    deleteMetric
+    deleteMetric,
+    clearMetric
   }
 }

@@ -92,8 +92,8 @@ const {
   metricOperatorOptions,
   isAnyMetricActionLoading,
   isMetricDeleteSubmitting,
-  loadMetricsForRoute,
-  clearMetrics,
+  loadMetricForRoute,
+  clearMetric,
   openCreateMetricModal,
   openEditMetricModal,
   openMetricDeleteModal,
@@ -158,7 +158,7 @@ const openHypothesisDeleteConfirmation = (): void => {
 const loadHypothesisForRoute = async (): Promise<void> => {
   if (!hasValidRouteParams.value) {
     clearHypothesis()
-    clearMetrics()
+    clearMetric()
     clearExperiment()
     return
   }
@@ -167,7 +167,7 @@ const loadHypothesisForRoute = async (): Promise<void> => {
     loadHypothesis({
       hypothesisId: hypothesisId.value
     }),
-    loadMetricsForRoute(),
+    loadMetricForRoute(),
     loadExperimentForRouteFromDetail()
   ])
 }
@@ -279,7 +279,7 @@ watch([hypothesisId], async () => {
       :is-metric-delete-submitting="isMetricDeleteSubmitting"
       :metric-deleting-id="metricDeletingId"
       :format-metric-threshold="formatMetricThreshold"
-      @retry="loadMetricsForRoute"
+      @retry="loadMetricForRoute"
       @create="openCreateMetricModal"
       @edit="openEditMetricModal"
       @delete="openMetricDeleteModal"
