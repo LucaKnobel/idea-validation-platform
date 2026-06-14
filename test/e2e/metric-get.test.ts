@@ -26,7 +26,7 @@ describe('GET /api/hypotheses/:hypothesisId/metric integration', async () => {
     return fetch(url(`/api/hypotheses/${hypothesisId}/metric`), {
       method: 'GET',
       headers: {
-        cookie: cookieHeader,
+        'cookie': cookieHeader,
         'x-forwarded-for': createClientIp()
       }
     })
