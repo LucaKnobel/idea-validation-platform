@@ -25,8 +25,8 @@ export interface UseHypothesisMetricsDetailComposable {
   metricOperatorOptions: ComputedRef<Array<{ label: string, value: UpsertMetricBodyDto['threshold']['operator'] }>>
   isAnyMetricActionLoading: ComputedRef<boolean>
   isMetricDeleteSubmitting: Ref<boolean>
-  loadMetricsForRoute: () => Promise<void>
-  clearMetrics: () => void
+  loadMetricForRoute: () => Promise<void>
+  clearMetric: () => void
   openCreateMetricModal: () => void
   openEditMetricModal: () => void
   openMetricDeleteModal: () => void
@@ -50,9 +50,10 @@ export const useHypothesisMetricsDetail = (
     isCreating: isMetricCreating,
     isDeletingId: isMetricDeletingId,
     hasError: hasMetricsError,
-    loadMetrics,
+    loadMetric,
     upsertMetric,
-    deleteMetric
+    deleteMetric,
+    clearMetric
   } = useHypothesisMetrics()
   const {
     isSubmitting: isMetricFormSubmitting,
@@ -65,7 +66,6 @@ export const useHypothesisMetricsDetail = (
 
   const isMetricModalOpen = ref(false)
   const metricFormMode = ref<'create' | 'update'>('create')
-  const activeMetricId = ref<string | null>(null)
   const metricDeleteCandidate = ref<MetricResponseDto | null>(null)
   const isMetricDeleteModalOpen = ref(false)
 
@@ -121,19 +121,20 @@ export const useHypothesisMetricsDetail = (
   /**
    * Clears local singleton state when route params are invalid or navigation leaves the context.
    */
-  const clearMetrics = (): void => {
-    metric.value = null
+  const clearMetricDetails = (): void => {
+    clearMetric()
+    metricDeleteCandidate.value = null
   }
 
   /**
    * Loads the singleton metric for the currently active idea/version/hypothesis route.
    */
-  const loadMetricsForRoute = async (): Promise<void> => {
+  const loadMetricForRoute = async (): Promise<void> => {
     if (!input.hasValidRouteParams.value) {
       return
     }
 
-    await loadMetrics({
+    await loadMetric({
       hypothesisId: input.hypothesisId.value
     })
   }
@@ -147,7 +148,6 @@ export const useHypothesisMetricsDetail = (
     }
 
     metricFormMode.value = 'create'
-    activeMetricId.value = null
     resetMetricForm()
     isMetricModalOpen.value = true
   }
@@ -161,7 +161,6 @@ export const useHypothesisMetricsDetail = (
     }
 
     metricFormMode.value = 'update'
-    activeMetricId.value = metric.value.id
     metricFormState.name = metric.value.name
     metricFormState.description = metric.value.description || ''
     metricFormState.unit = metric.value.unit || ''
@@ -306,8 +305,8 @@ export const useHypothesisMetricsDetail = (
     metricOperatorOptions,
     isAnyMetricActionLoading,
     isMetricDeleteSubmitting,
-    loadMetricsForRoute,
-    clearMetrics,
+    loadMetricForRoute,
+    clearMetric: clearMetricDetails,
     openCreateMetricModal,
     openEditMetricModal,
     openMetricDeleteModal,
