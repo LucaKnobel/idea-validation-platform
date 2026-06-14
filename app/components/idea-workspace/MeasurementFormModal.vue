@@ -2,14 +2,8 @@
 import type { FormSubmitEvent } from '@nuxt/ui'
 
 export interface MeasurementFormState {
-  metricId: string
   value: number
   note: string
-}
-
-interface MeasurementMetricOption {
-  label: string
-  value: string
 }
 
 /**
@@ -22,7 +16,6 @@ interface MeasurementFormModalProps {
   title: string
   submitLabel: string
   isSubmitting: boolean
-  metricOptions: MeasurementMetricOption[]
 }
 
 const props = defineProps<MeasurementFormModalProps>()
@@ -35,13 +28,11 @@ const emit = defineEmits<{
 const { t } = useI18n()
 
 const editableState = reactive<MeasurementFormState>({
-  metricId: '',
   value: 0,
   note: ''
 })
 
 const syncFromProps = (source: MeasurementFormState): void => {
-  editableState.metricId = source.metricId
   editableState.value = source.value
   editableState.note = source.note
 }
@@ -85,22 +76,6 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
         class="space-y-5"
         @submit="onSubmit"
       >
-        <UFormField
-          name="metricId"
-          :label="t('ideaWorkspace.hypotheses.detail.measurements.form.metric.label')"
-          required
-        >
-          <USelectMenu
-            v-model="editableState.metricId"
-            value-key="value"
-            :items="metricOptions"
-            :search-input="false"
-            class="w-full"
-            :placeholder="t('ideaWorkspace.hypotheses.detail.measurements.form.metric.placeholder')"
-            :disabled="isSubmitting"
-          />
-        </UFormField>
-
         <UFormField
           name="value"
           :label="t('ideaWorkspace.hypotheses.detail.measurements.form.value.label')"

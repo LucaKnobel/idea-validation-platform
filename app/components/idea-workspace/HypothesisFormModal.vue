@@ -15,39 +15,42 @@ interface SelectOption<TValue> {
 interface HypothesisFormModalProps {
   open: boolean
   formSchema: unknown
-  initialState: CreateHypothesisBodyDto
+  initialState: UpsertHypothesisBodyDto
   title: string
   submitLabel: string
   isSubmitting: boolean
-  dimensionOptions: Array<SelectOption<CreateHypothesisBodyDto['dimension']>>
-  priorityOptions: Array<SelectOption<CreateHypothesisBodyDto['priority']>>
-  sectionOptions: Array<SelectOption<CreateHypothesisBodyDto['canvasSectionTypes'][number]>>
+  dimensionOptions: Array<SelectOption<UpsertHypothesisBodyDto['dimension']>>
+  priorityOptions: Array<SelectOption<UpsertHypothesisBodyDto['priority']>>
+  evidenceTypeOptions: Array<SelectOption<UpsertHypothesisBodyDto['evidenceType']>>
+  sectionOptions: Array<SelectOption<UpsertHypothesisBodyDto['canvasElementTypes'][number]>>
 }
 
 const props = defineProps<HypothesisFormModalProps>()
 
 const emit = defineEmits<{
   (event: 'update:open', value: boolean): void
-  (event: 'submit', value: CreateHypothesisBodyDto): void
+  (event: 'submit', value: UpsertHypothesisBodyDto): void
 }>()
 
 const { t } = useI18n()
 const isSectionsMenuOpen = ref(false)
-const editableState = reactive<CreateHypothesisBodyDto>({
+const editableState = reactive<UpsertHypothesisBodyDto>({
   statement: '',
   dimension: 'PROBLEM',
   priority: 'MEDIUM',
-  canvasSectionTypes: []
+  evidenceType: 'QUALITATIVE',
+  canvasElementTypes: []
 })
 
 /**
  * Synchronizes local editable state with the parent state snapshot.
  */
-const syncFromProps = (source: CreateHypothesisBodyDto): void => {
+const syncFromProps = (source: UpsertHypothesisBodyDto): void => {
   editableState.statement = source.statement
   editableState.dimension = source.dimension
   editableState.priority = source.priority
-  editableState.canvasSectionTypes = [...source.canvasSectionTypes]
+  editableState.evidenceType = source.evidenceType
+  editableState.canvasElementTypes = [...source.canvasElementTypes]
 }
 
 watch(() => props.initialState, (next) => {
@@ -80,7 +83,7 @@ const closeFormModal = (): void => {
  * Emits validated form data to the page for persistence.
  */
 const onSubmit = (event: FormSubmitEvent<unknown>): void => {
-  emit('submit', event.data as CreateHypothesisBodyDto)
+  emit('submit', event.data as UpsertHypothesisBodyDto)
 }
 </script>
 
@@ -150,16 +153,32 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
               :disabled="isSubmitting"
             />
           </UFormField>
+
+          <UFormField
+            name="evidenceType"
+            :label="t('ideaWorkspace.hypotheses.form.evidenceType.label')"
+            required
+          >
+            <USelectMenu
+              v-model="editableState.evidenceType"
+              value-key="value"
+              :items="evidenceTypeOptions"
+              :search-input="false"
+              class="w-full"
+              :placeholder="t('ideaWorkspace.hypotheses.form.evidenceType.placeholder')"
+              :disabled="isSubmitting"
+            />
+          </UFormField>
         </div>
 
         <UFormField
-          name="canvasSectionTypes"
+          name="canvasElementTypes"
           :label="t('ideaWorkspace.hypotheses.form.sections.label')"
           :description="t('ideaWorkspace.hypotheses.form.sections.description')"
           required
         >
           <USelectMenu
-            v-model="editableState.canvasSectionTypes"
+            v-model="editableState.canvasElementTypes"
             v-model:open="isSectionsMenuOpen"
             value-key="value"
             multiple

@@ -1,5 +1,4 @@
 export type {
-  CanvasRouteParamsDto,
   CanvasElementInputDto,
   ReplaceIdeaVersionCanvasBodyDto,
   CanvasElementResponseDto,

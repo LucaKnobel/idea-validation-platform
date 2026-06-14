@@ -14,11 +14,10 @@ const {
   createEmptyFormState,
   dimensionOptions,
   priorityOptions,
+  evidenceTypeOptions,
   sectionOptions
 } = useHypothesisFormConfig()
 const {
-  ideaId,
-  versionId,
   hypothesisId,
   hasIdeaVersionHypothesisRouteParams
 } = useIdeaVersionRouteParams()
@@ -80,7 +79,7 @@ const listRoute = computed(() => {
   return toHypothesesList()
 })
 const {
-  metrics,
+  metric,
   isMetricsLoading,
   isMetricDeletingId: metricDeletingId,
   hasMetricsError,
@@ -93,8 +92,8 @@ const {
   metricOperatorOptions,
   isAnyMetricActionLoading,
   isMetricDeleteSubmitting,
-  loadMetricsForRoute,
-  clearMetrics,
+  loadMetricForRoute,
+  clearMetric,
   openCreateMetricModal,
   openEditMetricModal,
   openMetricDeleteModal,
@@ -102,14 +101,12 @@ const {
   submitMetricForm: onMetricSubmit,
   confirmDeleteMetric
 } = useHypothesisMetricsDetail({
-  ideaId,
-  versionId,
   hypothesisId,
   hasValidRouteParams
 })
 const {
-  experiments,
-  measurementsByExperiment,
+  experiment,
+  measurement,
   isExperimentsLoading,
   isMeasurementsLoading,
   isExperimentDeletingId: experimentDeletingId,
@@ -128,13 +125,12 @@ const {
   experimentSubmitLabel,
   measurementSubmitLabel,
   experimentStatusOptions,
-  measurementMetricOptions,
   isAnyExperimentActionLoading,
   isAnyMeasurementActionLoading,
   isExperimentDeleteSubmitting,
   isMeasurementDeleteSubmitting,
-  loadExperimentsForRoute: loadExperimentsForRouteFromDetail,
-  clearExperiments,
+  loadExperimentForRoute: loadExperimentForRouteFromDetail,
+  clearExperiment,
   openCreateExperimentModal,
   openCreateMeasurementModal,
   openEditMeasurementModal,
@@ -145,23 +141,11 @@ const {
   submitMeasurementForm,
   confirmDeleteExperiment,
   confirmDeleteMeasurement,
-  resolveMetricName,
   formatMeasurementValue
 } = useHypothesisExperimentsDetail({
-  ideaId,
-  versionId,
   hypothesisId,
-  metrics,
   hasValidRouteParams
 })
-
-const reloadMetricsForRoute = async (): Promise<void> => {
-  await loadMetricsForRoute()
-}
-
-const reloadExperimentsForRoute = async (): Promise<void> => {
-  await loadExperimentsForRouteFromDetail()
-}
 
 const openHypothesisEditModal = (): void => {
   openEditModal(hypothesis.value)
@@ -174,23 +158,21 @@ const openHypothesisDeleteConfirmation = (): void => {
 const loadHypothesisForRoute = async (): Promise<void> => {
   if (!hasValidRouteParams.value) {
     clearHypothesis()
-    clearMetrics()
-    clearExperiments()
+    clearMetric()
+    clearExperiment()
     return
   }
 
   await Promise.all([
     loadHypothesis({
-      ideaId: ideaId.value,
-      versionId: versionId.value,
       hypothesisId: hypothesisId.value
     }),
-    loadMetricsForRoute(),
-    loadExperimentsForRouteFromDetail()
+    loadMetricForRoute(),
+    loadExperimentForRouteFromDetail()
   ])
 }
 
-const onUpdateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
+const onUpdateSubmit = async (data: UpsertHypothesisBodyDto): Promise<void> => {
   if (!hasValidRouteParams.value || formHypothesisId.value === null) {
     return
   }
@@ -198,8 +180,6 @@ const onUpdateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
   try {
     await runUpdateAction(async () => {
       const updated = await updateHypothesisRequest({
-        ideaId: ideaId.value,
-        versionId: versionId.value,
         hypothesisId: formHypothesisId.value || '',
         body: data
       })
@@ -224,8 +204,6 @@ const confirmDeleteHypothesis = async (): Promise<void> => {
 
     await runDeleteAction(async () => {
       await deleteHypothesisRequest({
-        ideaId: ideaId.value,
-        versionId: versionId.value,
         hypothesisId: deleteHypothesisId
       })
 
@@ -240,7 +218,7 @@ const confirmDeleteHypothesis = async (): Promise<void> => {
   }
 }
 
-watch([ideaId, versionId, hypothesisId], async () => {
+watch([hypothesisId], async () => {
   await loadHypothesisForRoute()
 }, {
   immediate: true
@@ -293,7 +271,7 @@ watch([ideaId, versionId, hypothesisId], async () => {
     />
 
     <IdeaWorkspaceHypothesisMetricsSection
-      :metrics="metrics"
+      :metric="metric"
       :is-loading="isMetricsLoading"
       :has-error="hasMetricsError"
       :has-valid-route-params="hasValidRouteParams"
@@ -301,15 +279,15 @@ watch([ideaId, versionId, hypothesisId], async () => {
       :is-metric-delete-submitting="isMetricDeleteSubmitting"
       :metric-deleting-id="metricDeletingId"
       :format-metric-threshold="formatMetricThreshold"
-      @retry="reloadMetricsForRoute"
+      @retry="loadMetricForRoute"
       @create="openCreateMetricModal"
       @edit="openEditMetricModal"
       @delete="openMetricDeleteModal"
     />
 
     <IdeaWorkspaceHypothesisExperimentsSection
-      :experiments="experiments"
-      :measurements-by-experiment="measurementsByExperiment"
+      :experiment="experiment"
+      :measurement="measurement"
       :is-loading="isExperimentsLoading"
       :is-measurement-loading="isMeasurementsLoading"
       :has-error="hasExperimentsError"
@@ -319,9 +297,8 @@ watch([ideaId, versionId, hypothesisId], async () => {
       :is-measurement-delete-submitting="isMeasurementDeleteSubmitting"
       :experiment-deleting-id="experimentDeletingId"
       :measurement-deleting-id="measurementDeletingId"
-      :resolve-metric-name="resolveMetricName"
       :format-measurement-value="formatMeasurementValue"
-      @retry="reloadExperimentsForRoute"
+      @retry="loadExperimentForRouteFromDetail"
       @create="openCreateExperimentModal"
       @create-measurement="openCreateMeasurementModal"
       @edit-measurement="openEditMeasurementModal"
@@ -339,6 +316,7 @@ watch([ideaId, versionId, hypothesisId], async () => {
       :is-submitting="isUpdateActionSubmitting"
       :dimension-options="dimensionOptions"
       :priority-options="priorityOptions"
+      :evidence-type-options="evidenceTypeOptions"
       :section-options="sectionOptions"
       @update:open="isUpdateModalOpen = $event"
       @submit="onUpdateSubmit"
@@ -399,7 +377,6 @@ watch([ideaId, versionId, hypothesisId], async () => {
       :title="measurementFormTitle"
       :submit-label="measurementSubmitLabel"
       :is-submitting="isAnyMeasurementActionLoading"
-      :metric-options="measurementMetricOptions"
       @update:open="isMeasurementModalOpen = $event"
       @submit="submitMeasurementForm"
     />
@@ -408,7 +385,6 @@ watch([ideaId, versionId, hypothesisId], async () => {
       :open="isMeasurementDeleteModalOpen"
       :delete-candidate="measurementDeleteCandidate"
       :is-submitting="isMeasurementDeleteSubmitting"
-      :resolve-metric-name="resolveMetricName"
       @update:open="isMeasurementDeleteModalOpen = $event"
       @confirm-delete="confirmDeleteMeasurement"
     />

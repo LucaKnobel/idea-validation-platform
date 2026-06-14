@@ -8,7 +8,7 @@ import { sendVerificationMail } from '@infrastructure/mail/send-verification-mai
 import { sendResetPasswordMail } from '@infrastructure/mail/send-reset-password-mail'
 import { resolveLocaleFromRequest } from '@infrastructure/http/locale-resolver'
 import { logger } from '@infrastructure/logging/logger'
-import { createSubscriptionService } from '@application/services/subscription-service'
+import { buildSubscriptionService } from '@application/services/build-subscription-service'
 import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
 
 //  Helpers
@@ -38,7 +38,7 @@ const neutralAuthEventPaths = new Set<string>([
   '/send-verification-email'
 ])
 
-const subscriptionService = createSubscriptionService(subscriptionRepository, logger)
+const subscriptionService = buildSubscriptionService(subscriptionRepository, logger)
 
 /**
  * Removes account-enumeration details from framework log messages before they reach the app logger.

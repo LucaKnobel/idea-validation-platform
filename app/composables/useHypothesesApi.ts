@@ -7,24 +7,18 @@ export interface UseHypothesesApiComposable {
     versionId: string
   }) => Promise<HypothesesListResponseDto>
   getHypothesis: (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
   }) => Promise<HypothesisResponseDto>
   createHypothesis: (input: {
     ideaId: string
     versionId: string
-    body: CreateHypothesisBodyDto
+    body: UpsertHypothesisBodyDto
   }) => Promise<HypothesisResponseDto>
   updateHypothesis: (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
-    body: UpdateHypothesisBodyDto
+    body: UpsertHypothesisBodyDto
   }) => Promise<HypothesisResponseDto>
   deleteHypothesis: (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
   }) => Promise<void>
 }
@@ -41,17 +35,15 @@ export const useHypothesesApi = (): UseHypothesesApiComposable => {
   }
 
   const getHypothesis = async (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
   }): Promise<HypothesisResponseDto> => {
-    return $fetch<HypothesisResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/hypotheses/${input.hypothesisId}`)
+    return $fetch<HypothesisResponseDto>(`/api/hypotheses/${input.hypothesisId}`)
   }
 
   const createHypothesis = async (input: {
     ideaId: string
     versionId: string
-    body: CreateHypothesisBodyDto
+    body: UpsertHypothesisBodyDto
   }): Promise<HypothesisResponseDto> => {
     return $fetch<HypothesisResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/hypotheses`, {
       method: 'POST',
@@ -60,23 +52,19 @@ export const useHypothesesApi = (): UseHypothesesApiComposable => {
   }
 
   const updateHypothesis = async (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
-    body: UpdateHypothesisBodyDto
+    body: UpsertHypothesisBodyDto
   }): Promise<HypothesisResponseDto> => {
-    return $fetch<HypothesisResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/hypotheses/${input.hypothesisId}`, {
+    return $fetch<HypothesisResponseDto>(`/api/hypotheses/${input.hypothesisId}`, {
       method: 'PUT',
       body: input.body
     })
   }
 
   const deleteHypothesis = async (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
   }): Promise<void> => {
-    await $fetch(`/api/ideas/${input.ideaId}/versions/${input.versionId}/hypotheses/${input.hypothesisId}`, {
+    await $fetch(`/api/hypotheses/${input.hypothesisId}`, {
       method: 'DELETE'
     })
   }

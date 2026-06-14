@@ -1,6 +1,4 @@
 export type {
-  CreateMeasurementBodyDto,
-  UpdateMeasurementBodyDto,
-  MeasurementResponseDto,
-  MeasurementsListResponseDto
+  UpsertMeasurementBodyDto,
+  MeasurementResponseDto
 } from '@infrastructure/validation/measurement-schemas'

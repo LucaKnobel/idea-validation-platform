@@ -1,49 +1,34 @@
-import type { CreateMetricBodyDto, MetricResponseDto, UpdateMetricBodyDto } from '#shared/types/metric'
-
 /**
- * Public contract for loading and mutating hypothesis metrics.
+ * Public contract for loading and mutating the hypothesis metric.
  */
+export interface LoadHypothesisMetricInput {
+  hypothesisId: string
+}
+
 export interface UseHypothesisMetricsComposable {
-  metrics: Ref<MetricResponseDto[]>
+  metric: Ref<MetricResponseDto | null>
   isLoading: Ref<boolean>
   isCreating: Ref<boolean>
   isDeletingId: Ref<string | null>
-  isUpdatingId: Ref<string | null>
   hasError: Ref<boolean>
-  loadMetrics: (input: {
-    ideaId: string
-    versionId: string
+  loadMetric: (input: LoadHypothesisMetricInput) => Promise<void>
+  upsertMetric: (input: {
     hypothesisId: string
-  }) => Promise<void>
-  createMetric: (input: {
-    ideaId: string
-    versionId: string
-    hypothesisId: string
-    body: CreateMetricBodyDto
-  }) => Promise<MetricResponseDto | null>
-  updateMetric: (input: {
-    ideaId: string
-    versionId: string
-    hypothesisId: string
-    metricId: string
-    body: UpdateMetricBodyDto
+    body: UpsertMetricBodyDto
   }) => Promise<MetricResponseDto | null>
   deleteMetric: (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
-    metricId: string
   }) => Promise<boolean>
+  clearMetric: () => void
 }
 
 /**
- * Handles metrics list state and CRUD orchestration for one hypothesis.
+ * Handles the singleton metric state and CRUD orchestration for one hypothesis.
  */
 export const useHypothesisMetrics = (): UseHypothesisMetricsComposable => {
   const {
-    listMetrics,
-    createMetric: createMetricRequest,
-    updateMetric: updateMetricRequest,
+    getMetric,
+    upsertMetric: upsertMetricRequest,
     deleteMetric: deleteMetricRequest
   } = useMetricsApi()
   const {
@@ -51,33 +36,29 @@ export const useHypothesisMetrics = (): UseHypothesisMetricsComposable => {
     runWithErrorHandling
   } = useRequestErrorState()
 
-  const metrics = ref<MetricResponseDto[]>([])
+  const metric = ref<MetricResponseDto | null>(null)
   const isLoading = ref(false)
   const isCreating = ref(false)
-  const isUpdatingId = ref<string | null>(null)
   const isDeletingId = ref<string | null>(null)
 
-  const sortByNewest = (items: MetricResponseDto[]): MetricResponseDto[] => {
-    return [...items].sort((left, right) => {
-      return Date.parse(right.createdAt) - Date.parse(left.createdAt)
-    })
-  }
-
-  const loadMetrics = async (input: {
-    ideaId: string
-    versionId: string
-    hypothesisId: string
-  }): Promise<void> => {
+  const loadMetric = async (input: LoadHypothesisMetricInput): Promise<void> => {
     isLoading.value = true
 
     try {
       await runWithErrorHandling(async () => {
-        const response = await listMetrics(input)
-        metrics.value = sortByNewest(response.items)
+        try {
+          metric.value = await getMetric(input)
+        } catch (error: unknown) {
+          if (extractStatusCode(error) === 404) {
+            metric.value = null
+          } else {
+            throw error
+          }
+        }
       }, {
         fallback: undefined,
         onError: () => {
-          metrics.value = []
+          metric.value = null
         }
       })
     } finally {
@@ -85,19 +66,17 @@ export const useHypothesisMetrics = (): UseHypothesisMetricsComposable => {
     }
   }
 
-  const createMetric = async (input: {
-    ideaId: string
-    versionId: string
+  const upsertMetric = async (input: {
     hypothesisId: string
-    body: CreateMetricBodyDto
+    body: UpsertMetricBodyDto
   }): Promise<MetricResponseDto | null> => {
     isCreating.value = true
 
     try {
       return await runWithErrorHandling(async () => {
-        const createdMetric = await createMetricRequest(input)
-        metrics.value = sortByNewest([createdMetric, ...metrics.value])
-        return createdMetric
+        const updatedMetric = await upsertMetricRequest(input)
+        metric.value = updatedMetric
+        return updatedMetric
       }, {
         fallback: null
       })
@@ -106,42 +85,15 @@ export const useHypothesisMetrics = (): UseHypothesisMetricsComposable => {
     }
   }
 
-  const updateMetric = async (input: {
-    ideaId: string
-    versionId: string
-    hypothesisId: string
-    metricId: string
-    body: UpdateMetricBodyDto
-  }): Promise<MetricResponseDto | null> => {
-    isUpdatingId.value = input.metricId
-
-    try {
-      return await runWithErrorHandling(async () => {
-        const updatedMetric = await updateMetricRequest(input)
-        metrics.value = sortByNewest(metrics.value.map((metric) => {
-          return metric.id === updatedMetric.id ? updatedMetric : metric
-        }))
-        return updatedMetric
-      }, {
-        fallback: null
-      })
-    } finally {
-      isUpdatingId.value = null
-    }
-  }
-
   const deleteMetric = async (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
-    metricId: string
   }): Promise<boolean> => {
-    isDeletingId.value = input.metricId
+    isDeletingId.value = metric.value?.id || null
 
     try {
       return await runWithErrorHandling(async () => {
         await deleteMetricRequest(input)
-        metrics.value = metrics.value.filter(metric => metric.id !== input.metricId)
+        metric.value = null
         return true
       }, {
         fallback: false
@@ -151,16 +103,19 @@ export const useHypothesisMetrics = (): UseHypothesisMetricsComposable => {
     }
   }
 
+  const clearMetric = (): void => {
+    metric.value = null
+  }
+
   return {
-    metrics,
+    metric,
     isLoading,
     isCreating,
     isDeletingId,
-    isUpdatingId,
     hasError,
-    loadMetrics,
-    createMetric,
-    updateMetric,
-    deleteMetric
+    loadMetric,
+    upsertMetric,
+    deleteMetric,
+    clearMetric
   }
 }

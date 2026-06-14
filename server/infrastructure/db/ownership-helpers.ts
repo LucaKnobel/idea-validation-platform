@@ -1,12 +1,20 @@
 import { prisma } from '@infrastructure/db/prisma'
 import type { Prisma } from '@generated/prisma/client'
 import type {
-  ExperimentOwnerInput,
-  IdeaVersionOwnerInput,
-  HypothesisOwnerInput,
-  MeasurementOwnerInput,
-  MetricOwnerInput
+  IdeaOwnerInput,
+  HypothesisIdOwnerInput,
+  IdeaVersionOwnerInput
 } from '@application/interfaces/ownership-inputs'
+
+/**
+ * Builds a Prisma where filter that constrains one idea to its owning user.
+ */
+export const buildOwnedIdeaWhere = (input: IdeaOwnerInput): Prisma.IdeaWhereInput => {
+  return {
+    id: input.ideaId,
+    userId: input.userId
+  }
+}
 
 /**
  * Builds a Prisma where filter that constrains an idea version to its owning user.
@@ -24,12 +32,10 @@ export const buildOwnedIdeaVersionWhere = (input: IdeaVersionOwnerInput): Prisma
 /**
  * Builds a Prisma where filter that constrains one hypothesis to its owning user.
  */
-export const buildOwnedHypothesisWhere = (input: HypothesisOwnerInput): Prisma.HypothesisWhereInput => {
+export const buildOwnedHypothesisWhere = (input: HypothesisIdOwnerInput): Prisma.HypothesisWhereInput => {
   return {
     id: input.hypothesisId,
-    ideaVersionId: input.ideaVersionId,
     ideaVersion: {
-      ideaId: input.ideaId,
       idea: {
         userId: input.userId
       }
@@ -53,15 +59,13 @@ export const buildOwnedHypothesesByIdeaVersionWhere = (input: IdeaVersionOwnerIn
 }
 
 /**
- * Builds a Prisma where filter that constrains metrics to one owned hypothesis.
+ * Builds a Prisma where filter that constrains the metric singleton of one owned hypothesis.
  */
-export const buildOwnedMetricsByHypothesisWhere = (input: HypothesisOwnerInput): Prisma.MetricWhereInput => {
+export const buildOwnedMetricWhere = (input: HypothesisIdOwnerInput): Prisma.MetricWhereInput => {
   return {
     hypothesisId: input.hypothesisId,
     hypothesis: {
-      ideaVersionId: input.ideaVersionId,
       ideaVersion: {
-        ideaId: input.ideaId,
         idea: {
           userId: input.userId
         }
@@ -71,16 +75,13 @@ export const buildOwnedMetricsByHypothesisWhere = (input: HypothesisOwnerInput):
 }
 
 /**
- * Builds a Prisma where filter that constrains one metric to its owning user.
+ * Builds a Prisma where filter that constrains the experiment singleton of one owned hypothesis.
  */
-export const buildOwnedMetricWhere = (input: MetricOwnerInput): Prisma.MetricWhereInput => {
+export const buildOwnedExperimentWhere = (input: HypothesisIdOwnerInput): Prisma.ExperimentWhereInput => {
   return {
-    id: input.metricId,
     hypothesisId: input.hypothesisId,
     hypothesis: {
-      ideaVersionId: input.ideaVersionId,
       ideaVersion: {
-        ideaId: input.ideaId,
         idea: {
           userId: input.userId
         }
@@ -90,79 +91,15 @@ export const buildOwnedMetricWhere = (input: MetricOwnerInput): Prisma.MetricWhe
 }
 
 /**
- * Builds a Prisma where filter that constrains experiments to one owned hypothesis.
+ * Builds a Prisma where filter that constrains the measurement singleton of one owned hypothesis.
  */
-export const buildOwnedExperimentsByHypothesisWhere = (input: HypothesisOwnerInput): Prisma.ExperimentWhereInput => {
+export const buildOwnedMeasurementWhere = (input: HypothesisIdOwnerInput): Prisma.MeasurementWhereInput => {
   return {
     hypothesisId: input.hypothesisId,
     hypothesis: {
-      ideaVersionId: input.ideaVersionId,
       ideaVersion: {
-        ideaId: input.ideaId,
         idea: {
           userId: input.userId
-        }
-      }
-    }
-  }
-}
-
-/**
- * Builds a Prisma where filter that constrains one experiment to its owning user.
- */
-export const buildOwnedExperimentWhere = (input: ExperimentOwnerInput): Prisma.ExperimentWhereInput => {
-  return {
-    id: input.experimentId,
-    hypothesisId: input.hypothesisId,
-    hypothesis: {
-      ideaVersionId: input.ideaVersionId,
-      ideaVersion: {
-        ideaId: input.ideaId,
-        idea: {
-          userId: input.userId
-        }
-      }
-    }
-  }
-}
-
-/**
- * Builds a Prisma where filter that constrains measurements to one owned experiment.
- */
-export const buildOwnedMeasurementsByExperimentWhere = (input: ExperimentOwnerInput): Prisma.MeasurementWhereInput => {
-  return {
-    experimentId: input.experimentId,
-    experiment: {
-      hypothesisId: input.hypothesisId,
-      hypothesis: {
-        ideaVersionId: input.ideaVersionId,
-        ideaVersion: {
-          ideaId: input.ideaId,
-          idea: {
-            userId: input.userId
-          }
-        }
-      }
-    }
-  }
-}
-
-/**
- * Builds a Prisma where filter that constrains one measurement to its owning user.
- */
-export const buildOwnedMeasurementWhere = (input: MeasurementOwnerInput): Prisma.MeasurementWhereInput => {
-  return {
-    id: input.measurementId,
-    experimentId: input.experimentId,
-    experiment: {
-      hypothesisId: input.hypothesisId,
-      hypothesis: {
-        ideaVersionId: input.ideaVersionId,
-        ideaVersion: {
-          ideaId: input.ideaId,
-          idea: {
-            userId: input.userId
-          }
         }
       }
     }

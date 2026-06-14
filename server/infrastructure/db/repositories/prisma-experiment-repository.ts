@@ -1,13 +1,11 @@
-import type { ExperimentRepository, ExperimentMutationInput, ExperimentWriteInput } from '@application/interfaces/experiment-repository'
-import type { HypothesisOwnerInput, ExperimentOwnerInput } from '@application/interfaces/ownership-inputs'
+import type { ExperimentRepository, ExperimentUpsertInput } from '@application/interfaces/experiment-repository'
+import type { HypothesisIdOwnerInput } from '@application/interfaces/ownership-inputs'
 import type { Experiment } from '@application/models/experiment'
 import type { Prisma } from '@generated/prisma/client'
 import { prisma } from '@infrastructure/db/prisma'
 import {
   buildOwnedExperimentWhere,
-  buildOwnedExperimentsByHypothesisWhere,
-  buildOwnedHypothesisWhere,
-  isIdeaVersionOwnedByUser
+  buildOwnedHypothesisWhere
 } from '@infrastructure/db/ownership-helpers'
 
 type PrismaExperiment = Prisma.ExperimentGetPayload<Record<string, never>>
@@ -29,84 +27,45 @@ const toDomainExperiment = (row: PrismaExperiment): Experiment => {
  */
 export const experimentRepository: ExperimentRepository = {
   /**
-   * Lists all experiments for a hypothesis owned by the current user.
+   * Returns the experiment singleton of one owned hypothesis.
    */
-  async listByHypothesisForUser(input: HypothesisOwnerInput): Promise<Experiment[] | null> {
-    const hasIdeaVersionAccess = await isIdeaVersionOwnedByUser({
-      userId: input.userId,
-      ideaId: input.ideaId,
-      ideaVersionId: input.ideaVersionId
+  async getByHypothesis(input: HypothesisIdOwnerInput): Promise<Experiment | null> {
+    const row = await prisma.experiment.findFirst({
+      where: buildOwnedExperimentWhere(input)
     })
 
-    if (!hasIdeaVersionAccess) {
+    if (row === null) {
       return null
     }
-
-    const hasHypothesisAccess = await prisma.hypothesis.findFirst({
-      where: buildOwnedHypothesisWhere(input),
-      select: { id: true }
-    })
-
-    if (hasHypothesisAccess === null) {
-      return null
-    }
-
-    const rows = await prisma.experiment.findMany({
-      where: buildOwnedExperimentsByHypothesisWhere(input),
-      orderBy: [
-        { createdAt: 'asc' }
-      ]
-    })
-
-    return rows.map(toDomainExperiment)
-  },
-
-  /**
-   * Creates one experiment for a hypothesis owned by the current user.
-   */
-  async createForHypothesis(input: ExperimentWriteInput): Promise<Experiment | null> {
-    const hypothesis = await prisma.hypothesis.findFirst({
-      where: buildOwnedHypothesisWhere(input),
-      select: { id: true }
-    })
-
-    if (hypothesis === null) {
-      return null
-    }
-
-    const row = await prisma.experiment.create({
-      data: {
-        hypothesisId: input.hypothesisId,
-        title: input.title,
-        description: input.description,
-        status: input.status
-      }
-    })
 
     return toDomainExperiment(row)
   },
 
   /**
-   * Updates one experiment owned by the current user.
+   * Creates or updates the experiment singleton for one owned hypothesis.
    */
-  async updateByIdForUser(input: ExperimentMutationInput): Promise<Experiment | null> {
-    const where = buildOwnedExperimentWhere(input)
-
+  async upsertByHypothesis(input: ExperimentUpsertInput): Promise<Experiment | null> {
     return prisma.$transaction(async (tx) => {
-      const existingExperiment = await tx.experiment.findFirst({
-        where,
+      const ownedHypothesis = await tx.hypothesis.findFirst({
+        where: buildOwnedHypothesisWhere(input),
         select: { id: true }
       })
 
-      if (existingExperiment === null) {
+      if (ownedHypothesis === null) {
         return null
       }
 
-      const row = await tx.experiment.update({
+      const row = await tx.experiment.upsert({
         where: {
-          id: existingExperiment.id
+          hypothesisId: input.hypothesisId
         },
-        data: {
+        update: {
+          title: input.title,
+          description: input.description,
+          status: input.status
+        },
+        create: {
+          hypothesisId: input.hypothesisId,
           title: input.title,
           description: input.description,
           status: input.status
@@ -118,9 +77,9 @@ export const experimentRepository: ExperimentRepository = {
   },
 
   /**
-   * Deletes one experiment owned by the current user.
+   * Deletes the experiment singleton of one owned hypothesis.
    */
-  async deleteByIdForUser(input: ExperimentOwnerInput): Promise<boolean> {
+  async deleteByHypothesis(input: HypothesisIdOwnerInput): Promise<boolean> {
     const result = await prisma.experiment.deleteMany({
       where: buildOwnedExperimentWhere(input)
     })

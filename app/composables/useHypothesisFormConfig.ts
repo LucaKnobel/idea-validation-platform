@@ -10,9 +10,10 @@ export interface HypothesisFormSelectOption<T> {
  * Public API for reusable hypothesis form defaults and select options.
  */
 export interface UseHypothesisFormConfigComposable {
-  createEmptyFormState: () => CreateHypothesisBodyDto
+  createEmptyFormState: () => UpsertHypothesisBodyDto
   dimensionOptions: ComputedRef<Array<HypothesisFormSelectOption<HypothesisDimension>>>
   priorityOptions: ComputedRef<Array<HypothesisFormSelectOption<HypothesisPriority>>>
+  evidenceTypeOptions: ComputedRef<Array<HypothesisFormSelectOption<UpsertHypothesisBodyDto['evidenceType']>>>
   sectionOptions: ComputedRef<Array<HypothesisFormSelectOption<HypothesisCanvasSection>>>
 }
 
@@ -22,12 +23,13 @@ export interface UseHypothesisFormConfigComposable {
 export const useHypothesisFormConfig = (): UseHypothesisFormConfigComposable => {
   const { t } = useI18n()
 
-  const createEmptyFormState = (): CreateHypothesisBodyDto => {
+  const createEmptyFormState = (): UpsertHypothesisBodyDto => {
     return {
       statement: '',
       dimension: 'PROBLEM',
       priority: 'MEDIUM',
-      canvasSectionTypes: []
+      evidenceType: 'QUALITATIVE',
+      canvasElementTypes: []
     }
   }
 
@@ -49,6 +51,15 @@ export const useHypothesisFormConfig = (): UseHypothesisFormConfigComposable => 
     ]
   })
 
+  const evidenceTypeOptions = computed<Array<HypothesisFormSelectOption<UpsertHypothesisBodyDto['evidenceType']>>>(() => {
+    return [
+      { label: t('ideaWorkspace.hypotheses.evidenceTypes.QUALITATIVE'), value: 'QUALITATIVE' },
+      { label: t('ideaWorkspace.hypotheses.evidenceTypes.QUANTITATIVE'), value: 'QUANTITATIVE' },
+      { label: t('ideaWorkspace.hypotheses.evidenceTypes.BEHAVIORAL'), value: 'BEHAVIORAL' },
+      { label: t('ideaWorkspace.hypotheses.evidenceTypes.MONETARY'), value: 'MONETARY' }
+    ]
+  })
+
   const sectionOptions = computed<Array<HypothesisFormSelectOption<HypothesisCanvasSection>>>(() => {
     return [
       { label: t('ideaWorkspace.canvasPage.sections.KEY_PARTNERS'), value: 'KEY_PARTNERS' },
@@ -67,6 +78,7 @@ export const useHypothesisFormConfig = (): UseHypothesisFormConfigComposable => 
     createEmptyFormState,
     dimensionOptions,
     priorityOptions,
+    evidenceTypeOptions,
     sectionOptions
   }
 }

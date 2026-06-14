@@ -1,8 +1,12 @@
 import { prisma } from '@infrastructure/db/prisma'
-import type { HypothesisFieldsInput, HypothesisRepository } from '@application/interfaces/hypothesis-repository'
+import type {
+  HypothesisCreateFieldsInput,
+  HypothesisRepository,
+  HypothesisUpdateFieldsInput
+} from '@application/interfaces/hypothesis-repository'
 import type { Hypothesis } from '@application/models/hypothesis'
 import type { Prisma } from '@generated/prisma/client'
-import type { HypothesisOwnerInput } from '@application/interfaces/ownership-inputs'
+import type { HypothesisIdOwnerInput, IdeaVersionOwnerInput } from '@application/interfaces/ownership-inputs'
 import {
   buildOwnedHypothesisWhere,
   buildOwnedHypothesesByIdeaVersionWhere,
@@ -26,6 +30,8 @@ const toDomainHypothesis = (row: PrismaHypothesisWithSections): Hypothesis => {
     statement: row.statement,
     dimension: row.dimension,
     priority: row.priority,
+    evidenceType: row.evidenceType,
+    status: row.status,
     canvasSectionLinks: row.canvasSectionLinks.map(section => ({
       id: section.id,
       hypothesisId: section.hypothesisId,
@@ -43,9 +49,9 @@ const toDomainHypothesis = (row: PrismaHypothesisWithSections): Hypothesis => {
  */
 export const hypothesisRepository: HypothesisRepository = {
   /**
-   * Lists all hypotheses for a user-owned idea version.
+   * Lists all hypotheses for one user-owned idea version.
    */
-  async listByIdeaVersionForUser(input: HypothesisOwnerInput): Promise<Hypothesis[] | null> {
+  async listByIdeaVersion(input: IdeaVersionOwnerInput): Promise<Hypothesis[] | null> {
     const hasAccess = await isIdeaVersionOwnedByUser(input)
 
     if (!hasAccess) {
@@ -70,9 +76,9 @@ export const hypothesisRepository: HypothesisRepository = {
   },
 
   /**
-   * Returns one hypothesis for a user-owned idea version.
+   * Returns one owned hypothesis by hypothesis id.
    */
-  async getByIdForUser(input: HypothesisOwnerInput): Promise<Hypothesis | null> {
+  async getById(input: HypothesisIdOwnerInput): Promise<Hypothesis | null> {
     const row = await prisma.hypothesis.findFirst({
       where: buildOwnedHypothesisWhere(input),
       include: {
@@ -94,7 +100,7 @@ export const hypothesisRepository: HypothesisRepository = {
   /**
    * Creates one hypothesis for a user-owned idea version.
    */
-  async createForIdeaVersion(input: HypothesisOwnerInput & HypothesisFieldsInput): Promise<Hypothesis | null> {
+  async create(input: IdeaVersionOwnerInput & HypothesisCreateFieldsInput): Promise<Hypothesis | null> {
     const hasAccess = await isIdeaVersionOwnedByUser(input)
 
     if (!hasAccess) {
@@ -107,8 +113,9 @@ export const hypothesisRepository: HypothesisRepository = {
         statement: input.statement,
         dimension: input.dimension,
         priority: input.priority,
+        evidenceType: input.evidenceType,
         canvasSectionLinks: {
-          create: input.canvasSectionTypes.map(canvasElementType => ({
+          create: input.canvasElementTypes.map(canvasElementType => ({
             canvasElementType
           }))
         }
@@ -128,7 +135,7 @@ export const hypothesisRepository: HypothesisRepository = {
   /**
    * Updates one hypothesis and replaces its section links.
    */
-  async updateByIdForUser(input: HypothesisOwnerInput & HypothesisFieldsInput): Promise<Hypothesis | null> {
+  async update(input: HypothesisIdOwnerInput & HypothesisUpdateFieldsInput): Promise<Hypothesis | null> {
     const where = buildOwnedHypothesisWhere(input)
 
     const updated = await prisma.$transaction(async (tx) => {
@@ -137,7 +144,8 @@ export const hypothesisRepository: HypothesisRepository = {
         data: {
           statement: input.statement,
           dimension: input.dimension,
-          priority: input.priority
+          priority: input.priority,
+          evidenceType: input.evidenceType
         }
       })
 
@@ -151,9 +159,9 @@ export const hypothesisRepository: HypothesisRepository = {
         }
       })
 
-      if (input.canvasSectionTypes.length > 0) {
+      if (input.canvasElementTypes.length > 0) {
         await tx.hypothesisCanvasSection.createMany({
-          data: input.canvasSectionTypes.map(canvasElementType => ({
+          data: input.canvasElementTypes.map(canvasElementType => ({
             hypothesisId: input.hypothesisId,
             canvasElementType
           }))
@@ -182,9 +190,7 @@ export const hypothesisRepository: HypothesisRepository = {
   /**
    * Deletes one hypothesis for a user and returns whether a row was removed.
    */
-  async deleteByIdForUser(
-    input: HypothesisOwnerInput
-  ): Promise<boolean> {
+  async delete(input: HypothesisIdOwnerInput): Promise<boolean> {
     const result = await prisma.hypothesis.deleteMany({
       where: buildOwnedHypothesisWhere(input)
     })

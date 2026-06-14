@@ -8,145 +8,127 @@ import { measurementRepository } from '@infrastructure/db/repositories/prisma-me
 import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
 import { logger } from '@infrastructure/logging/logger'
 
-import { createSubscriptionService } from '@application/services/subscription-service'
-import { createCreateIdea } from '@application/services/create-idea'
-import { createGetIdeas } from '@application/services/get-ideas'
-import { createDeleteIdea } from '@application/services/delete-idea'
-import { createGetIdeaVersionCanvas } from '@application/services/get-idea-version-canvas'
-import { createUpdateIdeaVersionCanvas } from '@application/services/update-idea-version-canvas'
-import { createCreateHypothesis } from '@application/services/create-hypothesis'
-import { createGetIdeaVersionHypotheses } from '@application/services/get-idea-version-hypotheses'
-import { createGetHypothesis } from '@application/services/get-hypothesis'
-import { createUpdateHypothesis } from '@application/services/update-hypothesis'
-import { createDeleteHypothesis } from '@application/services/delete-hypothesis'
-import { createGetHypothesisMetrics } from '@application/services/get-hypothesis-metrics'
-import { createCreateMetric } from '@application/services/create-metric'
-import { createUpdateMetric } from '@application/services/update-metric'
-import { createDeleteMetric } from '@application/services/delete-metric'
-import { createGetHypothesisExperiments } from '@application/services/get-hypothesis-experiments'
-import { createCreateExperiment } from '@application/services/create-experiment'
-import { createUpdateExperiment } from '@application/services/update-experiment'
-import { createDeleteExperiment } from '@application/services/delete-experiment'
-import { createGetExperimentMeasurements } from '@application/services/get-experiment-measurements'
-import { createCreateMeasurement } from '@application/services/create-measurement'
-import { createUpdateMeasurement } from '@application/services/update-measurement'
-import { createDeleteMeasurement } from '@application/services/delete-measurement'
+import { buildSubscriptionService } from '@application/services/build-subscription-service'
+import { buildCreateIdea } from '@application/services/build-create-idea'
+import { buildGetIdeas } from '@application/services/build-get-ideas'
+import { buildDeleteIdea } from '@application/services/build-delete-idea'
+import { buildGetIdeaVersionCanvas } from '@application/services/build-get-idea-version-canvas'
+import { buildReplaceIdeaVersionCanvas } from '@application/services/build-replace-idea-version-canvas'
+import { buildCreateHypothesis } from '@application/services/build-create-hypothesis'
+import { buildGetIdeaVersionHypotheses } from '@application/services/build-get-idea-version-hypotheses'
+import { buildGetHypothesis } from '@application/services/build-get-hypothesis'
+import { buildUpdateHypothesis } from '@application/services/build-update-hypothesis'
+import { buildDeleteHypothesis } from '@application/services/build-delete-hypothesis'
+import { buildGetHypothesisMetric } from '@application/services/build-get-hypothesis-metric'
+import { buildUpsertMetric } from '@application/services/build-upsert-metric'
+import { buildDeleteMetric } from '@application/services/build-delete-metric'
+import { buildGetHypothesisExperiment } from '@application/services/build-get-hypothesis-experiment'
+import { buildUpsertExperiment } from '@application/services/build-upsert-experiment'
+import { buildDeleteExperiment } from '@application/services/build-delete-experiment'
+import { buildGetHypothesisMeasurement } from '@application/services/build-get-hypothesis-measurement'
+import { buildUpsertMeasurement } from '@application/services/build-upsert-measurement'
+import { buildDeleteMeasurement } from '@application/services/build-delete-measurement'
 
 /**
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
  */
-const subscriptionService = createSubscriptionService(
+const subscriptionService = buildSubscriptionService(
   subscriptionRepository,
   logger
 )
 
-const createIdea = createCreateIdea(
+const createIdea = buildCreateIdea(
   ideaRepository,
   subscriptionService,
   logger
 )
 
-const getIdeas = createGetIdeas(
+const getIdeas = buildGetIdeas(
   ideaVersionRepository,
   logger
 )
 
-const deleteIdea = createDeleteIdea(
+const deleteIdea = buildDeleteIdea(
   ideaRepository,
   logger
 )
 
-const getIdeaVersionCanvas = createGetIdeaVersionCanvas(
+const getIdeaVersionCanvas = buildGetIdeaVersionCanvas(
   canvasRepository,
   logger
 )
 
-const updateIdeaVersionCanvas = createUpdateIdeaVersionCanvas(
+const replaceIdeaVersionCanvas = buildReplaceIdeaVersionCanvas(
   canvasRepository,
   logger
 )
 
-const createHypothesis = createCreateHypothesis(
+const createHypothesis = buildCreateHypothesis(
   hypothesisRepository,
   logger
 )
 
-const getIdeaVersionHypotheses = createGetIdeaVersionHypotheses(
+const getIdeaVersionHypotheses = buildGetIdeaVersionHypotheses(
   hypothesisRepository,
   logger
 )
 
-const getHypothesis = createGetHypothesis(
+const getHypothesis = buildGetHypothesis(
   hypothesisRepository,
   logger
 )
 
-const updateHypothesis = createUpdateHypothesis(
+const updateHypothesis = buildUpdateHypothesis(
   hypothesisRepository,
   logger
 )
 
-const deleteHypothesis = createDeleteHypothesis(
+const deleteHypothesis = buildDeleteHypothesis(
   hypothesisRepository,
   logger
 )
 
-const getHypothesisMetrics = createGetHypothesisMetrics(
+const getHypothesisMetric = buildGetHypothesisMetric(
   metricRepository,
   logger
 )
 
-const createMetric = createCreateMetric(
+const upsertMetric = buildUpsertMetric(
   metricRepository,
   logger
 )
 
-const updateMetric = createUpdateMetric(
+const deleteMetric = buildDeleteMetric(
   metricRepository,
   logger
 )
 
-const deleteMetric = createDeleteMetric(
-  metricRepository,
-  logger
-)
-
-const getHypothesisExperiments = createGetHypothesisExperiments(
+const getHypothesisExperiment = buildGetHypothesisExperiment(
   experimentRepository,
   logger
 )
 
-const createExperiment = createCreateExperiment(
+const upsertExperiment = buildUpsertExperiment(
   experimentRepository,
   logger
 )
 
-const updateExperiment = createUpdateExperiment(
+const deleteExperiment = buildDeleteExperiment(
   experimentRepository,
   logger
 )
 
-const deleteExperiment = createDeleteExperiment(
-  experimentRepository,
-  logger
-)
-
-const getExperimentMeasurements = createGetExperimentMeasurements(
+const getHypothesisMeasurement = buildGetHypothesisMeasurement(
   measurementRepository,
   logger
 )
 
-const createMeasurement = createCreateMeasurement(
+const upsertMeasurement = buildUpsertMeasurement(
   measurementRepository,
   logger
 )
 
-const updateMeasurement = createUpdateMeasurement(
-  measurementRepository,
-  logger
-)
-
-const deleteMeasurement = createDeleteMeasurement(
+const deleteMeasurement = buildDeleteMeasurement(
   measurementRepository,
   logger
 )
@@ -157,22 +139,19 @@ export {
   getIdeas,
   deleteIdea,
   getIdeaVersionCanvas,
-  updateIdeaVersionCanvas,
+  replaceIdeaVersionCanvas,
   createHypothesis,
   getIdeaVersionHypotheses,
   getHypothesis,
   updateHypothesis,
   deleteHypothesis,
-  getHypothesisMetrics,
-  createMetric,
-  updateMetric,
+  getHypothesisMetric,
+  upsertMetric,
   deleteMetric,
-  getHypothesisExperiments,
-  createExperiment,
-  updateExperiment,
+  getHypothesisExperiment,
+  upsertExperiment,
   deleteExperiment,
-  getExperimentMeasurements,
-  createMeasurement,
-  updateMeasurement,
+  getHypothesisMeasurement,
+  upsertMeasurement,
   deleteMeasurement
 }

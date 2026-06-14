@@ -1,5 +1,3 @@
-import type { CreateIdeaBodyDto, IdeaResponseDto, IdeasListResponseDto } from '../../shared/types/idea'
-
 /**
  * Public contract implemented by useIdeasApi.
  */

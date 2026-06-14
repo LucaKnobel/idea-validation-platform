@@ -6,7 +6,6 @@ interface MeasurementDeleteModalProps {
   open: boolean
   deleteCandidate: MeasurementResponseDto | null
   isSubmitting: boolean
-  resolveMetricName: (metricId: string) => string
 }
 
 const props = defineProps<MeasurementDeleteModalProps>()
@@ -49,7 +48,7 @@ const closeDeleteModal = (): void => {
           class="rounded-lg border border-default p-3"
         >
           <p class="text-sm font-medium text-highlighted">
-            {{ resolveMetricName(deleteCandidate.metricId) }}
+            {{ deleteCandidate.value }}
           </p>
         </div>
       </div>

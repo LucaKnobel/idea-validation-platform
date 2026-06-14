@@ -2,14 +2,14 @@
  * Input required to initialize the update modal state.
  */
 export interface UseHypothesisUpdateModalInput {
-  createEmptyFormState: () => CreateHypothesisBodyDto
+  createEmptyFormState: () => UpsertHypothesisBodyDto
 }
 
 /**
  * Public API for the update modal state.
  */
 export interface UseHypothesisUpdateModalComposable {
-  formState: CreateHypothesisBodyDto
+  formState: UpsertHypothesisBodyDto
   formHypothesisId: Ref<string | null>
   isUpdateModalOpen: Ref<boolean>
   resetForm: () => void
@@ -23,7 +23,7 @@ export interface UseHypothesisUpdateModalComposable {
 export const useHypothesisUpdateModal = (
   input: UseHypothesisUpdateModalInput
 ): UseHypothesisUpdateModalComposable => {
-  const formState = reactive<CreateHypothesisBodyDto>(input.createEmptyFormState())
+  const formState = reactive<UpsertHypothesisBodyDto>(input.createEmptyFormState())
   const formHypothesisId = ref<string | null>(null)
   const { isOpen: isUpdateModalOpen, open: openModal, close: closeModal } = useModalState()
 
@@ -35,7 +35,8 @@ export const useHypothesisUpdateModal = (
     formState.statement = nextState.statement
     formState.dimension = nextState.dimension
     formState.priority = nextState.priority
-    formState.canvasSectionTypes = [...nextState.canvasSectionTypes]
+    formState.evidenceType = nextState.evidenceType
+    formState.canvasElementTypes = [...nextState.canvasElementTypes]
   }
 
   /**
@@ -46,7 +47,8 @@ export const useHypothesisUpdateModal = (
     formState.statement = hypothesis.statement
     formState.dimension = hypothesis.dimension
     formState.priority = hypothesis.priority
-    formState.canvasSectionTypes = hypothesis.canvasSectionLinks.map(link => link.canvasElementType)
+    formState.evidenceType = hypothesis.evidenceType
+    formState.canvasElementTypes = hypothesis.canvasSections
     openModal()
   }
 

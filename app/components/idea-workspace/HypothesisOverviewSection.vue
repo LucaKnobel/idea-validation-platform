@@ -64,6 +64,20 @@ const props = defineProps<HypothesisOverviewSectionProps>()
             />
           </dd>
         </div>
+
+        <div class="grid gap-1">
+          <dt class="font-medium text-muted">
+            {{ $t('ideaWorkspace.hypotheses.detail.overview.fields.evidenceType') }}
+          </dt>
+          <dd>
+            <UBadge
+              :label="props.hypothesis ? $t(`ideaWorkspace.hypotheses.evidenceTypes.${props.hypothesis.evidenceType}`) : '-'"
+              color="neutral"
+              variant="subtle"
+              size="sm"
+            />
+          </dd>
+        </div>
       </div>
 
       <div class="grid gap-1.5">
@@ -73,16 +87,16 @@ const props = defineProps<HypothesisOverviewSectionProps>()
 
         <dd class="flex flex-wrap gap-1.5">
           <UBadge
-            v-for="section in props.hypothesis?.canvasSectionLinks || []"
-            :key="section.id"
-            :label="$t(`ideaWorkspace.canvasPage.sections.${section.canvasElementType}`)"
+            v-for="section in props.hypothesis?.canvasSections || []"
+            :key="section"
+            :label="$t(`ideaWorkspace.canvasPage.sections.${section}`)"
             color="neutral"
             variant="subtle"
             size="sm"
           />
 
           <p
-            v-if="(props.hypothesis?.canvasSectionLinks.length || 0) === 0"
+            v-if="(props.hypothesis?.canvasSections.length || 0) === 0"
             class="text-sm text-muted"
           >
             {{ $t('ideaWorkspace.hypotheses.detail.overview.canvasEmpty') }}

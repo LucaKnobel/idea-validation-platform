@@ -1,34 +1,22 @@
 import type {
-  MeasurementMutationInput,
-  MeasurementMutationResult,
   MeasurementRepository,
-  MeasurementWriteInput
+  MeasurementUpsertInput
 } from '@application/interfaces/measurement-repository'
-import type { ExperimentOwnerInput, MeasurementOwnerInput } from '@application/interfaces/ownership-inputs'
+import type { HypothesisIdOwnerInput } from '@application/interfaces/ownership-inputs'
 import type { Measurement } from '@application/models/measurement'
 import type { Prisma } from '@generated/prisma/client'
 import { prisma } from '@infrastructure/db/prisma'
 import {
-  buildOwnedExperimentWhere,
-  buildOwnedMeasurementWhere,
-  buildOwnedMeasurementsByExperimentWhere
+  buildOwnedHypothesisWhere,
+  buildOwnedMeasurementWhere
 } from '@infrastructure/db/ownership-helpers'
 
 type PrismaMeasurement = Prisma.MeasurementGetPayload<Record<string, never>>
 
-const isPrismaUniqueConstraintViolation = (error: unknown): boolean => {
-  if (!error || typeof error !== 'object') {
-    return false
-  }
-
-  return (error as { code?: string }).code === 'P2002'
-}
-
 const toDomainMeasurement = (row: PrismaMeasurement): Measurement => {
   return {
     id: row.id,
-    experimentId: row.experimentId,
-    metricId: row.metricId,
+    hypothesisId: row.hypothesisId,
     value: Number(row.value),
     note: row.note,
     createdAt: row.createdAt,
@@ -41,148 +29,57 @@ const toDomainMeasurement = (row: PrismaMeasurement): Measurement => {
  */
 export const measurementRepository: MeasurementRepository = {
   /**
-   * Lists all measurements for an experiment owned by the current user.
+   * Returns the measurement singleton of one owned hypothesis.
    */
-  async listByExperimentForUser(input: ExperimentOwnerInput): Promise<Measurement[] | null> {
-    const hasExperimentAccess = await prisma.experiment.findFirst({
-      where: buildOwnedExperimentWhere(input),
-      select: { id: true }
+  async getByHypothesis(input: HypothesisIdOwnerInput): Promise<Measurement | null> {
+    const row = await prisma.measurement.findFirst({
+      where: buildOwnedMeasurementWhere(input)
     })
 
-    if (hasExperimentAccess === null) {
+    if (row === null) {
       return null
     }
 
-    const rows = await prisma.measurement.findMany({
-      where: buildOwnedMeasurementsByExperimentWhere(input),
-      orderBy: [
-        { createdAt: 'asc' }
-      ]
-    })
-
-    return rows.map(toDomainMeasurement)
+    return toDomainMeasurement(row)
   },
 
   /**
-   * Creates one measurement in an experiment owned by the current user.
+   * Creates or updates the measurement singleton for one owned hypothesis.
    */
-  async createForExperiment(input: MeasurementWriteInput): Promise<MeasurementMutationResult> {
-    const experiment = await prisma.experiment.findFirst({
-      where: buildOwnedExperimentWhere(input),
-      select: {
-        id: true,
-        hypothesisId: true
+  async upsertByHypothesis(input: MeasurementUpsertInput): Promise<Measurement | null> {
+    return prisma.$transaction(async (tx) => {
+      const ownedHypothesis = await tx.hypothesis.findFirst({
+        where: buildOwnedHypothesisWhere(input),
+        select: { id: true }
+      })
+
+      if (ownedHypothesis === null) {
+        return null
       }
-    })
 
-    if (experiment === null) {
-      return { kind: 'notFound' }
-    }
-
-    const metric = await prisma.metric.findFirst({
-      where: {
-        id: input.metricId,
-        hypothesisId: experiment.hypothesisId
-      },
-      select: { id: true }
-    })
-
-    if (metric === null) {
-      return { kind: 'notFound' }
-    }
-
-    let row: PrismaMeasurement
-
-    try {
-      row = await prisma.measurement.create({
-        data: {
-          experimentId: input.experimentId,
-          metricId: input.metricId,
+      const row = await tx.measurement.upsert({
+        where: {
+          hypothesisId: input.hypothesisId
+        },
+        update: {
+          value: input.value,
+          note: input.note
+        },
+        create: {
+          hypothesisId: input.hypothesisId,
           value: input.value,
           note: input.note
         }
       })
-    } catch (error) {
-      if (isPrismaUniqueConstraintViolation(error)) {
-        return { kind: 'conflict' }
-      }
 
-      throw error
-    }
-
-    return {
-      kind: 'success',
-      measurement: toDomainMeasurement(row)
-    }
-  },
-
-  /**
-   * Updates one measurement owned by the current user.
-   */
-  async updateByIdForUser(input: MeasurementMutationInput): Promise<MeasurementMutationResult> {
-    const where = buildOwnedMeasurementWhere(input)
-
-    return prisma.$transaction(async (tx) => {
-      const existingMeasurement = await tx.measurement.findFirst({
-        where,
-        select: {
-          id: true,
-          experiment: {
-            select: {
-              hypothesisId: true
-            }
-          }
-        }
-      })
-
-      if (existingMeasurement === null) {
-        return { kind: 'notFound' }
-      }
-
-      const metric = await tx.metric.findFirst({
-        where: {
-          id: input.metricId,
-          hypothesisId: existingMeasurement.experiment.hypothesisId
-        },
-        select: { id: true }
-      })
-
-      if (metric === null) {
-        return { kind: 'notFound' }
-      }
-
-      let row: PrismaMeasurement
-
-      try {
-        row = await tx.measurement.update({
-          where: {
-            id: existingMeasurement.id
-          },
-          data: {
-            metricId: input.metricId,
-            value: input.value,
-            note: input.note
-          }
-        })
-      } catch (error) {
-        if (isPrismaUniqueConstraintViolation(error)) {
-          return { kind: 'conflict' }
-        }
-
-        throw error
-      }
-
-      return {
-        kind: 'success',
-        measurement: toDomainMeasurement(row)
-      }
+      return toDomainMeasurement(row)
     })
   },
 
   /**
-   * Deletes one measurement owned by the current user.
+   * Deletes the measurement singleton of one owned hypothesis.
    */
-  async deleteByIdForUser(input: MeasurementOwnerInput): Promise<boolean> {
+  async deleteByHypothesis(input: HypothesisIdOwnerInput): Promise<boolean> {
     const result = await prisma.measurement.deleteMany({
       where: buildOwnedMeasurementWhere(input)
     })

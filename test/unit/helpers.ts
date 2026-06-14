@@ -46,13 +46,13 @@ export const makeIdeaVersion = (overrides: Partial<IdeaVersion> = {}): IdeaVersi
 })
 
 export const makeIdeaRepository = (): IdeaRepository => ({
-  countByUserId: vi.fn(),
-  createWithInitialVersion: vi.fn(),
-  deleteByIdForUser: vi.fn()
+  countByUser: vi.fn(),
+  create: vi.fn(),
+  delete: vi.fn()
 })
 
 export const makeIdeaVersionRepository = (): IdeaVersionRepository => ({
-  listIdeasByUser: vi.fn()
+  listByUser: vi.fn()
 })
 
 export const makeSubscriptionService = (): SubscriptionService => ({
@@ -82,8 +82,8 @@ export const makeCanvasElement = (overrides: Partial<CanvasElement> = {}): Canva
 })
 
 export const makeCanvasRepository = (): CanvasRepository => ({
-  getByIdeaVersionForUser: vi.fn(),
-  replaceByIdeaVersionForUser: vi.fn()
+  listByIdeaVersion: vi.fn(),
+  replaceByIdeaVersion: vi.fn()
 })
 
 export const makeHypothesisCanvasSection = (
@@ -103,6 +103,8 @@ export const makeHypothesis = (overrides: Partial<Hypothesis> = {}): Hypothesis 
   statement: 'Test hypothesis',
   dimension: 'PROBLEM',
   priority: 'HIGH',
+  evidenceType: 'QUALITATIVE',
+  status: 'NOT_TESTED',
   canvasSectionLinks: [makeHypothesisCanvasSection()],
   createdAt: new Date(VALID_ISO_DATETIME),
   updatedAt: new Date(VALID_ISO_DATETIME),
@@ -110,11 +112,11 @@ export const makeHypothesis = (overrides: Partial<Hypothesis> = {}): Hypothesis 
 })
 
 export const makeHypothesisRepository = (): HypothesisRepository => ({
-  listByIdeaVersionForUser: vi.fn(),
-  getByIdForUser: vi.fn(),
-  createForIdeaVersion: vi.fn(),
-  updateByIdForUser: vi.fn(),
-  deleteByIdForUser: vi.fn()
+  listByIdeaVersion: vi.fn(),
+  getById: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
+  delete: vi.fn()
 })
 
 export const makeMetricThreshold = (overrides: Partial<MetricThreshold> = {}): MetricThreshold => ({
@@ -140,10 +142,9 @@ export const makeMetric = (overrides: Partial<Metric> = {}): Metric => ({
 })
 
 export const makeMetricRepository = (): MetricRepository => ({
-  listByHypothesisForUser: vi.fn(),
-  createForHypothesis: vi.fn(),
-  updateByIdForUser: vi.fn(),
-  deleteByIdForUser: vi.fn()
+  getByHypothesis: vi.fn(),
+  upsertByHypothesis: vi.fn(),
+  deleteByHypothesis: vi.fn()
 })
 
 export const makeExperiment = (overrides: Partial<Experiment> = {}): Experiment => ({
@@ -158,16 +159,14 @@ export const makeExperiment = (overrides: Partial<Experiment> = {}): Experiment 
 })
 
 export const makeExperimentRepository = (): ExperimentRepository => ({
-  listByHypothesisForUser: vi.fn(),
-  createForHypothesis: vi.fn(),
-  updateByIdForUser: vi.fn(),
-  deleteByIdForUser: vi.fn()
+  getByHypothesis: vi.fn(),
+  upsertByHypothesis: vi.fn(),
+  deleteByHypothesis: vi.fn()
 })
 
 export const makeMeasurement = (overrides: Partial<Measurement> = {}): Measurement => ({
   id: 'measurement-001',
-  experimentId: 'experiment-001',
-  metricId: 'metric-001',
+  hypothesisId: 'hypothesis-001',
   value: 42,
   note: 'Observed in first cohort',
   createdAt: new Date(VALID_ISO_DATETIME),
@@ -176,8 +175,7 @@ export const makeMeasurement = (overrides: Partial<Measurement> = {}): Measureme
 })
 
 export const makeMeasurementRepository = (): MeasurementRepository => ({
-  listByExperimentForUser: vi.fn(),
-  createForExperiment: vi.fn(),
-  updateByIdForUser: vi.fn(),
-  deleteByIdForUser: vi.fn()
+  getByHypothesis: vi.fn(),
+  upsertByHypothesis: vi.fn(),
+  deleteByHypothesis: vi.fn()
 })

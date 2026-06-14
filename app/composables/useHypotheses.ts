@@ -12,17 +12,13 @@ export interface UseHypothesesComposable {
   createHypothesis: (input: {
     ideaId: string
     versionId: string
-    body: CreateHypothesisBodyDto
+    body: UpsertHypothesisBodyDto
   }) => Promise<HypothesisResponseDto | null>
   updateHypothesis: (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
-    body: UpdateHypothesisBodyDto
+    body: UpsertHypothesisBodyDto
   }) => Promise<HypothesisResponseDto | null>
   deleteHypothesis: (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
   }) => Promise<boolean>
 }
@@ -79,7 +75,7 @@ export const useHypotheses = (): UseHypothesesComposable => {
   const createHypothesis = async (input: {
     ideaId: string
     versionId: string
-    body: CreateHypothesisBodyDto
+    body: UpsertHypothesisBodyDto
   }): Promise<HypothesisResponseDto | null> => {
     isCreating.value = true
 
@@ -92,7 +88,8 @@ export const useHypotheses = (): UseHypothesesComposable => {
             statement: input.body.statement,
             dimension: input.body.dimension,
             priority: input.body.priority,
-            canvasSectionTypes: uniqueSectionTypes(input.body.canvasSectionTypes)
+            evidenceType: input.body.evidenceType,
+            canvasElementTypes: uniqueSectionTypes(input.body.canvasElementTypes)
           }
         })
 
@@ -107,24 +104,21 @@ export const useHypotheses = (): UseHypothesesComposable => {
   }
 
   const updateHypothesis = async (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
-    body: UpdateHypothesisBodyDto
+    body: UpsertHypothesisBodyDto
   }): Promise<HypothesisResponseDto | null> => {
     isUpdatingId.value = input.hypothesisId
 
     try {
       return await runWithErrorHandling(async () => {
         const updatedHypothesis = await updateHypothesisRequest({
-          ideaId: input.ideaId,
-          versionId: input.versionId,
           hypothesisId: input.hypothesisId,
           body: {
             statement: input.body.statement,
             dimension: input.body.dimension,
             priority: input.body.priority,
-            canvasSectionTypes: uniqueSectionTypes(input.body.canvasSectionTypes)
+            evidenceType: input.body.evidenceType,
+            canvasElementTypes: uniqueSectionTypes(input.body.canvasElementTypes)
           }
         })
 
@@ -142,8 +136,6 @@ export const useHypotheses = (): UseHypothesesComposable => {
   }
 
   const deleteHypothesis = async (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
   }): Promise<boolean> => {
     isDeletingId.value = input.hypothesisId

@@ -6,8 +6,6 @@ export interface UseHypothesisDetailsComposable {
   isLoading: Ref<boolean>
   hasError: Ref<boolean>
   loadHypothesis: (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
   }) => Promise<HypothesisResponseDto | null>
   clearHypothesis: () => void
@@ -28,8 +26,6 @@ export const useHypothesisDetails = (): UseHypothesisDetailsComposable => {
   const isLoading = ref(false)
 
   const loadHypothesis = async (input: {
-    ideaId: string
-    versionId: string
     hypothesisId: string
   }): Promise<HypothesisResponseDto | null> => {
     isLoading.value = true

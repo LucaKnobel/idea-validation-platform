@@ -54,7 +54,10 @@ const buildIdeaWhere = (input: Pick<IdeaVersionListInput, 'userId' | 'search'>):
 }
 
 export const ideaVersionRepository: IdeaVersionRepository = {
-  async listIdeasByUser(input: IdeaVersionListInput): Promise<{ ideas: Idea[], total: number }> {
+  /**
+   * Lists the latest visible idea versions for one user with pagination.
+   */
+  async listByUser(input: IdeaVersionListInput): Promise<{ ideas: Idea[], total: number }> {
     const skip = (input.page - 1) * input.pageSize
     const where = buildIdeaWhere({
       userId: input.userId,

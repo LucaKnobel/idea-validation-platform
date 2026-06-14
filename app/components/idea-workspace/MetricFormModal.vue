@@ -6,14 +6,14 @@ export interface MetricFormState {
   description: string
   unit: string
   threshold: {
-    operator: CreateMetricBodyDto['threshold']['operator']
+    operator: UpsertMetricBodyDto['threshold']['operator']
     referenceValue: number
   }
 }
 
 interface MetricFormOperatorOption {
   label: string
-  value: CreateMetricBodyDto['threshold']['operator']
+  value: UpsertMetricBodyDto['threshold']['operator']
 }
 
 /**

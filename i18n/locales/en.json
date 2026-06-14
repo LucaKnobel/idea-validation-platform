@@ -58,32 +58,33 @@
       "tooManyElements": "A maximum of 500 canvas elements is allowed"
     },
     "hypothesis": {
-      "statementRequired": "A hypothesis statement is required",
-      "statementTooLong": "A hypothesis statement must not exceed 3000 characters",
-      "dimensionRequired": "Please select a hypothesis dimension",
+      "statementRequired": "A hypothesis is required",
+      "statementTooLong": "A hypothesis must not exceed 3000 characters",
+      "dimensionRequired": "Please select an uncertainty area",
       "priorityRequired": "Please select a hypothesis priority",
+      "evidenceTypeRequired": "Please select a validation type",
       "canvasSectionMin": "Select at least one canvas section",
       "canvasSectionMax": "A maximum of 9 canvas sections can be linked"
     },
     "metric": {
-      "nameRequired": "A metric name is required",
-      "nameTooLong": "A metric name must not exceed 200 characters",
+      "nameRequired": "A metric is required",
+      "nameTooLong": "A metric must not exceed 200 characters",
       "descriptionTooLong": "A metric description must not exceed 1000 characters",
       "unitTooLong": "A metric unit must not exceed 100 characters",
-      "operatorRequired": "Please select a threshold operator",
-      "referenceValueRequired": "A threshold value is required",
-      "referenceValueFinite": "Threshold value must be a finite number"
+      "operatorRequired": "Please select a success condition",
+      "referenceValueRequired": "A target value is required",
+      "referenceValueFinite": "Target value must be a finite number"
     },
     "experiment": {
-      "titleRequired": "An experiment title is required",
-      "titleTooLong": "An experiment title must not exceed 200 characters",
+      "titleRequired": "An experiment is required",
+      "titleTooLong": "An experiment must not exceed 200 characters",
       "descriptionTooLong": "An experiment description must not exceed 4000 characters",
       "statusRequired": "Please select an experiment status"
     },
     "measurement": {
       "metricRequired": "Please select a metric",
       "valueRequired": "A measurement value is required",
-      "noteTooLong": "A measurement note must not exceed 2000 characters"
+      "noteTooLong": "Insights must not exceed 2000 characters"
     }
   },
   "error": {
@@ -482,8 +483,8 @@
       },
       "table": {
         "columns": {
-          "statement": "Statement",
-          "dimension": "Dimension",
+          "statement": "Hypothesis",
+          "dimension": "Uncertainty Area",
           "priority": "Priority",
           "status": "Status",
           "actions": "Actions"
@@ -504,26 +505,26 @@
         },
         "overview": {
           "title": "Overview",
-          "canvasEmpty": "No canvas areas linked yet.",
+          "canvasEmpty": "No canvas sections linked yet.",
           "fields": {
-            "dimension": "Dimension",
+            "dimension": "Uncertainty Area",
             "priority": "Priority",
+            "evidenceType": "Validation Type",
             "status": "Status",
-            "canvasAssignments": "Canvas assignments"
+            "canvasAssignments": "Linked Canvas Sections"
           }
         },
         "metrics": {
-          "title": "Metrics",
+          "title": "Metric",
           "noDescription": "No description",
           "actions": {
             "create": "Create metric",
-            "createFirst": "Add first metric",
             "update": "Update metric",
             "deleteConfirm": "Delete metric"
           },
           "fields": {
             "unit": "Unit",
-            "threshold": "Threshold"
+            "threshold": "Target Value"
           },
           "operators": {
             "GTE": ">=",
@@ -533,22 +534,22 @@
             "EQ": "="
           },
           "empty": {
-            "title": "No metrics yet",
-            "description": "Define measurable thresholds so you can evaluate this hypothesis objectively."
+            "title": "No metric yet",
+            "description": "Define one measurable metric and its target value so you can evaluate this hypothesis objectively."
           },
           "modal": {
             "createTitle": "Create metric",
             "editTitle": "Edit metric",
-            "description": "Capture one measurable signal and the threshold that indicates success."
+            "description": "Capture one measurable signal and the target value that indicates success."
           },
           "deleteModal": {
             "title": "Delete metric",
             "description": "Please confirm that you want to remove this metric.",
-            "warning": "This action permanently deletes the metric and its linked threshold."
+            "warning": "This action permanently deletes the metric and its linked target value."
           },
           "form": {
             "name": {
-              "label": "Metric name",
+              "label": "Metric",
               "placeholder": "Example: Trial conversion rate"
             },
             "description": {
@@ -557,7 +558,7 @@
               "placeholder": "Example: Share of trial users that convert within 14 days"
             },
             "criterion": {
-              "label": "Success Criterion"
+              "label": "Target Value"
             },
             "unit": {
               "label": "Unit",
@@ -589,7 +590,7 @@
           },
           "error": {
             "load": {
-              "title": "Could not load metrics",
+              "title": "Could not load metric",
               "message": "Please try again in a moment."
             },
             "create": {
@@ -607,28 +608,27 @@
           }
         },
         "experiments": {
-          "title": "Experiments",
+          "title": "Experiment",
           "noDescription": "No description",
           "actions": {
             "create": "Create experiment",
-            "createFirst": "Add first experiment",
-            "measurements": "Measurements",
+            "measurements": "Measurement",
             "update": "Update experiment",
             "deleteConfirm": "Delete experiment"
           },
           "fields": {
             "status": "Status",
-            "measurements": "Measurements"
+            "measurements": "Measurement"
           },
           "status": {
             "PLANNED": "Planned",
-            "RUNNING": "Running",
+            "RUNNING": "Active",
             "COMPLETED": "Completed",
             "CANCELLED": "Cancelled"
           },
           "empty": {
-            "title": "No experiments yet",
-            "description": "Add your first experiment to test this hypothesis with measurable results."
+            "title": "No experiment yet",
+            "description": "Create an experiment to test this hypothesis with measurable results."
           },
           "modal": {
             "createTitle": "Create experiment",
@@ -642,7 +642,7 @@
           },
           "form": {
             "title": {
-              "label": "Experiment title",
+              "label": "Experiment",
               "placeholder": "Example: Landing page smoke test"
             },
             "description": {
@@ -671,7 +671,7 @@
           },
           "error": {
             "load": {
-              "title": "Could not load experiments",
+              "title": "Could not load experiment",
               "message": "Please try again in a moment."
             },
             "create": {
@@ -689,21 +689,21 @@
           }
         },
         "measurements": {
-          "title": "Measurements",
-          "description": "Capture observed values for this experiment.",
+          "title": "Measurement",
+          "description": "Capture the observed value for this experiment.",
           "actions": {
             "create": "Add measurement",
             "update": "Update measurement",
             "deleteConfirm": "Delete measurement"
           },
           "empty": {
-            "title": "No measurements yet",
-            "description": "Add measurements to document observed outcomes for this experiment."
+            "title": "No measurement yet",
+            "description": "Add a measurement to document the observed outcome for this experiment."
           },
           "modal": {
             "createTitle": "Add measurement",
             "editTitle": "Edit measurement",
-            "description": "Link one metric and capture the observed value."
+            "description": "Capture the observed value and optional insights."
           },
           "deleteModal": {
             "title": "Delete measurement",
@@ -711,16 +711,12 @@
             "warning": "This action permanently deletes the measurement."
           },
           "form": {
-            "metric": {
-              "label": "Metric",
-              "placeholder": "Select a metric"
-            },
             "value": {
               "label": "Value",
               "placeholder": "Example: 14.17"
             },
             "note": {
-              "label": "Note",
+              "label": "Insights",
               "placeholder": "Optional"
             }
           },
@@ -740,16 +736,12 @@
           },
           "error": {
             "load": {
-              "title": "Could not load measurements",
+              "title": "Could not load measurement",
               "message": "Please try again in a moment."
             },
             "conflict": {
               "title": "Measurement already exists",
-              "message": "A measurement for this metric already exists in this experiment. Edit the existing one instead."
-            },
-            "noAvailableMetric": {
-              "title": "No metric available",
-              "message": "All metrics for this hypothesis already have a measurement in this experiment."
+              "message": "A measurement already exists for this experiment. Edit the existing one instead."
             },
             "create": {
               "title": "Could not create measurement",
@@ -784,21 +776,25 @@
       "deleteModal": {
         "title": "Delete hypothesis",
         "description": "Please confirm that you want to remove this hypothesis.",
-        "warning": "This action permanently deletes the hypothesis including linked metrics, thresholds and experiments."
+        "warning": "This action permanently deletes the hypothesis including linked metrics, target values and experiments."
       },
       "form": {
         "statement": {
-          "label": "Hypothesis statement",
+          "label": "Hypothesis",
           "description": "Write one concrete and testable assumption.",
           "placeholder": "Example: Freelancers will pay for weekly AI-generated lead lists."
         },
         "dimension": {
-          "label": "Uncertainty dimension",
-          "placeholder": "Select a dimension"
+          "label": "Uncertainty Area",
+          "placeholder": "Select an uncertainty area"
         },
         "priority": {
           "label": "Priority",
           "placeholder": "Select a priority"
+        },
+        "evidenceType": {
+          "label": "Validation Type",
+          "placeholder": "Select a validation type"
         },
         "sections": {
           "label": "Canvas sections",
@@ -807,6 +803,12 @@
           "searchPlaceholder": "Filter sections",
           "confirm": "Done"
         }
+      },
+      "evidenceTypes": {
+        "QUALITATIVE": "Qualitative",
+        "QUANTITATIVE": "Quantitative",
+        "BEHAVIORAL": "Behavioral",
+        "MONETARY": "Monetary"
       },
       "success": {
         "create": {

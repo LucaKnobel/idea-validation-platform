@@ -1,6 +1,4 @@
 export type {
-  CreateExperimentBodyDto,
-  UpdateExperimentBodyDto,
-  ExperimentResponseDto,
-  ExperimentsListResponseDto
+  UpsertExperimentBodyDto,
+  ExperimentResponseDto
 } from '@infrastructure/validation/experiment-schemas'

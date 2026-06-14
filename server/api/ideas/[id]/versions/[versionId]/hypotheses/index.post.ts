@@ -1,16 +1,16 @@
 import { setResponseStatus } from 'h3'
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
-import {
-  CreateHypothesisBodySchema,
-  HypothesisVersionRouteParamsSchema,
-  type HypothesisResponseDto
-} from '@infrastructure/validation/hypothesis-schemas'
 import { createHypothesis } from '@infrastructure/composition'
 import { toHypothesisResponseDto } from '@infrastructure/mappers/hypothesis-mapper'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
+import {
+  UpsertHypothesisBodySchema,
+  type HypothesisResponseDto
+} from '@infrastructure/validation/hypothesis-schemas'
+import { IdeaVersionRouteParamsSchema } from '@infrastructure/validation/route-params-schemas'
 
 /**
- * Creates one hypothesis in a specific idea version owned by the current user.
+ * Creates one hypothesis for one owned idea version.
  */
 export default defineProtectedHandler(async (event, userId): Promise<HypothesisResponseDto> => {
   await enforceRateLimit(event, {
@@ -20,8 +20,8 @@ export default defineProtectedHandler(async (event, userId): Promise<HypothesisR
     scope: 'user'
   })
 
-  const params = await getValidatedRouterParams(event, HypothesisVersionRouteParamsSchema.parse)
-  const body = await readValidatedBody(event, CreateHypothesisBodySchema.parse)
+  const params = await getValidatedRouterParams(event, IdeaVersionRouteParamsSchema.parse)
+  const body = await readValidatedBody(event, UpsertHypothesisBodySchema.parse)
 
   const hypothesis = await createHypothesis({
     userId,
@@ -30,7 +30,8 @@ export default defineProtectedHandler(async (event, userId): Promise<HypothesisR
     statement: body.statement,
     dimension: body.dimension,
     priority: body.priority,
-    canvasSectionTypes: body.canvasSectionTypes
+    evidenceType: body.evidenceType,
+    canvasElementTypes: body.canvasElementTypes
   })
 
   setResponseStatus(event, 201)

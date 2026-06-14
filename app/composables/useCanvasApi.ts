@@ -1,5 +1,3 @@
-import type { IdeaVersionCanvasResponseDto, ReplaceIdeaVersionCanvasBodyDto } from '../../shared/types/canvas'
-
 /**
  * Public contract implemented by useCanvasApi.
  *

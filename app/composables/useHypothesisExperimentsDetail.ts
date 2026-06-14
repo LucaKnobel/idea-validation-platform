@@ -2,32 +2,28 @@ import type { ExperimentFormState } from '~/components/idea-workspace/Experiment
 import type { MeasurementFormState } from '~/components/idea-workspace/MeasurementFormModal.vue'
 
 /**
- * Route-level dependencies required by the hypothesis experiments detail flow.
+ * Route-level dependencies required by the hypothesis experiment detail flow.
  */
 export interface UseHypothesisExperimentsDetailInput {
-  ideaId: Ref<string>
-  versionId: Ref<string>
   hypothesisId: Ref<string>
-  metrics: Ref<MetricResponseDto[]>
   hasValidRouteParams: ComputedRef<boolean>
 }
 
 /**
- * Public API for experiments section state and modal workflows on hypothesis detail pages.
+ * Public API for experiment section state and modal workflows on hypothesis detail pages.
  */
 export interface UseHypothesisExperimentsDetailComposable {
-  experiments: Ref<ExperimentResponseDto[]>
-  measurementsByExperiment: Ref<Record<string, MeasurementResponseDto[]>>
+  experiment: Ref<ExperimentResponseDto | null>
+  measurement: Ref<MeasurementResponseDto | null>
   isExperimentsLoading: Ref<boolean>
   isMeasurementsLoading: Ref<boolean>
   isExperimentDeletingId: Ref<string | null>
   measurementDeletingId: Ref<string | null>
-  hasExperimentsError: Ref<boolean>
+  hasExperimentsError: ComputedRef<boolean>
   isExperimentModalOpen: Ref<boolean>
   isMeasurementModalOpen: Ref<boolean>
   isMeasurementDeleteModalOpen: Ref<boolean>
   isExperimentDeleteModalOpen: Ref<boolean>
-  activeMeasurementsExperiment: Ref<ExperimentResponseDto | null>
   measurementDeleteCandidate: Ref<MeasurementResponseDto | null>
   experimentDeleteCandidate: Ref<ExperimentResponseDto | null>
   experimentFormState: ExperimentFormState
@@ -36,30 +32,28 @@ export interface UseHypothesisExperimentsDetailComposable {
   measurementFormTitle: ComputedRef<string>
   experimentSubmitLabel: ComputedRef<string>
   measurementSubmitLabel: ComputedRef<string>
-  experimentStatusOptions: ComputedRef<Array<{ label: string, value: CreateExperimentBodyDto['status'] }>>
-  measurementMetricOptions: ComputedRef<Array<{ label: string, value: string }>>
+  experimentStatusOptions: ComputedRef<Array<{ label: string, value: UpsertExperimentBodyDto['status'] }>>
   isAnyExperimentActionLoading: ComputedRef<boolean>
   isAnyMeasurementActionLoading: ComputedRef<boolean>
   isExperimentDeleteSubmitting: Ref<boolean>
   isMeasurementDeleteSubmitting: Ref<boolean>
-  loadExperimentsForRoute: () => Promise<void>
-  clearExperiments: () => void
+  loadExperimentForRoute: () => Promise<void>
+  clearExperiment: () => void
   openCreateExperimentModal: () => void
-  openCreateMeasurementModal: (experiment: ExperimentResponseDto) => Promise<void>
-  openEditMeasurementModal: (experiment: ExperimentResponseDto, measurement: MeasurementResponseDto) => Promise<void>
-  openMeasurementDeleteModal: (experiment: ExperimentResponseDto, measurement: MeasurementResponseDto) => void
-  openEditExperimentModal: (experiment: ExperimentResponseDto) => void
-  openExperimentDeleteModal: (experiment: ExperimentResponseDto) => void
+  openCreateMeasurementModal: () => void
+  openEditMeasurementModal: (measurement: MeasurementResponseDto) => void
+  openMeasurementDeleteModal: (measurement: MeasurementResponseDto) => void
+  openEditExperimentModal: () => void
+  openExperimentDeleteModal: () => void
   submitExperimentForm: (state: ExperimentFormState) => Promise<void>
   submitMeasurementForm: (state: MeasurementFormState) => Promise<void>
   confirmDeleteExperiment: () => Promise<void>
   confirmDeleteMeasurement: () => Promise<void>
-  resolveMetricName: (metricId: string) => string
   formatMeasurementValue: (measurement: MeasurementResponseDto) => string
 }
 
 /**
- * Encapsulates experiments data loading, modal state, and CRUD submit handlers for one hypothesis detail page.
+ * Encapsulates experiment and measurement data loading, modal state, and CRUD submit handlers for one hypothesis detail page.
  */
 export const useHypothesisExperimentsDetail = (
   input: UseHypothesisExperimentsDetailInput
@@ -68,23 +62,20 @@ export const useHypothesisExperimentsDetail = (
   const { handleRateLimitError } = useErrorHandler()
   const { showSuccess, showError } = useToastNotification()
   const {
-    listMeasurements,
-    createMeasurement,
-    updateMeasurement,
+    getMeasurement,
+    upsertMeasurement,
     deleteMeasurement
-  } = useMeasurementsApi()
+  } = useMeasurementApi()
   const {
-    experiments,
+    experiment,
     isLoading: isExperimentsLoading,
     isCreating: isExperimentCreating,
     isDeletingId: isExperimentDeletingId,
-    isUpdatingId: experimentUpdatingId,
-    hasError: hasExperimentsError,
-    loadExperiments,
-    createExperiment,
-    updateExperiment,
+    hasError: hasExperimentsRequestError,
+    loadExperiment,
+    upsertExperiment,
     deleteExperiment,
-    clearExperiments
+    clearExperiment
   } = useHypothesisExperiments()
   const {
     isSubmitting: isExperimentFormSubmitting,
@@ -108,15 +99,15 @@ export const useHypothesisExperimentsDetail = (
   const isMeasurementDeleteModalOpen = ref(false)
   const experimentFormMode = ref<'create' | 'update'>('create')
   const measurementFormMode = ref<'create' | 'update'>('create')
-  const activeExperimentId = ref<string | null>(null)
-  const activeMeasurementsExperiment = ref<ExperimentResponseDto | null>(null)
-  const activeMeasurementId = ref<string | null>(null)
   const experimentDeleteCandidate = ref<ExperimentResponseDto | null>(null)
   const measurementDeleteCandidate = ref<MeasurementResponseDto | null>(null)
   const isExperimentDeleteModalOpen = ref(false)
-  const measurements = ref<MeasurementResponseDto[]>([])
-  const measurementsByExperiment = ref<Record<string, MeasurementResponseDto[]>>({})
+  const measurement = ref<MeasurementResponseDto | null>(null)
   const isMeasurementsLoading = ref(false)
+  const hasMeasurementsLoadError = ref(false)
+  const hasExperimentsError = computed(() => {
+    return hasExperimentsRequestError.value || hasMeasurementsLoadError.value
+  })
   const isMeasurementCreating = ref(false)
   const measurementUpdatingId = ref<string | null>(null)
   const measurementDeletingId = ref<string | null>(null)
@@ -128,7 +119,6 @@ export const useHypothesisExperimentsDetail = (
   })
 
   const measurementFormState = reactive<MeasurementFormState>({
-    metricId: '',
     value: 0,
     note: ''
   })
@@ -163,42 +153,15 @@ export const useHypothesisExperimentsDetail = (
       { label: t('ideaWorkspace.hypotheses.detail.experiments.status.RUNNING'), value: 'RUNNING' },
       { label: t('ideaWorkspace.hypotheses.detail.experiments.status.COMPLETED'), value: 'COMPLETED' },
       { label: t('ideaWorkspace.hypotheses.detail.experiments.status.CANCELLED'), value: 'CANCELLED' }
-    ] satisfies Array<{ label: string, value: CreateExperimentBodyDto['status'] }>
+    ] satisfies Array<{ label: string, value: UpsertExperimentBodyDto['status'] }>
   })
 
   const isAnyExperimentActionLoading = computed(() => {
-    return isExperimentCreating.value || experimentUpdatingId.value !== null || isExperimentFormSubmitting.value
+    return isExperimentCreating.value || isExperimentFormSubmitting.value
   })
 
   const isAnyMeasurementActionLoading = computed(() => {
     return isMeasurementCreating.value || measurementUpdatingId.value !== null || isMeasurementFormSubmitting.value
-  })
-
-  const metricById = computed(() => {
-    return new Map(input.metrics.value.map(metric => [metric.id, metric]))
-  })
-
-  const measurementMetricOptions = computed(() => {
-    const activeExperimentMeasurements = activeMeasurementsExperiment.value
-      ? measurementsByExperiment.value[activeMeasurementsExperiment.value.id] || []
-      : []
-
-    const usedMetricIds = new Set(
-      activeExperimentMeasurements
-        .filter(measurement => measurement.id !== activeMeasurementId.value)
-        .map(measurement => measurement.metricId)
-    )
-
-    return input.metrics.value
-      .filter(metric => !usedMetricIds.has(metric.id))
-      .map((metric) => {
-        const unit = metric.unit ? ` (${metric.unit})` : ''
-
-        return {
-          label: `${metric.name}${unit}`,
-          value: metric.id
-        }
-      })
   })
 
   /**
@@ -214,115 +177,90 @@ export const useHypothesisExperimentsDetail = (
    * Resets the editable measurement form to defaults used by create mode.
    */
   const resetMeasurementForm = (): void => {
-    measurementFormState.metricId = measurementMetricOptions.value[0]?.value || ''
     measurementFormState.value = 0
     measurementFormState.note = ''
   }
 
   /**
-   * Loads all measurements for one experiment and updates section state.
+   * Loads the singleton measurement for the current hypothesis.
    */
-  const loadMeasurementsForExperiment = async (experimentId: string): Promise<void> => {
+  const loadMeasurement = async (): Promise<void> => {
     if (!input.hasValidRouteParams.value) {
       return
     }
 
     isMeasurementsLoading.value = true
+    hasMeasurementsLoadError.value = false
 
     try {
-      const response = await listMeasurements({
-        ideaId: input.ideaId.value,
-        versionId: input.versionId.value,
-        hypothesisId: input.hypothesisId.value,
-        experimentId
-      })
+      measurement.value = await getMeasurement({ hypothesisId: input.hypothesisId.value })
+    } catch (error: unknown) {
+      if (extractStatusCode(error) === 404) {
+        measurement.value = null
+        return
+      }
 
-      const sortedMeasurements = [...response.items].sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt))
-      measurements.value = sortedMeasurements
-      measurementsByExperiment.value = {
-        ...measurementsByExperiment.value,
-        [experimentId]: sortedMeasurements
-      }
-    } catch {
-      measurements.value = []
-      measurementsByExperiment.value = {
-        ...measurementsByExperiment.value,
-        [experimentId]: []
-      }
+      hasMeasurementsLoadError.value = true
+      measurement.value = null
     } finally {
       isMeasurementsLoading.value = false
     }
   }
 
   /**
-   * Preloads measurement counts for all experiments to render cards without opening the modal first.
+   * Loads the experiment for the currently active idea/version/hypothesis route.
    */
-  const preloadMeasurementsByExperiment = async (items: ExperimentResponseDto[]): Promise<void> => {
-    if (!input.hasValidRouteParams.value || items.length === 0) {
-      measurementsByExperiment.value = {}
-      return
-    }
-
-    const entries = await Promise.all(items.map(async (experiment) => {
-      try {
-        const response = await listMeasurements({
-          ideaId: input.ideaId.value,
-          versionId: input.versionId.value,
-          hypothesisId: input.hypothesisId.value,
-          experimentId: experiment.id
-        })
-
-        const sortedMeasurements = [...response.items].sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt))
-        return [experiment.id, sortedMeasurements] as const
-      } catch {
-        return [experiment.id, []] as const
-      }
-    }))
-
-    measurementsByExperiment.value = Object.fromEntries(entries)
-  }
-
-  /**
-   * Loads experiments for the currently active idea/version/hypothesis route.
-   */
-  const loadExperimentsForRoute = async (): Promise<void> => {
+  const loadExperimentForRoute = async (): Promise<void> => {
     if (!input.hasValidRouteParams.value) {
       return
     }
 
-    await loadExperiments({
-      ideaId: input.ideaId.value,
-      versionId: input.versionId.value,
+    await loadExperiment({
       hypothesisId: input.hypothesisId.value
     })
 
-    await preloadMeasurementsByExperiment(experiments.value)
+    if (experiment.value === null) {
+      measurement.value = null
+      hasMeasurementsLoadError.value = false
+      return
+    }
+
+    await loadMeasurement()
+  }
+
+  /**
+   * Clears local singleton state when route params are invalid or navigation leaves the context.
+   */
+  const clearExperimentDetails = (): void => {
+    clearExperiment()
+    measurement.value = null
+    hasMeasurementsLoadError.value = false
+    measurementDeleteCandidate.value = null
+    experimentDeleteCandidate.value = null
   }
 
   /**
    * Opens create mode with a clean experiment form.
    */
   const openCreateExperimentModal = (): void => {
+    if (experiment.value !== null) {
+      return
+    }
+
     experimentFormMode.value = 'create'
-    activeExperimentId.value = null
     resetExperimentForm()
     isExperimentModalOpen.value = true
   }
 
   /**
-   * Opens the measurements modal for one experiment and loads all current measurements.
+   * Opens create mode for the singleton measurement.
    */
-  const openCreateMeasurementModal = async (experiment: ExperimentResponseDto): Promise<void> => {
-    activeMeasurementsExperiment.value = experiment
-    await loadMeasurementsForExperiment(experiment.id)
-
-    if (measurementMetricOptions.value.length === 0) {
-      showError('ideaWorkspace.hypotheses.detail.measurements.error.noAvailableMetric.title', 'ideaWorkspace.hypotheses.detail.measurements.error.noAvailableMetric.message')
+  const openCreateMeasurementModal = (): void => {
+    if (experiment.value === null || measurement.value !== null) {
       return
     }
 
     measurementFormMode.value = 'create'
-    activeMeasurementId.value = null
     resetMeasurementForm()
     isMeasurementModalOpen.value = true
   }
@@ -330,13 +268,8 @@ export const useHypothesisExperimentsDetail = (
   /**
    * Opens update mode and pre-fills the measurement form from the selected measurement.
    */
-  const openEditMeasurementModal = async (experiment: ExperimentResponseDto, measurement: MeasurementResponseDto): Promise<void> => {
-    activeMeasurementsExperiment.value = experiment
-    await loadMeasurementsForExperiment(experiment.id)
-
+  const openEditMeasurementModal = (measurement: MeasurementResponseDto): void => {
     measurementFormMode.value = 'update'
-    activeMeasurementId.value = measurement.id
-    measurementFormState.metricId = measurement.metricId
     measurementFormState.value = measurement.value
     measurementFormState.note = measurement.note || ''
     isMeasurementModalOpen.value = true
@@ -345,8 +278,7 @@ export const useHypothesisExperimentsDetail = (
   /**
    * Opens delete confirmation for the selected measurement.
    */
-  const openMeasurementDeleteModal = (experiment: ExperimentResponseDto, measurement: MeasurementResponseDto): void => {
-    activeMeasurementsExperiment.value = experiment
+  const openMeasurementDeleteModal = (measurement: MeasurementResponseDto): void => {
     measurementDeleteCandidate.value = measurement
     isMeasurementDeleteModalOpen.value = true
   }
@@ -354,20 +286,27 @@ export const useHypothesisExperimentsDetail = (
   /**
    * Opens update mode and pre-fills the experiment form from the selected experiment.
    */
-  const openEditExperimentModal = (experiment: ExperimentResponseDto): void => {
+  const openEditExperimentModal = (): void => {
+    if (experiment.value === null) {
+      return
+    }
+
     experimentFormMode.value = 'update'
-    activeExperimentId.value = experiment.id
-    experimentFormState.title = experiment.title
-    experimentFormState.description = experiment.description || ''
-    experimentFormState.status = experiment.status
+    experimentFormState.title = experiment.value.title
+    experimentFormState.description = experiment.value.description || ''
+    experimentFormState.status = experiment.value.status
     isExperimentModalOpen.value = true
   }
 
   /**
    * Opens delete confirmation for the selected experiment.
    */
-  const openExperimentDeleteModal = (experiment: ExperimentResponseDto): void => {
-    experimentDeleteCandidate.value = experiment
+  const openExperimentDeleteModal = (): void => {
+    if (experiment.value === null) {
+      return
+    }
+
+    experimentDeleteCandidate.value = experiment.value
     isExperimentDeleteModalOpen.value = true
   }
 
@@ -376,7 +315,7 @@ export const useHypothesisExperimentsDetail = (
    */
   const normalizeExperimentBody = (
     state: ExperimentFormState
-  ): CreateExperimentBodyDto => {
+  ): UpsertExperimentBodyDto => {
     return {
       title: state.title,
       description: state.description.trim().length > 0 ? state.description.trim() : null,
@@ -387,9 +326,8 @@ export const useHypothesisExperimentsDetail = (
   /**
    * Normalizes measurement form values to the API payload shape.
    */
-  const normalizeMeasurementBody = (state: MeasurementFormState): CreateMeasurementBodyDto => {
+  const normalizeMeasurementBody = (state: MeasurementFormState): UpsertMeasurementBodyDto => {
     return {
-      metricId: state.metricId,
       value: state.value,
       note: state.note.trim().length > 0 ? state.note.trim() : null
     }
@@ -408,9 +346,7 @@ export const useHypothesisExperimentsDetail = (
     try {
       await runExperimentFormAction(async () => {
         if (experimentFormMode.value === 'create') {
-          const created = await createExperiment({
-            ideaId: input.ideaId.value,
-            versionId: input.versionId.value,
+          const created = await upsertExperiment({
             hypothesisId: input.hypothesisId.value,
             body
           })
@@ -421,23 +357,13 @@ export const useHypothesisExperimentsDetail = (
           }
 
           showSuccess('ideaWorkspace.hypotheses.detail.experiments.success.create.title', 'ideaWorkspace.hypotheses.detail.experiments.success.create.message')
-          measurementsByExperiment.value = {
-            ...measurementsByExperiment.value,
-            [created.id]: []
-          }
+          measurement.value = null
           isExperimentModalOpen.value = false
           return true
         }
 
-        if (activeExperimentId.value === null) {
-          return false
-        }
-
-        const updated = await updateExperiment({
-          ideaId: input.ideaId.value,
-          versionId: input.versionId.value,
+        const updated = await upsertExperiment({
           hypothesisId: input.hypothesisId.value,
-          experimentId: activeExperimentId.value,
           body
         })
 
@@ -461,11 +387,10 @@ export const useHypothesisExperimentsDetail = (
    * Executes create/update save flow for the measurement form.
    */
   const submitMeasurementForm = async (state: MeasurementFormState): Promise<void> => {
-    if (!input.hasValidRouteParams.value || activeMeasurementsExperiment.value === null) {
+    if (!input.hasValidRouteParams.value || experiment.value === null) {
       return
     }
 
-    const experimentId = activeMeasurementsExperiment.value.id
     const body = normalizeMeasurementBody(state)
 
     try {
@@ -473,11 +398,8 @@ export const useHypothesisExperimentsDetail = (
         if (measurementFormMode.value === 'create') {
           isMeasurementCreating.value = true
 
-          const createdMeasurement = await createMeasurement({
-            ideaId: input.ideaId.value,
-            versionId: input.versionId.value,
+          const createdMeasurement = await upsertMeasurement({
             hypothesisId: input.hypothesisId.value,
-            experimentId,
             body
           })
 
@@ -488,21 +410,13 @@ export const useHypothesisExperimentsDetail = (
 
           showSuccess('ideaWorkspace.hypotheses.detail.measurements.success.create.title', 'ideaWorkspace.hypotheses.detail.measurements.success.create.message')
           isMeasurementModalOpen.value = false
-          await loadMeasurementsForExperiment(experimentId)
+          await loadMeasurement()
           return true
         }
 
-        if (activeMeasurementId.value === null) {
-          return false
-        }
-
-        measurementUpdatingId.value = activeMeasurementId.value
-        const updatedMeasurement = await updateMeasurement({
-          ideaId: input.ideaId.value,
-          versionId: input.versionId.value,
+        measurementUpdatingId.value = measurement.value?.id || null
+        const updatedMeasurement = await upsertMeasurement({
           hypothesisId: input.hypothesisId.value,
-          experimentId,
-          measurementId: activeMeasurementId.value,
           body
         })
 
@@ -513,7 +427,7 @@ export const useHypothesisExperimentsDetail = (
 
         showSuccess('ideaWorkspace.hypotheses.detail.measurements.success.update.title', 'ideaWorkspace.hypotheses.detail.measurements.success.update.message')
         isMeasurementModalOpen.value = false
-        await loadMeasurementsForExperiment(experimentId)
+        await loadMeasurement()
         return true
       })
     } catch (error: unknown) {
@@ -523,7 +437,7 @@ export const useHypothesisExperimentsDetail = (
 
       if (extractStatusCode(error) === 409) {
         showError('ideaWorkspace.hypotheses.detail.measurements.error.conflict.title', 'ideaWorkspace.hypotheses.detail.measurements.error.conflict.message')
-        await loadMeasurementsForExperiment(experimentId)
+        await loadMeasurement()
         return
       }
 
@@ -549,15 +463,10 @@ export const useHypothesisExperimentsDetail = (
       return
     }
 
-    const candidate = experimentDeleteCandidate.value
-
     try {
       await runExperimentDeleteAction(async () => {
         const deleted = await deleteExperiment({
-          ideaId: input.ideaId.value,
-          versionId: input.versionId.value,
-          hypothesisId: input.hypothesisId.value,
-          experimentId: candidate.id
+          hypothesisId: input.hypothesisId.value
         })
 
         if (!deleted) {
@@ -568,16 +477,7 @@ export const useHypothesisExperimentsDetail = (
         showSuccess('ideaWorkspace.hypotheses.detail.experiments.success.delete.title', 'ideaWorkspace.hypotheses.detail.experiments.success.delete.message')
         isExperimentDeleteModalOpen.value = false
         experimentDeleteCandidate.value = null
-        const nextCounts = {
-          ...measurementsByExperiment.value
-        }
-        const { [candidate.id]: _removedMeasurements, ...remainingMeasurements } = nextCounts
-        measurementsByExperiment.value = remainingMeasurements
-
-        if (activeMeasurementsExperiment.value?.id === candidate.id) {
-          activeMeasurementsExperiment.value = null
-          measurements.value = []
-        }
+        measurement.value = null
 
         return true
       })
@@ -592,29 +492,24 @@ export const useHypothesisExperimentsDetail = (
    * Confirms deletion of the active measurement candidate and closes the modal on success.
    */
   const confirmDeleteMeasurement = async (): Promise<void> => {
-    if (!input.hasValidRouteParams.value || measurementDeleteCandidate.value === null || activeMeasurementsExperiment.value === null) {
+    if (!input.hasValidRouteParams.value || measurementDeleteCandidate.value === null) {
       return
     }
 
     const candidate = measurementDeleteCandidate.value
-    const experimentId = activeMeasurementsExperiment.value.id
 
     try {
       await runMeasurementDeleteAction(async () => {
         measurementDeletingId.value = candidate.id
 
         await deleteMeasurement({
-          ideaId: input.ideaId.value,
-          versionId: input.versionId.value,
-          hypothesisId: input.hypothesisId.value,
-          experimentId,
-          measurementId: candidate.id
+          hypothesisId: input.hypothesisId.value
         })
 
         showSuccess('ideaWorkspace.hypotheses.detail.measurements.success.delete.title', 'ideaWorkspace.hypotheses.detail.measurements.success.delete.message')
         measurementDeleteCandidate.value = null
         isMeasurementDeleteModalOpen.value = false
-        await loadMeasurementsForExperiment(experimentId)
+        await loadMeasurement()
         return true
       })
     } catch (error: unknown) {
@@ -629,31 +524,15 @@ export const useHypothesisExperimentsDetail = (
   }
 
   /**
-   * Reloads measurements for the currently active experiment modal.
-   */
-  /**
-   * Resolves the display label for one metric id.
-   */
-  const resolveMetricName = (metricId: string): string => {
-    return metricById.value.get(metricId)?.name || '-'
-  }
-
-  /**
-   * Formats one measurement value using the unit of its linked metric.
+   * Formats one measurement value for compact display.
    */
   const formatMeasurementValue = (measurement: MeasurementResponseDto): string => {
-    const metric = metricById.value.get(measurement.metricId)
-
-    if (!metric?.unit) {
-      return String(measurement.value)
-    }
-
-    return `${measurement.value} ${metric.unit}`
+    return String(measurement.value)
   }
 
   return {
-    experiments,
-    measurementsByExperiment,
+    experiment,
+    measurement,
     isExperimentsLoading,
     isMeasurementsLoading,
     isExperimentDeletingId,
@@ -663,7 +542,6 @@ export const useHypothesisExperimentsDetail = (
     isMeasurementModalOpen,
     isMeasurementDeleteModalOpen,
     isExperimentDeleteModalOpen,
-    activeMeasurementsExperiment,
     measurementDeleteCandidate,
     experimentDeleteCandidate,
     experimentFormState,
@@ -673,13 +551,12 @@ export const useHypothesisExperimentsDetail = (
     experimentSubmitLabel,
     measurementSubmitLabel,
     experimentStatusOptions,
-    measurementMetricOptions,
     isAnyExperimentActionLoading,
     isAnyMeasurementActionLoading,
     isExperimentDeleteSubmitting,
     isMeasurementDeleteSubmitting,
-    loadExperimentsForRoute,
-    clearExperiments,
+    loadExperimentForRoute,
+    clearExperiment: clearExperimentDetails,
     openCreateExperimentModal,
     openCreateMeasurementModal,
     openEditMeasurementModal,
@@ -690,7 +567,6 @@ export const useHypothesisExperimentsDetail = (
     submitMeasurementForm,
     confirmDeleteExperiment,
     confirmDeleteMeasurement,
-    resolveMetricName,
     formatMeasurementValue
   }
 }

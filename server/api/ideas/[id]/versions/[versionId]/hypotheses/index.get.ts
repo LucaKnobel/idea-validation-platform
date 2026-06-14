@@ -1,14 +1,12 @@
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
-import {
-  HypothesisVersionRouteParamsSchema,
-  type HypothesesListResponseDto
-} from '@infrastructure/validation/hypothesis-schemas'
 import { getIdeaVersionHypotheses } from '@infrastructure/composition'
 import { toHypothesesListResponseDto } from '@infrastructure/mappers/hypothesis-mapper'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
+import { IdeaVersionRouteParamsSchema } from '@infrastructure/validation/route-params-schemas'
+import type { HypothesesListResponseDto } from '@infrastructure/validation/hypothesis-schemas'
 
 /**
- * Returns all hypotheses for a specific idea version owned by the current user.
+ * Returns all hypotheses for one owned idea version.
  */
 export default defineProtectedHandler(async (event, userId): Promise<HypothesesListResponseDto> => {
   await enforceRateLimit(event, {
@@ -18,7 +16,7 @@ export default defineProtectedHandler(async (event, userId): Promise<HypothesesL
     scope: 'user'
   })
 
-  const params = await getValidatedRouterParams(event, HypothesisVersionRouteParamsSchema.parse)
+  const params = await getValidatedRouterParams(event, IdeaVersionRouteParamsSchema.parse)
 
   const hypotheses = await getIdeaVersionHypotheses({
     userId,

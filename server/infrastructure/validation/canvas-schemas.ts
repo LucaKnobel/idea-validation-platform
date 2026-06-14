@@ -1,11 +1,6 @@
 import * as z from 'zod'
 import { canvasElementTypes } from '@application/models/canvas-element'
 
-export const CanvasRouteParamsSchema = z.object({
-  id: z.uuid(),
-  versionId: z.uuid()
-})
-
 export const CanvasElementTypeSchema = z.enum(canvasElementTypes)
 
 export const CanvasElementInputSchema = z.object({
@@ -30,7 +25,6 @@ export const IdeaVersionCanvasResponseSchema = z.object({
   elements: z.array(CanvasElementResponseSchema)
 })
 
-export type CanvasRouteParamsDto = z.infer<typeof CanvasRouteParamsSchema>
 export type CanvasElementInputDto = z.infer<typeof CanvasElementInputSchema>
 export type ReplaceIdeaVersionCanvasBodyDto = z.infer<typeof ReplaceIdeaVersionCanvasBodySchema>
 export type CanvasElementResponseDto = z.infer<typeof CanvasElementResponseSchema>

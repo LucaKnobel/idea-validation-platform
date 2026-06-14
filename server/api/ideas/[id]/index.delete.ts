@@ -1,5 +1,5 @@
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
-import { IdeaRouteParamsSchema } from '@infrastructure/validation/idea-schemas'
+import { IdeaIdParamsSchema } from '@infrastructure/validation/route-params-schemas'
 import { deleteIdea } from '@infrastructure/composition'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
 
@@ -14,7 +14,7 @@ export default defineProtectedHandler(async (event, userId): Promise<void> => {
     scope: 'user'
   })
 
-  const params = await getValidatedRouterParams(event, IdeaRouteParamsSchema.parse)
+  const params = await getValidatedRouterParams(event, IdeaIdParamsSchema.parse)
 
   await deleteIdea({
     userId,

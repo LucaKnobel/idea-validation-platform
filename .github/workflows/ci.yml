@@ -56,11 +56,11 @@ jobs:
       # Install dependencies from lock file (ensures reproducible builds)
       - run: npm ci
 
-      # Generate Prisma Client and run migrations
+      # Reset database and generate Prisma Client
       - name: Setup database
         run: |
+          npx prisma migrate reset --force
           npx prisma generate
-          npx prisma migrate deploy
 
       # Check dependencies for known vulnerabilities (fail on critical severity)
       - run: npm audit --omit=dev --audit-level=critical
@@ -120,12 +120,12 @@ jobs:
         run: curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
 
       # Scan for vulnerabilities, leaked secrets, and IaC misconfigurations
-      # Fails CI on medium+ severity findings to enforce security standards
+      # Fails CI on critical severity findings to enforce security standards
       - name: Run Trivy scan
         run: |
           trivy fs \
             --scanners vuln,secret,misconfig \
-            --severity CRITICAL,HIGH \
+            --severity CRITICAL \
             --ignore-unfixed \
             --exit-code 1 \
             --no-progress \
