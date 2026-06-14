@@ -15,17 +15,14 @@ import { createIdeaVersionForUser } from './ideas-test-helpers'
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
-describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metrics/:metricId integration', async () => {
+describe('DELETE /api/hypotheses/:hypothesisId/metric integration', async () => {
   await setup(getE2ESetupOptions())
 
   const deleteMetricWithCookie = async (
     cookieHeader: string,
-    ideaId: string,
-    versionId: string,
-    hypothesisId: string,
-    metricId: string
+    hypothesisId: string
   ): Promise<Response> => {
-    return fetch(url(`/api/ideas/${ideaId}/versions/${versionId}/hypotheses/${hypothesisId}/metrics/${metricId}`), {
+    return fetch(url(`/api/hypotheses/${hypothesisId}/metric`), {
       method: 'DELETE',
       headers: {
         'cookie': cookieHeader,
@@ -35,7 +32,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/met
   }
 
   it('requires authentication for metric deletion', async () => {
-    const response = await fetch(url(`/api/ideas/${randomUUID()}/versions/${randomUUID()}/hypotheses/${randomUUID()}/metrics/${randomUUID()}`), {
+    const response = await fetch(url(`/api/hypotheses/${randomUUID()}/metric`), {
       method: 'DELETE'
     })
 
@@ -80,7 +77,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/met
       }
     })
 
-    const response = await deleteMetricWithCookie(user.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, metric.id)
+    const response = await deleteMetricWithCookie(user.cookieHeader, hypothesis.id)
 
     expect(response.status).toBe(204)
 
@@ -98,7 +95,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/met
     })
     const user = expectAuthenticatedSessionCreated(sessionResult)
 
-    const response = await deleteMetricWithCookie(user.cookieHeader, 'not-a-uuid', 'also-not-a-uuid', 'still-not-a-uuid', 'nope-not-a-uuid')
+    const response = await deleteMetricWithCookie(user.cookieHeader, 'still-not-a-uuid')
 
     expect(response.status).toBe(400)
   })
@@ -147,7 +144,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/met
       }
     })
 
-    const response = await deleteMetricWithCookie(attacker.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, metric.id)
+    const response = await deleteMetricWithCookie(attacker.cookieHeader, hypothesis.id)
 
     expect(response.status).toBe(404)
 
