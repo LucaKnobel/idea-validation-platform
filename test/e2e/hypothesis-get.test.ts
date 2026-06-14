@@ -16,16 +16,14 @@ import { createIdeaVersionForUser } from './ideas-test-helpers'
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
-describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId integration', async () => {
+describe('GET /api/hypotheses/:hypothesisId integration', async () => {
   await setup(getE2ESetupOptions())
 
   const getHypothesisWithCookie = async (
     cookieHeader: string,
-    ideaId: string,
-    versionId: string,
     hypothesisId: string
   ): Promise<Response> => {
-    return fetch(url(`/api/ideas/${ideaId}/versions/${versionId}/hypotheses/${hypothesisId}`), {
+    return fetch(url(`/api/hypotheses/${hypothesisId}`), {
       method: 'GET',
       headers: {
         'cookie': cookieHeader,
@@ -35,7 +33,7 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId integr
   }
 
   it('requires authentication for loading one hypothesis', async () => {
-    const response = await fetch(url(`/api/ideas/${randomUUID()}/versions/${randomUUID()}/hypotheses/${randomUUID()}`), {
+    const response = await fetch(url(`/api/hypotheses/${randomUUID()}`), {
       method: 'GET'
     })
 
@@ -71,7 +69,7 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId integr
       }
     })
 
-    const response = await getHypothesisWithCookie(owner.cookieHeader, version.ideaId, version.ideaVersionId, hypothesis.id)
+    const response = await getHypothesisWithCookie(owner.cookieHeader, hypothesis.id)
 
     expect(response.status).toBe(200)
 
@@ -82,7 +80,7 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId integr
     expect(payload.statement).toBe('Owned single hypothesis')
     expect(payload.dimension).toBe('MARKET')
     expect(payload.priority).toBe('MEDIUM')
-    expect(payload.canvasSectionLinks).toHaveLength(2)
+    expect(payload.canvasSections).toHaveLength(2)
   })
 
   it('rejects invalid route params with 400', async () => {
@@ -92,7 +90,7 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId integr
     })
     const user = expectAuthenticatedSessionCreated(sessionResult)
 
-    const response = await getHypothesisWithCookie(user.cookieHeader, 'not-a-uuid', 'also-not-a-uuid', 'still-not-a-uuid')
+    const response = await getHypothesisWithCookie(user.cookieHeader, 'still-not-a-uuid')
 
     expect(response.status).toBe(400)
   })
@@ -126,7 +124,7 @@ describe('GET /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId integr
       }
     })
 
-    const response = await getHypothesisWithCookie(attacker.cookieHeader, version.ideaId, version.ideaVersionId, hypothesis.id)
+    const response = await getHypothesisWithCookie(attacker.cookieHeader, hypothesis.id)
 
     expect(response.status).toBe(404)
   })

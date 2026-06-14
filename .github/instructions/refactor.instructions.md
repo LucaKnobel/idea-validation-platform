@@ -351,7 +351,7 @@ server/api/
       index.get.ts X
       index.put.ts X
       index.delete.ts X
-    index.get.ts
+    index.get.ts X
     index.put.ts
     index.delete.ts
 ```
