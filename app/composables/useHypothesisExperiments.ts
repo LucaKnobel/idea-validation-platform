@@ -1,7 +1,7 @@
 /**
  * Public contract for loading and exposing the hypothesis experiment.
  */
-export interface LoadHypothesisExperimentsInput {
+export interface LoadHypothesisExperimentInput {
   hypothesisId: string
 }
 
@@ -20,10 +20,10 @@ export interface UseHypothesisExperimentsComposable {
   isCreating: Ref<boolean>
   isDeletingId: Ref<string | null>
   hasError: Ref<boolean>
-  loadExperiments: (input: LoadHypothesisExperimentsInput) => Promise<void>
+  loadExperiment: (input: LoadHypothesisExperimentInput) => Promise<void>
   upsertExperiment: (input: UpsertHypothesisExperimentInput) => Promise<ExperimentResponseDto | null>
   deleteExperiment: (input: DeleteHypothesisExperimentInput) => Promise<boolean>
-  clearExperiments: () => void
+  clearExperiment: () => void
 }
 
 /**
@@ -45,7 +45,7 @@ export const useHypothesisExperiments = (): UseHypothesisExperimentsComposable =
   const isCreating = ref(false)
   const isDeletingId = ref<string | null>(null)
 
-  const loadExperiments = async (input: LoadHypothesisExperimentsInput): Promise<void> => {
+  const loadExperiment = async (input: LoadHypothesisExperimentInput): Promise<void> => {
     isLoading.value = true
 
     try {
@@ -102,7 +102,7 @@ export const useHypothesisExperiments = (): UseHypothesisExperimentsComposable =
     }
   }
 
-  const clearExperiments = (): void => {
+  const clearExperiment = (): void => {
     experiment.value = null
   }
 
@@ -112,9 +112,9 @@ export const useHypothesisExperiments = (): UseHypothesisExperimentsComposable =
     isCreating,
     isDeletingId,
     hasError,
-    loadExperiments,
+    loadExperiment,
     upsertExperiment,
     deleteExperiment,
-    clearExperiments
+    clearExperiment
   }
 }

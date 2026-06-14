@@ -37,8 +37,8 @@ export interface UseHypothesisExperimentsDetailComposable {
   isAnyMeasurementActionLoading: ComputedRef<boolean>
   isExperimentDeleteSubmitting: Ref<boolean>
   isMeasurementDeleteSubmitting: Ref<boolean>
-  loadExperimentsForRoute: () => Promise<void>
-  clearExperiments: () => void
+  loadExperimentForRoute: () => Promise<void>
+  clearExperiment: () => void
   openCreateExperimentModal: () => void
   openCreateMeasurementModal: () => void
   openEditMeasurementModal: (measurement: MeasurementResponseDto) => void
@@ -72,10 +72,10 @@ export const useHypothesisExperimentsDetail = (
     isCreating: isExperimentCreating,
     isDeletingId: isExperimentDeletingId,
     hasError: hasExperimentsRequestError,
-    loadExperiments,
+    loadExperiment,
     upsertExperiment,
     deleteExperiment,
-    clearExperiments
+    clearExperiment
   } = useHypothesisExperiments()
   const {
     isSubmitting: isExperimentFormSubmitting,
@@ -209,14 +209,14 @@ export const useHypothesisExperimentsDetail = (
   }
 
   /**
-   * Loads experiments for the currently active idea/version/hypothesis route.
+  * Loads the experiment for the currently active idea/version/hypothesis route.
    */
-  const loadExperimentsForRoute = async (): Promise<void> => {
+  const loadExperimentForRoute = async (): Promise<void> => {
     if (!input.hasValidRouteParams.value) {
       return
     }
 
-    await loadExperiments({
+    await loadExperiment({
       hypothesisId: input.hypothesisId.value
     })
 
@@ -233,7 +233,7 @@ export const useHypothesisExperimentsDetail = (
    * Clears local singleton state when route params are invalid or navigation leaves the context.
    */
   const clearExperimentDetails = (): void => {
-    clearExperiments()
+    clearExperiment()
     measurement.value = null
     hasMeasurementsLoadError.value = false
     measurementDeleteCandidate.value = null
@@ -558,8 +558,8 @@ export const useHypothesisExperimentsDetail = (
     isAnyMeasurementActionLoading,
     isExperimentDeleteSubmitting,
     isMeasurementDeleteSubmitting,
-    loadExperimentsForRoute,
-    clearExperiments: clearExperimentDetails,
+    loadExperimentForRoute,
+    clearExperiment: clearExperimentDetails,
     openCreateExperimentModal,
     openCreateMeasurementModal,
     openEditMeasurementModal,
