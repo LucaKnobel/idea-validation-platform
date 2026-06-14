@@ -2,14 +2,14 @@
  * Input required to initialize the create modal state.
  */
 export interface UseHypothesisCreateModalInput {
-  createEmptyFormState: () => CreateHypothesisBodyDto
+  createEmptyFormState: () => UpsertHypothesisBodyDto
 }
 
 /**
  * Public API for the create modal state.
  */
 export interface UseHypothesisCreateModalComposable {
-  formState: CreateHypothesisBodyDto
+  formState: UpsertHypothesisBodyDto
   isCreateModalOpen: Ref<boolean>
   resetForm: () => void
   openCreateModal: () => void
@@ -22,7 +22,7 @@ export interface UseHypothesisCreateModalComposable {
 export const useHypothesisCreateModal = (
   input: UseHypothesisCreateModalInput
 ): UseHypothesisCreateModalComposable => {
-  const formState = reactive<CreateHypothesisBodyDto>(input.createEmptyFormState())
+  const formState = reactive<UpsertHypothesisBodyDto>(input.createEmptyFormState())
   const { isOpen: isCreateModalOpen, open: openModal, close: closeModal } = useModalState()
 
   /**
@@ -33,7 +33,8 @@ export const useHypothesisCreateModal = (
     formState.statement = nextState.statement
     formState.dimension = nextState.dimension
     formState.priority = nextState.priority
-    formState.canvasSectionTypes = [...nextState.canvasSectionTypes]
+    formState.evidenceType = nextState.evidenceType
+    formState.canvasElementTypes = [...nextState.canvasElementTypes]
   }
 
   /**

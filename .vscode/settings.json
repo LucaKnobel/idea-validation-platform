@@ -10,6 +10,7 @@
     "npm run -s test": true,
     "npx vitest": true,
     "npm run -s typecheck": true,
-    "npx nuxi": true
+    "npx nuxi": true,
+    "npm run -s lint": true
   }
 }

@@ -62,6 +62,7 @@
       "statementTooLong": "Eine Hypothesen-Aussage darf maximal 3000 Zeichen haben",
       "dimensionRequired": "Bitte wählen Sie eine Hypothesen-Dimension",
       "priorityRequired": "Bitte wählen Sie eine Priorität",
+      "evidenceTypeRequired": "Bitte wählen Sie einen Evidenztyp",
       "canvasSectionMin": "Wählen Sie mindestens einen Canvas-Bereich",
       "canvasSectionMax": "Es können maximal 9 Canvas-Bereiche verknüpft werden"
     },
@@ -412,7 +413,7 @@
     "actions": {
       "backToIdeas": "Alle Ideen",
       "openNavigation": "Navigation öffnen",
-      "closeNavigation": "Navigation schliessen"
+      "closeNavigation": "Navigation schließen"
     },
     "labels": {
       "version": "Version"
@@ -508,16 +509,16 @@
           "fields": {
             "dimension": "Dimension",
             "priority": "Priorität",
+            "evidenceType": "Evidenztyp",
             "status": "Status",
             "canvasAssignments": "Canvas-Zuordnungen"
           }
         },
         "metrics": {
-          "title": "Metriken",
+          "title": "Metrik",
           "noDescription": "Keine Beschreibung",
           "actions": {
             "create": "Metrik erstellen",
-            "createFirst": "Erste Metrik hinzufügen",
             "update": "Metrik aktualisieren",
             "deleteConfirm": "Metrik löschen"
           },
@@ -533,8 +534,8 @@
             "EQ": "="
           },
           "empty": {
-            "title": "Noch keine Metriken",
-            "description": "Definieren Sie messbare Schwellwerte, um diese Hypothese objektiv zu bewerten."
+            "title": "Noch keine Metrik",
+            "description": "Definieren Sie eine messbare Metrik und den Schwellwert, um diese Hypothese objektiv zu bewerten."
           },
           "modal": {
             "createTitle": "Metrik erstellen",
@@ -589,7 +590,7 @@
           },
           "error": {
             "load": {
-              "title": "Metriken konnten nicht geladen werden",
+              "title": "Metrik konnte nicht geladen werden",
               "message": "Bitte versuchen Sie es in einem Moment erneut."
             },
             "create": {
@@ -607,18 +608,17 @@
           }
         },
         "experiments": {
-          "title": "Experimente",
+          "title": "Experiment",
           "noDescription": "Keine Beschreibung",
           "actions": {
             "create": "Experiment erstellen",
-            "createFirst": "Erstes Experiment hinzufügen",
-            "measurements": "Messungen",
+            "measurements": "Messung",
             "update": "Experiment aktualisieren",
             "deleteConfirm": "Experiment löschen"
           },
           "fields": {
             "status": "Status",
-            "measurements": "Messungen"
+            "measurements": "Messung"
           },
           "status": {
             "PLANNED": "Geplant",
@@ -627,8 +627,8 @@
             "CANCELLED": "Abgebrochen"
           },
           "empty": {
-            "title": "Noch keine Experimente",
-            "description": "Fügen Sie Ihr erstes Experiment hinzu, um diese Hypothese mit messbaren Ergebnissen zu testen."
+            "title": "Noch kein Experiment",
+            "description": "Erstellen Sie ein Experiment, um diese Hypothese mit messbaren Ergebnissen zu testen."
           },
           "modal": {
             "createTitle": "Experiment erstellen",
@@ -671,7 +671,7 @@
           },
           "error": {
             "load": {
-              "title": "Experimente konnten nicht geladen werden",
+              "title": "Experiment konnte nicht geladen werden",
               "message": "Bitte versuchen Sie es in einem Moment erneut."
             },
             "create": {
@@ -689,21 +689,21 @@
           }
         },
         "measurements": {
-          "title": "Messungen",
-          "description": "Erfassen Sie beobachtete Werte für dieses Experiment.",
+          "title": "Messung",
+          "description": "Erfassen Sie den beobachteten Wert für dieses Experiment.",
           "actions": {
             "create": "Messung hinzufügen",
             "update": "Messung aktualisieren",
             "deleteConfirm": "Messung löschen"
           },
           "empty": {
-            "title": "Noch keine Messungen",
-            "description": "Fügen Sie Messungen hinzu, um beobachtete Ergebnisse für dieses Experiment zu dokumentieren."
+            "title": "Noch keine Messung",
+            "description": "Fügen Sie eine Messung hinzu, um das beobachtete Ergebnis für dieses Experiment zu dokumentieren."
           },
           "modal": {
             "createTitle": "Messung hinzufügen",
             "editTitle": "Messung bearbeiten",
-            "description": "Verknüpfen Sie eine Metrik und erfassen Sie den beobachteten Wert."
+            "description": "Erfassen Sie den beobachteten Wert und optional eine Notiz."
           },
           "deleteModal": {
             "title": "Messung löschen",
@@ -711,10 +711,6 @@
             "warning": "Diese Aktion löscht die Messung dauerhaft."
           },
           "form": {
-            "metric": {
-              "label": "Metrik",
-              "placeholder": "Metrik wählen"
-            },
             "value": {
               "label": "Wert",
               "placeholder": "Beispiel: 14.17"
@@ -740,16 +736,12 @@
           },
           "error": {
             "load": {
-              "title": "Messungen konnten nicht geladen werden",
+              "title": "Messung konnte nicht geladen werden",
               "message": "Bitte versuchen Sie es in einem Moment erneut."
             },
             "conflict": {
               "title": "Messung existiert bereits",
-              "message": "Für diese Metrik existiert in diesem Experiment bereits eine Messung. Bearbeiten Sie die bestehende Messung stattdessen."
-            },
-            "noAvailableMetric": {
-              "title": "Keine Metrik verfügbar",
-              "message": "Für dieses Experiment haben bereits alle Metriken dieser Hypothese eine Messung."
+              "message": "Für dieses Experiment existiert bereits eine Messung. Bearbeiten Sie die bestehende Messung stattdessen."
             },
             "create": {
               "title": "Messung konnte nicht erstellt werden",
@@ -800,6 +792,10 @@
           "label": "Priorität",
           "placeholder": "Priorität wählen"
         },
+        "evidenceType": {
+          "label": "Evidenztyp",
+          "placeholder": "Evidenztyp wählen"
+        },
         "sections": {
           "label": "Canvas-Bereiche",
           "description": "Wählen Sie einen oder mehrere Business-Model-Canvas-Bereiche für diese Hypothese.",
@@ -807,6 +803,12 @@
           "searchPlaceholder": "Bereiche filtern",
           "confirm": "Fertig"
         }
+      },
+      "evidenceTypes": {
+        "QUALITATIVE": "Qualitativ",
+        "QUANTITATIVE": "Quantitativ",
+        "BEHAVIORAL": "Verhaltensbasiert",
+        "MONETARY": "Monetär"
       },
       "success": {
         "create": {

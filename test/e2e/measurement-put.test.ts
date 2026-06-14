@@ -28,7 +28,7 @@ describe('PUT /api/hypotheses/:hypothesisId/measurement integration', async () =
       method: 'PUT',
       headers: {
         'content-type': 'application/json',
-        cookie: cookieHeader,
+        'cookie': cookieHeader,
         'x-forwarded-for': createClientIp()
       },
       body: JSON.stringify(body)

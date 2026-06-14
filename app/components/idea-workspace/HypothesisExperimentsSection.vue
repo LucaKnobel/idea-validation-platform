@@ -1,10 +1,10 @@
 <script setup lang="ts">
 /**
- * Props for rendering the experiments section of the hypothesis detail page.
+ * Props for rendering the experiment section of the hypothesis detail page.
  */
 interface HypothesisExperimentsSectionProps {
-  experiments: ExperimentResponseDto[]
-  measurementsByExperiment: Record<string, MeasurementResponseDto[]>
+  experiment: ExperimentResponseDto | null
+  measurement: MeasurementResponseDto | null
   isLoading: boolean
   hasError: boolean
   hasValidRouteParams: boolean
@@ -14,20 +14,19 @@ interface HypothesisExperimentsSectionProps {
   isMeasurementDeleteSubmitting: boolean
   experimentDeletingId: string | null
   measurementDeletingId: string | null
-  resolveMetricName: (metricId: string) => string
   formatMeasurementValue: (measurement: MeasurementResponseDto) => string
 }
 
-const props = defineProps<HypothesisExperimentsSectionProps>()
+defineProps<HypothesisExperimentsSectionProps>()
 
 const emit = defineEmits<{
   retry: []
   create: []
-  createMeasurement: [experiment: ExperimentResponseDto]
-  editMeasurement: [experiment: ExperimentResponseDto, measurement: MeasurementResponseDto]
-  deleteMeasurement: [experiment: ExperimentResponseDto, measurement: MeasurementResponseDto]
-  edit: [experiment: ExperimentResponseDto]
-  delete: [experiment: ExperimentResponseDto]
+  createMeasurement: []
+  editMeasurement: [measurement: MeasurementResponseDto]
+  deleteMeasurement: [measurement: MeasurementResponseDto]
+  edit: []
+  delete: []
 }>()
 </script>
 
@@ -43,7 +42,7 @@ const emit = defineEmits<{
           <UButton
             icon="i-lucide-plus"
             color="primary"
-            :disabled="!hasValidRouteParams"
+            :disabled="!hasValidRouteParams || experiment !== null"
             @click="emit('create')"
           >
             {{ $t('ideaWorkspace.hypotheses.detail.experiments.actions.create') }}
@@ -83,7 +82,7 @@ const emit = defineEmits<{
     </div>
 
     <div
-      v-else-if="experiments.length === 0"
+      v-else-if="experiment === null"
       class="flex min-h-44 flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-default px-5 py-8 text-center"
     >
       <div class="flex size-12 items-center justify-center rounded-full bg-elevated">
@@ -101,14 +100,6 @@ const emit = defineEmits<{
           {{ $t('ideaWorkspace.hypotheses.detail.experiments.empty.description') }}
         </p>
       </div>
-
-      <UButton
-        icon="i-lucide-plus"
-        color="primary"
-        @click="emit('create')"
-      >
-        {{ $t('ideaWorkspace.hypotheses.detail.experiments.actions.createFirst') }}
-      </UButton>
     </div>
 
     <div
@@ -116,8 +107,6 @@ const emit = defineEmits<{
       class="space-y-2.5"
     >
       <article
-        v-for="experiment in experiments"
-        :key="experiment.id"
         class="rounded-lg border border-default bg-default p-3"
       >
         <div class="flex flex-wrap items-start gap-2.5">
@@ -138,7 +127,7 @@ const emit = defineEmits<{
               :disabled="isAnyActionLoading"
               :aria-label="$t('actions.edit')"
               :title="$t('actions.edit')"
-              @click="emit('edit', experiment)"
+              @click="emit('edit')"
             />
 
             <UButton
@@ -149,7 +138,7 @@ const emit = defineEmits<{
               :disabled="isExperimentDeleteSubmitting"
               :aria-label="$t('actions.delete')"
               :title="$t('actions.delete')"
-              @click="emit('delete', experiment)"
+              @click="emit('delete')"
             />
           </div>
         </div>
@@ -177,7 +166,7 @@ const emit = defineEmits<{
             </div>
 
             <div
-              v-else-if="(props.measurementsByExperiment[experiment.id] || []).length === 0"
+              v-else-if="measurement === null"
               class="space-y-2"
             >
               <p class="text-xs text-muted">
@@ -189,7 +178,7 @@ const emit = defineEmits<{
                 variant="soft"
                 icon="i-lucide-plus"
                 :disabled="isAnyActionLoading"
-                @click="emit('createMeasurement', experiment)"
+                @click="emit('createMeasurement')"
               >
                 {{ $t('ideaWorkspace.hypotheses.detail.measurements.actions.create') }}
               </UButton>
@@ -200,13 +189,8 @@ const emit = defineEmits<{
               class="space-y-1.5"
             >
               <article
-                v-for="measurement in props.measurementsByExperiment[experiment.id]"
-                :key="measurement.id"
                 class="rounded border border-default bg-default p-2"
               >
-                <p class="text-xs font-semibold text-highlighted">
-                  {{ resolveMetricName(measurement.metricId) }}
-                </p>
                 <p class="text-xs text-muted">
                   {{ formatMeasurementValue(measurement) }}
                 </p>
@@ -225,7 +209,7 @@ const emit = defineEmits<{
                     :disabled="isAnyActionLoading"
                     :aria-label="$t('ideaWorkspace.hypotheses.detail.measurements.actions.update')"
                     :title="$t('ideaWorkspace.hypotheses.detail.measurements.actions.update')"
-                    @click="emit('editMeasurement', experiment, measurement)"
+                    @click="emit('editMeasurement', measurement)"
                   />
 
                   <UButton
@@ -236,20 +220,10 @@ const emit = defineEmits<{
                     :disabled="isMeasurementDeleteSubmitting"
                     :aria-label="$t('actions.delete')"
                     :title="$t('actions.delete')"
-                    @click="emit('deleteMeasurement', experiment, measurement)"
+                    @click="emit('deleteMeasurement', measurement)"
                   />
                 </div>
               </article>
-
-              <UButton
-                color="primary"
-                variant="soft"
-                icon="i-lucide-plus"
-                :disabled="isAnyActionLoading"
-                @click="emit('createMeasurement', experiment)"
-              >
-                {{ $t('ideaWorkspace.hypotheses.detail.measurements.actions.create') }}
-              </UButton>
             </div>
           </div>
         </div>

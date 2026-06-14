@@ -62,6 +62,7 @@
       "statementTooLong": "A hypothesis statement must not exceed 3000 characters",
       "dimensionRequired": "Please select a hypothesis dimension",
       "priorityRequired": "Please select a hypothesis priority",
+      "evidenceTypeRequired": "Please select an evidence type",
       "canvasSectionMin": "Select at least one canvas section",
       "canvasSectionMax": "A maximum of 9 canvas sections can be linked"
     },
@@ -508,16 +509,16 @@
           "fields": {
             "dimension": "Dimension",
             "priority": "Priority",
+            "evidenceType": "Evidence type",
             "status": "Status",
             "canvasAssignments": "Canvas assignments"
           }
         },
         "metrics": {
-          "title": "Metrics",
+          "title": "Metric",
           "noDescription": "No description",
           "actions": {
             "create": "Create metric",
-            "createFirst": "Add first metric",
             "update": "Update metric",
             "deleteConfirm": "Delete metric"
           },
@@ -533,8 +534,8 @@
             "EQ": "="
           },
           "empty": {
-            "title": "No metrics yet",
-            "description": "Define measurable thresholds so you can evaluate this hypothesis objectively."
+            "title": "No metric yet",
+            "description": "Define one measurable metric and its threshold so you can evaluate this hypothesis objectively."
           },
           "modal": {
             "createTitle": "Create metric",
@@ -589,7 +590,7 @@
           },
           "error": {
             "load": {
-              "title": "Could not load metrics",
+              "title": "Could not load metric",
               "message": "Please try again in a moment."
             },
             "create": {
@@ -607,18 +608,17 @@
           }
         },
         "experiments": {
-          "title": "Experiments",
+          "title": "Experiment",
           "noDescription": "No description",
           "actions": {
             "create": "Create experiment",
-            "createFirst": "Add first experiment",
-            "measurements": "Measurements",
+            "measurements": "Measurement",
             "update": "Update experiment",
             "deleteConfirm": "Delete experiment"
           },
           "fields": {
             "status": "Status",
-            "measurements": "Measurements"
+            "measurements": "Measurement"
           },
           "status": {
             "PLANNED": "Planned",
@@ -627,8 +627,8 @@
             "CANCELLED": "Cancelled"
           },
           "empty": {
-            "title": "No experiments yet",
-            "description": "Add your first experiment to test this hypothesis with measurable results."
+            "title": "No experiment yet",
+            "description": "Create an experiment to test this hypothesis with measurable results."
           },
           "modal": {
             "createTitle": "Create experiment",
@@ -671,7 +671,7 @@
           },
           "error": {
             "load": {
-              "title": "Could not load experiments",
+              "title": "Could not load experiment",
               "message": "Please try again in a moment."
             },
             "create": {
@@ -689,21 +689,21 @@
           }
         },
         "measurements": {
-          "title": "Measurements",
-          "description": "Capture observed values for this experiment.",
+          "title": "Measurement",
+          "description": "Capture the observed value for this experiment.",
           "actions": {
             "create": "Add measurement",
             "update": "Update measurement",
             "deleteConfirm": "Delete measurement"
           },
           "empty": {
-            "title": "No measurements yet",
-            "description": "Add measurements to document observed outcomes for this experiment."
+            "title": "No measurement yet",
+            "description": "Add a measurement to document the observed outcome for this experiment."
           },
           "modal": {
             "createTitle": "Add measurement",
             "editTitle": "Edit measurement",
-            "description": "Link one metric and capture the observed value."
+            "description": "Capture the observed value and an optional note."
           },
           "deleteModal": {
             "title": "Delete measurement",
@@ -711,10 +711,6 @@
             "warning": "This action permanently deletes the measurement."
           },
           "form": {
-            "metric": {
-              "label": "Metric",
-              "placeholder": "Select a metric"
-            },
             "value": {
               "label": "Value",
               "placeholder": "Example: 14.17"
@@ -740,16 +736,12 @@
           },
           "error": {
             "load": {
-              "title": "Could not load measurements",
+              "title": "Could not load measurement",
               "message": "Please try again in a moment."
             },
             "conflict": {
               "title": "Measurement already exists",
-              "message": "A measurement for this metric already exists in this experiment. Edit the existing one instead."
-            },
-            "noAvailableMetric": {
-              "title": "No metric available",
-              "message": "All metrics for this hypothesis already have a measurement in this experiment."
+              "message": "A measurement already exists for this experiment. Edit the existing one instead."
             },
             "create": {
               "title": "Could not create measurement",
@@ -800,6 +792,10 @@
           "label": "Priority",
           "placeholder": "Select a priority"
         },
+        "evidenceType": {
+          "label": "Evidence type",
+          "placeholder": "Select an evidence type"
+        },
         "sections": {
           "label": "Canvas sections",
           "description": "Select one or more Business Model Canvas sections this hypothesis belongs to.",
@@ -807,6 +803,12 @@
           "searchPlaceholder": "Filter sections",
           "confirm": "Done"
         }
+      },
+      "evidenceTypes": {
+        "QUALITATIVE": "Qualitative",
+        "QUANTITATIVE": "Quantitative",
+        "BEHAVIORAL": "Behavioral",
+        "MONETARY": "Monetary"
       },
       "success": {
         "create": {

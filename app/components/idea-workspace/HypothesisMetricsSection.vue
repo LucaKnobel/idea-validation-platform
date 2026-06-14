@@ -1,9 +1,9 @@
 <script setup lang="ts">
 /**
- * Props for rendering the metrics section of the hypothesis detail page.
+ * Props for rendering the metric section of the hypothesis detail page.
  */
 interface HypothesisMetricsSectionProps {
-  metrics: MetricResponseDto[]
+  metric: MetricResponseDto | null
   isLoading: boolean
   hasError: boolean
   hasValidRouteParams: boolean
@@ -18,8 +18,8 @@ const props = defineProps<HypothesisMetricsSectionProps>()
 const emit = defineEmits<{
   retry: []
   create: []
-  edit: [metric: MetricResponseDto]
-  delete: [metric: MetricResponseDto]
+  edit: []
+  delete: []
 }>()
 </script>
 
@@ -35,7 +35,7 @@ const emit = defineEmits<{
           <UButton
             icon="i-lucide-plus"
             color="primary"
-            :disabled="!hasValidRouteParams"
+            :disabled="!hasValidRouteParams || metric !== null"
             @click="emit('create')"
           >
             {{ $t('ideaWorkspace.hypotheses.detail.metrics.actions.create') }}
@@ -75,7 +75,7 @@ const emit = defineEmits<{
     </div>
 
     <div
-      v-else-if="metrics.length === 0"
+      v-else-if="metric === null"
       class="flex min-h-44 flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-default px-5 py-8 text-center"
     >
       <div class="flex size-12 items-center justify-center rounded-full bg-elevated">
@@ -93,14 +93,6 @@ const emit = defineEmits<{
           {{ $t('ideaWorkspace.hypotheses.detail.metrics.empty.description') }}
         </p>
       </div>
-
-      <UButton
-        icon="i-lucide-plus"
-        color="primary"
-        @click="emit('create')"
-      >
-        {{ $t('ideaWorkspace.hypotheses.detail.metrics.actions.createFirst') }}
-      </UButton>
     </div>
 
     <div
@@ -108,8 +100,6 @@ const emit = defineEmits<{
       class="space-y-2.5"
     >
       <article
-        v-for="metric in metrics"
-        :key="metric.id"
         class="rounded-lg border border-default bg-default p-3"
       >
         <div class="flex flex-wrap items-start gap-2.5">
@@ -130,7 +120,7 @@ const emit = defineEmits<{
               :disabled="isAnyActionLoading"
               :aria-label="$t('actions.edit')"
               :title="$t('actions.edit')"
-              @click="emit('edit', metric)"
+              @click="emit('edit')"
             />
 
             <UButton
@@ -141,7 +131,7 @@ const emit = defineEmits<{
               :disabled="isMetricDeleteSubmitting"
               :aria-label="$t('actions.delete')"
               :title="$t('actions.delete')"
-              @click="emit('delete', metric)"
+              @click="emit('delete')"
             />
           </div>
         </div>

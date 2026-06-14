@@ -4,12 +4,12 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 export interface ExperimentFormState {
   title: string
   description: string
-  status: CreateExperimentBodyDto['status']
+  status: UpsertExperimentBodyDto['status']
 }
 
 interface ExperimentFormStatusOption {
   label: string
-  value: CreateExperimentBodyDto['status']
+  value: UpsertExperimentBodyDto['status']
 }
 
 /**

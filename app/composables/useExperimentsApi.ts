@@ -1,38 +1,22 @@
-export type ListExperimentsInput = {
-  ideaId: string
-  versionId: string
+export type GetExperimentInput = {
   hypothesisId: string
 }
 
-export type CreateExperimentInput = {
-  ideaId: string
-  versionId: string
+export type UpsertExperimentInput = {
   hypothesisId: string
-  body: CreateExperimentBodyDto
-}
-
-export type UpdateExperimentInput = {
-  ideaId: string
-  versionId: string
-  hypothesisId: string
-  experimentId: string
-  body: UpdateExperimentBodyDto
+  body: UpsertExperimentBodyDto
 }
 
 export type DeleteExperimentInput = {
-  ideaId: string
-  versionId: string
   hypothesisId: string
-  experimentId: string
 }
 
 /**
  * Public contract implemented by useExperimentsApi.
  */
 export interface UseExperimentsApiComposable {
-  listExperiments: (input: ListExperimentsInput) => Promise<ExperimentsListResponseDto>
-  createExperiment: (input: CreateExperimentInput) => Promise<ExperimentResponseDto>
-  updateExperiment: (input: UpdateExperimentInput) => Promise<ExperimentResponseDto>
+  getExperiment: (input: GetExperimentInput) => Promise<ExperimentResponseDto>
+  upsertExperiment: (input: UpsertExperimentInput) => Promise<ExperimentResponseDto>
   deleteExperiment: (input: DeleteExperimentInput) => Promise<void>
 }
 
@@ -40,34 +24,26 @@ export interface UseExperimentsApiComposable {
  * Encapsulates HTTP calls for hypothesis experiment resources.
  */
 export const useExperimentsApi = (): UseExperimentsApiComposable => {
-  const listExperiments = async (input: ListExperimentsInput): Promise<ExperimentsListResponseDto> => {
-    return $fetch<ExperimentsListResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/hypotheses/${input.hypothesisId}/experiments`)
+  const getExperiment = async (input: GetExperimentInput): Promise<ExperimentResponseDto> => {
+    return $fetch<ExperimentResponseDto>(`/api/hypotheses/${input.hypothesisId}/experiment`)
   }
 
-  const createExperiment = async (input: CreateExperimentInput): Promise<ExperimentResponseDto> => {
-    return $fetch<ExperimentResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/hypotheses/${input.hypothesisId}/experiments`, {
-      method: 'POST',
-      body: input.body
-    })
-  }
-
-  const updateExperiment = async (input: UpdateExperimentInput): Promise<ExperimentResponseDto> => {
-    return $fetch<ExperimentResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/hypotheses/${input.hypothesisId}/experiments/${input.experimentId}`, {
+  const upsertExperiment = async (input: UpsertExperimentInput): Promise<ExperimentResponseDto> => {
+    return $fetch<ExperimentResponseDto>(`/api/hypotheses/${input.hypothesisId}/experiment`, {
       method: 'PUT',
       body: input.body
     })
   }
 
   const deleteExperiment = async (input: DeleteExperimentInput): Promise<void> => {
-    await $fetch(`/api/ideas/${input.ideaId}/versions/${input.versionId}/hypotheses/${input.hypothesisId}/experiments/${input.experimentId}`, {
+    await $fetch(`/api/hypotheses/${input.hypothesisId}/experiment`, {
       method: 'DELETE'
     })
   }
 
   return {
-    listExperiments,
-    createExperiment,
-    updateExperiment,
+    getExperiment,
+    upsertExperiment,
     deleteExperiment
   }
 }

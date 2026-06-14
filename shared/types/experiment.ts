@@ -1,5 +1,4 @@
 export type {
   UpsertExperimentBodyDto,
-  ExperimentResponseDto,
-  ExperimentsListResponseDto
+  ExperimentResponseDto
 } from '@infrastructure/validation/experiment-schemas'

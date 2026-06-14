@@ -1,20 +1,18 @@
 import type { MetricFormState } from '~/components/idea-workspace/MetricFormModal.vue'
 
 /**
- * Route-level dependencies required by the hypothesis metrics detail flow.
+ * Route-level dependencies required by the hypothesis metric detail flow.
  */
 export interface UseHypothesisMetricsDetailInput {
-  ideaId: Ref<string>
-  versionId: Ref<string>
   hypothesisId: Ref<string>
   hasValidRouteParams: ComputedRef<boolean>
 }
 
 /**
- * Public API for metrics section state and modal workflows on hypothesis detail pages.
+ * Public API for metric section state and modal workflows on hypothesis detail pages.
  */
 export interface UseHypothesisMetricsDetailComposable {
-  metrics: Ref<MetricResponseDto[]>
+  metric: Ref<MetricResponseDto | null>
   isMetricsLoading: Ref<boolean>
   isMetricDeletingId: Ref<string | null>
   hasMetricsError: Ref<boolean>
@@ -24,21 +22,21 @@ export interface UseHypothesisMetricsDetailComposable {
   metricFormState: MetricFormState
   metricFormTitle: ComputedRef<string>
   metricSubmitLabel: ComputedRef<string>
-  metricOperatorOptions: ComputedRef<Array<{ label: string, value: CreateMetricBodyDto['threshold']['operator'] }>>
+  metricOperatorOptions: ComputedRef<Array<{ label: string, value: UpsertMetricBodyDto['threshold']['operator'] }>>
   isAnyMetricActionLoading: ComputedRef<boolean>
   isMetricDeleteSubmitting: Ref<boolean>
   loadMetricsForRoute: () => Promise<void>
   clearMetrics: () => void
   openCreateMetricModal: () => void
-  openEditMetricModal: (metric: MetricResponseDto) => void
-  openMetricDeleteModal: (metric: MetricResponseDto) => void
+  openEditMetricModal: () => void
+  openMetricDeleteModal: () => void
   formatMetricThreshold: (metric: MetricResponseDto) => string
   submitMetricForm: (state: MetricFormState) => Promise<void>
   confirmDeleteMetric: () => Promise<void>
 }
 
 /**
- * Encapsulates metrics data loading, modal state, and CRUD submit handlers for one hypothesis detail page.
+ * Encapsulates metric data loading, modal state, and CRUD submit handlers for one hypothesis detail page.
  */
 export const useHypothesisMetricsDetail = (
   input: UseHypothesisMetricsDetailInput
@@ -47,15 +45,13 @@ export const useHypothesisMetricsDetail = (
   const { handleRateLimitError } = useErrorHandler()
   const { showSuccess, showError } = useToastNotification()
   const {
-    metrics,
+    metric,
     isLoading: isMetricsLoading,
     isCreating: isMetricCreating,
     isDeletingId: isMetricDeletingId,
-    isUpdatingId: metricUpdatingId,
     hasError: hasMetricsError,
     loadMetrics,
-    createMetric,
-    updateMetric,
+    upsertMetric,
     deleteMetric
   } = useHypothesisMetrics()
   const {
@@ -102,11 +98,11 @@ export const useHypothesisMetricsDetail = (
       { label: t('ideaWorkspace.hypotheses.detail.metrics.operators.LTE'), value: 'LTE' },
       { label: t('ideaWorkspace.hypotheses.detail.metrics.operators.LT'), value: 'LT' },
       { label: t('ideaWorkspace.hypotheses.detail.metrics.operators.EQ'), value: 'EQ' }
-    ] satisfies Array<{ label: string, value: CreateMetricBodyDto['threshold']['operator'] }>
+    ] satisfies Array<{ label: string, value: UpsertMetricBodyDto['threshold']['operator'] }>
   })
 
   const isAnyMetricActionLoading = computed(() => {
-    return isMetricCreating.value || metricUpdatingId.value !== null || isMetricFormSubmitting.value
+    return isMetricCreating.value || isMetricFormSubmitting.value
   })
 
   /**
@@ -123,14 +119,14 @@ export const useHypothesisMetricsDetail = (
   }
 
   /**
-   * Clears local list state when route params are invalid or navigation leaves the context.
+   * Clears local singleton state when route params are invalid or navigation leaves the context.
    */
   const clearMetrics = (): void => {
-    metrics.value = []
+    metric.value = null
   }
 
   /**
-   * Loads metrics for the currently active idea/version/hypothesis route.
+   * Loads the singleton metric for the currently active idea/version/hypothesis route.
    */
   const loadMetricsForRoute = async (): Promise<void> => {
     if (!input.hasValidRouteParams.value) {
@@ -138,8 +134,6 @@ export const useHypothesisMetricsDetail = (
     }
 
     await loadMetrics({
-      ideaId: input.ideaId.value,
-      versionId: input.versionId.value,
       hypothesisId: input.hypothesisId.value
     })
   }
@@ -148,6 +142,10 @@ export const useHypothesisMetricsDetail = (
    * Opens create mode with a clean metric form.
    */
   const openCreateMetricModal = (): void => {
+    if (metric.value !== null) {
+      return
+    }
+
     metricFormMode.value = 'create'
     activeMetricId.value = null
     resetMetricForm()
@@ -155,26 +153,34 @@ export const useHypothesisMetricsDetail = (
   }
 
   /**
-   * Opens update mode and pre-fills the metric form from the selected metric.
+   * Opens update mode and pre-fills the metric form from the current metric.
    */
-  const openEditMetricModal = (metric: MetricResponseDto): void => {
+  const openEditMetricModal = (): void => {
+    if (metric.value === null) {
+      return
+    }
+
     metricFormMode.value = 'update'
-    activeMetricId.value = metric.id
-    metricFormState.name = metric.name
-    metricFormState.description = metric.description || ''
-    metricFormState.unit = metric.unit || ''
+    activeMetricId.value = metric.value.id
+    metricFormState.name = metric.value.name
+    metricFormState.description = metric.value.description || ''
+    metricFormState.unit = metric.value.unit || ''
     metricFormState.threshold = {
-      operator: metric.threshold?.operator || 'GTE',
-      referenceValue: metric.threshold?.referenceValue || 0
+      operator: metric.value.threshold?.operator || 'GTE',
+      referenceValue: metric.value.threshold?.referenceValue || 0
     }
     isMetricModalOpen.value = true
   }
 
   /**
-   * Opens delete confirmation for the selected metric.
+   * Opens delete confirmation for the current metric.
    */
-  const openMetricDeleteModal = (metric: MetricResponseDto): void => {
-    metricDeleteCandidate.value = metric
+  const openMetricDeleteModal = (): void => {
+    if (metric.value === null) {
+      return
+    }
+
+    metricDeleteCandidate.value = metric.value
     isMetricDeleteModalOpen.value = true
   }
 
@@ -194,7 +200,7 @@ export const useHypothesisMetricsDetail = (
   /**
    * Normalizes form values to the API payload shape (nullable strings for optional fields).
    */
-  const normalizeMetricBody = (state: MetricFormState): CreateMetricBodyDto => {
+  const normalizeMetricBody = (state: MetricFormState): UpsertMetricBodyDto => {
     return {
       name: state.name,
       description: state.description.trim().length > 0 ? state.description.trim() : null,
@@ -219,9 +225,7 @@ export const useHypothesisMetricsDetail = (
     try {
       await runMetricFormAction(async () => {
         if (metricFormMode.value === 'create') {
-          const created = await createMetric({
-            ideaId: input.ideaId.value,
-            versionId: input.versionId.value,
+          const created = await upsertMetric({
             hypothesisId: input.hypothesisId.value,
             body
           })
@@ -236,15 +240,8 @@ export const useHypothesisMetricsDetail = (
           return true
         }
 
-        if (activeMetricId.value === null) {
-          return false
-        }
-
-        const updated = await updateMetric({
-          ideaId: input.ideaId.value,
-          versionId: input.versionId.value,
+        const updated = await upsertMetric({
           hypothesisId: input.hypothesisId.value,
-          metricId: activeMetricId.value,
           body
         })
 
@@ -272,15 +269,10 @@ export const useHypothesisMetricsDetail = (
       return
     }
 
-    const candidate = metricDeleteCandidate.value
-
     try {
       await runMetricDeleteAction(async () => {
         const deleted = await deleteMetric({
-          ideaId: input.ideaId.value,
-          versionId: input.versionId.value,
-          hypothesisId: input.hypothesisId.value,
-          metricId: candidate.id
+          hypothesisId: input.hypothesisId.value
         })
 
         if (!deleted) {
@@ -301,7 +293,7 @@ export const useHypothesisMetricsDetail = (
   }
 
   return {
-    metrics,
+    metric,
     isMetricsLoading,
     isMetricDeletingId,
     hasMetricsError,
