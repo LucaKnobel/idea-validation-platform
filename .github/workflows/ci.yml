@@ -59,7 +59,7 @@ jobs:
       # Reset database and generate Prisma Client
       - name: Setup database
         run: |
-          npx prisma migrate reset --force --skip-generate
+          npx prisma migrate reset --force
           npx prisma generate
 
       # Check dependencies for known vulnerabilities (fail on critical severity)
