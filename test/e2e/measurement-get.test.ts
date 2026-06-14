@@ -16,11 +16,14 @@ import { createIdeaVersionForUser } from './ideas-test-helpers'
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
-describe('GET /api/measurements/:measurementId integration', async () => {
+describe('GET /api/hypotheses/:hypothesisId/measurement integration', async () => {
   await setup(getE2ESetupOptions())
 
-  const getMeasurementWithCookie = async (cookieHeader: string, measurementId: string): Promise<Response> => {
-    return fetch(url(`/api/measurements/${measurementId}`), {
+  const getMeasurementWithCookie = async (
+    cookieHeader: string,
+    hypothesisId: string
+  ): Promise<Response> => {
+    return fetch(url(`/api/hypotheses/${hypothesisId}/measurement`), {
       method: 'GET',
       headers: {
         'cookie': cookieHeader,
@@ -29,24 +32,24 @@ describe('GET /api/measurements/:measurementId integration', async () => {
     })
   }
 
-  it('requires authentication for measurement loading', async () => {
-    const response = await fetch(url(`/api/measurements/${randomUUID()}`), {
+  it('requires authentication', async () => {
+    const response = await fetch(url(`/api/hypotheses/${randomUUID()}/measurement`), {
       method: 'GET'
     })
 
     expect(response.status).toBe(401)
   })
 
-  it('returns one owned measurement', async () => {
+  it('returns the measurement singleton for an owned hypothesis', async () => {
     const sessionResult = await createAuthenticatedSession({
-      emailPrefix: 'measurements-list-owner',
-      name: 'Measurements List Owner'
+      emailPrefix: 'measurements-get-owner',
+      name: 'Measurements Get Owner'
     })
     const user = expectAuthenticatedSessionCreated(sessionResult)
 
     const createdVersion = await createIdeaVersionForUser({
       userId: user.id,
-      title: 'Idea for measurement listing',
+      title: 'Measurement get version',
       description: 'Fixture idea version'
     })
 
@@ -60,56 +63,29 @@ describe('GET /api/measurements/:measurementId integration', async () => {
       }
     })
 
-    const experiment = await prisma.experiment.create({
+    const measurement = await prisma.measurement.create({
       data: {
         hypothesisId: hypothesis.id,
-        title: 'Owner Experiment',
-        description: 'Measurement experiment',
-        status: 'RUNNING'
-      }
-    })
-
-    const metricA = await prisma.metric.create({
-      data: {
-        hypothesisId: hypothesis.id,
-        name: 'Conversion Rate',
-        description: null,
-        unit: '%',
-        threshold: {
-          create: {
-            operator: 'GTE',
-            referenceValue: 10
-          }
-        }
-      }
-    })
-
-    const measurementA = await prisma.measurement.create({
-      data: {
-        experimentId: experiment.id,
-        metricId: metricA.id,
         value: 12.5,
         note: 'First cohort'
       }
     })
 
-    const response = await getMeasurementWithCookie(user.cookieHeader, measurementA.id)
+    const response = await getMeasurementWithCookie(user.cookieHeader, hypothesis.id)
 
     expect(response.status).toBe(200)
 
     const payload = await response.json() as MeasurementResponseDto
 
-    expect(payload.id).toBe(measurementA.id)
-    expect(payload.experimentId).toBe(experiment.id)
-    expect(payload.metricId).toBe(metricA.id)
+    expect(payload.id).toBe(measurement.id)
     expect(payload.value).toBe(12.5)
     expect(payload.note).toBe('First cohort')
   })
 
-  it('rejects invalid route params with 400', async () => {
+  it('returns 400 for invalid hypothesisId route param', async () => {
     const sessionResult = await createAuthenticatedSession({
-      emailPrefix: 'measurements-list-invalid',
-      name: 'Measurements List Invalid'
+      emailPrefix: 'measurements-get-invalid',
+      name: 'Measurements Get Invalid'
     })
     const user = expectAuthenticatedSessionCreated(sessionResult)
 
@@ -118,14 +94,42 @@ describe('GET /api/measurements/:measurementId integration', async () => {
     expect(response.status).toBe(400)
   })
 
-  it('returns 404 when an authenticated user requests another users measurement', async () => {
+  it('returns 404 when measurement does not exist for owned hypothesis', async () => {
+    const sessionResult = await createAuthenticatedSession({
+      emailPrefix: 'measurements-get-missing',
+      name: 'Measurements Get Missing'
+    })
+    const user = expectAuthenticatedSessionCreated(sessionResult)
+
+    const createdVersion = await createIdeaVersionForUser({
+      userId: user.id,
+      title: 'Private idea version without measurement',
+      description: 'Private'
+    })
+
+    const hypothesis = await prisma.hypothesis.create({
+      data: {
+        ideaVersionId: createdVersion.ideaVersionId,
+        statement: 'Hypothesis without measurement',
+        dimension: 'MARKET',
+        priority: 'MEDIUM',
+        evidenceType: 'QUANTITATIVE'
+      }
+    })
+
+    const response = await getMeasurementWithCookie(user.cookieHeader, hypothesis.id)
+
+    expect(response.status).toBe(404)
+  })
+
+  it('returns 404 for another users hypothesis', async () => {
     const ownerResult = await createAuthenticatedSession({
-      emailPrefix: 'measurements-list-owner-b',
-      name: 'Measurements List Owner B'
+      emailPrefix: 'measurements-get-owner-b',
+      name: 'Measurements Get Owner B'
     })
     const attackerResult = await createAuthenticatedSession({
-      emailPrefix: 'measurements-list-attacker',
-      name: 'Measurements List Attacker'
+      emailPrefix: 'measurements-get-attacker',
+      name: 'Measurements Get Attacker'
     })
 
     const owner = expectAuthenticatedSessionCreated(ownerResult)
@@ -141,46 +145,21 @@ describe('GET /api/measurements/:measurementId integration', async () => {
       data: {
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Protected measurements hypothesis',
-        dimension: 'MARKET',
-        priority: 'MEDIUM',
-        evidenceType: 'QUANTITATIVE'
+        dimension: 'SOLUTION',
+        priority: 'LOW',
+        evidenceType: 'QUALITATIVE'
       }
     })
 
-    const experiment = await prisma.experiment.create({
+    await prisma.measurement.create({
       data: {
         hypothesisId: hypothesis.id,
-        title: 'Private Experiment',
-        description: null,
-        status: 'RUNNING'
-      }
-    })
-
-    const metric = await prisma.metric.create({
-      data: {
-        hypothesisId: hypothesis.id,
-        name: 'Private Metric',
-        description: null,
-        unit: null,
-        threshold: {
-          create: {
-            operator: 'GTE',
-            referenceValue: 1
-          }
-        }
-      }
-    })
-
-    const measurement = await prisma.measurement.create({
-      data: {
-        experimentId: experiment.id,
-        metricId: metric.id,
         value: 3,
         note: null
       }
     })
 
-    const response = await getMeasurementWithCookie(attacker.cookieHeader, measurement.id)
+    const response = await getMeasurementWithCookie(attacker.cookieHeader, hypothesis.id)
 
     expect(response.status).toBe(404)
   })
