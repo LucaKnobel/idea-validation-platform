@@ -58,33 +58,33 @@
       "tooManyElements": "Es sind maximal 500 Canvas-Einträge erlaubt"
     },
     "hypothesis": {
-      "statementRequired": "Eine Hypothesen-Aussage ist erforderlich",
-      "statementTooLong": "Eine Hypothesen-Aussage darf maximal 3000 Zeichen haben",
-      "dimensionRequired": "Bitte wählen Sie eine Hypothesen-Dimension",
+      "statementRequired": "Eine Hypothese ist erforderlich",
+      "statementTooLong": "Eine Hypothese darf maximal 3000 Zeichen haben",
+      "dimensionRequired": "Bitte wählen Sie einen Unsicherheitsbereich",
       "priorityRequired": "Bitte wählen Sie eine Priorität",
-      "evidenceTypeRequired": "Bitte wählen Sie einen Evidenztyp",
+      "evidenceTypeRequired": "Bitte wählen Sie eine Validierungsart",
       "canvasSectionMin": "Wählen Sie mindestens einen Canvas-Bereich",
       "canvasSectionMax": "Es können maximal 9 Canvas-Bereiche verknüpft werden"
     },
     "metric": {
-      "nameRequired": "Ein Metrik-Name ist erforderlich",
-      "nameTooLong": "Ein Metrik-Name darf maximal 200 Zeichen enthalten",
+      "nameRequired": "Eine Metrik ist erforderlich",
+      "nameTooLong": "Eine Metrik darf maximal 200 Zeichen enthalten",
       "descriptionTooLong": "Eine Metrik-Beschreibung darf maximal 1000 Zeichen enthalten",
       "unitTooLong": "Eine Metrik-Einheit darf maximal 100 Zeichen enthalten",
-      "operatorRequired": "Bitte wählen Sie einen Schwellwert-Operator",
-      "referenceValueRequired": "Ein Schwellwert ist erforderlich",
-      "referenceValueFinite": "Der Schwellwert muss eine endliche Zahl sein"
+      "operatorRequired": "Bitte wählen Sie eine Erfolgsbedingung",
+      "referenceValueRequired": "Ein Zielwert ist erforderlich",
+      "referenceValueFinite": "Der Zielwert muss eine endliche Zahl sein"
     },
     "experiment": {
-      "titleRequired": "Ein Experiment-Titel ist erforderlich",
-      "titleTooLong": "Ein Experiment-Titel darf maximal 200 Zeichen lang sein",
+      "titleRequired": "Ein Experiment ist erforderlich",
+      "titleTooLong": "Ein Experiment darf maximal 200 Zeichen lang sein",
       "descriptionTooLong": "Eine Experiment-Beschreibung darf maximal 4000 Zeichen lang sein",
       "statusRequired": "Bitte wählen Sie einen Experiment-Status"
     },
     "measurement": {
       "metricRequired": "Bitte wählen Sie eine Metrik",
       "valueRequired": "Ein Messwert ist erforderlich",
-      "noteTooLong": "Eine Notiz darf maximal 2000 Zeichen lang sein"
+      "noteTooLong": "Erkenntnisse dürfen maximal 2000 Zeichen lang sein"
     }
   },
   "error": {
@@ -483,8 +483,8 @@
       },
       "table": {
         "columns": {
-          "statement": "Aussage",
-          "dimension": "Dimension",
+          "statement": "Hypothese",
+          "dimension": "Unsicherheitsbereich",
           "priority": "Priorität",
           "status": "Status",
           "actions": "Aktionen"
@@ -507,11 +507,11 @@
           "title": "Übersicht",
           "canvasEmpty": "Noch keine Canvas-Bereiche verknüpft.",
           "fields": {
-            "dimension": "Dimension",
+            "dimension": "Unsicherheitsbereich",
             "priority": "Priorität",
-            "evidenceType": "Evidenztyp",
+            "evidenceType": "Validierungsart",
             "status": "Status",
-            "canvasAssignments": "Canvas-Zuordnungen"
+            "canvasAssignments": "Verknüpfte Canvas-Bereiche"
           }
         },
         "metrics": {
@@ -524,7 +524,7 @@
           },
           "fields": {
             "unit": "Einheit",
-            "threshold": "Schwellwert"
+            "threshold": "Zielwert"
           },
           "operators": {
             "GTE": ">=",
@@ -535,21 +535,21 @@
           },
           "empty": {
             "title": "Noch keine Metrik",
-            "description": "Definieren Sie eine messbare Metrik und den Schwellwert, um diese Hypothese objektiv zu bewerten."
+            "description": "Definieren Sie eine messbare Metrik und den Zielwert, um diese Hypothese objektiv zu bewerten."
           },
           "modal": {
             "createTitle": "Metrik erstellen",
             "editTitle": "Metrik bearbeiten",
-            "description": "Erfassen Sie ein messbares Signal und den Schwellwert, der Erfolg anzeigt."
+            "description": "Erfassen Sie ein messbares Signal und den Zielwert, der Erfolg anzeigt."
           },
           "deleteModal": {
             "title": "Metrik löschen",
             "description": "Bitte bestätigen Sie, dass Sie diese Metrik entfernen möchten.",
-            "warning": "Diese Aktion löscht die Metrik und den verknüpften Schwellwert dauerhaft."
+            "warning": "Diese Aktion löscht die Metrik und den verknüpften Zielwert dauerhaft."
           },
           "form": {
             "name": {
-              "label": "Metrik-Name",
+              "label": "Metrik",
               "placeholder": "Beispiel: Trial-Conversion-Rate"
             },
             "description": {
@@ -558,7 +558,7 @@
               "placeholder": "Beispiel: Anteil der Trial-Nutzer, die innerhalb von 14 Tagen konvertieren"
             },
             "criterion": {
-              "label": "Erfolgskriterium"
+              "label": "Zielwert"
             },
             "unit": {
               "label": "Einheit",
@@ -622,7 +622,7 @@
           },
           "status": {
             "PLANNED": "Geplant",
-            "RUNNING": "Laufend",
+            "RUNNING": "Aktiv",
             "COMPLETED": "Abgeschlossen",
             "CANCELLED": "Abgebrochen"
           },
@@ -642,7 +642,7 @@
           },
           "form": {
             "title": {
-              "label": "Experiment-Titel",
+              "label": "Experiment",
               "placeholder": "Beispiel: Landingpage Smoke-Test"
             },
             "description": {
@@ -703,7 +703,7 @@
           "modal": {
             "createTitle": "Messung hinzufügen",
             "editTitle": "Messung bearbeiten",
-            "description": "Erfassen Sie den beobachteten Wert und optional eine Notiz."
+            "description": "Erfassen Sie den beobachteten Wert und optionale Erkenntnisse."
           },
           "deleteModal": {
             "title": "Messung löschen",
@@ -716,7 +716,7 @@
               "placeholder": "Beispiel: 14.17"
             },
             "note": {
-              "label": "Notiz",
+              "label": "Erkenntnisse",
               "placeholder": "Optional"
             }
           },
@@ -776,25 +776,25 @@
       "deleteModal": {
         "title": "Hypothese löschen",
         "description": "Bitte bestätigen Sie, dass Sie diese Hypothese entfernen möchten.",
-        "warning": "Diese Aktion löscht die Hypothese inklusive verknüpfter Metriken, Schwellwerte und Experimente dauerhaft."
+        "warning": "Diese Aktion löscht die Hypothese inklusive verknüpfter Metriken, Zielwerte und Experimente dauerhaft."
       },
       "form": {
         "statement": {
-          "label": "Hypothesen-Aussage",
+          "label": "Hypothese",
           "description": "Formulieren Sie eine konkrete und testbare Annahme.",
           "placeholder": "Beispiel: Freelancer zahlen für wöchentliche KI-generierte Lead-Listen."
         },
         "dimension": {
-          "label": "Unsicherheits-Dimension",
-          "placeholder": "Dimension wählen"
+          "label": "Unsicherheitsbereich",
+          "placeholder": "Unsicherheitsbereich wählen"
         },
         "priority": {
           "label": "Priorität",
           "placeholder": "Priorität wählen"
         },
         "evidenceType": {
-          "label": "Evidenztyp",
-          "placeholder": "Evidenztyp wählen"
+          "label": "Validierungsart",
+          "placeholder": "Validierungsart wählen"
         },
         "sections": {
           "label": "Canvas-Bereiche",
