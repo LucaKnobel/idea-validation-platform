@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { setup, url } from '@nuxt/test-utils/e2e'
 import type { MetricResponseDto } from '@infrastructure/validation/metric-schemas'
@@ -14,18 +15,15 @@ import { createIdeaVersionForUser } from './ideas-test-helpers'
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
-describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metrics/:metricId integration', async () => {
+describe('PUT /api/hypotheses/:hypothesisId/metric integration', async () => {
   await setup(getE2ESetupOptions())
 
-  const updateMetricWithCookie = async (
+  const putMetricWithCookie = async (
     cookieHeader: string,
-    ideaId: string,
-    versionId: string,
     hypothesisId: string,
-    metricId: string,
     body: Record<string, unknown>
   ): Promise<Response> => {
-    return fetch(url(`/api/ideas/${ideaId}/versions/${versionId}/hypotheses/${hypothesisId}/metrics/${metricId}`), {
+    return fetch(url(`/api/hypotheses/${hypothesisId}/metric`), {
       method: 'PUT',
       headers: {
         'content-type': 'application/json',
@@ -36,16 +34,36 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
     })
   }
 
-  it('updates the metric and upserts its threshold in one request', async () => {
+  it('requires authentication', async () => {
+    const response = await fetch(url(`/api/hypotheses/${randomUUID()}/metric`), {
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: 'Conversion Rate',
+        description: 'Measures sign-up conversion.',
+        unit: '%',
+        threshold: {
+          operator: 'GTE',
+          referenceValue: 10
+        }
+      })
+    })
+
+    expect(response.status).toBe(401)
+  })
+
+  it('updates an existing metric and upserts threshold', async () => {
     const sessionResult = await createAuthenticatedSession({
-      emailPrefix: 'metrics-update-owner',
-      name: 'Metrics Update Owner'
+      emailPrefix: 'metrics-put-owner',
+      name: 'Metrics Put Owner'
     })
     const user = expectAuthenticatedSessionCreated(sessionResult)
 
     const createdVersion = await createIdeaVersionForUser({
       userId: user.id,
-      title: 'Idea for metric update',
+      title: 'Idea for metric put',
       description: 'Fixture idea version'
     })
 
@@ -65,13 +83,10 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
         name: 'Willingness To Pay',
         description: 'Initial description',
         unit: null
-      },
-      include: {
-        threshold: true
       }
     })
 
-    const response = await updateMetricWithCookie(user.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, metric.id, {
+    const response = await putMetricWithCookie(user.cookieHeader, hypothesis.id, {
       name: '  Willingness To Pay  ',
       description: '  Average amount users are willing to pay.  ',
       unit: ' CHF ',
@@ -84,6 +99,7 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
     expect(response.status).toBe(200)
 
     const payload = await response.json() as MetricResponseDto
+    expect(payload.id).toBe(metric.id)
     expect(payload.name).toBe('Willingness To Pay')
     expect(payload.description).toBe('Average amount users are willing to pay.')
     expect(payload.unit).toBe('CHF')
@@ -101,14 +117,76 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
     expect(Number(storedMetric?.threshold?.referenceValue)).toBe(19)
   })
 
-  it('returns 404 when trying to update another users metric', async () => {
+  it('creates metric when missing for an owned hypothesis', async () => {
+    const sessionResult = await createAuthenticatedSession({
+      emailPrefix: 'metrics-put-create',
+      name: 'Metrics Put Create'
+    })
+    const user = expectAuthenticatedSessionCreated(sessionResult)
+
+    const createdVersion = await createIdeaVersionForUser({
+      userId: user.id,
+      title: 'Idea for metric put create',
+      description: 'Fixture idea version'
+    })
+
+    const hypothesis = await prisma.hypothesis.create({
+      data: {
+        ideaVersionId: createdVersion.ideaVersionId,
+        statement: 'Create metric by put',
+        dimension: 'PROBLEM',
+        priority: 'MEDIUM',
+        evidenceType: 'QUANTITATIVE'
+      }
+    })
+
+    const response = await putMetricWithCookie(user.cookieHeader, hypothesis.id, {
+      name: 'Signup Rate',
+      description: null,
+      unit: '%',
+      threshold: {
+        operator: 'GTE',
+        referenceValue: 10
+      }
+    })
+
+    expect(response.status).toBe(200)
+
+    const payload = await response.json() as MetricResponseDto
+    expect(payload.name).toBe('Signup Rate')
+    expect(payload.unit).toBe('%')
+    expect(payload.threshold?.operator).toBe('GTE')
+    expect(payload.threshold?.referenceValue).toBe(10)
+  })
+
+  it('returns 400 for invalid hypothesisId route param', async () => {
+    const sessionResult = await createAuthenticatedSession({
+      emailPrefix: 'metrics-put-invalid',
+      name: 'Metrics Put Invalid'
+    })
+    const user = expectAuthenticatedSessionCreated(sessionResult)
+
+    const response = await putMetricWithCookie(user.cookieHeader, 'not-a-uuid', {
+      name: 'Conversion Rate',
+      description: null,
+      unit: '%',
+      threshold: {
+        operator: 'GTE',
+        referenceValue: 10
+      }
+    })
+
+    expect(response.status).toBe(400)
+  })
+
+  it('returns 404 when updating another users hypothesis metric', async () => {
     const ownerResult = await createAuthenticatedSession({
-      emailPrefix: 'metrics-update-owner-b',
-      name: 'Metrics Update Owner B'
+      emailPrefix: 'metrics-put-owner-b',
+      name: 'Metrics Put Owner B'
     })
     const attackerResult = await createAuthenticatedSession({
-      emailPrefix: 'metrics-update-attacker',
-      name: 'Metrics Update Attacker'
+      emailPrefix: 'metrics-put-attacker',
+      name: 'Metrics Put Attacker'
     })
 
     const owner = expectAuthenticatedSessionCreated(ownerResult)
@@ -124,13 +202,13 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
       data: {
         ideaVersionId: createdVersion.ideaVersionId,
         statement: 'Protected hypothesis',
-        dimension: 'PROBLEM',
-        priority: 'HIGH',
-        evidenceType: 'QUANTITATIVE'
+        dimension: 'SOLUTION',
+        priority: 'LOW',
+        evidenceType: 'QUALITATIVE'
       }
     })
 
-    const metric = await prisma.metric.create({
+    await prisma.metric.create({
       data: {
         hypothesisId: hypothesis.id,
         name: 'Protected Metric',
@@ -145,7 +223,7 @@ describe('PUT /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/metric
       }
     })
 
-    const response = await updateMetricWithCookie(attacker.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, metric.id, {
+    const response = await putMetricWithCookie(attacker.cookieHeader, hypothesis.id, {
       name: 'Attack Metric',
       description: null,
       unit: '%',
