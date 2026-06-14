@@ -342,7 +342,7 @@ server/api/
     metric/
       index.get.ts X
       index.put.ts X
-      index.delete.ts
+      index.delete.ts X
     experiment/
       index.get.ts X
       index.put.ts
