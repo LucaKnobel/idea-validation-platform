@@ -10,8 +10,6 @@ import {
 export const toMeasurementResponseDto = (measurement: Measurement): MeasurementResponseDto => {
   return MeasurementResponseSchema.parse({
     id: measurement.id,
-    experimentId: measurement.experimentId,
-    metricId: measurement.metricId,
     value: measurement.value,
     note: measurement.note,
     createdAt: measurement.createdAt.toISOString(),
