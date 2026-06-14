@@ -15,17 +15,14 @@ import { createIdeaVersionForUser } from './ideas-test-helpers'
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
-describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/experiments/:experimentId integration', async () => {
+describe('DELETE /api/hypotheses/:hypothesisId/experiment integration', async () => {
   await setup(getE2ESetupOptions())
 
   const deleteExperimentWithCookie = async (
     cookieHeader: string,
-    ideaId: string,
-    versionId: string,
-    hypothesisId: string,
-    experimentId: string
+    hypothesisId: string
   ): Promise<Response> => {
-    return fetch(url(`/api/ideas/${ideaId}/versions/${versionId}/hypotheses/${hypothesisId}/experiments/${experimentId}`), {
+    return fetch(url(`/api/hypotheses/${hypothesisId}/experiment`), {
       method: 'DELETE',
       headers: {
         'cookie': cookieHeader,
@@ -35,7 +32,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
   }
 
   it('requires authentication for experiment deletion', async () => {
-    const response = await fetch(url(`/api/ideas/${randomUUID()}/versions/${randomUUID()}/hypotheses/${randomUUID()}/experiments/${randomUUID()}`), {
+    const response = await fetch(url(`/api/hypotheses/${randomUUID()}/experiment`), {
       method: 'DELETE'
     })
 
@@ -74,7 +71,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
       }
     })
 
-    const response = await deleteExperimentWithCookie(user.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, experiment.id)
+    const response = await deleteExperimentWithCookie(user.cookieHeader, hypothesis.id)
 
     expect(response.status).toBe(204)
 
@@ -92,7 +89,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
     })
     const user = expectAuthenticatedSessionCreated(sessionResult)
 
-    const response = await deleteExperimentWithCookie(user.cookieHeader, 'not-a-uuid', 'also-not-a-uuid', 'still-not-a-uuid', 'nope-not-a-uuid')
+    const response = await deleteExperimentWithCookie(user.cookieHeader, 'still-not-a-uuid')
 
     expect(response.status).toBe(400)
   })
@@ -135,7 +132,7 @@ describe('DELETE /api/ideas/:id/versions/:versionId/hypotheses/:hypothesisId/exp
       }
     })
 
-    const response = await deleteExperimentWithCookie(attacker.cookieHeader, createdVersion.ideaId, createdVersion.ideaVersionId, hypothesis.id, experiment.id)
+    const response = await deleteExperimentWithCookie(attacker.cookieHeader, hypothesis.id)
 
     expect(response.status).toBe(404)
 
