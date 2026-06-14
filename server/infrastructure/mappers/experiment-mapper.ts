@@ -1,9 +1,7 @@
 import type { Experiment } from '@application/models/experiment'
 import {
   ExperimentResponseSchema,
-  ExperimentsListResponseSchema,
-  type ExperimentResponseDto,
-  type ExperimentsListResponseDto
+  type ExperimentResponseDto
 } from '@infrastructure/validation/experiment-schemas'
 
 /**
@@ -12,21 +10,10 @@ import {
 export const toExperimentResponseDto = (experiment: Experiment): ExperimentResponseDto => {
   return ExperimentResponseSchema.parse({
     id: experiment.id,
-    hypothesisId: experiment.hypothesisId,
-    measurementId: experiment.measurementId,
     title: experiment.title,
     description: experiment.description,
     status: experiment.status,
     createdAt: experiment.createdAt.toISOString(),
     updatedAt: experiment.updatedAt.toISOString()
-  })
-}
-
-/**
- * Maps a list of domain experiments to the public collection DTO.
- */
-export const toExperimentsListResponseDto = (experiments: Experiment[]): ExperimentsListResponseDto => {
-  return ExperimentsListResponseSchema.parse({
-    items: experiments.map(toExperimentResponseDto)
   })
 }

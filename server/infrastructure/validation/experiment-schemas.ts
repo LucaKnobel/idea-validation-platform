@@ -19,10 +19,5 @@ export const ExperimentResponseSchema = z.object({
   updatedAt: z.iso.datetime()
 })
 
-export const ExperimentsListResponseSchema = z.object({
-  items: z.array(ExperimentResponseSchema)
-})
-
 export type UpsertExperimentBodyDto = z.infer<typeof UpsertExperimentBodySchema>
 export type ExperimentResponseDto = z.infer<typeof ExperimentResponseSchema>
-export type ExperimentsListResponseDto = z.infer<typeof ExperimentsListResponseSchema>
