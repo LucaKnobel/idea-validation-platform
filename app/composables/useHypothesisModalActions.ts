@@ -2,7 +2,7 @@
  * Input required to initialize shared hypothesis modal actions.
  */
 export interface UseHypothesisModalActionsInput {
-  createEmptyFormState: () => CreateHypothesisBodyDto
+  createEmptyFormState: () => UpsertHypothesisBodyDto
 }
 
 /**
@@ -13,8 +13,8 @@ export interface UseHypothesisModalActionsComposable {
   createSubmitLabel: ComputedRef<string>
   updateFormTitle: ComputedRef<string>
   updateSubmitLabel: ComputedRef<string>
-  createFormState: CreateHypothesisBodyDto
-  updateFormState: CreateHypothesisBodyDto
+  createFormState: UpsertHypothesisBodyDto
+  updateFormState: UpsertHypothesisBodyDto
   formHypothesisId: Ref<string | null>
   deleteCandidate: Ref<HypothesisResponseDto | null>
   isCreateModalOpen: Ref<boolean>

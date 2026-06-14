@@ -9,6 +9,7 @@ const {
   createEmptyFormState,
   dimensionOptions,
   priorityOptions,
+  evidenceTypeOptions,
   sectionOptions
 } = useHypothesisFormConfig()
 const { ideaId, versionId, hasIdeaVersionRouteParams } = useIdeaVersionRouteParams()
@@ -80,7 +81,7 @@ const loadHypothesesForRoute = async (): Promise<void> => {
 /**
  * Persists create changes emitted by the create hypothesis form modal.
  */
-const onCreateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
+const onCreateSubmit = async (data: UpsertHypothesisBodyDto): Promise<void> => {
   if (!hasIdeaVersionRouteParams.value) {
     return
   }
@@ -99,7 +100,7 @@ const onCreateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
 /**
  * Persists update changes emitted by the update hypothesis form modal.
  */
-const onUpdateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
+const onUpdateSubmit = async (data: UpsertHypothesisBodyDto): Promise<void> => {
   if (!hasIdeaVersionRouteParams.value) {
     return
   }
@@ -110,8 +111,6 @@ const onUpdateSubmit = async (data: CreateHypothesisBodyDto): Promise<void> => {
 
   await runUpdateAction(async () => {
     const updated = await updateHypothesisData({
-      ideaId: ideaId.value,
-      versionId: versionId.value,
       hypothesisId: formHypothesisId.value || '',
       body: data
     })
@@ -136,8 +135,6 @@ const confirmDeleteHypothesis = async (): Promise<void> => {
 
   await runDeleteAction(async () => {
     return await deleteHypothesisData({
-      ideaId: ideaId.value,
-      versionId: versionId.value,
       hypothesisId
     })
   })
@@ -231,6 +228,7 @@ watch([ideaId, versionId], async () => {
       :is-submitting="isCreateFormSubmitting"
       :dimension-options="dimensionOptions"
       :priority-options="priorityOptions"
+      :evidence-type-options="evidenceTypeOptions"
       :section-options="sectionOptions"
       @update:open="isCreateModalOpen = $event"
       @submit="onCreateSubmit"
@@ -245,6 +243,7 @@ watch([ideaId, versionId], async () => {
       :is-submitting="isUpdateFormSubmitting"
       :dimension-options="dimensionOptions"
       :priority-options="priorityOptions"
+      :evidence-type-options="evidenceTypeOptions"
       :section-options="sectionOptions"
       @update:open="isUpdateModalOpen = $event"
       @submit="onUpdateSubmit"

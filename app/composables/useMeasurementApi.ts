@@ -1,28 +1,22 @@
-export type CreateMeasurementInput = {
-  experimentId: string
-  body: CreateMeasurementBodyDto
-}
-
 export type GetMeasurementInput = {
-  measurementId: string
+  hypothesisId: string
 }
 
-export type UpdateMeasurementInput = {
-  measurementId: string
-  body: UpdateMeasurementBodyDto
+export type UpsertMeasurementInput = {
+  hypothesisId: string
+  body: UpsertMeasurementBodyDto
 }
 
 export type DeleteMeasurementInput = {
-  measurementId: string
+  hypothesisId: string
 }
 
 /**
  * Public contract implemented by useMeasurementApi.
  */
 export interface UseMeasurementApiComposable {
-  createMeasurement: (input: CreateMeasurementInput) => Promise<MeasurementResponseDto>
   getMeasurement: (input: GetMeasurementInput) => Promise<MeasurementResponseDto>
-  updateMeasurement: (input: UpdateMeasurementInput) => Promise<MeasurementResponseDto>
+  upsertMeasurement: (input: UpsertMeasurementInput) => Promise<MeasurementResponseDto>
   deleteMeasurement: (input: DeleteMeasurementInput) => Promise<void>
 }
 
@@ -30,34 +24,26 @@ export interface UseMeasurementApiComposable {
  * Encapsulates HTTP calls for experiment measurement resources.
  */
 export const useMeasurementApi = (): UseMeasurementApiComposable => {
-  const createMeasurement = async (input: CreateMeasurementInput): Promise<MeasurementResponseDto> => {
-    return $fetch<MeasurementResponseDto>(`/api/experiments/${input.experimentId}/measurements`, {
-      method: 'POST',
-      body: input.body
-    })
-  }
-
   const getMeasurement = async (input: GetMeasurementInput): Promise<MeasurementResponseDto> => {
-    return $fetch<MeasurementResponseDto>(`/api/measurements/${input.measurementId}`)
+    return $fetch<MeasurementResponseDto>(`/api/hypotheses/${input.hypothesisId}/measurement`)
   }
 
-  const updateMeasurement = async (input: UpdateMeasurementInput): Promise<MeasurementResponseDto> => {
-    return $fetch<MeasurementResponseDto>(`/api/measurements/${input.measurementId}`, {
+  const upsertMeasurement = async (input: UpsertMeasurementInput): Promise<MeasurementResponseDto> => {
+    return $fetch<MeasurementResponseDto>(`/api/hypotheses/${input.hypothesisId}/measurement`, {
       method: 'PUT',
       body: input.body
     })
   }
 
   const deleteMeasurement = async (input: DeleteMeasurementInput): Promise<void> => {
-    await $fetch(`/api/measurements/${input.measurementId}`, {
+    await $fetch(`/api/hypotheses/${input.hypothesisId}/measurement`, {
       method: 'DELETE'
     })
   }
 
   return {
-    createMeasurement,
     getMeasurement,
-    updateMeasurement,
+    upsertMeasurement,
     deleteMeasurement
   }
 }

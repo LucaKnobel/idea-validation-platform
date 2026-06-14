@@ -7,13 +7,20 @@ const HYPOTHESIS_DIMENSIONS = [
   'MARKET',
   'MONETIZATION',
   'EXECUTION'
-] as const satisfies readonly CreateHypothesisBodyDto['dimension'][]
+] as const satisfies readonly UpsertHypothesisBodyDto['dimension'][]
 
 const HYPOTHESIS_PRIORITIES = [
   'HIGH',
   'MEDIUM',
   'LOW'
-] as const satisfies readonly CreateHypothesisBodyDto['priority'][]
+] as const satisfies readonly UpsertHypothesisBodyDto['priority'][]
+
+const HYPOTHESIS_EVIDENCE_TYPES = [
+  'QUALITATIVE',
+  'QUANTITATIVE',
+  'BEHAVIORAL',
+  'MONETARY'
+] as const satisfies readonly UpsertHypothesisBodyDto['evidenceType'][]
 
 const METRIC_THRESHOLD_OPERATORS = [
   'GTE',
@@ -21,14 +28,14 @@ const METRIC_THRESHOLD_OPERATORS = [
   'LTE',
   'LT',
   'EQ'
-] as const satisfies readonly CreateMetricBodyDto['threshold']['operator'][]
+] as const satisfies readonly UpsertMetricBodyDto['threshold']['operator'][]
 
 const EXPERIMENT_STATUSES = [
   'PLANNED',
   'RUNNING',
   'COMPLETED',
   'CANCELLED'
-] as const satisfies readonly CreateExperimentBodyDto['status'][]
+] as const satisfies readonly UpsertExperimentBodyDto['status'][]
 
 /**
  * Creates localized Zod schemas used by frontend forms (auth, idea creation, and canvas).
@@ -138,7 +145,8 @@ export const useValidation = () => {
       .max(3000, t('validation.hypothesis.statementTooLong')),
     dimension: z.enum(HYPOTHESIS_DIMENSIONS, { error: t('validation.hypothesis.dimensionRequired') }),
     priority: z.enum(HYPOTHESIS_PRIORITIES, { error: t('validation.hypothesis.priorityRequired') }),
-    canvasSectionTypes: z.array(z.enum(CANVAS_SECTION_ORDER))
+    evidenceType: z.enum(HYPOTHESIS_EVIDENCE_TYPES, { error: t('validation.hypothesis.evidenceTypeRequired') }),
+    canvasElementTypes: z.array(z.enum(CANVAS_SECTION_ORDER))
       .min(1, t('validation.hypothesis.canvasSectionMin'))
       .max(9, t('validation.hypothesis.canvasSectionMax'))
   })
@@ -187,9 +195,6 @@ export const useValidation = () => {
    * Builds the schema for creating and updating measurements in one modal.
    */
   const createMeasurementFormSchema = () => z.object({
-    metricId: z.string({ error: t('validation.measurement.metricRequired') })
-      .trim()
-      .min(1, t('validation.measurement.metricRequired')),
     value: z.coerce.number({ error: t('validation.measurement.valueRequired') }),
     note: z.string()
       .trim()
