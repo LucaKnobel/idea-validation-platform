@@ -15,14 +15,14 @@ import { createIdeaVersionForUser } from './ideas-test-helpers'
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
-describe('DELETE /api/measurements/:measurementId integration', async () => {
+describe('DELETE /api/hypotheses/:hypothesisId/measurement integration', async () => {
   await setup(getE2ESetupOptions())
 
   const deleteMeasurementWithCookie = async (
     cookieHeader: string,
-    measurementId: string
+    hypothesisId: string
   ): Promise<Response> => {
-    return fetch(url(`/api/measurements/${measurementId}`), {
+    return fetch(url(`/api/hypotheses/${hypothesisId}/measurement`), {
       method: 'DELETE',
       headers: {
         'cookie': cookieHeader,
@@ -32,7 +32,7 @@ describe('DELETE /api/measurements/:measurementId integration', async () => {
   }
 
   it('requires authentication for measurement deletion', async () => {
-    const response = await fetch(url(`/api/measurements/${randomUUID()}`), {
+    const response = await fetch(url(`/api/hypotheses/${randomUUID()}/measurement`), {
       method: 'DELETE'
     })
 
@@ -62,40 +62,15 @@ describe('DELETE /api/measurements/:measurementId integration', async () => {
       }
     })
 
-    const experiment = await prisma.experiment.create({
-      data: {
-        hypothesisId: hypothesis.id,
-        title: 'Delete Measurement Experiment',
-        description: null,
-        status: 'RUNNING'
-      }
-    })
-
-    const metric = await prisma.metric.create({
-      data: {
-        hypothesisId: hypothesis.id,
-        name: 'Delete Metric',
-        description: null,
-        unit: null,
-        threshold: {
-          create: {
-            operator: 'GTE',
-            referenceValue: 1
-          }
-        }
-      }
-    })
-
     const measurement = await prisma.measurement.create({
       data: {
-        experimentId: experiment.id,
-        metricId: metric.id,
+        hypothesisId: hypothesis.id,
         value: 7,
         note: 'Delete me'
       }
     })
 
-    const response = await deleteMeasurementWithCookie(user.cookieHeader, measurement.id)
+    const response = await deleteMeasurementWithCookie(user.cookieHeader, hypothesis.id)
 
     expect(response.status).toBe(204)
 
@@ -147,40 +122,15 @@ describe('DELETE /api/measurements/:measurementId integration', async () => {
       }
     })
 
-    const experiment = await prisma.experiment.create({
-      data: {
-        hypothesisId: hypothesis.id,
-        title: 'Protected Experiment',
-        description: null,
-        status: 'RUNNING'
-      }
-    })
-
-    const metric = await prisma.metric.create({
-      data: {
-        hypothesisId: hypothesis.id,
-        name: 'Protected Metric',
-        description: null,
-        unit: null,
-        threshold: {
-          create: {
-            operator: 'GTE',
-            referenceValue: 1
-          }
-        }
-      }
-    })
-
     const measurement = await prisma.measurement.create({
       data: {
-        experimentId: experiment.id,
-        metricId: metric.id,
+        hypothesisId: hypothesis.id,
         value: 3,
         note: null
       }
     })
 
-    const response = await deleteMeasurementWithCookie(attacker.cookieHeader, measurement.id)
+    const response = await deleteMeasurementWithCookie(attacker.cookieHeader, hypothesis.id)
 
     expect(response.status).toBe(404)
 
