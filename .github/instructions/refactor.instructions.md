@@ -340,7 +340,7 @@ server/api/
   hypotheses/
    [hypothesisId]/
     metric/
-      index.get.ts
+      index.get.ts X
       index.put.ts
       index.delete.ts
     experiment/
