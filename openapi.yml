@@ -18,6 +18,12 @@ tags:
     description: Authenticated canvas and hypothesis endpoints scoped to one idea version
   - name: Hypotheses
     description: Hypothesis-specific mutation endpoints
+  - name: Experiments
+    description: Singleton experiment endpoints scoped to one hypothesis
+  - name: Metrics
+    description: Singleton metric endpoints scoped to one hypothesis
+  - name: Measurements
+    description: Singleton measurement endpoints scoped to one hypothesis
 
 security: []
 
@@ -72,7 +78,7 @@ paths:
       summary: List ideas of the authenticated user
       description: |
         Returns a paginated list of ideas owned by the current authenticated user.
-        Supports optional full-text query over title and description.
+        Supports optional full-text query over the latest version title and description.
       tags:
         - Ideas
       security:
@@ -168,7 +174,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateIdeaRequest'
       responses:
-        '200':
+        '201':
           description: Idea created
           headers:
             RateLimit-Policy:
@@ -541,7 +547,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
     post:
-      operationId: createHypothesis
+      operationId: createIdeaVersionHypothesis
       summary: Create a hypothesis in an idea version
       description: |
         Creates one hypothesis in a specific idea version owned by the current authenticated user.
@@ -626,32 +632,90 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /ideas/{id}/versions/{versionId}/hypotheses/{hypothesisId}:
+  /hypotheses/{hypothesisId}:
+    get:
+      operationId: getHypothesis
+      summary: Get one hypothesis
+      description: |
+        Returns one hypothesis owned by the current authenticated user.
+      tags:
+        - Hypotheses
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: hypothesisId
+          in: path
+          required: true
+          description: Hypothesis identifier.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Hypothesis loaded successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HypothesisResponse'
+        '400':
+          description: Invalid path parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Hypothesis not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
     put:
       operationId: updateHypothesis
       summary: Update a hypothesis
       description: |
-        Updates one hypothesis in a specific idea version owned by the current authenticated user.
+        Updates one hypothesis owned by the current authenticated user.
         The server trims the statement and deduplicates canvas section links before persisting.
       tags:
         - Hypotheses
       security:
         - cookieAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: Idea identifier.
-          schema:
-            type: string
-            format: uuid
-        - name: versionId
-          in: path
-          required: true
-          description: Idea version identifier.
-          schema:
-            type: string
-            format: uuid
         - name: hypothesisId
           in: path
           required: true
@@ -725,26 +789,12 @@ paths:
       summary: Delete a hypothesis
       description: |
         Deletes one hypothesis owned by the current authenticated user.
-        Returns `404` when the hypothesis does not exist for this user or version.
+        Returns `404` when the hypothesis does not exist for this user.
       tags:
         - Hypotheses
       security:
         - cookieAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: Idea identifier.
-          schema:
-            type: string
-            format: uuid
-        - name: versionId
-          in: path
-          required: true
-          description: Idea version identifier.
-          schema:
-            type: string
-            format: uuid
         - name: hypothesisId
           in: path
           required: true
@@ -803,18 +853,669 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /hypotheses/{hypothesisId}/experiment:
+    get:
+      operationId: getHypothesisExperiment
+      summary: Get the experiment for a hypothesis
+      description: |
+        Returns the experiment singleton for a specific hypothesis owned by the current authenticated user.
+      tags:
+        - Experiments
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: hypothesisId
+          in: path
+          required: true
+          description: Hypothesis identifier.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Experiment loaded successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExperimentResponse'
+        '400':
+          description: Invalid path parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Experiment not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      operationId: upsertHypothesisExperiment
+      summary: Create or update the experiment for a hypothesis
+      description: |
+        Creates or updates the experiment singleton for a specific hypothesis owned by the current authenticated user.
+      tags:
+        - Experiments
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: hypothesisId
+          in: path
+          required: true
+          description: Hypothesis identifier.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertExperimentRequest'
+      responses:
+        '200':
+          description: Experiment upserted successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExperimentResponse'
+        '400':
+          description: Invalid path parameter or request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Hypothesis not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      operationId: deleteHypothesisExperiment
+      summary: Delete the experiment for a hypothesis
+      description: |
+        Deletes the experiment singleton for a specific hypothesis owned by the current authenticated user.
+      tags:
+        - Experiments
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: hypothesisId
+          in: path
+          required: true
+          description: Hypothesis identifier.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Experiment deleted successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+        '400':
+          description: Invalid path parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Experiment not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /hypotheses/{hypothesisId}/metric:
+    get:
+      operationId: getHypothesisMetric
+      summary: Get the metric for a hypothesis
+      description: |
+        Returns the metric singleton for a specific hypothesis owned by the current authenticated user.
+      tags:
+        - Metrics
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: hypothesisId
+          in: path
+          required: true
+          description: Hypothesis identifier.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Metric loaded successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricResponse'
+        '400':
+          description: Invalid path parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Metric not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      operationId: upsertHypothesisMetric
+      summary: Create or update the metric for a hypothesis
+      description: |
+        Creates or updates the metric singleton for a specific hypothesis owned by the current authenticated user.
+      tags:
+        - Metrics
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: hypothesisId
+          in: path
+          required: true
+          description: Hypothesis identifier.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertMetricRequest'
+      responses:
+        '200':
+          description: Metric upserted successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricResponse'
+        '400':
+          description: Invalid path parameter or request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Hypothesis not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      operationId: deleteHypothesisMetric
+      summary: Delete the metric for a hypothesis
+      description: |
+        Deletes the metric singleton for a specific hypothesis owned by the current authenticated user.
+      tags:
+        - Metrics
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: hypothesisId
+          in: path
+          required: true
+          description: Hypothesis identifier.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Metric deleted successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+        '400':
+          description: Invalid path parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Metric not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /hypotheses/{hypothesisId}/measurement:
+    get:
+      operationId: getHypothesisMeasurement
+      summary: Get the measurement for a hypothesis
+      description: |
+        Returns the measurement singleton for a specific hypothesis owned by the current authenticated user.
+      tags:
+        - Measurements
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: hypothesisId
+          in: path
+          required: true
+          description: Hypothesis identifier.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Measurement loaded successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeasurementResponse'
+        '400':
+          description: Invalid path parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Measurement not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      operationId: upsertHypothesisMeasurement
+      summary: Create or update the measurement for a hypothesis
+      description: |
+        Creates or updates the measurement singleton for a specific hypothesis owned by the current authenticated user.
+      tags:
+        - Measurements
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: hypothesisId
+          in: path
+          required: true
+          description: Hypothesis identifier.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertMeasurementRequest'
+      responses:
+        '200':
+          description: Measurement upserted successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeasurementResponse'
+        '400':
+          description: Invalid path parameter or request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Hypothesis not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      operationId: deleteHypothesisMeasurement
+      summary: Delete the measurement for a hypothesis
+      description: |
+        Deletes the measurement singleton for a specific hypothesis owned by the current authenticated user.
+      tags:
+        - Measurements
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: hypothesisId
+          in: path
+          required: true
+          description: Hypothesis identifier.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Measurement deleted successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+        '400':
+          description: Invalid path parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Measurement not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /auth/sign-up/email:
     post:
-      operationId: signUpWithEmail
-      summary: Register a new account
-      description: |
-        Creates a new account and triggers verification flow.
-        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
+      operationId: authSignUpEmail
+      summary: Register with email and password
       tags:
         - Auth
-      parameters:
-        - $ref: '#/components/parameters/OriginHeader'
-        - $ref: '#/components/parameters/RefererHeader'
       requestBody:
         required: true
         content:
@@ -823,13 +1524,13 @@ paths:
               $ref: '#/components/schemas/SignUpRequest'
       responses:
         '200':
-          description: Sign-up accepted (neutral success response)
+          description: Request accepted
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthStatusResponse'
         '400':
-          description: Invalid request body or missing/untrusted origin context
+          description: Invalid request body
           content:
             application/json:
               schema:
@@ -843,16 +1544,10 @@ paths:
 
   /auth/sign-in/email:
     post:
-      operationId: signInWithEmail
+      operationId: authSignInEmail
       summary: Sign in with email and password
-      description: |
-        Authenticates a user and issues a session cookie when successful.
-        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
       tags:
         - Auth
-      parameters:
-        - $ref: '#/components/parameters/OriginHeader'
-        - $ref: '#/components/parameters/RefererHeader'
       requestBody:
         required: true
         content:
@@ -861,12 +1556,7 @@ paths:
               $ref: '#/components/schemas/SignInRequest'
       responses:
         '200':
-          description: Sign-in succeeded and session cookie is issued
-          headers:
-            Set-Cookie:
-              schema:
-                type: string
-              description: Contains `better-auth.session_token`.
+          description: Sign-in succeeded
           content:
             application/json:
               schema:
@@ -883,12 +1573,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthErrorResponse'
-        '403':
-          description: Email not verified
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthErrorResponse'
         '429':
           description: Too many requests
           content:
@@ -898,18 +1582,10 @@ paths:
 
   /auth/sign-out:
     post:
-      operationId: signOut
+      operationId: authSignOut
       summary: Sign out current session
-      description: |
-        Invalidates the current session.
-        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
       tags:
         - Auth
-      security:
-        - cookieAuth: []
-      parameters:
-        - $ref: '#/components/parameters/OriginHeader'
-        - $ref: '#/components/parameters/RefererHeader'
       requestBody:
         required: false
         content:
@@ -917,7 +1593,6 @@ paths:
             schema:
               type: object
               additionalProperties: true
-              example: {}
       responses:
         '200':
           description: Sign-out succeeded
@@ -925,12 +1600,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthStatusResponse'
-        '400':
-          description: Missing or untrusted origin context
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthErrorResponse'
         '401':
           description: No active session
           content:
@@ -946,21 +1615,19 @@ paths:
 
   /auth/get-session:
     get:
-      operationId: getSession
+      operationId: authGetSession
       summary: Get current session and user
       tags:
         - Auth
-      security:
-        - cookieAuth: []
       responses:
         '200':
-          description: Session payload returned (or null fields when no active session)
+          description: Session payload
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SessionEnvelope'
         '401':
-          description: Invalid or missing session cookie
+          description: Invalid or missing session
           content:
             application/json:
               schema:
@@ -968,16 +1635,10 @@ paths:
 
   /auth/send-verification-email:
     post:
-      operationId: sendVerificationEmail
-      summary: Send (or re-send) verification email
-      description: |
-        Sends (or re-sends) the verification email.
-        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
+      operationId: authSendVerificationEmail
+      summary: Send or resend verification email
       tags:
         - Auth
-      parameters:
-        - $ref: '#/components/parameters/OriginHeader'
-        - $ref: '#/components/parameters/RefererHeader'
       requestBody:
         required: true
         content:
@@ -986,13 +1647,13 @@ paths:
               $ref: '#/components/schemas/SendVerificationEmailRequest'
       responses:
         '200':
-          description: Request accepted (neutral success response)
+          description: Request accepted
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthStatusResponse'
         '400':
-          description: Invalid request body or missing/untrusted origin context
+          description: Invalid request body
           content:
             application/json:
               schema:
@@ -1006,8 +1667,8 @@ paths:
 
   /auth/verify-email:
     get:
-      operationId: verifyEmail
-      summary: Verify email using token
+      operationId: authVerifyEmail
+      summary: Verify email token
       tags:
         - Auth
       parameters:
@@ -1017,22 +1678,24 @@ paths:
           schema:
             type: string
             minLength: 1
+            maxLength: 512
         - name: callbackURL
           in: query
           required: false
           schema:
             type: string
             minLength: 1
-          description: Relative callback path after successful verification.
+            maxLength: 2048
+            pattern: '^/(?!/).*'
       responses:
         '200':
-          description: Email verification processed
+          description: Verification processed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthStatusResponse'
         '400':
-          description: Invalid or expired verification token
+          description: Invalid token or request
           content:
             application/json:
               schema:
@@ -1046,16 +1709,10 @@ paths:
 
   /auth/request-password-reset:
     post:
-      operationId: requestPasswordReset
-      summary: Request a password reset email
-      description: |
-        Requests a password reset email.
-        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
+      operationId: authRequestPasswordReset
+      summary: Request password reset email
       tags:
         - Auth
-      parameters:
-        - $ref: '#/components/parameters/OriginHeader'
-        - $ref: '#/components/parameters/RefererHeader'
       requestBody:
         required: true
         content:
@@ -1064,13 +1721,13 @@ paths:
               $ref: '#/components/schemas/RequestPasswordResetRequest'
       responses:
         '200':
-          description: Request accepted (generic response to prevent account enumeration)
+          description: Request accepted
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthStatusResponse'
         '400':
-          description: Invalid request body or missing/untrusted origin context
+          description: Invalid request body
           content:
             application/json:
               schema:
@@ -1084,16 +1741,10 @@ paths:
 
   /auth/reset-password:
     post:
-      operationId: resetPassword
+      operationId: authResetPassword
       summary: Reset password with token
-      description: |
-        Resets the password using a valid reset token.
-        This state-changing endpoint requires trusted `Origin` and `Referer` headers.
       tags:
         - Auth
-      parameters:
-        - $ref: '#/components/parameters/OriginHeader'
-        - $ref: '#/components/parameters/RefererHeader'
       requestBody:
         required: true
         content:
@@ -1108,7 +1759,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AuthStatusResponse'
         '400':
-          description: Invalid request body, token, or missing/untrusted origin context
+          description: Invalid request body or token
           content:
             application/json:
               schema:
@@ -1119,6 +1770,87 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthErrorResponse'
+
+  /auth/{path}:
+    parameters:
+      - name: path
+        in: path
+        required: true
+        description: |
+          Generic Better Auth proxy path handled by `server/api/auth/[...all].ts`.
+          For nested segments, provide URL-encoded slashes (`%2F`) in this parameter.
+        schema:
+          type: string
+    get:
+      operationId: authProxyGet
+      summary: Proxy any other Better Auth GET request
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Proxied response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: Invalid auth request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      operationId: authProxyPost
+      summary: Proxy any other Better Auth POST request
+      tags:
+        - Auth
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Proxied response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: Invalid auth request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   parameters:
@@ -1233,12 +1965,16 @@ components:
       type: object
       required:
         - id
+        - latestVersionId
         - title
         - description
         - createdAt
         - updatedAt
       properties:
         id:
+          type: string
+          format: uuid
+        latestVersionId:
           type: string
           format: uuid
         title:
@@ -1379,7 +2115,9 @@ components:
         - statement
         - dimension
         - priority
-        - canvasSectionLinks
+        - evidenceType
+        - status
+        - canvasSections
         - createdAt
         - updatedAt
       properties:
@@ -1395,10 +2133,14 @@ components:
           $ref: '#/components/schemas/HypothesisDimension'
         priority:
           $ref: '#/components/schemas/HypothesisPriority'
-        canvasSectionLinks:
+        evidenceType:
+          $ref: '#/components/schemas/HypothesisEvidenceType'
+        status:
+          $ref: '#/components/schemas/HypothesisStatus'
+        canvasSections:
           type: array
           items:
-            $ref: '#/components/schemas/HypothesisCanvasSectionResponse'
+            $ref: '#/components/schemas/CanvasElementType'
         createdAt:
           type: string
           format: date-time
@@ -1422,7 +2164,8 @@ components:
         - statement
         - dimension
         - priority
-        - canvasSectionTypes
+        - evidenceType
+        - canvasElementTypes
       properties:
         statement:
           type: string
@@ -1433,7 +2176,9 @@ components:
           $ref: '#/components/schemas/HypothesisDimension'
         priority:
           $ref: '#/components/schemas/HypothesisPriority'
-        canvasSectionTypes:
+        evidenceType:
+          $ref: '#/components/schemas/HypothesisEvidenceType'
+        canvasElementTypes:
           type: array
           minItems: 1
           maxItems: 9
@@ -1443,6 +2188,172 @@ components:
     UpdateHypothesisRequest:
       allOf:
         - $ref: '#/components/schemas/CreateHypothesisRequest'
+
+    UpsertExperimentRequest:
+      type: object
+      required:
+        - title
+        - description
+        - status
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Experiment title trimmed by the server.
+        description:
+          type: string
+          nullable: true
+          maxLength: 4000
+          description: Optional experiment description. Blank values are normalized to null.
+        status:
+          $ref: '#/components/schemas/ExperimentStatus'
+
+    ExperimentResponse:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ExperimentStatus'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UpsertMetricRequest:
+      type: object
+      required:
+        - name
+        - description
+        - unit
+        - threshold
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Metric name trimmed by the server.
+        description:
+          type: string
+          nullable: true
+          maxLength: 1000
+          description: Optional metric description. Blank values are normalized to null.
+        unit:
+          type: string
+          nullable: true
+          maxLength: 100
+          description: Optional metric unit. Blank values are normalized to null.
+        threshold:
+          $ref: '#/components/schemas/MetricThresholdInput'
+
+    MetricThresholdInput:
+      type: object
+      required:
+        - operator
+        - referenceValue
+      properties:
+        operator:
+          $ref: '#/components/schemas/ThresholdOperator'
+        referenceValue:
+          type: number
+
+    MetricResponse:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - unit
+        - threshold
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        unit:
+          type: string
+          nullable: true
+        threshold:
+          allOf:
+            - $ref: '#/components/schemas/MetricThresholdResponse'
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    MetricThresholdResponse:
+      type: object
+      required:
+        - operator
+        - referenceValue
+      properties:
+        operator:
+          $ref: '#/components/schemas/ThresholdOperator'
+        referenceValue:
+          type: number
+
+    UpsertMeasurementRequest:
+      type: object
+      required:
+        - value
+        - note
+      properties:
+        value:
+          type: number
+        note:
+          type: string
+          nullable: true
+          maxLength: 2000
+          description: Optional measurement note. Blank values are normalized to null.
+
+    MeasurementResponse:
+      type: object
+      required:
+        - id
+        - value
+        - note
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        value:
+          type: number
+        note:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
     CanvasElementType:
       type: string
@@ -1473,6 +2384,38 @@ components:
         - MEDIUM
         - LOW
 
+    HypothesisEvidenceType:
+      type: string
+      enum:
+        - QUALITATIVE
+        - QUANTITATIVE
+        - BEHAVIORAL
+        - MONETARY
+
+    HypothesisStatus:
+      type: string
+      enum:
+        - NOT_TESTED
+        - VALIDATED
+        - INVALIDATED
+
+    ExperimentStatus:
+      type: string
+      enum:
+        - PLANNED
+        - RUNNING
+        - COMPLETED
+        - CANCELLED
+
+    ThresholdOperator:
+      type: string
+      enum:
+        - GTE
+        - GT
+        - LTE
+        - LT
+        - EQ
+
     SignUpRequest:
       type: object
       required:
@@ -1487,11 +2430,10 @@ components:
           minLength: 15
           maxLength: 256
           description: Must include uppercase, lowercase, number, and special character.
-        name:
-          type: string
-          description: Optional display name.
         callbackURL:
           type: string
+          minLength: 1
+          maxLength: 2048
           description: Relative path callback (for example `/auth/login`).
           pattern: '^/(?!/).*'
 
@@ -1513,6 +2455,8 @@ components:
           default: true
         callbackURL:
           type: string
+          minLength: 1
+          maxLength: 2048
           description: Relative path callback.
           pattern: '^/(?!/).*'
 
@@ -1526,6 +2470,8 @@ components:
           format: email
         callbackURL:
           type: string
+          minLength: 1
+          maxLength: 2048
           description: Relative path callback.
           pattern: '^/(?!/).*'
 
@@ -1540,7 +2486,9 @@ components:
         redirectTo:
           type: string
           format: uri
+          maxLength: 2048
           description: Absolute URL used in reset email.
+          pattern: '^https?://'
 
     ResetPasswordRequest:
       type: object
