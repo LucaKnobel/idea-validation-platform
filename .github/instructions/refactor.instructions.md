@@ -348,7 +348,7 @@ server/api/
       index.put.ts
       index.delete.ts
     measurement/
-      index.get.ts
+      index.get.ts X
       index.put.ts
       index.delete.ts
     index.get.ts
