@@ -16,7 +16,7 @@ import { createIdeaVersionForUser } from './ideas-test-helpers'
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
-describe('PUT /api/hypotheses/:hypothesisId/experiment upsert integration', async () => {
+describe('PUT /api/hypotheses/:hypothesisId/experiment integration', async () => {
   await setup(getE2ESetupOptions())
 
   const upsertExperimentWithCookie = async (

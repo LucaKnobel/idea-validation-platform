@@ -16,7 +16,7 @@ import { createIdeaVersionForUser } from './ideas-test-helpers'
 beforeEach(clearAuthTables)
 afterEach(clearAuthTables)
 
-describe('PUT /api/hypotheses/:hypothesisId/measurement upsert integration', async () => {
+describe('PUT /api/hypotheses/:hypothesisId/measurement integration', async () => {
   await setup(getE2ESetupOptions())
 
   const upsertMeasurementWithCookie = async (
