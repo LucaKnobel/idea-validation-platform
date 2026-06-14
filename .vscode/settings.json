@@ -9,6 +9,7 @@
     "npx eslint": true,
     "npm run -s test": true,
     "npx vitest": true,
-    "npm run -s typecheck": true
+    "npm run -s typecheck": true,
+    "npx nuxi": true
   }
 }

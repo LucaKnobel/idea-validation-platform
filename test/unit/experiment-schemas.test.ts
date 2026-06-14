@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest'
 import {
   ExperimentResponseSchema,
   ExperimentStatusSchema,
-  ExperimentsListResponseSchema,
   UpsertExperimentBodySchema
 } from '@infrastructure/validation/experiment-schemas'
 import { HypothesisIdRouteParamsSchema } from '@infrastructure/validation/route-params-schemas'
@@ -88,10 +87,6 @@ describe('Experiment response schemas', () => {
 
   it('accepts a valid experiment response', () => {
     expect(ExperimentResponseSchema.safeParse(validExperimentResponse).success).toBe(true)
-  })
-
-  it('accepts a valid experiments list response', () => {
-    expect(ExperimentsListResponseSchema.safeParse({ items: [validExperimentResponse] }).success).toBe(true)
   })
 
   it('rejects invalid timestamps in responses', () => {

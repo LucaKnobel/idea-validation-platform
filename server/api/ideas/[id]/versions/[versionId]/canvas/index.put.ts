@@ -1,10 +1,10 @@
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
 import {
-  CanvasRouteParamsSchema,
   ReplaceIdeaVersionCanvasBodySchema,
   type IdeaVersionCanvasResponseDto
 } from '@infrastructure/validation/canvas-schemas'
-import { updateIdeaVersionCanvas } from '@infrastructure/composition'
+import { IdeaVersionRouteParamsSchema } from '@infrastructure/validation/route-params-schemas'
+import { replaceIdeaVersionCanvas } from '@infrastructure/composition'
 import { toIdeaVersionCanvasResponseDto } from '@infrastructure/mappers/canvas-mapper'
 import { defineProtectedHandler } from '@infrastructure/handlers/protected-handler'
 
@@ -19,10 +19,10 @@ export default defineProtectedHandler(async (event, userId): Promise<IdeaVersion
     scope: 'user'
   })
 
-  const params = await getValidatedRouterParams(event, CanvasRouteParamsSchema.parse)
+  const params = await getValidatedRouterParams(event, IdeaVersionRouteParamsSchema.parse)
   const body = await readValidatedBody(event, ReplaceIdeaVersionCanvasBodySchema.parse)
 
-  const canvasElements = await updateIdeaVersionCanvas({
+  const canvasElements = await replaceIdeaVersionCanvas({
     userId,
     ideaId: params.id,
     ideaVersionId: params.versionId,

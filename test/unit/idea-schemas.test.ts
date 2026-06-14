@@ -68,11 +68,11 @@ describe('GetIdeasQuerySchema', () => {
 
 describe('IdeaIdParamsSchema', () => {
   it('accepts a valid idea id UUID', () => {
-    expect(IdeaIdParamsSchema.safeParse({ ideaId: VALID_UUID }).success).toBe(true)
+    expect(IdeaIdParamsSchema.safeParse({ id: VALID_UUID }).success).toBe(true)
   })
 
   it('rejects an invalid idea id UUID', () => {
-    expect(IdeaIdParamsSchema.safeParse({ ideaId: 'not-a-uuid' }).success).toBe(false)
+    expect(IdeaIdParamsSchema.safeParse({ id: 'not-a-uuid' }).success).toBe(false)
   })
 })
 
