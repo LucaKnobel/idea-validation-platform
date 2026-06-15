@@ -1,5 +1,6 @@
 import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
 import type { ExperimentRepository } from '@application/interfaces/experiment-repository'
+import type { HypothesisStatusSyncService } from '@application/interfaces/hypothesis-status-sync'
 import type { Experiment, ExperimentStatus } from '@application/models/experiment'
 import type { Logger } from '@interfaces/logger'
 
@@ -14,7 +15,11 @@ export type UpsertExperimentInput = {
 /**
  * Builds the use case that creates or updates the experiment singleton of one owned hypothesis.
  */
-export const buildUpsertExperiment = (experimentRepository: ExperimentRepository, logger: Logger) => {
+export const buildUpsertExperiment = (
+  experimentRepository: ExperimentRepository,
+  hypothesisStatusSyncService: HypothesisStatusSyncService,
+  logger: Logger
+) => {
   return async (input: UpsertExperimentInput): Promise<Experiment> => {
     const experiment = await experimentRepository.upsertByHypothesis({
       userId: input.userId,
@@ -27,6 +32,11 @@ export const buildUpsertExperiment = (experimentRepository: ExperimentRepository
     if (experiment === null) {
       throw new HypothesisNotFoundError()
     }
+
+    await hypothesisStatusSyncService.sync({
+      userId: input.userId,
+      hypothesisId: input.hypothesisId
+    })
 
     logger.debug('Experiment upserted', {
       userId: input.userId,

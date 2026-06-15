@@ -1,19 +1,24 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { buildDeleteExperiment } from '@application/services/build-delete-experiment'
+import type { HypothesisStatusSyncService } from '@application/interfaces/hypothesis-status-sync'
 import { ExperimentNotFoundError } from '@application/errors/experiment-errors'
 import type { ExperimentRepository } from '@application/interfaces/experiment-repository'
 import type { Logger } from '@interfaces/logger'
-import { makeExperimentRepository, makeLogger, VALID_USER_ID } from './helpers'
+import { makeExperimentRepository, makeHypothesis, makeLogger, VALID_USER_ID } from './helpers'
 
 describe('buildDeleteExperiment', () => {
   let experimentRepository: ExperimentRepository
+  let hypothesisStatusSyncService: HypothesisStatusSyncService
   let logger: Logger
   let deleteExperiment: ReturnType<typeof buildDeleteExperiment>
 
   beforeEach(() => {
     experimentRepository = makeExperimentRepository()
+    hypothesisStatusSyncService = {
+      sync: vi.fn().mockResolvedValue(makeHypothesis())
+    }
     logger = makeLogger()
-    deleteExperiment = buildDeleteExperiment(experimentRepository, logger)
+    deleteExperiment = buildDeleteExperiment(experimentRepository, hypothesisStatusSyncService, logger)
     vi.mocked(experimentRepository.deleteByHypothesis).mockResolvedValue(true)
   })
 
@@ -41,6 +46,15 @@ describe('buildDeleteExperiment', () => {
     })
   })
 
+  it('syncs hypothesis status after deletion', async () => {
+    await deleteExperiment({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' })
+
+    expect(hypothesisStatusSyncService.sync).toHaveBeenCalledWith({
+      userId: VALID_USER_ID,
+      hypothesisId: 'hypothesis-001'
+    })
+  })
+
   it('throws ExperimentNotFoundError when no experiment was deleted', async () => {
     vi.mocked(experimentRepository.deleteByHypothesis).mockResolvedValue(false)
 
@@ -48,6 +62,7 @@ describe('buildDeleteExperiment', () => {
       deleteExperiment({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' })
     ).rejects.toThrow(ExperimentNotFoundError)
 
+    expect(hypothesisStatusSyncService.sync).not.toHaveBeenCalled()
     expect(logger.debug).not.toHaveBeenCalled()
   })
 })

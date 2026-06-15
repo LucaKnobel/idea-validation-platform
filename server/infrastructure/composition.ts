@@ -28,6 +28,7 @@ import { buildDeleteExperiment } from '@application/services/build-delete-experi
 import { buildGetHypothesisMeasurement } from '@application/services/build-get-hypothesis-measurement'
 import { buildUpsertMeasurement } from '@application/services/build-upsert-measurement'
 import { buildDeleteMeasurement } from '@application/services/build-delete-measurement'
+import { buildSyncHypothesisStatus } from '@application/services/build-sync-hypothesis-status'
 
 /**
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
@@ -88,6 +89,14 @@ const deleteHypothesis = buildDeleteHypothesis(
   logger
 )
 
+const hypothesisStatusSyncService = buildSyncHypothesisStatus(
+  hypothesisRepository,
+  experimentRepository,
+  metricRepository,
+  measurementRepository,
+  logger
+)
+
 const getHypothesisMetric = buildGetHypothesisMetric(
   metricRepository,
   logger
@@ -95,11 +104,13 @@ const getHypothesisMetric = buildGetHypothesisMetric(
 
 const upsertMetric = buildUpsertMetric(
   metricRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
 const deleteMetric = buildDeleteMetric(
   metricRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
@@ -110,11 +121,13 @@ const getHypothesisExperiment = buildGetHypothesisExperiment(
 
 const upsertExperiment = buildUpsertExperiment(
   experimentRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
 const deleteExperiment = buildDeleteExperiment(
   experimentRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
@@ -125,11 +138,13 @@ const getHypothesisMeasurement = buildGetHypothesisMeasurement(
 
 const upsertMeasurement = buildUpsertMeasurement(
   measurementRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
 const deleteMeasurement = buildDeleteMeasurement(
   measurementRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
