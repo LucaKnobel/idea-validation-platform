@@ -3,7 +3,8 @@ import type {
   Hypothesis,
   HypothesisDimension,
   HypothesisEvidenceType,
-  HypothesisPriority
+  HypothesisPriority,
+  HypothesisStatus
 } from '@application/models/hypothesis'
 import type { IdeaVersionOwnerInput, HypothesisIdOwnerInput } from '@application/interfaces/ownership-inputs'
 
@@ -16,6 +17,10 @@ export type HypothesisUpdateFieldsInput = {
 }
 
 export type HypothesisCreateFieldsInput = HypothesisUpdateFieldsInput
+
+export type HypothesisStatusUpdateInput = HypothesisIdOwnerInput & {
+  status: HypothesisStatus
+}
 
 /**
  * Persistence contract for reading and mutating hypotheses in one owned idea version.
@@ -44,6 +49,12 @@ export interface HypothesisRepository {
    * Returns null when the hypothesis does not exist or is not accessible.
    */
   update(input: HypothesisIdOwnerInput & HypothesisUpdateFieldsInput): Promise<Hypothesis | null>
+
+  /**
+   * Updates only the derived status of one owned hypothesis.
+   * Returns null when the hypothesis does not exist or is not accessible.
+   */
+  updateStatus(input: HypothesisStatusUpdateInput): Promise<Hypothesis | null>
 
   /**
    * Deletes one hypothesis owned by the given user.
