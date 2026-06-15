@@ -2,6 +2,7 @@ import { prisma } from '@infrastructure/db/prisma'
 import type {
   HypothesisCreateFieldsInput,
   HypothesisRepository,
+  HypothesisStatusUpdateInput,
   HypothesisUpdateFieldsInput
 } from '@application/interfaces/hypothesis-repository'
 import type { Hypothesis } from '@application/models/hypothesis'
@@ -166,6 +167,43 @@ export const hypothesisRepository: HypothesisRepository = {
             canvasElementType
           }))
         })
+      }
+
+      return tx.hypothesis.findFirst({
+        where,
+        include: {
+          canvasSectionLinks: {
+            orderBy: {
+              canvasElementType: 'asc'
+            }
+          }
+        }
+      })
+    })
+
+    if (updated === null) {
+      return null
+    }
+
+    return toDomainHypothesis(updated)
+  },
+
+  /**
+   * Updates only the derived status for one owned hypothesis.
+   */
+  async updateStatus(input: HypothesisStatusUpdateInput): Promise<Hypothesis | null> {
+    const where = buildOwnedHypothesisWhere(input)
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const updatedRows = await tx.hypothesis.updateMany({
+        where,
+        data: {
+          status: input.status
+        }
+      })
+
+      if (updatedRows.count === 0) {
+        return null
       }
 
       return tx.hypothesis.findFirst({

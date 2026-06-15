@@ -116,6 +116,7 @@ export const makeHypothesisRepository = (): HypothesisRepository => ({
   getById: vi.fn(),
   create: vi.fn(),
   update: vi.fn(),
+  updateStatus: vi.fn(),
   delete: vi.fn()
 })
 
