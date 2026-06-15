@@ -632,6 +632,87 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /ideas/{id}/versions/{versionId}/validation:
+    get:
+      operationId: getIdeaVersionValidationOverview
+      summary: Get validation summary for an idea version
+      description: |
+        Returns aggregated validation counts for the current authenticated user's idea version.
+        The summary groups hypotheses by status, priority, evidence type, and uncertainty dimension.
+      tags:
+        - Idea Versions
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Idea identifier.
+          schema:
+            type: string
+            format: uuid
+        - name: versionId
+          in: path
+          required: true
+          description: Idea version identifier.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Validation summary loaded successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeaVersionValidationOverviewResponse'
+        '400':
+          description: Invalid path parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Idea version not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /hypotheses/{hypothesisId}:
     get:
       operationId: getHypothesis
@@ -2157,6 +2238,109 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HypothesisResponse'
+
+    ValidationStatusCounts:
+      type: object
+      required:
+        - validated
+        - invalidated
+        - notTested
+      properties:
+        validated:
+          type: integer
+          minimum: 0
+        invalidated:
+          type: integer
+          minimum: 0
+        notTested:
+          type: integer
+          minimum: 0
+
+    ValidationPriorityCounts:
+      type: object
+      required:
+        - high
+        - medium
+        - low
+      properties:
+        high:
+          type: integer
+          minimum: 0
+        medium:
+          type: integer
+          minimum: 0
+        low:
+          type: integer
+          minimum: 0
+
+    ValidationEvidenceCounts:
+      type: object
+      required:
+        - qualitative
+        - quantitative
+        - behavioral
+        - monetary
+      properties:
+        qualitative:
+          type: integer
+          minimum: 0
+        quantitative:
+          type: integer
+          minimum: 0
+        behavioral:
+          type: integer
+          minimum: 0
+        monetary:
+          type: integer
+          minimum: 0
+
+    IdeaVersionValidationOverviewDimensionCard:
+      type: object
+      required:
+        - dimension
+        - statusCounts
+        - priorityCounts
+        - evidenceCounts
+      properties:
+        dimension:
+          $ref: '#/components/schemas/HypothesisDimension'
+        statusCounts:
+          $ref: '#/components/schemas/ValidationStatusCounts'
+        priorityCounts:
+          $ref: '#/components/schemas/ValidationPriorityCounts'
+        evidenceCounts:
+          $ref: '#/components/schemas/ValidationEvidenceCounts'
+
+    IdeaVersionValidationOverviewResponse:
+      type: object
+      required:
+        - ideaId
+        - ideaVersionId
+        - totalHypotheses
+        - statusCounts
+        - priorityCounts
+        - evidenceCounts
+        - dimensionCards
+      properties:
+        ideaId:
+          type: string
+          format: uuid
+        ideaVersionId:
+          type: string
+          format: uuid
+        totalHypotheses:
+          type: integer
+          minimum: 0
+        statusCounts:
+          $ref: '#/components/schemas/ValidationStatusCounts'
+        priorityCounts:
+          $ref: '#/components/schemas/ValidationPriorityCounts'
+        evidenceCounts:
+          $ref: '#/components/schemas/ValidationEvidenceCounts'
+        dimensionCards:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdeaVersionValidationOverviewDimensionCard'
 
     CreateHypothesisRequest:
       type: object

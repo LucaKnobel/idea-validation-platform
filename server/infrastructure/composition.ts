@@ -29,6 +29,7 @@ import { buildGetHypothesisMeasurement } from '@application/services/build-get-h
 import { buildUpsertMeasurement } from '@application/services/build-upsert-measurement'
 import { buildDeleteMeasurement } from '@application/services/build-delete-measurement'
 import { buildSyncHypothesisStatus } from '@application/services/build-sync-hypothesis-status'
+import { buildGetIdeaVersionValidationOverview } from '@application/services/build-get-idea-version-validation-overview'
 
 /**
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
@@ -70,6 +71,11 @@ const createHypothesis = buildCreateHypothesis(
 )
 
 const getIdeaVersionHypotheses = buildGetIdeaVersionHypotheses(
+  hypothesisRepository,
+  logger
+)
+
+const getIdeaVersionValidationOverview = buildGetIdeaVersionValidationOverview(
   hypothesisRepository,
   logger
 )
@@ -157,6 +163,7 @@ export {
   replaceIdeaVersionCanvas,
   createHypothesis,
   getIdeaVersionHypotheses,
+  getIdeaVersionValidationOverview,
   getHypothesis,
   updateHypothesis,
   deleteHypothesis,
