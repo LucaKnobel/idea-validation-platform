@@ -1,12 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { buildUpsertExperiment } from '@application/services/build-upsert-experiment'
+import type { HypothesisStatusSyncService } from '@application/interfaces/hypothesis-status-sync'
 import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
 import type { ExperimentRepository } from '@application/interfaces/experiment-repository'
 import type { Logger } from '@interfaces/logger'
-import { makeExperiment, makeExperimentRepository, makeLogger, VALID_USER_ID } from './helpers'
+import { makeExperiment, makeExperimentRepository, makeHypothesis, makeLogger, VALID_USER_ID } from './helpers'
 
 describe('buildUpsertExperiment', () => {
   let experimentRepository: ExperimentRepository
+  let hypothesisStatusSyncService: HypothesisStatusSyncService
   let logger: Logger
   let upsertExperiment: ReturnType<typeof buildUpsertExperiment>
 
@@ -20,8 +22,11 @@ describe('buildUpsertExperiment', () => {
 
   beforeEach(() => {
     experimentRepository = makeExperimentRepository()
+    hypothesisStatusSyncService = {
+      sync: vi.fn().mockResolvedValue(makeHypothesis())
+    }
     logger = makeLogger()
-    upsertExperiment = buildUpsertExperiment(experimentRepository, logger)
+    upsertExperiment = buildUpsertExperiment(experimentRepository, hypothesisStatusSyncService, logger)
     vi.mocked(experimentRepository.upsertByHypothesis).mockResolvedValue(makeExperiment())
   })
 
@@ -46,6 +51,15 @@ describe('buildUpsertExperiment', () => {
     expect(result).toEqual(experiment)
   })
 
+  it('syncs hypothesis status after upsert', async () => {
+    await upsertExperiment(validInput)
+
+    expect(hypothesisStatusSyncService.sync).toHaveBeenCalledWith({
+      userId: VALID_USER_ID,
+      hypothesisId: 'hypothesis-001'
+    })
+  })
+
   it('logs the upserted experiment id', async () => {
     vi.mocked(experimentRepository.upsertByHypothesis).mockResolvedValue(makeExperiment({ id: 'experiment-xyz' }))
 
@@ -63,6 +77,7 @@ describe('buildUpsertExperiment', () => {
 
     await expect(upsertExperiment(validInput)).rejects.toThrow(HypothesisNotFoundError)
 
+    expect(hypothesisStatusSyncService.sync).not.toHaveBeenCalled()
     expect(logger.debug).not.toHaveBeenCalled()
   })
 })

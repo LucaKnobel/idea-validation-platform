@@ -6,6 +6,7 @@ import {
 } from '@application/services/build-sync-hypothesis-status'
 import type { ExperimentRepository } from '@application/interfaces/experiment-repository'
 import type { HypothesisRepository } from '@application/interfaces/hypothesis-repository'
+import type { HypothesisStatusSyncService } from '@application/interfaces/hypothesis-status-sync'
 import type { MeasurementRepository } from '@application/interfaces/measurement-repository'
 import type { MetricRepository } from '@application/interfaces/metric-repository'
 import type { Logger } from '@interfaces/logger'
@@ -151,7 +152,7 @@ describe('buildSyncHypothesisStatus', () => {
   let metricRepository: MetricRepository
   let measurementRepository: MeasurementRepository
   let logger: Logger
-  let syncHypothesisStatus: ReturnType<typeof buildSyncHypothesisStatus>
+  let hypothesisStatusSyncService: HypothesisStatusSyncService
 
   beforeEach(() => {
     hypothesisRepository = makeHypothesisRepository()
@@ -160,7 +161,7 @@ describe('buildSyncHypothesisStatus', () => {
     measurementRepository = makeMeasurementRepository()
     logger = makeLogger()
 
-    syncHypothesisStatus = buildSyncHypothesisStatus(
+    hypothesisStatusSyncService = buildSyncHypothesisStatus(
       hypothesisRepository,
       experimentRepository,
       metricRepository,
@@ -172,7 +173,7 @@ describe('buildSyncHypothesisStatus', () => {
   it('throws HypothesisNotFoundError when the hypothesis is not accessible', async () => {
     vi.mocked(hypothesisRepository.getById).mockResolvedValue(null)
 
-    await expect(syncHypothesisStatus({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' }))
+    await expect(hypothesisStatusSyncService.sync({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' }))
       .rejects.toThrow(HypothesisNotFoundError)
 
     expect(hypothesisRepository.updateStatus).not.toHaveBeenCalled()
@@ -186,7 +187,7 @@ describe('buildSyncHypothesisStatus', () => {
     vi.mocked(metricRepository.getByHypothesis).mockResolvedValue(makeMetric())
     vi.mocked(measurementRepository.getByHypothesis).mockResolvedValue(makeMeasurement())
 
-    const result = await syncHypothesisStatus({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' })
+    const result = await hypothesisStatusSyncService.sync({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' })
 
     expect(result).toEqual(hypothesis)
     expect(hypothesisRepository.updateStatus).not.toHaveBeenCalled()
@@ -202,7 +203,7 @@ describe('buildSyncHypothesisStatus', () => {
     vi.mocked(measurementRepository.getByHypothesis).mockResolvedValue(makeMeasurement({ value: 12 }))
     vi.mocked(hypothesisRepository.updateStatus).mockResolvedValue(makeHypothesis({ status: 'VALIDATED' }))
 
-    const result = await syncHypothesisStatus({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' })
+    const result = await hypothesisStatusSyncService.sync({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' })
 
     expect(hypothesisRepository.updateStatus).toHaveBeenCalledWith({
       userId: VALID_USER_ID,
@@ -225,7 +226,7 @@ describe('buildSyncHypothesisStatus', () => {
     vi.mocked(measurementRepository.getByHypothesis).mockResolvedValue(makeMeasurement({ value: 42 }))
     vi.mocked(hypothesisRepository.updateStatus).mockResolvedValue(null)
 
-    await expect(syncHypothesisStatus({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' }))
+    await expect(hypothesisStatusSyncService.sync({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' }))
       .rejects.toThrow(HypothesisNotFoundError)
   })
 })

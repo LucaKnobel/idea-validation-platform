@@ -1,12 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { buildUpsertMeasurement } from '@application/services/build-upsert-measurement'
+import type { HypothesisStatusSyncService } from '@application/interfaces/hypothesis-status-sync'
 import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
 import type { MeasurementRepository } from '@application/interfaces/measurement-repository'
 import type { Logger } from '@interfaces/logger'
-import { makeMeasurement, makeMeasurementRepository, makeLogger, VALID_USER_ID } from './helpers'
+import { makeHypothesis, makeLogger, makeMeasurement, makeMeasurementRepository, VALID_USER_ID } from './helpers'
 
 describe('buildUpsertMeasurement', () => {
   let measurementRepository: MeasurementRepository
+  let hypothesisStatusSyncService: HypothesisStatusSyncService
   let logger: Logger
   let upsertMeasurement: ReturnType<typeof buildUpsertMeasurement>
 
@@ -19,8 +21,11 @@ describe('buildUpsertMeasurement', () => {
 
   beforeEach(() => {
     measurementRepository = makeMeasurementRepository()
+    hypothesisStatusSyncService = {
+      sync: vi.fn().mockResolvedValue(makeHypothesis())
+    }
     logger = makeLogger()
-    upsertMeasurement = buildUpsertMeasurement(measurementRepository, logger)
+    upsertMeasurement = buildUpsertMeasurement(measurementRepository, hypothesisStatusSyncService, logger)
     vi.mocked(measurementRepository.upsertByHypothesis).mockResolvedValue(makeMeasurement())
   })
 
@@ -64,11 +69,21 @@ describe('buildUpsertMeasurement', () => {
     })
   })
 
+  it('syncs hypothesis status after upsert', async () => {
+    await upsertMeasurement(validInput)
+
+    expect(hypothesisStatusSyncService.sync).toHaveBeenCalledWith({
+      userId: VALID_USER_ID,
+      hypothesisId: 'hypothesis-001'
+    })
+  })
+
   it('throws HypothesisNotFoundError when the hypothesis is not accessible', async () => {
     vi.mocked(measurementRepository.upsertByHypothesis).mockResolvedValue(null)
 
     await expect(upsertMeasurement(validInput)).rejects.toThrow(HypothesisNotFoundError)
 
+    expect(hypothesisStatusSyncService.sync).not.toHaveBeenCalled()
     expect(logger.debug).not.toHaveBeenCalled()
   })
 })

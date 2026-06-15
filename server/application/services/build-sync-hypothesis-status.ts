@@ -1,17 +1,16 @@
 import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
 import type { ExperimentRepository } from '@application/interfaces/experiment-repository'
 import type { HypothesisRepository } from '@application/interfaces/hypothesis-repository'
+import type {
+  HypothesisStatusSyncService,
+  SyncHypothesisStatusInput
+} from '@application/interfaces/hypothesis-status-sync'
 import type { MeasurementRepository } from '@application/interfaces/measurement-repository'
 import type { MetricRepository } from '@application/interfaces/metric-repository'
 import type { ExperimentStatus } from '@application/models/experiment'
 import type { Hypothesis, HypothesisStatus } from '@application/models/hypothesis'
 import type { MetricThreshold, ThresholdOperator } from '@application/models/metric-threshold'
 import type { Logger } from '@interfaces/logger'
-
-export type SyncHypothesisStatusInput = {
-  userId: string
-  hypothesisId: string
-}
 
 export type DeriveHypothesisStatusInput = {
   experimentStatus: ExperimentStatus | null
@@ -59,8 +58,8 @@ export const buildSyncHypothesisStatus = (
   metricRepository: MetricRepository,
   measurementRepository: MeasurementRepository,
   logger: Logger
-) => {
-  return async (input: SyncHypothesisStatusInput): Promise<Hypothesis> => {
+): HypothesisStatusSyncService => {
+  const sync = async (input: SyncHypothesisStatusInput): Promise<Hypothesis> => {
     const existingHypothesis = await hypothesisRepository.getById({
       userId: input.userId,
       hypothesisId: input.hypothesisId
@@ -113,5 +112,9 @@ export const buildSyncHypothesisStatus = (
     })
 
     return updatedHypothesis
+  }
+
+  return {
+    sync
   }
 }

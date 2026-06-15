@@ -1,12 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { buildUpsertMetric } from '@application/services/build-upsert-metric'
+import type { HypothesisStatusSyncService } from '@application/interfaces/hypothesis-status-sync'
 import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
 import type { MetricRepository } from '@application/interfaces/metric-repository'
 import type { Logger } from '@interfaces/logger'
-import { makeMetric, makeMetricRepository, makeLogger, VALID_USER_ID } from './helpers'
+import { makeHypothesis, makeLogger, makeMetric, makeMetricRepository, VALID_USER_ID } from './helpers'
 
 describe('buildUpsertMetric', () => {
   let metricRepository: MetricRepository
+  let hypothesisStatusSyncService: HypothesisStatusSyncService
   let logger: Logger
   let upsertMetric: ReturnType<typeof buildUpsertMetric>
 
@@ -21,8 +23,11 @@ describe('buildUpsertMetric', () => {
 
   beforeEach(() => {
     metricRepository = makeMetricRepository()
+    hypothesisStatusSyncService = {
+      sync: vi.fn().mockResolvedValue(makeHypothesis())
+    }
     logger = makeLogger()
-    upsertMetric = buildUpsertMetric(metricRepository, logger)
+    upsertMetric = buildUpsertMetric(metricRepository, hypothesisStatusSyncService, logger)
     vi.mocked(metricRepository.upsertByHypothesis).mockResolvedValue(makeMetric())
   })
 
@@ -60,11 +65,21 @@ describe('buildUpsertMetric', () => {
     })
   })
 
+  it('syncs hypothesis status after upsert', async () => {
+    await upsertMetric(validInput)
+
+    expect(hypothesisStatusSyncService.sync).toHaveBeenCalledWith({
+      userId: VALID_USER_ID,
+      hypothesisId: 'hypothesis-001'
+    })
+  })
+
   it('throws HypothesisNotFoundError when the hypothesis is not accessible', async () => {
     vi.mocked(metricRepository.upsertByHypothesis).mockResolvedValue(null)
 
     await expect(upsertMetric(validInput)).rejects.toThrow(HypothesisNotFoundError)
 
+    expect(hypothesisStatusSyncService.sync).not.toHaveBeenCalled()
     expect(logger.debug).not.toHaveBeenCalled()
   })
 })

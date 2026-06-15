@@ -1,4 +1,5 @@
 import type { MetricRepository } from '@application/interfaces/metric-repository'
+import type { HypothesisStatusSyncService } from '@application/interfaces/hypothesis-status-sync'
 import type { Metric } from '@application/models/metric'
 import type { ThresholdOperator } from '@application/models/metric-threshold'
 import type { Logger } from '@interfaces/logger'
@@ -19,7 +20,11 @@ export type UpsertMetricInput = {
 /**
  * Builds the use case that creates or updates the metric singleton for one owned hypothesis.
  */
-export const buildUpsertMetric = (metricRepository: MetricRepository, logger: Logger) => {
+export const buildUpsertMetric = (
+  metricRepository: MetricRepository,
+  hypothesisStatusSyncService: HypothesisStatusSyncService,
+  logger: Logger
+) => {
   return async (input: UpsertMetricInput): Promise<Metric> => {
     const metric = await metricRepository.upsertByHypothesis({
       userId: input.userId,
@@ -33,6 +38,11 @@ export const buildUpsertMetric = (metricRepository: MetricRepository, logger: Lo
     if (metric === null) {
       throw new HypothesisNotFoundError()
     }
+
+    await hypothesisStatusSyncService.sync({
+      userId: input.userId,
+      hypothesisId: input.hypothesisId
+    })
 
     logger.debug('Metric upserted', {
       userId: input.userId,
