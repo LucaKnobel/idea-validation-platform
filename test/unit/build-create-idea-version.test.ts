@@ -54,6 +54,21 @@ describe('buildCreateIdeaVersion', () => {
     expect(repository.createFromSource).not.toHaveBeenCalled()
   })
 
+  it('requests source metadata with the selected base version ownership scope', async () => {
+    await createIdeaVersion({
+      userId: VALID_USER_ID,
+      ideaId: VALID_IDEA_ID,
+      baseVersionId: VALID_IDEA_VERSION_ID,
+      type: 'ITERATION'
+    })
+
+    expect(repository.getVersionSource).toHaveBeenCalledWith({
+      userId: VALID_USER_ID,
+      ideaId: VALID_IDEA_ID,
+      ideaVersionId: VALID_IDEA_VERSION_ID
+    })
+  })
+
   it('copies all hypotheses for iteration', async () => {
     await createIdeaVersion({
       userId: VALID_USER_ID,
@@ -85,6 +100,53 @@ describe('buildCreateIdeaVersion', () => {
       baseVersionId: VALID_IDEA_VERSION_ID,
       type: 'PIVOT',
       hypothesisIdsToCopy: ['hyp-001', 'hyp-002']
+    })
+  })
+
+  it('passes an empty copy list for pivot when all hypotheses are invalidated', async () => {
+    vi.mocked(repository.getVersionSource).mockResolvedValue({
+      baseVersion: makeIdeaVersion({ id: VALID_IDEA_VERSION_ID, versionNumber: 2 }),
+      hypotheses: [
+        { id: 'hyp-100', status: 'INVALIDATED' },
+        { id: 'hyp-101', status: 'INVALIDATED' }
+      ]
+    })
+
+    await createIdeaVersion({
+      userId: VALID_USER_ID,
+      ideaId: VALID_IDEA_ID,
+      baseVersionId: VALID_IDEA_VERSION_ID,
+      type: 'PIVOT'
+    })
+
+    expect(repository.createFromSource).toHaveBeenCalledWith({
+      userId: VALID_USER_ID,
+      ideaId: VALID_IDEA_ID,
+      baseVersionId: VALID_IDEA_VERSION_ID,
+      type: 'PIVOT',
+      hypothesisIdsToCopy: []
+    })
+  })
+
+  it('passes an empty copy list for iteration when the base version has no hypotheses', async () => {
+    vi.mocked(repository.getVersionSource).mockResolvedValue({
+      baseVersion: makeIdeaVersion({ id: VALID_IDEA_VERSION_ID, versionNumber: 2 }),
+      hypotheses: []
+    })
+
+    await createIdeaVersion({
+      userId: VALID_USER_ID,
+      ideaId: VALID_IDEA_ID,
+      baseVersionId: VALID_IDEA_VERSION_ID,
+      type: 'ITERATION'
+    })
+
+    expect(repository.createFromSource).toHaveBeenCalledWith({
+      userId: VALID_USER_ID,
+      ideaId: VALID_IDEA_ID,
+      baseVersionId: VALID_IDEA_VERSION_ID,
+      type: 'ITERATION',
+      hypothesisIdsToCopy: []
     })
   })
 
@@ -126,5 +188,7 @@ describe('buildCreateIdeaVersion', () => {
       baseVersionId: VALID_IDEA_VERSION_ID,
       type: 'ITERATION'
     })).rejects.toThrow(IdeaVersionNotFoundError)
+
+    expect(logger.debug).not.toHaveBeenCalled()
   })
 })

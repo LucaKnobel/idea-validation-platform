@@ -54,6 +54,8 @@ export const makeIdeaRepository = (): IdeaRepository => ({
 
 export const makeIdeaVersionRepository = (): IdeaVersionRepository => ({
   listByUser: vi.fn(),
+  getByIdea: vi.fn(),
+  listByIdea: vi.fn(),
   getVersionSource: vi.fn(),
   createFromSource: vi.fn()
 })

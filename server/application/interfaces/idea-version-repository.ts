@@ -1,7 +1,7 @@
 import type { Idea } from '@application/models/idea'
 import type { IdeaVersion, IdeaVersionType } from '@application/models/idea-version'
 import type { HypothesisStatus } from '@application/models/hypothesis'
-import type { IdeaVersionOwnerInput } from '@application/interfaces/ownership-inputs'
+import type { IdeaOwnerInput, IdeaVersionOwnerInput } from '@application/interfaces/ownership-inputs'
 
 export type IdeaVersionListInput = {
   userId: string
@@ -47,6 +47,18 @@ export interface IdeaVersionRepository {
    * Lists idea cards for one user. Each idea contains only its latest version.
    */
   listByUser(input: IdeaVersionListInput): Promise<{ ideas: Idea[], total: number }>
+
+  /**
+   * Returns one owned idea with all versions sorted by version number descending.
+   * Returns null when the idea is not accessible to the user.
+   */
+  getByIdea(input: IdeaOwnerInput): Promise<Idea | null>
+
+  /**
+   * Returns all versions for one owned idea sorted by version number descending.
+   * Returns null when the idea is not accessible to the user.
+   */
+  listByIdea(input: IdeaOwnerInput): Promise<IdeaVersion[] | null>
 
   /**
    * Loads the selected base version and hypothesis states needed for copy rules.

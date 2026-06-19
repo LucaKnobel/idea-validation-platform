@@ -20,6 +20,48 @@ export const IdeaResponseSchema = z.object({
   updatedAt: z.iso.datetime()
 })
 
+/**
+ * Request body for deriving a new version from an existing base version.
+ */
+export const CreateIdeaVersionBodySchema = z.object({
+  baseVersionId: z.uuid(),
+  type: z.enum(['ITERATION', 'PIVOT'])
+})
+
+/**
+ * Public metadata for one idea version used by overview and history UIs.
+ */
+export const IdeaVersionMetadataSchema = z.object({
+  id: z.uuid(),
+  versionNumber: z.number().int().min(1),
+  type: z.enum(['INITIAL', 'ITERATION', 'PIVOT']),
+  parentVersionId: z.uuid().nullable(),
+  parentVersionNumber: z.number().int().min(1).nullable(),
+  title: z.string(),
+  description: z.string().nullable(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime()
+})
+
+/**
+ * Idea detail payload with the latest version pointer and full version metadata list.
+ */
+export const IdeaDetailResponseSchema = z.object({
+  id: z.uuid(),
+  latestVersionId: z.uuid(),
+  latestVersionNumber: z.number().int().min(1),
+  versions: z.array(IdeaVersionMetadataSchema),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime()
+})
+
+/**
+ * Compact list payload for all versions that belong to one idea.
+ */
+export const IdeaVersionsListResponseSchema = z.object({
+  items: z.array(IdeaVersionMetadataSchema)
+})
+
 export const IdeasListResponseSchema = z.object({
   items: z.array(IdeaResponseSchema),
   page: z.number().int().min(1),
@@ -30,6 +72,10 @@ export const IdeasListResponseSchema = z.object({
 })
 
 export type CreateIdeaBodyDto = z.infer<typeof CreateIdeaBodySchema>
+export type CreateIdeaVersionBodyDto = z.infer<typeof CreateIdeaVersionBodySchema>
 export type GetIdeasQueryDto = z.infer<typeof GetIdeasQuerySchema>
 export type IdeaResponseDto = z.infer<typeof IdeaResponseSchema>
 export type IdeasListResponseDto = z.infer<typeof IdeasListResponseSchema>
+export type IdeaVersionMetadataDto = z.infer<typeof IdeaVersionMetadataSchema>
+export type IdeaDetailResponseDto = z.infer<typeof IdeaDetailResponseSchema>
+export type IdeaVersionsListResponseDto = z.infer<typeof IdeaVersionsListResponseSchema>
