@@ -10,6 +10,7 @@ import { logger } from '@infrastructure/logging/logger'
 
 import { buildSubscriptionService } from '@application/services/build-subscription-service'
 import { buildCreateIdea } from '@application/services/build-create-idea'
+import { buildCreateIdeaVersion } from '@application/services/build-create-idea-version'
 import { buildGetIdeas } from '@application/services/build-get-ideas'
 import { buildDeleteIdea } from '@application/services/build-delete-idea'
 import { buildGetIdeaVersionCanvas } from '@application/services/build-get-idea-version-canvas'
@@ -46,6 +47,11 @@ const createIdea = buildCreateIdea(
 )
 
 const getIdeas = buildGetIdeas(
+  ideaVersionRepository,
+  logger
+)
+
+const createIdeaVersion = buildCreateIdeaVersion(
   ideaVersionRepository,
   logger
 )
@@ -157,6 +163,7 @@ const deleteMeasurement = buildDeleteMeasurement(
 export {
   subscriptionService,
   createIdea,
+  createIdeaVersion,
   getIdeas,
   deleteIdea,
   getIdeaVersionCanvas,
