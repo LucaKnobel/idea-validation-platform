@@ -427,6 +427,44 @@
     "versionSwitcher": {
       "comingSoon": "More versions coming soon"
     },
+    "validationOverview": {
+      "title": "Validation Overview",
+      "description": "Monitor the current validation state of this idea version across status, priority and evidence distributions.",
+      "cards": {
+        "totalHypotheses": "Total hypotheses",
+        "statusDistribution": "Status distribution",
+        "priorityDistribution": "Priority distribution",
+        "evidenceDistribution": "Evidence distribution"
+      },
+      "status": {
+        "validated": "Validated",
+        "invalidated": "Invalidated",
+        "notTested": "Not tested"
+      },
+      "priority": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "evidence": {
+        "qualitative": "Qualitative",
+        "quantitative": "Quantitative",
+        "behavioral": "Behavioral",
+        "monetary": "Monetary"
+      },
+      "dimensionCards": {
+        "title": "Validation by uncertainty area"
+      },
+      "empty": {
+        "noHypotheses": "No hypotheses available for this idea version yet."
+      },
+      "error": {
+        "load": {
+          "title": "Could not load validation summary",
+          "message": "Please try again in a moment."
+        }
+      }
+    },
     "canvasPage": {
       "title": "Business Model Canvas",
       "description": "Capture assumptions per canvas section and save the current version snapshot.",
@@ -467,7 +505,10 @@
         "openDetails": "Open details"
       },
       "status": {
-        "OPEN": "Open"
+        "OPEN": "Open",
+        "VALIDATED": "Validated",
+        "INVALIDATED": "Invalidated",
+        "NOT_TESTED": "Not tested"
       },
       "dimensions": {
         "PROBLEM": "Problem",

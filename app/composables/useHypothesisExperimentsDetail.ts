@@ -7,6 +7,7 @@ import type { MeasurementFormState } from '~/components/idea-workspace/Measureme
 export interface UseHypothesisExperimentsDetailInput {
   hypothesisId: Ref<string>
   hasValidRouteParams: ComputedRef<boolean>
+  onStatusChanged?: () => Promise<void> | void
 }
 
 /**
@@ -359,6 +360,7 @@ export const useHypothesisExperimentsDetail = (
           showSuccess('ideaWorkspace.hypotheses.detail.experiments.success.create.title', 'ideaWorkspace.hypotheses.detail.experiments.success.create.message')
           measurement.value = null
           isExperimentModalOpen.value = false
+          await input.onStatusChanged?.()
           return true
         }
 
@@ -374,6 +376,7 @@ export const useHypothesisExperimentsDetail = (
 
         showSuccess('ideaWorkspace.hypotheses.detail.experiments.success.update.title', 'ideaWorkspace.hypotheses.detail.experiments.success.update.message')
         isExperimentModalOpen.value = false
+        await input.onStatusChanged?.()
         return true
       })
     } catch (error: unknown) {
@@ -411,6 +414,7 @@ export const useHypothesisExperimentsDetail = (
           showSuccess('ideaWorkspace.hypotheses.detail.measurements.success.create.title', 'ideaWorkspace.hypotheses.detail.measurements.success.create.message')
           isMeasurementModalOpen.value = false
           await loadMeasurement()
+          await input.onStatusChanged?.()
           return true
         }
 
@@ -428,6 +432,7 @@ export const useHypothesisExperimentsDetail = (
         showSuccess('ideaWorkspace.hypotheses.detail.measurements.success.update.title', 'ideaWorkspace.hypotheses.detail.measurements.success.update.message')
         isMeasurementModalOpen.value = false
         await loadMeasurement()
+        await input.onStatusChanged?.()
         return true
       })
     } catch (error: unknown) {
@@ -478,6 +483,7 @@ export const useHypothesisExperimentsDetail = (
         isExperimentDeleteModalOpen.value = false
         experimentDeleteCandidate.value = null
         measurement.value = null
+        await input.onStatusChanged?.()
 
         return true
       })
@@ -510,6 +516,7 @@ export const useHypothesisExperimentsDetail = (
         measurementDeleteCandidate.value = null
         isMeasurementDeleteModalOpen.value = false
         await loadMeasurement()
+        await input.onStatusChanged?.()
         return true
       })
     } catch (error: unknown) {

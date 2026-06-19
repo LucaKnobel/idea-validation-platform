@@ -6,9 +6,9 @@ import type {
 } from '#shared/types/hypothesis'
 
 /**
- * UI-only status placeholder until domain status is implemented.
+ * Domain status used across the hypothesis table and detail views.
  */
-export type HypothesisUiStatus = 'OPEN'
+export type HypothesisUiStatus = HypothesisResponseDto['status']
 
 /**
  * Public API for rendering and controlling the hypotheses table.
@@ -17,6 +17,7 @@ export interface UseHypothesesTableComposable {
   columns: ComputedRef<TableColumn<HypothesisResponseDto>[]>
   sorting: Ref<Array<{ id: string, desc: boolean }>>
   priorityColor: (priority: HypothesisPriority) => 'error' | 'warning' | 'neutral'
+  statusColor: (status: HypothesisUiStatus) => 'success' | 'error' | 'neutral'
   dimensionLabel: (dimension: HypothesisDimension) => string
   priorityLabel: (priority: HypothesisPriority) => string
   statusLabel: (status: HypothesisUiStatus) => string
@@ -51,12 +52,24 @@ export const useHypothesesTable = (
     return t(`ideaWorkspace.hypotheses.priorities.${priority}`)
   }
 
-  const getHypothesisUiStatus = (_hypothesis: HypothesisResponseDto): HypothesisUiStatus => {
-    return 'OPEN'
+  const getHypothesisUiStatus = (hypothesis: HypothesisResponseDto): HypothesisUiStatus => {
+    return hypothesis.status
   }
 
   const statusLabel = (status: HypothesisUiStatus): string => {
     return t(`ideaWorkspace.hypotheses.status.${status}`)
+  }
+
+  const statusColor = (status: HypothesisUiStatus): 'success' | 'error' | 'neutral' => {
+    if (status === 'VALIDATED') {
+      return 'success'
+    }
+
+    if (status === 'INVALIDATED') {
+      return 'error'
+    }
+
+    return 'neutral'
   }
 
   const columns = computed<TableColumn<HypothesisResponseDto>[]>(() => [
@@ -107,7 +120,9 @@ export const useHypothesesTable = (
       accessorFn: row => getHypothesisUiStatus(row),
       sortingFn: (left, right) => {
         const statusRank: Record<HypothesisUiStatus, number> = {
-          OPEN: 1
+          VALIDATED: 3,
+          INVALIDATED: 2,
+          NOT_TESTED: 1
         }
 
         return statusRank[getHypothesisUiStatus(left.original)] - statusRank[getHypothesisUiStatus(right.original)]
@@ -138,6 +153,7 @@ export const useHypothesesTable = (
     columns,
     sorting,
     priorityColor,
+    statusColor,
     dimensionLabel,
     priorityLabel,
     statusLabel,
