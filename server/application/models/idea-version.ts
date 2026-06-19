@@ -6,6 +6,7 @@ export type IdeaVersionType = 'INITIAL' | 'ITERATION' | 'PIVOT'
 export type IdeaVersion = {
   id: string
   ideaId: string
+  parentVersionId: string | null
   versionNumber: number
   type: IdeaVersionType
   title: string

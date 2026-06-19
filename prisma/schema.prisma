@@ -188,6 +188,9 @@ model IdeaVersion {
   id             String          @id @default(uuid())
   ideaId         String
   idea           Idea            @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  parentVersionId String?
+  parentVersion   IdeaVersion?    @relation("IdeaVersionParent", fields: [parentVersionId], references: [id], onDelete: SetNull)
+  childVersions   IdeaVersion[]   @relation("IdeaVersionParent")
   canvasElements CanvasElement[]
   hypotheses     Hypothesis[]
   versionNumber  Int
@@ -199,6 +202,7 @@ model IdeaVersion {
 
   @@unique([ideaId, versionNumber])
   @@index([ideaId])
+  @@index([parentVersionId])
   @@map("ideaVersion")
 }
 

@@ -21,6 +21,7 @@ const toDomainIdea = (row: PrismaIdeaWithVersions): Idea => {
     versions: row.versions.map(version => ({
       id: version.id,
       ideaId: version.ideaId,
+      parentVersionId: version.parentVersionId,
       versionNumber: version.versionNumber,
       type: version.type,
       title: version.title,
