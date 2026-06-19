@@ -427,6 +427,44 @@
     "versionSwitcher": {
       "comingSoon": "Weitere Versionen folgen"
     },
+    "validationOverview": {
+      "title": "Validierungsübersicht",
+      "description": "Überwachen Sie den aktuellen Validierungsstand dieser Ideen-Version über Status-, Prioritäts- und Evidenzverteilungen.",
+      "cards": {
+        "totalHypotheses": "Hypothesen gesamt",
+        "statusDistribution": "Statusverteilung",
+        "priorityDistribution": "Prioritätsverteilung",
+        "evidenceDistribution": "Evidenzverteilung"
+      },
+      "status": {
+        "validated": "Validiert",
+        "invalidated": "Invalidiert",
+        "notTested": "Nicht getestet"
+      },
+      "priority": {
+        "high": "Hoch",
+        "medium": "Mittel",
+        "low": "Niedrig"
+      },
+      "evidence": {
+        "qualitative": "Qualitativ",
+        "quantitative": "Quantitativ",
+        "behavioral": "Verhaltensbasiert",
+        "monetary": "Monetär"
+      },
+      "dimensionCards": {
+        "title": "Validierung nach Unsicherheitsbereich"
+      },
+      "empty": {
+        "noHypotheses": "Für diese Ideen-Version sind noch keine Hypothesen vorhanden."
+      },
+      "error": {
+        "load": {
+          "title": "Validierungszusammenfassung konnte nicht geladen werden",
+          "message": "Bitte versuchen Sie es in einem Moment erneut."
+        }
+      }
+    },
     "canvasPage": {
       "title": "Business Model Canvas",
       "description": "Erfassen Sie Annahmen pro Canvas-Bereich und speichern Sie den aktuellen Versionsstand.",
@@ -467,7 +505,10 @@
         "openDetails": "Details öffnen"
       },
       "status": {
-        "OPEN": "Offen"
+        "OPEN": "Offen",
+        "VALIDATED": "Validiert",
+        "INVALIDATED": "Invalidiert",
+        "NOT_TESTED": "Nicht getestet"
       },
       "dimensions": {
         "PROBLEM": "Problem",

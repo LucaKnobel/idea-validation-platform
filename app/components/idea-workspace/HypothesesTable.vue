@@ -24,6 +24,7 @@ const {
   columns,
   sorting,
   priorityColor,
+  statusColor,
   dimensionLabel,
   priorityLabel,
   statusLabel,
@@ -194,8 +195,8 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
             </UBadge>
 
             <UBadge
-              color="neutral"
-              variant="soft"
+              :color="statusColor(getHypothesisUiStatus(hypothesis))"
+              variant="subtle"
             >
               {{ statusLabel(getHypothesisUiStatus(hypothesis)) }}
             </UBadge>
@@ -272,30 +273,36 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
       </template>
 
       <template #dimension-cell="{ row }">
-        <UBadge
-          color="neutral"
-          variant="soft"
-        >
-          {{ dimensionLabel(row.original.dimension) }}
-        </UBadge>
+        <div class="flex min-h-10 items-center">
+          <UBadge
+            color="neutral"
+            variant="soft"
+          >
+            {{ dimensionLabel(row.original.dimension) }}
+          </UBadge>
+        </div>
       </template>
 
       <template #priority-cell="{ row }">
-        <UBadge
-          :color="priorityColor(row.original.priority)"
-          variant="soft"
-        >
-          {{ priorityLabel(row.original.priority) }}
-        </UBadge>
+        <div class="flex min-h-10 items-center">
+          <UBadge
+            :color="priorityColor(row.original.priority)"
+            variant="soft"
+          >
+            {{ priorityLabel(row.original.priority) }}
+          </UBadge>
+        </div>
       </template>
 
       <template #status-cell="{ row }">
-        <UBadge
-          color="neutral"
-          variant="soft"
-        >
-          {{ statusLabel(getHypothesisUiStatus(row.original)) }}
-        </UBadge>
+        <div class="flex min-h-10 items-center">
+          <UBadge
+            :color="statusColor(getHypothesisUiStatus(row.original))"
+            variant="subtle"
+          >
+            {{ statusLabel(getHypothesisUiStatus(row.original)) }}
+          </UBadge>
+        </div>
       </template>
 
       <template #actions-cell="{ row }">
