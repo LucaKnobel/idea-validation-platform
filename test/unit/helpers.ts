@@ -36,6 +36,7 @@ export const makeIdea = (overrides: Partial<Idea> = {}): Idea => ({
 export const makeIdeaVersion = (overrides: Partial<IdeaVersion> = {}): IdeaVersion => ({
   id: 'idea-version-001',
   ideaId: 'idea-001',
+  parentVersionId: null,
   versionNumber: 1,
   type: 'INITIAL',
   title: 'Test Idea',
@@ -52,7 +53,9 @@ export const makeIdeaRepository = (): IdeaRepository => ({
 })
 
 export const makeIdeaVersionRepository = (): IdeaVersionRepository => ({
-  listByUser: vi.fn()
+  listByUser: vi.fn(),
+  getVersionSource: vi.fn(),
+  createFromSource: vi.fn()
 })
 
 export const makeSubscriptionService = (): SubscriptionService => ({
