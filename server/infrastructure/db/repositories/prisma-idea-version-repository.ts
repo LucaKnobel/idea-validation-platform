@@ -8,7 +8,8 @@ import type {
 } from '@application/interfaces/idea-version-repository'
 import type { Idea } from '@application/models/idea'
 import type { IdeaVersion } from '@application/models/idea-version'
-import type { IdeaVersionOwnerInput } from '@application/interfaces/ownership-inputs'
+import type { IdeaOwnerInput, IdeaVersionOwnerInput } from '@application/interfaces/ownership-inputs'
+import { buildOwnedIdeaWhere } from '@infrastructure/db/ownership-helpers'
 
 // ---------------------------------------------------------------------------
 // Prisma payload types
@@ -294,6 +295,50 @@ export const ideaVersionRepository: IdeaVersionRepository = {
     ])
 
     return { ideas: rows.map(toDomainIdea), total }
+  },
+
+  /**
+   * Returns one owned idea with all versions sorted by version number descending.
+   */
+  async getByIdea(input: IdeaOwnerInput): Promise<Idea | null> {
+    const row = await prisma.idea.findFirst({
+      where: buildOwnedIdeaWhere(input),
+      include: {
+        versions: {
+          orderBy: {
+            versionNumber: 'desc'
+          }
+        }
+      }
+    })
+
+    if (row === null) {
+      return null
+    }
+
+    return toDomainIdea(row)
+  },
+
+  /**
+   * Returns all versions for one owned idea sorted by version number descending.
+   */
+  async listByIdea(input: IdeaOwnerInput): Promise<IdeaVersion[] | null> {
+    const row = await prisma.idea.findFirst({
+      where: buildOwnedIdeaWhere(input),
+      select: {
+        versions: {
+          orderBy: {
+            versionNumber: 'desc'
+          }
+        }
+      }
+    })
+
+    if (row === null) {
+      return null
+    }
+
+    return row.versions.map(toDomainIdeaVersion)
   },
 
   /**

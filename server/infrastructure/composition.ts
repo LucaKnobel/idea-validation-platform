@@ -11,6 +11,8 @@ import { logger } from '@infrastructure/logging/logger'
 import { buildSubscriptionService } from '@application/services/build-subscription-service'
 import { buildCreateIdea } from '@application/services/build-create-idea'
 import { buildCreateIdeaVersion } from '@application/services/build-create-idea-version'
+import { buildGetIdea } from '@application/services/build-get-idea'
+import { buildGetIdeaVersions } from '@application/services/build-get-idea-versions'
 import { buildGetIdeas } from '@application/services/build-get-ideas'
 import { buildDeleteIdea } from '@application/services/build-delete-idea'
 import { buildGetIdeaVersionCanvas } from '@application/services/build-get-idea-version-canvas'
@@ -52,6 +54,16 @@ const getIdeas = buildGetIdeas(
 )
 
 const createIdeaVersion = buildCreateIdeaVersion(
+  ideaVersionRepository,
+  logger
+)
+
+const getIdea = buildGetIdea(
+  ideaVersionRepository,
+  logger
+)
+
+const getIdeaVersions = buildGetIdeaVersions(
   ideaVersionRepository,
   logger
 )
@@ -164,6 +176,8 @@ export {
   subscriptionService,
   createIdea,
   createIdeaVersion,
+  getIdea,
+  getIdeaVersions,
   getIdeas,
   deleteIdea,
   getIdeaVersionCanvas,
