@@ -91,7 +91,7 @@ const config = computed(() => {
 
         <div class="rounded-lg border border-default p-3">
           <p class="text-xs font-semibold uppercase tracking-wide text-muted">
-            {{ t('ideaWorkspace.versionActions.confirm.whatHappens') }}
+            {{ $t('ideaWorkspace.versionActions.confirm.whatHappens') }}
           </p>
 
           <ul class="mt-2 list-disc space-y-1.5 pl-5 text-sm text-default">
@@ -114,7 +114,7 @@ const config = computed(() => {
           :disabled="isLoading"
           @click="emit('update:open', false)"
         >
-          {{ t('actions.cancel') }}
+          {{ $t('actions.cancel') }}
         </UButton>
 
         <UButton

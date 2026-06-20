@@ -20,8 +20,6 @@ const emit = defineEmits<{
   submit: [form: IdeaMetadataForm]
 }>()
 
-const { t } = useI18n()
-
 /**
  * Emits current form state, while mutation logic stays in the parent composable.
  */
@@ -33,7 +31,7 @@ const onSubmit = (): void => {
 <template>
   <UModal
     v-model:open="open"
-    :title="t('ideaWorkspace.overview.metadata.editModal.title')"
+    :title="$t('ideaWorkspace.overview.metadata.editModal.title')"
     :dismissible="!isSubmitting"
     :ui="{
       content: 'w-[92vw] sm:max-w-2xl md:min-w-[44rem]',
@@ -49,13 +47,13 @@ const onSubmit = (): void => {
       >
         <UFormField
           name="title"
-          :label="t('ideaWorkspace.overview.metadata.fields.title.label')"
-          :description="t('ideaWorkspace.overview.metadata.fields.title.description')"
+          :label="$t('ideaWorkspace.overview.metadata.fields.title.label')"
+          :description="$t('ideaWorkspace.overview.metadata.fields.title.description')"
           required
         >
           <UInput
             v-model="state.title"
-            :placeholder="t('ideaWorkspace.overview.metadata.fields.title.placeholder')"
+            :placeholder="$t('ideaWorkspace.overview.metadata.fields.title.placeholder')"
             :disabled="isSubmitting"
             class="w-full"
           />
@@ -63,12 +61,12 @@ const onSubmit = (): void => {
 
         <UFormField
           name="description"
-          :label="t('ideaWorkspace.overview.metadata.fields.description.label')"
-          :description="t('ideaWorkspace.overview.metadata.fields.description.description')"
+          :label="$t('ideaWorkspace.overview.metadata.fields.description.label')"
+          :description="$t('ideaWorkspace.overview.metadata.fields.description.description')"
         >
           <UTextarea
             v-model="state.description"
-            :placeholder="t('ideaWorkspace.overview.metadata.fields.description.placeholder')"
+            :placeholder="$t('ideaWorkspace.overview.metadata.fields.description.placeholder')"
             :disabled="isSubmitting"
             :rows="4"
             class="w-full"
@@ -82,7 +80,7 @@ const onSubmit = (): void => {
             :disabled="isSubmitting"
             @click="open = false"
           >
-            {{ t('actions.cancel') }}
+            {{ $t('actions.cancel') }}
           </UButton>
 
           <UButton
@@ -91,7 +89,7 @@ const onSubmit = (): void => {
             icon="i-lucide-save"
             :loading="isSubmitting"
           >
-            {{ t('actions.save') }}
+            {{ $t('actions.save') }}
           </UButton>
         </div>
       </UForm>

@@ -3,15 +3,14 @@ const open = defineModel<boolean>('open', {
   default: false
 })
 
-const { t } = useI18n()
 const localePath = useLocalePath()
 </script>
 
 <template>
   <UModal
     v-model:open="open"
-    :title="t('upgradeToProModal.title')"
-    :description="t('upgradeToProModal.description')"
+    :title="$t('upgradeToProModal.title')"
+    :description="$t('upgradeToProModal.description')"
     :ui="{
       content: 'w-[92vw] sm:max-w-xl',
       body: 'space-y-5',
@@ -21,7 +20,7 @@ const localePath = useLocalePath()
     <template #body>
       <div class="rounded-xl border border-primary/20 bg-primary/5 p-4">
         <p class="text-sm text-toned">
-          {{ t('upgradeToProModal.pitch') }}
+          {{ $t('upgradeToProModal.pitch') }}
         </p>
       </div>
     </template>
@@ -32,7 +31,7 @@ const localePath = useLocalePath()
         variant="ghost"
         @click="open = false"
       >
-        {{ t('actions.cancel') }}
+        {{ $t('actions.cancel') }}
       </UButton>
 
       <UButton
@@ -41,7 +40,7 @@ const localePath = useLocalePath()
         :to="localePath('/upgrade-to-pro')"
         @click="open = false"
       >
-        {{ t('upgradeToProModal.cta') }}
+        {{ $t('upgradeToProModal.cta') }}
       </UButton>
     </template>
   </UModal>

@@ -4,7 +4,6 @@ definePageMeta({
   layout: 'idea-workspace'
 })
 
-const { t } = useI18n()
 const { notifyCanvasSaved, notifyCanvasSaveFailed } = useCanvasNotifications()
 const { ideaId, versionId, hasIdeaVersionRouteParams } = useIdeaVersionRouteParams()
 
@@ -195,7 +194,7 @@ watch([ideaId, versionId], async () => {
       >
         <div class="flex items-center justify-between gap-2 border-b border-default/80 pb-2">
           <h2 class="text-sm font-semibold text-highlighted">
-            {{ t(sectionMeta[section].labelKey) }}
+            {{ $t(sectionMeta[section].labelKey) }}
           </h2>
           <UIcon
             :name="sectionMeta[section].icon"

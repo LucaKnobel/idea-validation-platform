@@ -32,8 +32,6 @@ const emit = defineEmits<{
   (event: 'submit', value: ExperimentFormState): void
 }>()
 
-const { t } = useI18n()
-
 const editableState = reactive<ExperimentFormState>({
   title: '',
   description: '',
@@ -70,7 +68,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
   <UModal
     :open="open"
     :title="title"
-    :description="t('ideaWorkspace.hypotheses.detail.experiments.modal.description')"
+    :description="$t('ideaWorkspace.hypotheses.detail.experiments.modal.description')"
     :dismissible="!isSubmitting"
     :ui="{
       content: 'w-[92vw] sm:max-w-2xl',
@@ -87,34 +85,34 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
       >
         <UFormField
           name="title"
-          :label="t('ideaWorkspace.hypotheses.detail.experiments.form.title.label')"
+          :label="$t('ideaWorkspace.hypotheses.detail.experiments.form.title.label')"
           required
         >
           <UInput
             v-model="editableState.title"
             class="w-full"
-            :placeholder="t('ideaWorkspace.hypotheses.detail.experiments.form.title.placeholder')"
+            :placeholder="$t('ideaWorkspace.hypotheses.detail.experiments.form.title.placeholder')"
             :disabled="isSubmitting"
           />
         </UFormField>
 
         <UFormField
           name="description"
-          :label="t('ideaWorkspace.hypotheses.detail.experiments.form.description.label')"
-          :description="t('ideaWorkspace.hypotheses.detail.experiments.form.description.description')"
+          :label="$t('ideaWorkspace.hypotheses.detail.experiments.form.description.label')"
+          :description="$t('ideaWorkspace.hypotheses.detail.experiments.form.description.description')"
         >
           <UTextarea
             v-model="editableState.description"
             :rows="4"
             class="w-full"
-            :placeholder="t('ideaWorkspace.hypotheses.detail.experiments.form.description.placeholder')"
+            :placeholder="$t('ideaWorkspace.hypotheses.detail.experiments.form.description.placeholder')"
             :disabled="isSubmitting"
           />
         </UFormField>
 
         <UFormField
           name="status"
-          :label="t('ideaWorkspace.hypotheses.detail.experiments.form.status.label')"
+          :label="$t('ideaWorkspace.hypotheses.detail.experiments.form.status.label')"
           required
         >
           <USelectMenu
@@ -123,7 +121,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
             :items="statusOptions"
             :search-input="false"
             class="w-full"
-            :placeholder="t('ideaWorkspace.hypotheses.detail.experiments.form.status.placeholder')"
+            :placeholder="$t('ideaWorkspace.hypotheses.detail.experiments.form.status.placeholder')"
             :disabled="isSubmitting"
           />
         </UFormField>
@@ -136,7 +134,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
               :disabled="isSubmitting"
               @click="closeFormModal"
             >
-              {{ t('actions.cancel') }}
+              {{ $t('actions.cancel') }}
             </UButton>
 
             <UButton

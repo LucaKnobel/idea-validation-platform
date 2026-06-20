@@ -61,7 +61,7 @@ const mobileMenuItems = computed<DropdownMenuItem[][]>(() => {
         :loading="isVersionsLoading || isCreatingVersion"
         @click="openIterationConfirm"
       >
-        {{ t('ideaWorkspace.versionActions.createIteration') }}
+        {{ $t('ideaWorkspace.versionActions.createIteration') }}
       </UButton>
 
       <UButton
@@ -72,7 +72,7 @@ const mobileMenuItems = computed<DropdownMenuItem[][]>(() => {
         :loading="isVersionsLoading || isCreatingVersion"
         @click="openPivotConfirm"
       >
-        {{ t('ideaWorkspace.versionActions.createPivot') }}
+        {{ $t('ideaWorkspace.versionActions.createPivot') }}
       </UButton>
     </div>
 
@@ -88,7 +88,7 @@ const mobileMenuItems = computed<DropdownMenuItem[][]>(() => {
         icon="i-lucide-ellipsis-vertical"
         size="sm"
         :loading="isVersionsLoading || isCreatingVersion"
-        :aria-label="t('ideaWorkspace.versionActions.mobileMenuLabel')"
+        :aria-label="$t('ideaWorkspace.versionActions.mobileMenuLabel')"
       />
     </UDropdownMenu>
 

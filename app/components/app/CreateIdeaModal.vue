@@ -18,8 +18,6 @@ const emit = defineEmits<{
   submit: [form: CreateIdeaForm]
 }>()
 
-const { t } = useI18n()
-
 /**
  * Emits the current form state so submit flow stays in the composable.
  */
@@ -31,7 +29,7 @@ const onSubmit = (): void => {
 <template>
   <UModal
     v-model:open="open"
-    :title="t('createIdeaModal.title')"
+    :title="$t('createIdeaModal.title')"
     :dismissible="!isCreatingIdea"
     :ui="{
       content: 'w-[92vw] sm:max-w-2xl md:min-w-[44rem]',
@@ -47,13 +45,13 @@ const onSubmit = (): void => {
       >
         <UFormField
           name="title"
-          :label="t('createIdeaModal.fields.title.label')"
-          :description="t('createIdeaModal.fields.title.description')"
+          :label="$t('createIdeaModal.fields.title.label')"
+          :description="$t('createIdeaModal.fields.title.description')"
           required
         >
           <UInput
             v-model="state.title"
-            :placeholder="t('createIdeaModal.fields.title.placeholder')"
+            :placeholder="$t('createIdeaModal.fields.title.placeholder')"
             :disabled="isCreatingIdea"
             class="w-full"
           />
@@ -61,12 +59,12 @@ const onSubmit = (): void => {
 
         <UFormField
           name="description"
-          :label="t('createIdeaModal.fields.description.label')"
-          :description="t('createIdeaModal.fields.description.description')"
+          :label="$t('createIdeaModal.fields.description.label')"
+          :description="$t('createIdeaModal.fields.description.description')"
         >
           <UTextarea
             v-model="state.description"
-            :placeholder="t('createIdeaModal.fields.description.placeholder')"
+            :placeholder="$t('createIdeaModal.fields.description.placeholder')"
             :disabled="isCreatingIdea"
             :rows="4"
             class="w-full"
@@ -80,7 +78,7 @@ const onSubmit = (): void => {
             :disabled="isCreatingIdea"
             @click="open = false"
           >
-            {{ t('actions.cancel') }}
+            {{ $t('actions.cancel') }}
           </UButton>
 
           <UButton
@@ -88,7 +86,7 @@ const onSubmit = (): void => {
             color="primary"
             :loading="isCreatingIdea"
           >
-            {{ t('createIdeaModal.submit') }}
+            {{ $t('createIdeaModal.submit') }}
           </UButton>
         </div>
       </UForm>
