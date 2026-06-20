@@ -15,7 +15,8 @@ describe('buildSubscriptionService', () => {
     userId: VALID_USER_ID,
     plan: 'FREE',
     status: 'ACTIVE',
-    providerReference: null,
+    providerCustomerId: null,
+    providerSubscriptionId: null,
     currentPeriodEnd: null,
     ...overrides
   })
@@ -61,11 +62,11 @@ describe('buildSubscriptionService', () => {
     await expect(service.isPro(VALID_USER_ID)).resolves.toBe(true)
   })
 
-  it('isPro returns true for cancelled PRO subscriptions still in paid period', async () => {
+  it('isPro returns true for in-notice PRO subscriptions still in paid period', async () => {
     vi.mocked(repository.findByUserId).mockResolvedValue(
       makeSubscription({
         plan: 'PRO',
-        status: 'CANCELLED',
+        status: 'IN_NOTICE',
         currentPeriodEnd: new Date('2026-07-01T00:00:00.000Z')
       })
     )
@@ -73,12 +74,24 @@ describe('buildSubscriptionService', () => {
     await expect(service.isPro(VALID_USER_ID)).resolves.toBe(true)
   })
 
-  it('isPro returns false for cancelled PRO subscriptions with expired period', async () => {
+  it('isPro returns false for in-notice PRO subscriptions with expired period', async () => {
+    vi.mocked(repository.findByUserId).mockResolvedValue(
+      makeSubscription({
+        plan: 'PRO',
+        status: 'IN_NOTICE',
+        currentPeriodEnd: new Date('2026-06-01T00:00:00.000Z')
+      })
+    )
+
+    await expect(service.isPro(VALID_USER_ID)).resolves.toBe(false)
+  })
+
+  it('isPro returns false for cancelled PRO subscriptions immediately', async () => {
     vi.mocked(repository.findByUserId).mockResolvedValue(
       makeSubscription({
         plan: 'PRO',
         status: 'CANCELLED',
-        currentPeriodEnd: new Date('2026-06-01T00:00:00.000Z')
+        currentPeriodEnd: new Date('2026-07-01T00:00:00.000Z')
       })
     )
 
@@ -131,7 +144,8 @@ describe('buildSubscriptionService', () => {
       userId: VALID_USER_ID,
       plan: 'FREE',
       status: 'ACTIVE',
-      providerReference: null,
+      providerCustomerId: null,
+      providerSubscriptionId: null,
       currentPeriodEnd: null
     })
     expect(logger.info).toHaveBeenCalledWith('Free subscription created', {
