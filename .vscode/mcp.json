@@ -19,6 +19,10 @@
 		"Docs": {
 			"url": "https://docs.payrexx.com/merchant/~gitbook/mcp",
 			"type": "http"
+		},
+		"payrexx": {
+			"type": "http",
+			"url": "https://developers.payrexx.com/mcp"
 		}
 	},
 	"inputs": []
