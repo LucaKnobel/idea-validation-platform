@@ -508,12 +508,10 @@
         "fields": {
           "title": {
             "label": "Titel",
-            "description": "Verwenden Sie einen prägnanten Titel, der den Fokus dieser Version beschreibt.",
             "placeholder": "Ideen-Titel eingeben"
           },
           "description": {
             "label": "Beschreibung",
-            "description": "Optionaler Kontext dazu, was diese Version validieren soll.",
             "placeholder": "Aktuelle Richtung beschreiben"
           }
         },

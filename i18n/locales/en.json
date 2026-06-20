@@ -508,12 +508,10 @@
         "fields": {
           "title": {
             "label": "Title",
-            "description": "Use a concise, specific title that captures your current version focus.",
             "placeholder": "Enter idea title"
           },
           "description": {
             "label": "Description",
-            "description": "Optional context for what this version aims to validate.",
             "placeholder": "Describe your current direction"
           }
         },
