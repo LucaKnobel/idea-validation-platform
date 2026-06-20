@@ -10,7 +10,8 @@ const toDomainSubscription = (row: PrismaSubscription): Subscription => ({
   userId: row.userId,
   plan: row.plan,
   status: row.status,
-  providerReference: row.providerReference,
+  providerCustomerId: row.providerCustomerId,
+  providerSubscriptionId: row.providerSubscriptionId,
   currentPeriodEnd: row.currentPeriodEnd
 })
 
@@ -35,7 +36,8 @@ export const subscriptionRepository: SubscriptionRepository = {
         userId: subscription.userId,
         plan: subscription.plan,
         status: subscription.status,
-        providerReference: subscription.providerReference,
+        providerCustomerId: subscription.providerCustomerId,
+        providerSubscriptionId: subscription.providerSubscriptionId,
         currentPeriodEnd: subscription.currentPeriodEnd
       }
     })
@@ -52,7 +54,8 @@ export const subscriptionRepository: SubscriptionRepository = {
       data: {
         plan: subscription.plan,
         status: subscription.status,
-        providerReference: subscription.providerReference,
+        providerCustomerId: subscription.providerCustomerId,
+        providerSubscriptionId: subscription.providerSubscriptionId,
         currentPeriodEnd: subscription.currentPeriodEnd
       }
     })
