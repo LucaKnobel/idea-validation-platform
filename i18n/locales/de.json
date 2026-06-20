@@ -403,10 +403,9 @@
     "wipBadge": "Work in Progress",
     "wipText": "Dieser Bereich wird als nächstes ausgebaut.",
     "navigation": {
-      "overview": "Overview",
+      "overview": "Übersicht",
       "canvas": "Canvas",
       "hypotheses": "Hypothesen",
-      "decision": "Entscheidung",
       "history": "Verlauf",
       "settings": "Einstellungen"
     },
@@ -425,7 +424,82 @@
       "ideaTitle": "Ausgewählte Idee"
     },
     "versionSwitcher": {
+      "label": "Version",
       "comingSoon": "Weitere Versionen folgen"
+    },
+    "historyPage": {
+      "title": "Versionsverlauf",
+      "description": "Alle Versionen dieser Idee im Überblick – wechsle direkt in eine bestimmte Version.",
+      "currentBadge": "Aktuell",
+      "timeline": {
+        "title": "Version {versionNumber} · {typeLabel}",
+        "type": {
+          "initial": "Initial",
+          "iteration": "Iteration",
+          "pivot": "Pivot"
+        },
+        "description": {
+          "noDescription": "Keine Beschreibung vorhanden.",
+          "derivedFromVersion": "Abgeleitet von Version {versionNumber}",
+          "startingPoint": "Ausgangspunkt dieser Idee",
+          "separator": "·"
+        }
+      },
+      "empty": {
+        "title": "Keine Versionen gefunden",
+        "description": "Für diese Idee gibt es noch keinen Versionsverlauf."
+      },
+      "error": {
+        "title": "Versionen konnten nicht geladen werden",
+        "message": "Der Versionsverlauf ist vorübergehend nicht verfügbar. Bitte versuche es später erneut."
+      }
+    },
+    "versionActions": {
+      "newVersion": "Neue Version",
+      "mobileMenuLabel": "Versionsaktionen öffnen",
+      "createIteration": "Iteration erstellen",
+      "createPivot": "Pivot erstellen",
+      "confirm": {
+        "whatHappens": "Das passiert",
+        "iteration": {
+          "title": "Iteration erstellen",
+          "description": "Du erstellst eine neue Version, die auf der aktuellen Version aufbaut.",
+          "body": "Das ist sinnvoll, wenn du deinen aktuellen Ansatz weiterentwickeln willst.",
+          "details": {
+            "copyTitleDescription": "Titel und Beschreibung der aktuellen Version werden übernommen.",
+            "copyCanvas": "Dein Canvas wird vollständig übernommen.",
+            "copyAllHypotheses": "Alle Hypothesen werden übernommen.",
+            "copyEvidence": "Verknüpfte Experimente, Metriken und Messungen zu den Hypothesen werden ebenfalls übernommen."
+          },
+          "confirm": "Iteration erstellen"
+        },
+        "pivot": {
+          "title": "Pivot erstellen",
+          "description": "Du erstellst eine neue Version für eine geänderte Richtung.",
+          "body": "Das ist sinnvoll, wenn sich wichtige Annahmen geändert haben.",
+          "details": {
+            "copyTitleDescription": "Titel und Beschreibung der aktuellen Version werden übernommen.",
+            "copyCanvas": "Dein Canvas wird vollständig übernommen.",
+            "copySelectedHypotheses": "Validierte und nicht getestete Hypothesen werden übernommen.",
+            "excludeInvalidated": "Invalidierte Hypothesen und deren verknüpfte Daten werden nicht übernommen."
+          },
+          "confirm": "Pivot erstellen"
+        }
+      },
+      "success": {
+        "iteration": {
+          "title": "Iteration erstellt",
+          "message": "Die neue Iterations-Version ist bereit."
+        },
+        "pivot": {
+          "title": "Pivot erstellt",
+          "message": "Die neue Pivot-Version ist bereit."
+        }
+      },
+      "error": {
+        "title": "Version konnte nicht erstellt werden",
+        "message": "Bitte versuchen Sie es in einem Moment erneut."
+      }
     },
     "validationOverview": {
       "title": "Validierungsübersicht",

@@ -9,9 +9,8 @@ const { ideaId, versionId } = useIdeaVersionRouteParams()
 const {
   validationSummary,
   isLoading,
-  hasError,
-  loadValidationSummary
-} = useIdeaVersionValidation()
+  hasError
+} = useIdeaVersionValidation({ ideaId, versionId })
 
 const {
   statusItems,
@@ -20,23 +19,6 @@ const {
   hasSummaryData
 } = useValidationOverview({
   validationSummary
-})
-
-const loadOverview = async (): Promise<void> => {
-  if (!ideaId.value || !versionId.value) {
-    return
-  }
-
-  await loadValidationSummary({
-    ideaId: ideaId.value,
-    versionId: versionId.value
-  })
-}
-
-watch([ideaId, versionId], async () => {
-  await loadOverview()
-}, {
-  immediate: true
 })
 </script>
 

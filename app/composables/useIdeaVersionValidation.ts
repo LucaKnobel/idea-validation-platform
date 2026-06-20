@@ -4,42 +4,40 @@ import type { IdeaVersionValidationOverviewResponseDto } from '#shared/types/val
  * Public contract for loading one idea version validation summary.
  */
 export interface UseIdeaVersionValidationComposable {
-  validationSummary: Ref<IdeaVersionValidationOverviewResponseDto | null>
-  isLoading: Ref<boolean>
-  hasError: Ref<boolean>
-  loadValidationSummary: (input: { ideaId: string, versionId: string }) => Promise<void>
+  validationSummary: ComputedRef<IdeaVersionValidationOverviewResponseDto | null>
+  isLoading: ComputedRef<boolean>
+  hasError: ComputedRef<boolean>
 }
 
 /**
  * Handles validation summary state and API orchestration for the idea workspace overview page.
+ * Fetches server-side and hydrates cleanly via useAsyncData.
  */
-export const useIdeaVersionValidation = (): UseIdeaVersionValidationComposable => {
+export const useIdeaVersionValidation = (input: {
+  ideaId: ComputedRef<string>
+  versionId: ComputedRef<string>
+}): UseIdeaVersionValidationComposable => {
   const { getValidationSummary } = useIdeaVersionValidationApi()
-  const requestedInput = ref<{ ideaId: string, versionId: string } | null>(null)
 
   const {
     data,
     error,
-    status,
-    execute
+    status
   } = useAsyncData<IdeaVersionValidationOverviewResponseDto | null>(
-    () => {
-      if (!requestedInput.value) {
-        return 'idea-version-validation:idle'
-      }
-
-      return `idea-version-validation:${requestedInput.value.ideaId}:${requestedInput.value.versionId}`
-    },
+    () => `idea-version-validation:${input.ideaId.value}:${input.versionId.value}`,
     async () => {
-      if (!requestedInput.value) {
+      if (!input.ideaId.value || !input.versionId.value) {
         return null
       }
 
-      return await getValidationSummary(requestedInput.value)
+      return await getValidationSummary({
+        ideaId: input.ideaId.value,
+        versionId: input.versionId.value
+      })
     },
     {
-      immediate: false,
-      default: () => null
+      default: () => null,
+      watch: [input.ideaId, input.versionId]
     }
   )
 
@@ -47,15 +45,9 @@ export const useIdeaVersionValidation = (): UseIdeaVersionValidationComposable =
   const isLoading = computed(() => status.value === 'pending')
   const hasError = computed(() => Boolean(error.value))
 
-  const loadValidationSummary = async (input: { ideaId: string, versionId: string }): Promise<void> => {
-    requestedInput.value = input
-    await execute()
-  }
-
   return {
     validationSummary,
     isLoading,
-    hasError,
-    loadValidationSummary
+    hasError
   }
 }
