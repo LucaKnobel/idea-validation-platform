@@ -14,15 +14,24 @@ const hasEffectiveProAccess = (
     return false
   }
 
-  if (subscription.status === 'ACTIVE') {
-    return true
-  }
+  switch (subscription.status) {
+    case 'ACTIVE':
+      return true
 
-  return Boolean(
-    subscription.status === 'CANCELLED'
-    && subscription.currentPeriodEnd
-    && subscription.currentPeriodEnd > now
-  )
+    case 'IN_NOTICE':
+      return Boolean(
+        subscription.currentPeriodEnd
+        && subscription.currentPeriodEnd > now
+      )
+
+    case 'OVERDUE':
+    case 'FAILED':
+    case 'CANCELLED':
+      return false
+
+    default:
+      return false
+  }
 }
 
 export const buildSubscriptionService = (
@@ -68,7 +77,8 @@ export const buildSubscriptionService = (
       userId,
       plan: 'FREE',
       status: 'ACTIVE',
-      providerReference: null,
+      providerCustomerId: null,
+      providerSubscriptionId: null,
       currentPeriodEnd: null
     })
 
