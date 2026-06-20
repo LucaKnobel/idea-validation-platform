@@ -95,19 +95,23 @@ enum SubscriptionPlan {
 
 enum SubscriptionStatus {
   ACTIVE
+  IN_NOTICE
+  OVERDUE
+  FAILED
   CANCELLED
 }
 
 model Subscription {
-  id                String             @id @default(uuid())
-  userId            String             @unique
-  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plan              SubscriptionPlan
-  status            SubscriptionStatus
-  providerReference String?
-  currentPeriodEnd  DateTime?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+  id                     String             @id @default(uuid())
+  userId                 String             @unique
+  user                   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                   SubscriptionPlan
+  status                 SubscriptionStatus
+  providerCustomerId     String?
+  providerSubscriptionId String?
+  currentPeriodEnd       DateTime?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
 
   @@map("subscription")
 }
@@ -185,20 +189,20 @@ enum ThresholdOperator {
 }
 
 model IdeaVersion {
-  id             String          @id @default(uuid())
-  ideaId         String
-  idea           Idea            @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  id              String          @id @default(uuid())
+  ideaId          String
+  idea            Idea            @relation(fields: [ideaId], references: [id], onDelete: Cascade)
   parentVersionId String?
   parentVersion   IdeaVersion?    @relation("IdeaVersionParent", fields: [parentVersionId], references: [id], onDelete: SetNull)
   childVersions   IdeaVersion[]   @relation("IdeaVersionParent")
-  canvasElements CanvasElement[]
-  hypotheses     Hypothesis[]
-  versionNumber  Int
-  type           IdeaVersionType
-  title          String
-  description    String?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  canvasElements  CanvasElement[]
+  hypotheses      Hypothesis[]
+  versionNumber   Int
+  type            IdeaVersionType
+  title           String
+  description     String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 
   @@unique([ideaId, versionNumber])
   @@index([ideaId])
