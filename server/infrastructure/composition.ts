@@ -11,6 +11,7 @@ import { logger } from '@infrastructure/logging/logger'
 import { buildSubscriptionService } from '@application/services/build-subscription-service'
 import { buildCreateIdea } from '@application/services/build-create-idea'
 import { buildCreateIdeaVersion } from '@application/services/build-create-idea-version'
+import { buildUpdateIdeaVersion } from '@application/services/build-update-idea-version'
 import { buildGetIdea } from '@application/services/build-get-idea'
 import { buildGetIdeaVersions } from '@application/services/build-get-idea-versions'
 import { buildGetIdeas } from '@application/services/build-get-ideas'
@@ -54,6 +55,11 @@ const getIdeas = buildGetIdeas(
 )
 
 const createIdeaVersion = buildCreateIdeaVersion(
+  ideaVersionRepository,
+  logger
+)
+
+const updateIdeaVersion = buildUpdateIdeaVersion(
   ideaVersionRepository,
   logger
 )
@@ -176,6 +182,7 @@ export {
   subscriptionService,
   createIdea,
   createIdeaVersion,
+  updateIdeaVersion,
   getIdea,
   getIdeaVersions,
   getIdeas,

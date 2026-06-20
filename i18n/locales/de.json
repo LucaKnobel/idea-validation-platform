@@ -501,6 +501,40 @@
         "message": "Bitte versuchen Sie es in einem Moment erneut."
       }
     },
+    "overview": {
+      "metadata": {
+        "title": "Ideen-Metadaten",
+        "description": "Prüfen und aktualisieren Sie Titel und Beschreibung dieser Version.",
+        "fields": {
+          "title": {
+            "label": "Titel",
+            "description": "Verwenden Sie einen prägnanten Titel, der den Fokus dieser Version beschreibt.",
+            "placeholder": "Ideen-Titel eingeben"
+          },
+          "description": {
+            "label": "Beschreibung",
+            "description": "Optionaler Kontext dazu, was diese Version validieren soll.",
+            "placeholder": "Aktuelle Richtung beschreiben"
+          }
+        },
+        "editModal": {
+          "title": "Ideen-Metadaten bearbeiten",
+          "description": "Aktualisieren Sie Titel und Beschreibung für Idee {ideaId}."
+        },
+        "success": {
+          "title": "Metadaten aktualisiert",
+          "message": "Titel und Beschreibung wurden erfolgreich gespeichert."
+        },
+        "error": {
+          "title": "Metadaten konnten nicht aktualisiert werden",
+          "message": "Bitte versuchen Sie es in einem Moment erneut.",
+          "load": {
+            "title": "Metadaten konnten nicht geladen werden",
+            "message": "Bitte aktualisieren Sie die Seite und versuchen Sie es erneut."
+          }
+        }
+      }
+    },
     "validationOverview": {
       "title": "Validierungsübersicht",
       "description": "Überwachen Sie den aktuellen Validierungsstand dieser Ideen-Version über Status-, Prioritäts- und Evidenzverteilungen.",

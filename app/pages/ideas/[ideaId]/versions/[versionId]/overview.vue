@@ -13,6 +13,19 @@ const {
 } = useIdeaVersionValidation({ ideaId, versionId })
 
 const {
+  ideaMetadata,
+  isMetadataLoading,
+  hasMetadataError,
+  isEditModalOpen,
+  isSaving,
+  metadataFormState,
+  metadataFormSchema,
+  openEditModal,
+  closeEditModal,
+  submitEditMetadata
+} = useIdeaOverviewMetadata({ ideaId, versionId })
+
+const {
   statusItems,
   priorityItems,
   evidenceItems,
@@ -28,6 +41,69 @@ const {
       :title="$t('ideaWorkspace.validationOverview.title')"
       :description="$t('ideaWorkspace.validationOverview.description')"
     />
+
+    <UAlert
+      v-if="hasMetadataError"
+      color="error"
+      variant="soft"
+      icon="i-lucide-triangle-alert"
+      :title="$t('ideaWorkspace.overview.metadata.error.load.title')"
+      :description="$t('ideaWorkspace.overview.metadata.error.load.message')"
+    />
+
+    <UCard>
+      <template #header>
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-base font-semibold text-highlighted">
+              {{ $t('ideaWorkspace.overview.metadata.title') }}
+            </h2>
+          </div>
+
+          <UButton
+            color="neutral"
+            variant="soft"
+            icon="i-lucide-pencil"
+            :disabled="isMetadataLoading || !ideaMetadata"
+            @click="openEditModal"
+          >
+            {{ $t('actions.edit') }}
+          </UButton>
+        </div>
+      </template>
+
+      <div
+        v-if="isMetadataLoading"
+        class="space-y-3"
+      >
+        <USkeleton class="h-4 w-32" />
+        <USkeleton class="h-8 w-72" />
+        <USkeleton class="h-4 w-full" />
+      </div>
+
+      <div
+        v-else-if="ideaMetadata"
+        class="space-y-4"
+      >
+        <div class="space-y-1">
+          <p class="text-xs uppercase tracking-wide text-toned">
+            {{ $t('ideaWorkspace.overview.metadata.fields.title.label') }}
+          </p>
+          <p class="text-lg font-semibold text-highlighted">
+            {{ ideaMetadata.title }}
+          </p>
+        </div>
+
+        <div class="space-y-1">
+          <p class="text-xs uppercase tracking-wide text-toned">
+            {{ $t('ideaWorkspace.overview.metadata.fields.description.label') }}
+          </p>
+          <p class="text-sm text-default whitespace-pre-wrap">
+            {{ ideaMetadata.description || $t('dashboard.table.noDescription') }}
+          </p>
+        </div>
+      </div>
+    </UCard>
 
     <UAlert
       v-if="hasError"
@@ -281,5 +357,14 @@ const {
         </div>
       </UCard>
     </template>
+
+    <IdeaWorkspaceOverviewIdeaMetadataModal
+      v-model:open="isEditModalOpen"
+      v-model:state="metadataFormState"
+      :schema="metadataFormSchema"
+      :is-submitting="isSaving"
+      @submit="submitEditMetadata"
+      @update:open="(value: boolean) => !value && closeEditModal()"
+    />
   </div>
 </template>
