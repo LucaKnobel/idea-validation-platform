@@ -49,7 +49,7 @@ const ideaDescription = computed(() => {
             {{ $t('settings.dangerZone.title') }}
           </h2>
           <p class="text-sm text-muted">
-            {{ t('dashboard.delete.warning') }}
+            {{ $t('dashboard.delete.warning') }}
           </p>
         </div>
       </template>

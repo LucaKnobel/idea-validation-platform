@@ -25,8 +25,6 @@ const emit = defineEmits<{
   (event: 'submit', value: MeasurementFormState): void
 }>()
 
-const { t } = useI18n()
-
 const editableState = reactive<MeasurementFormState>({
   value: 0,
   note: ''
@@ -61,7 +59,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
   <UModal
     :open="open"
     :title="title"
-    :description="t('ideaWorkspace.hypotheses.detail.measurements.modal.description')"
+    :description="$t('ideaWorkspace.hypotheses.detail.measurements.modal.description')"
     :dismissible="!isSubmitting"
     :ui="{
       content: 'w-[92vw] sm:max-w-2xl',
@@ -78,27 +76,27 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
       >
         <UFormField
           name="value"
-          :label="t('ideaWorkspace.hypotheses.detail.measurements.form.value.label')"
+          :label="$t('ideaWorkspace.hypotheses.detail.measurements.form.value.label')"
           required
         >
           <UInput
             v-model="editableState.value"
             type="number"
             class="w-full"
-            :placeholder="t('ideaWorkspace.hypotheses.detail.measurements.form.value.placeholder')"
+            :placeholder="$t('ideaWorkspace.hypotheses.detail.measurements.form.value.placeholder')"
             :disabled="isSubmitting"
           />
         </UFormField>
 
         <UFormField
           name="note"
-          :label="t('ideaWorkspace.hypotheses.detail.measurements.form.note.label')"
+          :label="$t('ideaWorkspace.hypotheses.detail.measurements.form.note.label')"
         >
           <UTextarea
             v-model="editableState.note"
             :rows="3"
             class="w-full"
-            :placeholder="t('ideaWorkspace.hypotheses.detail.measurements.form.note.placeholder')"
+            :placeholder="$t('ideaWorkspace.hypotheses.detail.measurements.form.note.placeholder')"
             :disabled="isSubmitting"
           />
         </UFormField>
@@ -111,7 +109,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
               :disabled="isSubmitting"
               @click="closeFormModal"
             >
-              {{ t('actions.cancel') }}
+              {{ $t('actions.cancel') }}
             </UButton>
 
             <UButton

@@ -36,8 +36,6 @@ const emit = defineEmits<{
   (event: 'submit', value: MetricFormState): void
 }>()
 
-const { t } = useI18n()
-
 const editableState = reactive<MetricFormState>({
   name: '',
   description: '',
@@ -82,7 +80,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
   <UModal
     :open="open"
     :title="title"
-    :description="t('ideaWorkspace.hypotheses.detail.metrics.modal.description')"
+    :description="$t('ideaWorkspace.hypotheses.detail.metrics.modal.description')"
     :dismissible="!isSubmitting"
     :ui="{
       content: 'w-[92vw] sm:max-w-2xl',
@@ -99,33 +97,33 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
       >
         <UFormField
           name="name"
-          :label="t('ideaWorkspace.hypotheses.detail.metrics.form.name.label')"
+          :label="$t('ideaWorkspace.hypotheses.detail.metrics.form.name.label')"
           required
         >
           <UInput
             v-model="editableState.name"
             class="w-full"
-            :placeholder="t('ideaWorkspace.hypotheses.detail.metrics.form.name.placeholder')"
+            :placeholder="$t('ideaWorkspace.hypotheses.detail.metrics.form.name.placeholder')"
             :disabled="isSubmitting"
           />
         </UFormField>
 
         <UFormField
           name="description"
-          :label="t('ideaWorkspace.hypotheses.detail.metrics.form.description.label')"
-          :description="t('ideaWorkspace.hypotheses.detail.metrics.form.description.description')"
+          :label="$t('ideaWorkspace.hypotheses.detail.metrics.form.description.label')"
+          :description="$t('ideaWorkspace.hypotheses.detail.metrics.form.description.description')"
         >
           <UTextarea
             v-model="editableState.description"
             :rows="4"
             class="w-full"
-            :placeholder="t('ideaWorkspace.hypotheses.detail.metrics.form.description.placeholder')"
+            :placeholder="$t('ideaWorkspace.hypotheses.detail.metrics.form.description.placeholder')"
             :disabled="isSubmitting"
           />
         </UFormField>
 
         <UFormField
-          :label="t('ideaWorkspace.hypotheses.detail.metrics.form.criterion.label')"
+          :label="$t('ideaWorkspace.hypotheses.detail.metrics.form.criterion.label')"
           required
         >
           <div class="grid gap-3 md:grid-cols-[minmax(7rem,9rem)_minmax(0,1fr)_minmax(7rem,9rem)]">
@@ -136,7 +134,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
                 :items="operatorOptions"
                 :search-input="false"
                 class="w-full"
-                :placeholder="t('ideaWorkspace.hypotheses.detail.metrics.form.operator.placeholder')"
+                :placeholder="$t('ideaWorkspace.hypotheses.detail.metrics.form.operator.placeholder')"
                 :disabled="isSubmitting"
               />
             </UFormField>
@@ -146,7 +144,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
                 v-model="editableState.threshold.referenceValue"
                 type="number"
                 class="w-full"
-                :placeholder="t('ideaWorkspace.hypotheses.detail.metrics.form.referenceValue.placeholder')"
+                :placeholder="$t('ideaWorkspace.hypotheses.detail.metrics.form.referenceValue.placeholder')"
                 :disabled="isSubmitting"
               />
             </UFormField>
@@ -155,13 +153,13 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
               <UInput
                 v-model="editableState.unit"
                 class="w-full"
-                :placeholder="t('ideaWorkspace.hypotheses.detail.metrics.form.unit.placeholder')"
+                :placeholder="$t('ideaWorkspace.hypotheses.detail.metrics.form.unit.placeholder')"
                 :disabled="isSubmitting"
               />
             </UFormField>
           </div>
           <p class="mt-2 text-xs text-muted">
-            {{ t('ideaWorkspace.hypotheses.detail.metrics.form.unit.description') }}
+            {{ $t('ideaWorkspace.hypotheses.detail.metrics.form.unit.description') }}
           </p>
         </UFormField>
 
@@ -173,7 +171,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
               :disabled="isSubmitting"
               @click="closeFormModal"
             >
-              {{ t('actions.cancel') }}
+              {{ $t('actions.cancel') }}
             </UButton>
 
             <UButton
