@@ -57,7 +57,8 @@ export const makeIdeaVersionRepository = (): IdeaVersionRepository => ({
   getByIdea: vi.fn(),
   listByIdea: vi.fn(),
   getVersionSource: vi.fn(),
-  createFromSource: vi.fn()
+  createFromSource: vi.fn(),
+  updateMetadata: vi.fn()
 })
 
 export const makeSubscriptionService = (): SubscriptionService => ({

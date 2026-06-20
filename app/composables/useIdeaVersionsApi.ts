@@ -1,4 +1,7 @@
-import type { CreateIdeaVersionBodyDto, IdeaVersionMetadataDto, IdeaVersionsListResponseDto } from '#shared/types/idea'
+type UpdateIdeaVersionInputDto = {
+  ideaId: string
+  versionId: string
+} & UpdateIdeaVersionBodyDto
 
 /**
  * Public contract implemented by useIdeaVersionsApi.
@@ -10,6 +13,7 @@ export interface UseIdeaVersionsApiComposable {
     baseVersionId: string
     type: CreateIdeaVersionBodyDto['type']
   }) => Promise<IdeaVersionMetadataDto>
+  updateIdeaVersion: (input: UpdateIdeaVersionInputDto) => Promise<IdeaVersionMetadataDto>
 }
 
 /**
@@ -37,8 +41,20 @@ export const useIdeaVersionsApi = (): UseIdeaVersionsApiComposable => {
     })
   }
 
+  const updateIdeaVersion = async (input: UpdateIdeaVersionInputDto): Promise<IdeaVersionMetadataDto> => {
+    return await $fetch<IdeaVersionMetadataDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}`, {
+      method: 'PUT',
+      headers: import.meta.server ? useRequestHeaders(['cookie']) : undefined,
+      body: {
+        title: input.title,
+        description: input.description
+      }
+    })
+  }
+
   return {
     listIdeaVersions,
-    createIdeaVersion
+    createIdeaVersion,
+    updateIdeaVersion
   }
 }

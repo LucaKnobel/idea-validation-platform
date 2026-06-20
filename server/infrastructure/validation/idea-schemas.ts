@@ -5,6 +5,14 @@ export const CreateIdeaBodySchema = z.object({
   description: z.string().trim().max(3000, 'Description is too long').optional()
 })
 
+/**
+ * Request body for updating title and description of one idea version.
+ */
+export const UpdateIdeaVersionBodySchema = z.object({
+  title: z.string().trim().min(1, 'Title is required').max(200, 'Title is too long'),
+  description: z.string().trim().max(3000, 'Description is too long').optional()
+})
+
 export const GetIdeasQuerySchema = z.object({
   q: z.string().trim().max(200, 'Search query is too long').optional(),
   page: z.coerce.number().int().min(1).default(1),
@@ -73,6 +81,7 @@ export const IdeasListResponseSchema = z.object({
 
 export type CreateIdeaBodyDto = z.infer<typeof CreateIdeaBodySchema>
 export type CreateIdeaVersionBodyDto = z.infer<typeof CreateIdeaVersionBodySchema>
+export type UpdateIdeaVersionBodyDto = z.infer<typeof UpdateIdeaVersionBodySchema>
 export type GetIdeasQueryDto = z.infer<typeof GetIdeasQuerySchema>
 export type IdeaResponseDto = z.infer<typeof IdeaResponseSchema>
 export type IdeasListResponseDto = z.infer<typeof IdeasListResponseSchema>

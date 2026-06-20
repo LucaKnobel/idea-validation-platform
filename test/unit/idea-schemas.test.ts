@@ -3,7 +3,8 @@ import {
   CreateIdeaBodySchema,
   GetIdeasQuerySchema,
   IdeaResponseSchema,
-  IdeasListResponseSchema
+  IdeasListResponseSchema,
+  UpdateIdeaVersionBodySchema
 } from '@infrastructure/validation/idea-schemas'
 import { IdeaIdParamsSchema } from '@infrastructure/validation/route-params-schemas'
 import { VALID_ISO_DATETIME, VALID_UUID } from './helpers'
@@ -35,6 +36,36 @@ describe('CreateIdeaBodySchema', () => {
 
   it('rejects title exceeding 200 characters', () => {
     expect(CreateIdeaBodySchema.safeParse({ title: 'A'.repeat(201) }).success).toBe(false)
+  })
+})
+
+describe('UpdateIdeaVersionBodySchema', () => {
+  it('accepts valid input with title and description', () => {
+    expect(UpdateIdeaVersionBodySchema.safeParse({
+      title: 'Updated Idea',
+      description: 'Updated description'
+    }).success).toBe(true)
+  })
+
+  it('trims whitespace from title and description', () => {
+    const result = UpdateIdeaVersionBodySchema.safeParse({
+      title: '  Updated Idea  ',
+      description: '  Updated description  '
+    })
+
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.title).toBe('Updated Idea')
+      expect(result.data.description).toBe('Updated description')
+    }
+  })
+
+  it('rejects empty title and too long description', () => {
+    expect(UpdateIdeaVersionBodySchema.safeParse({ title: '   ' }).success).toBe(false)
+    expect(UpdateIdeaVersionBodySchema.safeParse({
+      title: 'Valid title',
+      description: 'A'.repeat(3001)
+    }).success).toBe(false)
   })
 })
 

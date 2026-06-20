@@ -4,6 +4,7 @@ export type {
   GetIdeasQueryDto,
   IdeaDetailResponseDto,
   IdeaResponseDto,
+  UpdateIdeaVersionBodyDto,
   IdeaVersionMetadataDto,
   IdeaVersionsListResponseDto,
   IdeasListResponseDto

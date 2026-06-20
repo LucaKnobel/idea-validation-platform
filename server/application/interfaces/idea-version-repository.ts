@@ -42,6 +42,17 @@ export type CreateVersionFromSourceInput = {
   hypothesisIdsToCopy: string[]
 }
 
+/**
+ * Input for updating one owned idea version metadata snapshot.
+ */
+export type UpdateIdeaVersionMetadataInput = {
+  userId: string
+  ideaId: string
+  ideaVersionId: string
+  title: string
+  description: string | null
+}
+
 export interface IdeaVersionRepository {
   /**
    * Lists idea cards for one user. Each idea contains only its latest version.
@@ -71,4 +82,10 @@ export interface IdeaVersionRepository {
    * Returns null when the base version is not accessible to the user.
    */
   createFromSource(input: CreateVersionFromSourceInput): Promise<IdeaVersion | null>
+
+  /**
+   * Updates metadata (title and description) on one owned idea version.
+   * Returns null when the version is not accessible to the user.
+   */
+  updateMetadata(input: UpdateIdeaVersionMetadataInput): Promise<IdeaVersion | null>
 }

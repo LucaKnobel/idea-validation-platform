@@ -4,12 +4,13 @@ import type {
   CreateVersionFromSourceInput,
   IdeaVersionListInput,
   IdeaVersionRepository,
+  UpdateIdeaVersionMetadataInput,
   VersionSource
 } from '@application/interfaces/idea-version-repository'
 import type { Idea } from '@application/models/idea'
 import type { IdeaVersion } from '@application/models/idea-version'
 import type { IdeaOwnerInput, IdeaVersionOwnerInput } from '@application/interfaces/ownership-inputs'
-import { buildOwnedIdeaWhere } from '@infrastructure/db/ownership-helpers'
+import { buildOwnedIdeaVersionWhere, buildOwnedIdeaWhere } from '@infrastructure/db/ownership-helpers'
 
 // ---------------------------------------------------------------------------
 // Prisma payload types
@@ -391,5 +392,36 @@ export const ideaVersionRepository: IdeaVersionRepository = {
 
       return toDomainIdeaVersion(createdVersion)
     })
+  },
+
+  /**
+   * Updates title and description on one owned idea version.
+   */
+  async updateMetadata(input: UpdateIdeaVersionMetadataInput): Promise<IdeaVersion | null> {
+    const updateResult = await prisma.ideaVersion.updateMany({
+      where: buildOwnedIdeaVersionWhere({
+        userId: input.userId,
+        ideaId: input.ideaId,
+        ideaVersionId: input.ideaVersionId
+      }),
+      data: {
+        title: input.title,
+        description: input.description
+      }
+    })
+
+    if (updateResult.count === 0) {
+      return null
+    }
+
+    const row = await prisma.ideaVersion.findUnique({
+      where: { id: input.ideaVersionId }
+    })
+
+    if (row === null) {
+      return null
+    }
+
+    return toDomainIdeaVersion(row)
   }
 }

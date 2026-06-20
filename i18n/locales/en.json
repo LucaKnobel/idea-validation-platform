@@ -501,6 +501,40 @@
         "message": "Please try again in a moment."
       }
     },
+    "overview": {
+      "metadata": {
+        "title": "Idea metadata",
+        "description": "Review and update this version's title and description.",
+        "fields": {
+          "title": {
+            "label": "Title",
+            "description": "Use a concise, specific title that captures your current version focus.",
+            "placeholder": "Enter idea title"
+          },
+          "description": {
+            "label": "Description",
+            "description": "Optional context for what this version aims to validate.",
+            "placeholder": "Describe your current direction"
+          }
+        },
+        "editModal": {
+          "title": "Edit idea metadata",
+          "description": "Update title and description for idea {ideaId}."
+        },
+        "success": {
+          "title": "Metadata updated",
+          "message": "Title and description were saved successfully."
+        },
+        "error": {
+          "title": "Could not update metadata",
+          "message": "Please try again in a moment.",
+          "load": {
+            "title": "Could not load metadata",
+            "message": "Please refresh and try again."
+          }
+        }
+      }
+    },
     "validationOverview": {
       "title": "Validation Overview",
       "description": "Monitor the current validation state of this idea version across status, priority and evidence distributions.",
