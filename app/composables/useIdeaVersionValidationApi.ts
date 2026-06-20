@@ -16,7 +16,9 @@ export const useIdeaVersionValidationApi = (): UseIdeaVersionValidationApiCompos
     ideaId: string
     versionId: string
   }): Promise<IdeaVersionValidationOverviewResponseDto> => {
-    return $fetch<IdeaVersionValidationOverviewResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/validation`)
+    return $fetch<IdeaVersionValidationOverviewResponseDto>(`/api/ideas/${input.ideaId}/versions/${input.versionId}/validation`, {
+      headers: import.meta.server ? useRequestHeaders(['cookie']) : undefined
+    })
   }
 
   return {

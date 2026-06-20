@@ -53,13 +53,6 @@ const navigationItems = computed(() => [
     onSelect: closeSidebarOnMobile
   },
   {
-    label: t('ideaWorkspace.navigation.decision'),
-    to: toIdeaVersionSection('decision'),
-    icon: 'i-lucide-scale',
-    active: route.path.endsWith('/decision'),
-    onSelect: closeSidebarOnMobile
-  },
-  {
     label: t('ideaWorkspace.navigation.history'),
     to: toIdeaVersionSection('history'),
     icon: 'i-lucide-history',
@@ -129,19 +122,24 @@ const footerItems = computed(() => [
     <div
       class="flex-1 flex flex-col overflow-hidden bg-default"
     >
-      <div
-        class="h-(--ui-header-height) shrink-0 flex items-center px-4"
-      >
-        <UButton
-          icon="i-lucide-panel-left"
-          color="neutral"
-          variant="ghost"
-          aria-label="Toggle sidebar"
-          @click="open = !open"
-        />
-        <h1 class="truncate text-base font-semibold">
-          {{ workspaceIdeaTitle }}
-        </h1>
+      <div class="h-(--ui-header-height) shrink-0 px-4">
+        <div class="flex h-full items-center justify-between gap-3">
+          <div class="flex min-w-0 items-center gap-1">
+            <UButton
+              icon="i-lucide-panel-left"
+              color="neutral"
+              variant="ghost"
+              aria-label="Toggle sidebar"
+              @click="open = !open"
+            />
+
+            <h1 class="truncate text-base font-semibold">
+              {{ workspaceIdeaTitle }}
+            </h1>
+          </div>
+
+          <IdeaWorkspaceHeaderVersionControls />
+        </div>
       </div>
 
       <div class="flex-1 p-4 overflow-auto">
