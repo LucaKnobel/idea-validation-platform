@@ -1,10 +1,16 @@
 export type SubscriptionPlan = 'FREE' | 'PRO'
-export type SubscriptionStatus = 'ACTIVE' | 'CANCELLED'
+export type SubscriptionStatus
+  = | 'ACTIVE'
+    | 'IN_NOTICE'
+    | 'OVERDUE'
+    | 'FAILED'
+    | 'CANCELLED'
 
 export type Subscription = {
   userId: string
   plan: SubscriptionPlan
   status: SubscriptionStatus
-  providerReference: string | null
+  providerCustomerId: string | null
+  providerSubscriptionId: string | null
   currentPeriodEnd: Date | null
 }
