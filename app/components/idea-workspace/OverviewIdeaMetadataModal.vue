@@ -48,7 +48,6 @@ const onSubmit = (): void => {
         <UFormField
           name="title"
           :label="$t('ideaWorkspace.overview.metadata.fields.title.label')"
-          :description="$t('ideaWorkspace.overview.metadata.fields.title.description')"
           required
         >
           <UInput
@@ -62,7 +61,6 @@ const onSubmit = (): void => {
         <UFormField
           name="description"
           :label="$t('ideaWorkspace.overview.metadata.fields.description.label')"
-          :description="$t('ideaWorkspace.overview.metadata.fields.description.description')"
         >
           <UTextarea
             v-model="state.description"
