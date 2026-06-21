@@ -20,8 +20,9 @@ model User {
   updatedAt     DateTime      @updatedAt
   sessions      Session[]
   accounts      Account[]
-  subscription  Subscription? // not Better Auth standard
-  ideas         Idea[] // not Better Auth standard
+  subscription          Subscription? // not Better Auth standard
+  subscriptionCheckouts SubscriptionCheckout[] // not Better Auth standard
+  ideas                 Idea[] // not Better Auth standard
 
   @@unique([email])
   @@map("user")
@@ -114,6 +115,17 @@ model Subscription {
   updatedAt              DateTime           @updatedAt
 
   @@map("subscription")
+}
+
+model SubscriptionCheckout {
+  id         String    @id @default(uuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+  @@map("subscriptionCheckout")
 }
 
 model Idea {

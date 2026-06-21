@@ -1,6 +1,8 @@
 import { createError, type H3Event } from 'h3'
 import {
   SubscriptionCancellationUnavailableError,
+  SubscriptionCheckoutAlreadyConsumedError,
+  SubscriptionCheckoutNotFoundError,
   SubscriptionLimitExceededError,
   SubscriptionNotFoundError,
   SubscriptionProviderSubscriptionIdMissingError
@@ -45,6 +47,20 @@ export const mapError = (error: unknown, event?: H3Event): Error => {
     return createError({
       statusCode: 500,
       statusText: 'Provider subscription id missing'
+    })
+  }
+
+  if (error instanceof SubscriptionCheckoutNotFoundError) {
+    return createError({
+      statusCode: 404,
+      statusText: 'Subscription checkout not found'
+    })
+  }
+
+  if (error instanceof SubscriptionCheckoutAlreadyConsumedError) {
+    return createError({
+      statusCode: 409,
+      statusText: 'Subscription checkout already consumed'
     })
   }
 

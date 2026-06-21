@@ -43,3 +43,25 @@ export class SubscriptionProviderSubscriptionIdMissingError
     this.name = 'SubscriptionProviderSubscriptionIdMissingError'
   }
 }
+
+/**
+ * Raised when a checkout record cannot be found by its id.
+ */
+export class SubscriptionCheckoutNotFoundError
+  extends ApplicationError {
+  constructor() {
+    super('Subscription checkout not found.')
+    this.name = 'SubscriptionCheckoutNotFoundError'
+  }
+}
+
+/**
+ * Raised when a checkout has already been consumed.
+ */
+export class SubscriptionCheckoutAlreadyConsumedError
+  extends ApplicationError {
+  constructor() {
+    super('Subscription checkout has already been consumed.')
+    this.name = 'SubscriptionCheckoutAlreadyConsumedError'
+  }
+}

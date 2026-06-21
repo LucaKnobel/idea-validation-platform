@@ -6,10 +6,12 @@ import { experimentRepository } from '@infrastructure/db/repositories/prisma-exp
 import { metricRepository } from '@infrastructure/db/repositories/prisma-metric-repository'
 import { measurementRepository } from '@infrastructure/db/repositories/prisma-measurement-repository'
 import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
+import { subscriptionCheckoutRepository } from '@infrastructure/db/repositories/prisma-subscription-checkout-repository'
 import { payrexxSubscriptionCancellationGateway } from '@infrastructure/payrexx/payrexx-subscription-cancellation-gateway'
 import { logger } from '@infrastructure/logging/logger'
 
 import { buildSubscriptionService } from '@application/services/build-subscription-service'
+import { buildSubscriptionCheckoutService } from '@application/services/build-subscription-checkout-service'
 import { buildSyncPayrexxSubscriptionWebhook } from '@application/services/build-sync-payrexx-subscription-webhook'
 import { buildCancelSubscription } from '@application/services/build-cancel-subscription'
 import { buildCreateIdea } from '@application/services/build-create-idea'
@@ -43,6 +45,11 @@ import { buildGetIdeaVersionValidationOverview } from '@application/services/bui
  */
 const subscriptionService = buildSubscriptionService(
   subscriptionRepository,
+  logger
+)
+
+const subscriptionCheckoutService = buildSubscriptionCheckoutService(
+  subscriptionCheckoutRepository,
   logger
 )
 
@@ -194,6 +201,7 @@ const deleteMeasurement = buildDeleteMeasurement(
 
 export {
   subscriptionService,
+  subscriptionCheckoutService,
   syncPayrexxSubscriptionWebhook,
   cancelSubscription,
   createIdea,
