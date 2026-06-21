@@ -7,7 +7,7 @@ export interface UseSubscriptionComposable {
   showSubscribeAction: ComputedRef<boolean>
   showCancelAction: ComputedRef<boolean>
   loadSubscriptionStatus: () => Promise<void>
-  startSubscriptionCheckout: () => void
+  startSubscriptionCheckout: () => Promise<void>
   cancelProSubscription: () => Promise<void>
 }
 
@@ -65,9 +65,9 @@ export const useSubscription = (): UseSubscriptionComposable => {
   /**
    * Starts checkout and shows a user-safe toast when checkout URL is missing.
    */
-  const startSubscriptionCheckout = (): void => {
+  const startSubscriptionCheckout = async (): Promise<void> => {
     try {
-      navigateToCheckout()
+      await navigateToCheckout()
     } catch {
       showError('settings.subscription.checkout.error.title', 'settings.subscription.checkout.error.message')
     }

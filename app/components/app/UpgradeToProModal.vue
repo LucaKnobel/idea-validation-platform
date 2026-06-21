@@ -6,10 +6,10 @@ const open = defineModel<boolean>('open', {
 const { openCheckout } = usePayrexxCheckout()
 const { showError } = useToastNotification()
 
-const handleUpgrade = (): void => {
+const handleUpgrade = async (): Promise<void> => {
   try {
     open.value = false
-    openCheckout()
+    await openCheckout()
   } catch {
     showError('settings.subscription.checkout.error.title', 'settings.subscription.checkout.error.message')
   }

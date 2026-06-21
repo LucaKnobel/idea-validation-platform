@@ -1,6 +1,7 @@
 export interface UseSubscriptionApiComposable {
   getSubscriptionStatus: () => Promise<SubscriptionStatusResponseDto>
   cancelSubscription: () => Promise<CancelSubscriptionResponseDto>
+  getCheckoutUrl: () => Promise<SubscriptionCheckoutUrlResponseDto>
 }
 
 /**
@@ -17,8 +18,13 @@ export const useSubscriptionApi = (): UseSubscriptionApiComposable => {
     })
   }
 
+  const getCheckoutUrl = async (): Promise<SubscriptionCheckoutUrlResponseDto> => {
+    return await $fetch<SubscriptionCheckoutUrlResponseDto>('/api/subscription/checkout-url')
+  }
+
   return {
     getSubscriptionStatus,
-    cancelSubscription
+    cancelSubscription,
+    getCheckoutUrl
   }
 }

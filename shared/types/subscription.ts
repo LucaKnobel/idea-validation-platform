@@ -1,4 +1,5 @@
 export type {
   SubscriptionStatusResponseDto,
-  CancelSubscriptionResponseDto
+  CancelSubscriptionResponseDto,
+  SubscriptionCheckoutUrlResponseDto
 } from '@infrastructure/validation/subscription-schemas'

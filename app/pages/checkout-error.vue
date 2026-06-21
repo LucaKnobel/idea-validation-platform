@@ -35,7 +35,7 @@ const currentError = computed<ErrorMessage>(() => {
 
 const handleRetry = async (): Promise<void> => {
   const { navigateToCheckout } = usePayrexxCheckout()
-  navigateToCheckout()
+  await navigateToCheckout()
 }
 
 const handleGoHome = async (): Promise<void> => {

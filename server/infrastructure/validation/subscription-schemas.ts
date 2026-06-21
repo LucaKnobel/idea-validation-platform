@@ -16,3 +16,9 @@ export const SubscriptionStatusResponseSchema = z.object({
 })
 
 export type SubscriptionStatusResponseDto = z.infer<typeof SubscriptionStatusResponseSchema>
+
+export const SubscriptionCheckoutUrlResponseSchema = z.object({
+  checkoutUrl: z.url()
+})
+
+export type SubscriptionCheckoutUrlResponseDto = z.infer<typeof SubscriptionCheckoutUrlResponseSchema>
