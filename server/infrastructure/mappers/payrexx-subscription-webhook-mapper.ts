@@ -47,7 +47,7 @@ export const mapPayrexxWebhookToSyncSubscriptionInput = (
     userId: webhook.invoice.referenceId,
     status: mapPayrexxStatus(webhook.status),
     providerCustomerId: webhook.contact.uuid,
-    providerSubscriptionId: webhook.uuid,
+    providerSubscriptionId: String(webhook.id),
     currentPeriodEnd: parsePayrexxDate(webhook.end ?? webhook.valid_until)
   }
 }
