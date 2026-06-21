@@ -14,6 +14,21 @@ const {
   startSubscriptionCheckout,
   cancelProSubscription
 } = useSubscription()
+
+const isCancelConfirmOpen = ref(false)
+
+const openCancelConfirm = (): void => {
+  isCancelConfirmOpen.value = true
+}
+
+const closeCancelConfirm = (): void => {
+  isCancelConfirmOpen.value = false
+}
+
+const confirmCancelSubscription = async (): Promise<void> => {
+  await cancelProSubscription()
+  closeCancelConfirm()
+}
 </script>
 
 <template>
@@ -128,7 +143,7 @@ const {
               icon="i-lucide-circle-off"
               :loading="isCancellingSubscription"
               :disabled="isCancellingSubscription"
-              @click="cancelProSubscription"
+              @click="openCancelConfirm"
             >
               {{ $t('settings.subscription.actions.cancel') }}
             </UButton>
@@ -152,5 +167,39 @@ const {
         </p>
       </UCard>
     </div>
+
+    <UModal
+      v-model:open="isCancelConfirmOpen"
+      :title="$t('settings.subscription.cancel.confirm.title')"
+      :description="$t('settings.subscription.cancel.confirm.description')"
+    >
+      <template #body>
+        <p class="text-sm text-toned">
+          {{ $t('settings.subscription.cancel.confirm.warning') }}
+        </p>
+      </template>
+
+      <template #footer>
+        <div class="flex w-full justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="ghost"
+            :disabled="isCancellingSubscription"
+            @click="closeCancelConfirm"
+          >
+            {{ $t('common.cancel') }}
+          </UButton>
+
+          <UButton
+            color="error"
+            :loading="isCancellingSubscription"
+            :disabled="isCancellingSubscription"
+            @click="confirmCancelSubscription"
+          >
+            {{ $t('settings.subscription.cancel.confirm.action') }}
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>

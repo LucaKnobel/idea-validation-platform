@@ -328,6 +328,12 @@
         }
       },
       "cancel": {
+        "confirm": {
+          "title": "Confirm cancellation",
+          "description": "Do you really want to cancel your Pro subscription?",
+          "warning": "Cancellation stops auto-renewal. Access remains active until the end of your current billing period.",
+          "action": "Confirm cancellation"
+        },
         "success": {
           "title": "Cancellation requested",
           "message": "Your subscription has been marked for cancellation."

@@ -328,6 +328,12 @@
         }
       },
       "cancel": {
+        "confirm": {
+          "title": "Kündigung bestätigen",
+          "description": "Möchtest du dein Pro-Abonnement wirklich kündigen?",
+          "warning": "Die Kündigung stoppt die automatische Verlängerung. Dein Zugang bleibt bis zum Ende des aktuellen Abrechnungszeitraums aktiv.",
+          "action": "Kündigung bestätigen"
+        },
         "success": {
           "title": "Kündigung angefragt",
           "message": "Dein Abonnement wurde zur Kündigung vorgemerkt."
