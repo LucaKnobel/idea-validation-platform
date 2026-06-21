@@ -1,4 +1,5 @@
-export type SubscriptionPlan = 'FREE' | 'PRO'
+export const SUBSCRIPTION_PLANS = ['FREE', 'PRO'] as const
+export type SubscriptionPlan = (typeof SUBSCRIPTION_PLANS)[number]
 export const SUBSCRIPTION_STATUSES = [
   'ACTIVE',
   'IN_NOTICE',

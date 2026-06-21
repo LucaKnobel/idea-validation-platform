@@ -3,6 +3,17 @@ definePageMeta({
   middleware: ['auth-middleware'],
   layout: 'app'
 })
+
+const {
+  isSubscriptionStatusPending,
+  isCancellingSubscription,
+  currentPlanLabel,
+  currentStatusLabel,
+  showSubscribeAction,
+  showCancelAction,
+  startSubscriptionCheckout,
+  cancelProSubscription
+} = useSubscription()
 </script>
 
 <template>
@@ -72,9 +83,61 @@ definePageMeta({
           </h2>
         </template>
 
-        <p class="text-sm text-muted">
-          {{ $t('settings.subscription.placeholder') }}
-        </p>
+        <div class="space-y-4">
+          <p class="text-sm text-muted">
+            {{ $t('settings.subscription.description') }}
+          </p>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <UBadge
+              color="neutral"
+              variant="soft"
+            >
+              {{ $t('settings.subscription.currentPlan') }}: {{ currentPlanLabel }}
+            </UBadge>
+
+            <UBadge
+              color="primary"
+              variant="soft"
+            >
+              {{ $t('settings.subscription.currentStatus') }}: {{ currentStatusLabel }}
+            </UBadge>
+
+            <UBadge
+              v-if="isSubscriptionStatusPending"
+              color="neutral"
+              variant="subtle"
+            >
+              {{ $t('settings.subscription.loading') }}
+            </UBadge>
+          </div>
+
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <UButton
+              v-if="showSubscribeAction"
+              icon="i-lucide-badge-check"
+              @click="startSubscriptionCheckout"
+            >
+              {{ $t('settings.subscription.actions.subscribe') }}
+            </UButton>
+
+            <UButton
+              v-if="showCancelAction"
+              color="error"
+              variant="soft"
+              icon="i-lucide-circle-off"
+              :loading="isCancellingSubscription"
+              :disabled="isCancellingSubscription"
+              @click="cancelProSubscription"
+            >
+              {{ $t('settings.subscription.actions.cancel') }}
+            </UButton>
+          </div>
+
+          <p class="text-xs text-toned">
+            {{ $t('settings.subscription.note') }}
+          </p>
+        </div>
       </UCard>
 
       <UCard>

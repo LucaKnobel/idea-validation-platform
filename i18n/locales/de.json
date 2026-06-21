@@ -4,6 +4,7 @@
     "noData": "Keine Daten verfügbar",
     "loading": "Wird geladen...",
     "backToHome": "Zurück zur Startseite",
+    "redirecting": "Wird zum Checkout weitergeleitet...",
     "copyright": "Copyright"
   },
   "actions": {
@@ -297,7 +298,49 @@
     },
     "subscription": {
       "title": "Abonnement",
-      "placeholder": "Planstatus und Billing-Verwaltung werden hier ergänzt."
+      "placeholder": "Planstatus und Billing-Verwaltung werden hier ergänzt.",
+      "description": "Verwalte dein Pro-Abonnement direkt hier in den Einstellungen.",
+      "currentPlan": "Aktueller Plan",
+      "currentStatus": "Aktueller Status",
+      "loading": "Status wird geladen",
+      "note": "Die Kündigung stoppt die automatische Verlängerung deines laufenden Abonnements.",
+      "plan": {
+        "FREE": "Free",
+        "PRO": "Pro",
+        "UNKNOWN": "Unbekannt"
+      },
+      "status": {
+        "ACTIVE": "Aktiv",
+        "IN_NOTICE": "In Kündigung",
+        "OVERDUE": "Überfällig",
+        "FAILED": "Fehlgeschlagen",
+        "CANCELLED": "Gekündigt",
+        "UNKNOWN": "Unbekannt"
+      },
+      "actions": {
+        "subscribe": "Pro-Abo abschließen",
+        "cancel": "Pro-Abo kündigen"
+      },
+      "checkout": {
+        "error": {
+          "title": "Checkout nicht verfügbar",
+          "message": "Die Checkout-URL ist aktuell nicht konfiguriert. Bitte versuche es später erneut."
+        }
+      },
+      "cancel": {
+        "success": {
+          "title": "Kündigung angefragt",
+          "message": "Dein Abonnement wurde zur Kündigung vorgemerkt."
+        },
+        "unavailable": {
+          "title": "Kündigung nicht möglich",
+          "message": "Für deinen aktuellen Plan ist keine Kündigung erforderlich."
+        },
+        "error": {
+          "title": "Kündigung fehlgeschlagen",
+          "message": "Dein Abonnement konnte nicht gekündigt werden. Bitte versuche es erneut."
+        }
+      }
     },
     "dangerZone": {
       "title": "Gefährlicher Bereich",
@@ -396,6 +439,48 @@
     "description": "Im Free-Plan können Sie eine Geschäftsidee erstellen.",
     "pitch": "Mit Pro können Sie unbegrenzt Geschäftsideen erstellen und Ihre Validierung ohne Einschränkungen skalieren.",
     "cta": "Auf Pro upgraden"
+  },
+  "checkoutSuccess": {
+    "title": "Willkommen bei Pro",
+    "subtitle": "Dein Upgrade war erfolgreich!",
+    "message": "Dein Abonnement ist jetzt aktiv. Du kannst jetzt unbegrenzt Geschäftsideen erstellen.",
+    "nextSteps": "Was kommt als nächstes?",
+    "step1": "Beginne, weitere Geschäftsideen zu erstellen",
+    "step2": "Organisiere deine Hypothesen und Experimente",
+    "step3": "Skaliere deinen Validierungsprozess",
+    "cta": "Zum Dashboard",
+    "toast": {
+      "title": "Upgrade erfolgreich",
+      "message": "Willkommen bei Pro!"
+    },
+    "support": {
+      "prefix": "Benötigst du Hilfe?",
+      "link": "Kontaktiere uns"
+    }
+  },
+  "checkoutError": {
+    "explanation": "Es gab ein Problem bei der Verarbeitung deines Abonnements. Deine Zahlung wurde nicht abgeschlossen.",
+    "whatNow": "Was sollte ich tun?",
+    "step1": "Überprüfe deine Zahlungsdaten und versuche es erneut",
+    "step2": "Wenn das Problem weiterhin besteht, kontaktiere unser Support-Team",
+    "retryButton": "Erneut versuchen",
+    "homeButton": "Zurück zur Startseite",
+    "support": {
+      "prefix": "Hast du immer noch Probleme?",
+      "link": "Kontaktiere den Support"
+    }
+  },
+  "checkoutCancelled": {
+    "title": "Upgrade abgebrochen",
+    "description": "Du hast das Upgrade-Verfahren abgebrochen."
+  },
+  "checkoutFailed": {
+    "title": "Zahlung fehlgeschlagen",
+    "description": "Deine Zahlung konnte nicht verarbeitet werden."
+  },
+  "checkoutDeclined": {
+    "title": "Zahlung abgelehnt",
+    "description": "Deine Zahlungsmethode wurde abgelehnt. Bitte versuche es mit einer anderen Methode."
   },
   "ideaWorkspace": {
     "title": "Idea Workspace",
