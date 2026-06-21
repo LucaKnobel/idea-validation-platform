@@ -4,9 +4,11 @@ import {
   SubscriptionCheckoutUrlResponseSchema,
   type SubscriptionCheckoutUrlResponseDto
 } from '@infrastructure/validation/subscription-schemas'
+import { subscriptionCheckoutService } from '@infrastructure/composition'
 
 /**
- * Returns a checkout URL with server-side referenceId binding for the authenticated user.
+ * Creates a new checkout record and returns a Payrexx URL with the checkout ID as referenceId.
+ * The referenceId is used by the webhook to identify the user after payment.
  */
 export default defineProtectedHandler(async (event, userId): Promise<SubscriptionCheckoutUrlResponseDto> => {
   await enforceRateLimit(event, {
@@ -37,7 +39,8 @@ export default defineProtectedHandler(async (event, userId): Promise<Subscriptio
     })
   }
 
-  checkoutUrl.searchParams.set('referenceId', userId)
+  const checkout = await subscriptionCheckoutService.createCheckout(userId)
+  checkoutUrl.searchParams.set('referenceId', checkout.id)
 
   return SubscriptionCheckoutUrlResponseSchema.parse({
     checkoutUrl: checkoutUrl.toString()

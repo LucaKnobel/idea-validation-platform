@@ -6,15 +6,10 @@ import {
   SubscriptionCheckoutAlreadyConsumedError
 } from '@application/errors/subscription-errors'
 
-export interface SubscriptionCheckoutService {
-  createCheckout(userId: string): Promise<SubscriptionCheckout>
-  consumeCheckout(id: string): Promise<SubscriptionCheckout>
-}
-
 export const buildSubscriptionCheckoutService = (
   checkoutRepository: SubscriptionCheckoutRepository,
   logger: Logger
-): SubscriptionCheckoutService => {
+) => {
   const createCheckout = async (userId: string): Promise<SubscriptionCheckout> => {
     const checkout = await checkoutRepository.create(userId)
 

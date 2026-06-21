@@ -39,12 +39,16 @@ const parsePayrexxDate = (value: string | null): Date | null => {
 
 /**
  * Converts the validated Payrexx webhook payload into the use-case input model.
+ * userId and checkoutId must be resolved server-side before calling this.
  */
 export const mapPayrexxWebhookToSyncSubscriptionInput = (
-  webhook: PayrexxSubscriptionWebhook
+  webhook: PayrexxSubscriptionWebhook,
+  userId: string,
+  checkoutId: string
 ): SyncSubscriptionInput => {
   return {
-    userId: webhook.invoice.referenceId,
+    userId,
+    checkoutId,
     status: mapPayrexxStatus(webhook.status),
     providerCustomerId: webhook.contact.uuid,
     providerSubscriptionId: String(webhook.id),

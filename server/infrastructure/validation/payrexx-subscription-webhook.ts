@@ -37,8 +37,23 @@ export const PayrexxSubscriptionWebhookSchema = z
     PayrexxSubscriptionPayloadSchema,
     z.object({
       subscription: PayrexxSubscriptionPayloadSchema
+    }),
+    z.object({
+      transaction: z.object({
+        subscription: PayrexxSubscriptionPayloadSchema
+      })
     })
   ])
-  .transform(value => ('subscription' in value ? value.subscription : value))
+  .transform((value) => {
+    if ('subscription' in value) {
+      return value.subscription
+    }
+
+    if ('transaction' in value) {
+      return value.transaction.subscription
+    }
+
+    return value
+  })
 
 export type PayrexxSubscriptionWebhook = z.infer<typeof PayrexxSubscriptionWebhookSchema>

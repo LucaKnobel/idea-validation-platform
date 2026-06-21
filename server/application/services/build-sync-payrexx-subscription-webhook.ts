@@ -5,9 +5,11 @@ import type { Subscription, SubscriptionStatus } from '@application/models/subsc
 /**
  * Provider-neutral input used by the subscription sync use case.
  * External webhook payloads must be mapped to this shape first.
+ * userId is resolved server-side via the checkout record — never from the payload.
  */
 export type SyncSubscriptionInput = {
   userId: string
+  checkoutId: string
   status: SubscriptionStatus
   providerCustomerId: string | null
   providerSubscriptionId: string | null
