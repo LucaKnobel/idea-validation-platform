@@ -7,6 +7,12 @@ import { syncPayrexxSubscriptionWebhook, subscriptionCheckoutService } from '@in
 import { SubscriptionCheckoutAlreadyConsumedError, SubscriptionCheckoutNotFoundError } from '@application/errors/subscription-errors'
 import { logger } from '@infrastructure/logging/logger'
 
+type TransactionPayload = {
+  transaction?: {
+    subscription?: unknown
+  }
+}
+
 export default definePublicHandler(async (event) => {
   await enforceRateLimit(event, {
     name: 'payrexx.subscription_webhook',
@@ -44,7 +50,31 @@ export default definePublicHandler(async (event) => {
   }
 
   const parsedBody = await readBody(event)
-  const webhook = PayrexxSubscriptionWebhookSchema.parse(parsedBody)
+  const transactionPayload = parsedBody as TransactionPayload
+
+  if (transactionPayload.transaction?.subscription === null) {
+    logger.info('Webhook ignored because transaction subscription is null', {
+      source: 'payrexx-subscription-webhook',
+      event: 'payrexx.subscription_webhook.ignored_null_subscription'
+    })
+    return { ok: true }
+  }
+
+  const parsedWebhook = PayrexxSubscriptionWebhookSchema.safeParse(parsedBody)
+
+  if (!parsedWebhook.success) {
+    logger.warn('Invalid Payrexx subscription webhook payload', {
+      source: 'payrexx-subscription-webhook',
+      event: 'payrexx.subscription_webhook.invalid_payload',
+      issues: parsedWebhook.error.issues
+    })
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Invalid Payrexx subscription webhook payload'
+    })
+  }
+
+  const webhook = parsedWebhook.data
   const checkoutId = webhook.invoice.referenceId
 
   let checkout

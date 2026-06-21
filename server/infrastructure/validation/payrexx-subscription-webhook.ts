@@ -9,6 +9,7 @@ export const PAYREXX_SUBSCRIPTION_WEBHOOK_STATUSES = [
 ] as const
 
 const PayrexxSubscriptionStatusSchema = z.enum(PAYREXX_SUBSCRIPTION_WEBHOOK_STATUSES)
+const PayrexxIdentifierSchema = z.string().trim().min(1)
 
 const PayrexxSubscriptionInvoiceSchema = z.object({
   referenceId: z.string().trim().min(1)
@@ -16,13 +17,13 @@ const PayrexxSubscriptionInvoiceSchema = z.object({
 
 const PayrexxSubscriptionContactSchema = z.object({
   id: z.number().int().positive(),
-  uuid: z.uuid(),
-  email: z.email().optional()
+  uuid: PayrexxIdentifierSchema,
+  email: z.union([z.email(), z.literal('')]).optional()
 })
 
 const PayrexxSubscriptionPayloadSchema = z.object({
   id: z.number().int().positive(),
-  uuid: z.uuid(),
+  uuid: PayrexxIdentifierSchema,
   status: PayrexxSubscriptionStatusSchema,
   start: z.string().trim().min(1),
   end: z.string().trim().min(1).nullable(),

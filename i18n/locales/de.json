@@ -444,35 +444,12 @@
     "title": "Willkommen bei Pro",
     "subtitle": "Dein Upgrade war erfolgreich!",
     "message": "Dein Abonnement ist jetzt aktiv. Du kannst jetzt unbegrenzt Geschäftsideen erstellen.",
-    "nextSteps": "Was kommt als nächstes?",
-    "step1": "Beginne, weitere Geschäftsideen zu erstellen",
-    "step2": "Organisiere deine Hypothesen und Experimente",
-    "step3": "Skaliere deinen Validierungsprozess",
-    "cta": "Zum Dashboard",
-    "toast": {
-      "title": "Upgrade erfolgreich",
-      "message": "Willkommen bei Pro!"
-    },
-    "support": {
-      "prefix": "Benötigst du Hilfe?",
-      "link": "Kontaktiere uns"
-    }
+    "cta": "Zum Dashboard"
   },
   "checkoutError": {
     "explanation": "Es gab ein Problem bei der Verarbeitung deines Abonnements. Deine Zahlung wurde nicht abgeschlossen.",
-    "whatNow": "Was sollte ich tun?",
-    "step1": "Überprüfe deine Zahlungsdaten und versuche es erneut",
-    "step2": "Wenn das Problem weiterhin besteht, kontaktiere unser Support-Team",
     "retryButton": "Erneut versuchen",
-    "homeButton": "Zurück zur Startseite",
-    "support": {
-      "prefix": "Hast du immer noch Probleme?",
-      "link": "Kontaktiere den Support"
-    }
-  },
-  "checkoutCancelled": {
-    "title": "Upgrade abgebrochen",
-    "description": "Du hast das Upgrade-Verfahren abgebrochen."
+    "homeButton": "Zum Dashboard"
   },
   "checkoutFailed": {
     "title": "Zahlung fehlgeschlagen",

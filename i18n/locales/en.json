@@ -444,35 +444,12 @@
     "title": "Welcome to Pro",
     "subtitle": "Your upgrade was successful!",
     "message": "Your subscription is now active. You can start creating unlimited business ideas.",
-    "nextSteps": "What's next?",
-    "step1": "Start creating more business ideas",
-    "step2": "Organize your hypotheses and experiments",
-    "step3": "Scale your validation process",
-    "cta": "Continue to Dashboard",
-    "toast": {
-      "title": "Upgrade successful",
-      "message": "Welcome to Pro!"
-    },
-    "support": {
-      "prefix": "Need help?",
-      "link": "Contact us"
-    }
+    "cta": "Continue to Dashboard"
   },
   "checkoutError": {
     "explanation": "There was a problem processing your subscription. Your payment was not completed.",
-    "whatNow": "What should I do?",
-    "step1": "Check your payment details and try again",
-    "step2": "If the problem persists, contact our support team",
     "retryButton": "Try Again",
-    "homeButton": "Back to Home",
-    "support": {
-      "prefix": "Still having issues?",
-      "link": "Contact support"
-    }
-  },
-  "checkoutCancelled": {
-    "title": "Upgrade cancelled",
-    "description": "You cancelled the upgrade process."
+    "homeButton": "Back to Dashboard"
   },
   "checkoutFailed": {
     "title": "Payment failed",
