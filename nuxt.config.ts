@@ -28,7 +28,7 @@ export default defineNuxtConfig({
       appChannel: 'local',
       appDeployedAt: 'unknown',
       appImageTag: 'unknown',
-      payrexxProPageUrl: ''
+      payrexxProPageUrl: process.env.NUXT_PUBLIC_PAYREXX_PRO_PAGE_URL || process.env.NUXT_PAYREXX_PRO_PAGE_URL || ''
     }
   },
 

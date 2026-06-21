@@ -4,6 +4,7 @@
     "noData": "No data available",
     "loading": "Loading...",
     "backToHome": "Back to Home",
+    "redirecting": "Redirecting to checkout...",
     "copyright": "Copyright"
   },
   "actions": {
@@ -297,7 +298,49 @@
     },
     "subscription": {
       "title": "Subscription",
-      "placeholder": "Plan status and billing management will be added here."
+      "placeholder": "Plan status and billing management will be added here.",
+      "description": "Manage your Pro subscription directly from settings.",
+      "currentPlan": "Current plan",
+      "currentStatus": "Current status",
+      "loading": "Loading status",
+      "note": "Cancellation stops auto-renewal for your current subscription period.",
+      "plan": {
+        "FREE": "Free",
+        "PRO": "Pro",
+        "UNKNOWN": "Unknown"
+      },
+      "status": {
+        "ACTIVE": "Active",
+        "IN_NOTICE": "In notice",
+        "OVERDUE": "Overdue",
+        "FAILED": "Failed",
+        "CANCELLED": "Cancelled",
+        "UNKNOWN": "Unknown"
+      },
+      "actions": {
+        "subscribe": "Start Pro subscription",
+        "cancel": "Cancel Pro subscription"
+      },
+      "checkout": {
+        "error": {
+          "title": "Checkout unavailable",
+          "message": "The checkout URL is not configured right now. Please try again later."
+        }
+      },
+      "cancel": {
+        "success": {
+          "title": "Cancellation requested",
+          "message": "Your subscription has been marked for cancellation."
+        },
+        "unavailable": {
+          "title": "Cancellation not available",
+          "message": "Your current plan does not require cancellation."
+        },
+        "error": {
+          "title": "Cancellation failed",
+          "message": "We could not cancel your subscription. Please try again."
+        }
+      }
     },
     "dangerZone": {
       "title": "Danger zone",
@@ -396,6 +439,48 @@
     "description": "On the Free plan, you can create one business idea.",
     "pitch": "With Pro, you can create unlimited business ideas and scale your validation without limits.",
     "cta": "Upgrade to Pro"
+  },
+  "checkoutSuccess": {
+    "title": "Welcome to Pro",
+    "subtitle": "Your upgrade was successful!",
+    "message": "Your subscription is now active. You can start creating unlimited business ideas.",
+    "nextSteps": "What's next?",
+    "step1": "Start creating more business ideas",
+    "step2": "Organize your hypotheses and experiments",
+    "step3": "Scale your validation process",
+    "cta": "Continue to Dashboard",
+    "toast": {
+      "title": "Upgrade successful",
+      "message": "Welcome to Pro!"
+    },
+    "support": {
+      "prefix": "Need help?",
+      "link": "Contact us"
+    }
+  },
+  "checkoutError": {
+    "explanation": "There was a problem processing your subscription. Your payment was not completed.",
+    "whatNow": "What should I do?",
+    "step1": "Check your payment details and try again",
+    "step2": "If the problem persists, contact our support team",
+    "retryButton": "Try Again",
+    "homeButton": "Back to Home",
+    "support": {
+      "prefix": "Still having issues?",
+      "link": "Contact support"
+    }
+  },
+  "checkoutCancelled": {
+    "title": "Upgrade cancelled",
+    "description": "You cancelled the upgrade process."
+  },
+  "checkoutFailed": {
+    "title": "Payment failed",
+    "description": "Your payment could not be processed."
+  },
+  "checkoutDeclined": {
+    "title": "Payment declined",
+    "description": "Your payment method was declined. Please try a different method."
   },
   "ideaWorkspace": {
     "title": "Idea Workspace",

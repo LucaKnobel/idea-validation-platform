@@ -3,7 +3,17 @@ const open = defineModel<boolean>('open', {
   default: false
 })
 
-const localePath = useLocalePath()
+const { openCheckout } = usePayrexxCheckout()
+const { showError } = useToastNotification()
+
+const handleUpgrade = (): void => {
+  try {
+    open.value = false
+    openCheckout()
+  } catch {
+    showError('settings.subscription.checkout.error.title', 'settings.subscription.checkout.error.message')
+  }
+}
 </script>
 
 <template>
@@ -37,8 +47,7 @@ const localePath = useLocalePath()
       <UButton
         icon="i-lucide-sparkles"
         color="primary"
-        :to="localePath('/upgrade-to-pro')"
-        @click="open = false"
+        @click="handleUpgrade"
       >
         {{ $t('upgradeToProModal.cta') }}
       </UButton>
