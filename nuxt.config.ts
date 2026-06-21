@@ -18,12 +18,16 @@ export default defineNuxtConfig({
     smtpUser: '',
     smtpPass: '',
     smtpFrom: '',
+    payrexxInstanceName: '',
+    payrexxApiSecret: '',
+    payrexxWebhookSecret: '',
     public: {
       appVersion: 'dev',
       appCommit: 'local',
       appChannel: 'local',
       appDeployedAt: 'unknown',
-      appImageTag: 'unknown'
+      appImageTag: 'unknown',
+      payrexxProPageUrl: ''
     }
   },
 
