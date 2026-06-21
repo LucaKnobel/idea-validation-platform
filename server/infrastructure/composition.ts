@@ -9,6 +9,7 @@ import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-s
 import { logger } from '@infrastructure/logging/logger'
 
 import { buildSubscriptionService } from '@application/services/build-subscription-service'
+import { buildSyncPayrexxSubscriptionWebhook } from '@application/services/build-sync-payrexx-subscription-webhook'
 import { buildCreateIdea } from '@application/services/build-create-idea'
 import { buildCreateIdeaVersion } from '@application/services/build-create-idea-version'
 import { buildUpdateIdeaVersion } from '@application/services/build-update-idea-version'
@@ -39,6 +40,11 @@ import { buildGetIdeaVersionValidationOverview } from '@application/services/bui
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
  */
 const subscriptionService = buildSubscriptionService(
+  subscriptionRepository,
+  logger
+)
+
+const syncPayrexxSubscriptionWebhook = buildSyncPayrexxSubscriptionWebhook(
   subscriptionRepository,
   logger
 )
@@ -180,6 +186,7 @@ const deleteMeasurement = buildDeleteMeasurement(
 
 export {
   subscriptionService,
+  syncPayrexxSubscriptionWebhook,
   createIdea,
   createIdeaVersion,
   updateIdeaVersion,

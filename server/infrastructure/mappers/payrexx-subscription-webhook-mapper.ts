@@ -1,0 +1,53 @@
+import type { SubscriptionStatus } from '@application/models/subscription'
+import type { SyncSubscriptionInput } from '@application/services/build-sync-payrexx-subscription-webhook'
+import type { PayrexxSubscriptionWebhook } from '@infrastructure/validation/payrexx-subscription-webhook'
+
+/**
+ * Maps Payrexx status strings to internal subscription status values.
+ */
+const mapPayrexxStatus = (
+  status: PayrexxSubscriptionWebhook['status']
+): SubscriptionStatus => {
+  switch (status) {
+    case 'active':
+      return 'ACTIVE'
+    case 'in_notice':
+      return 'IN_NOTICE'
+    case 'overdue':
+      return 'OVERDUE'
+    case 'failed':
+      return 'FAILED'
+    case 'cancelled':
+      return 'CANCELLED'
+    default:
+      return 'FAILED'
+  }
+}
+
+/**
+ * Parses optional Payrexx date strings and normalizes invalid values to null.
+ */
+const parsePayrexxDate = (value: string | null): Date | null => {
+  if (!value) {
+    return null
+  }
+
+  const parsed = new Date(value)
+
+  return Number.isNaN(parsed.getTime()) ? null : parsed
+}
+
+/**
+ * Converts the validated Payrexx webhook payload into the use-case input model.
+ */
+export const mapPayrexxWebhookToSyncSubscriptionInput = (
+  webhook: PayrexxSubscriptionWebhook
+): SyncSubscriptionInput => {
+  return {
+    userId: webhook.invoice.referenceId,
+    status: mapPayrexxStatus(webhook.status),
+    providerCustomerId: webhook.contact.uuid,
+    providerSubscriptionId: webhook.uuid,
+    currentPeriodEnd: parsePayrexxDate(webhook.end ?? webhook.valid_until)
+  }
+}
