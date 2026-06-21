@@ -34,8 +34,8 @@ export const payrexxSubscriptionCancellationGateway: SubscriptionCancellationGat
     const response = await fetch(endpoint, {
       method: 'DELETE',
       headers: {
-        accept: 'application/json',
-        authorization: `Bearer ${apiSecret}`
+        'accept': 'application/json',
+        'x-api-key': apiSecret
       }
     })
 

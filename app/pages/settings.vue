@@ -187,7 +187,7 @@ const confirmCancelSubscription = async (): Promise<void> => {
             :disabled="isCancellingSubscription"
             @click="closeCancelConfirm"
           >
-            {{ $t('common.cancel') }}
+            {{ $t('actions.cancel') }}
           </UButton>
 
           <UButton
