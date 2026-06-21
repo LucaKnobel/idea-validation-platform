@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     smtpFrom: '',
     payrexxInstanceName: '',
     payrexxApiSecret: '',
+    payrexxApiBaseUrl: '',
     payrexxWebhookSecret: '',
     public: {
       appVersion: 'dev',

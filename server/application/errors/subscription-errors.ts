@@ -10,3 +10,36 @@ export class SubscriptionLimitExceededError
     this.name = 'SubscriptionLimitExceededError'
   }
 }
+
+/**
+ * Raised when a subscription record for the user cannot be found.
+ */
+export class SubscriptionNotFoundError
+  extends ApplicationError {
+  constructor() {
+    super('Subscription not found.')
+    this.name = 'SubscriptionNotFoundError'
+  }
+}
+
+/**
+ * Raised when cancellation is requested for a non-PRO subscription.
+ */
+export class SubscriptionCancellationUnavailableError
+  extends ApplicationError {
+  constructor() {
+    super('Subscription cancellation is only available for PRO subscriptions.')
+    this.name = 'SubscriptionCancellationUnavailableError'
+  }
+}
+
+/**
+ * Raised when provider identifiers are missing for a cancellable subscription.
+ */
+export class SubscriptionProviderSubscriptionIdMissingError
+  extends ApplicationError {
+  constructor() {
+    super('Provider subscription id is missing.')
+    this.name = 'SubscriptionProviderSubscriptionIdMissingError'
+  }
+}
