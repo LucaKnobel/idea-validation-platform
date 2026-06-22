@@ -1,10 +1,10 @@
 import { definePublicHandler } from '@infrastructure/handlers/public-handler'
 import { readVerifiedPayrexxSubscriptionWebhook } from '@infrastructure/http/read-verified-payrexx-subscription-webhook'
 import {
-  mapPayrexxWebhookToProviderSyncInput
+  mapPayrexxWebhookToProviderUpsertInput
 } from '@infrastructure/mappers/payrexx-subscription-webhook-mapper'
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
-import { processPayrexxSubscriptionWebhook } from '@infrastructure/composition'
+import { processSubscriptionWebhook } from '@infrastructure/composition'
 import { logger } from '@infrastructure/logging/logger'
 
 /**
@@ -26,11 +26,11 @@ export default definePublicHandler(async (event) => {
   }
 
   const checkoutId = webhook.invoice.referenceId
-  const providerSyncInput = mapPayrexxWebhookToProviderSyncInput(webhook)
+  const providerUpdate = mapPayrexxWebhookToProviderUpsertInput(webhook)
 
-  const synced = await processPayrexxSubscriptionWebhook({
+  const synced = await processSubscriptionWebhook({
     checkoutId,
-    providerSyncInput
+    providerUpdate
   })
 
   return synced ?? { ok: true }
