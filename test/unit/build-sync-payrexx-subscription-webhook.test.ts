@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { buildSubscriptionWebhookSyncService } from '@application/services/build-subscription-webhook-sync-service'
-import type { SyncSubscriptionInput } from '@application/services/build-subscription-webhook-sync-service'
+import type { SubscriptionUpsertByCheckoutInput } from '@application/interfaces/subscription-webhook-sync-service'
 import type { SubscriptionRepository } from '@application/interfaces/subscription-repository'
 import type { Subscription } from '@application/models/subscription'
 import { makeLogger, VALID_USER_ID } from './helpers'
@@ -9,9 +9,10 @@ describe('buildSubscriptionWebhookSyncService', () => {
   let repository: SubscriptionRepository
 
   const makeSyncInput = (
-    overrides: Partial<SyncSubscriptionInput> = {}
-  ): SyncSubscriptionInput => ({
+    overrides: Partial<SubscriptionUpsertByCheckoutInput> = {}
+  ): SubscriptionUpsertByCheckoutInput => ({
     userId: VALID_USER_ID,
+    checkoutId: 'checkout-123',
     status: 'ACTIVE',
     providerCustomerId: 'payrexx-contact-uuid',
     providerSubscriptionId: 'payrexx-subscription-uuid',
@@ -53,7 +54,7 @@ describe('buildSubscriptionWebhookSyncService', () => {
     vi.mocked(repository.create).mockResolvedValue(created)
 
     const service = buildSubscriptionWebhookSyncService(repository, makeLogger())
-    const result = await service.syncSubscriptionState(syncInput)
+    const result = await service.upsertByCheckout(syncInput)
 
     expect(repository.findByUserId).toHaveBeenCalledWith(VALID_USER_ID)
     expect(repository.create).toHaveBeenCalledWith({
@@ -86,7 +87,7 @@ describe('buildSubscriptionWebhookSyncService', () => {
     vi.mocked(repository.update).mockResolvedValue(updated)
 
     const service = buildSubscriptionWebhookSyncService(repository, makeLogger())
-    const result = await service.syncSubscriptionState(syncInput)
+    const result = await service.upsertByCheckout(syncInput)
 
     expect(repository.update).toHaveBeenCalledWith({
       userId: VALID_USER_ID,
@@ -122,7 +123,7 @@ describe('buildSubscriptionWebhookSyncService', () => {
     vi.mocked(repository.update).mockResolvedValue(updated)
 
     const service = buildSubscriptionWebhookSyncService(repository, makeLogger())
-    const result = await service.syncSubscriptionStateByProvider({
+    const result = await service.upsertByProvider({
       status: 'ACTIVE',
       providerCustomerId: 'payrexx-contact-uuid',
       providerSubscriptionId: 'payrexx-subscription-uuid',
