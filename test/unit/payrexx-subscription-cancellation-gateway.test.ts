@@ -64,7 +64,7 @@ describe('payrexxSubscriptionCancellationGateway', () => {
       {
         method: 'DELETE',
         headers: {
-          accept: 'application/json',
+          'accept': 'application/json',
           'x-api-key': 'secret-1'
         }
       }
