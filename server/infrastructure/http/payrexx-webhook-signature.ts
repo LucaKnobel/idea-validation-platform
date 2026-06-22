@@ -1,37 +1,34 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 
-const computeSignatureCandidates = (rawBody: string | Buffer, signingKey: string): string[] => {
-  const hexDigest = createHmac('sha256', signingKey).update(rawBody).digest('hex')
-  const base64Digest = createHmac('sha256', signingKey).update(rawBody).digest('base64')
-
-  return [hexDigest, base64Digest]
-}
-
+/**
+ * Normalizes signature header values (e.g. trims and removes optional sha256= prefix).
+ */
 const normalizeExpectedSignature = (value: string): string => {
   return value.trim().replace(/^sha256=/i, '')
 }
 
-const safeEqual = (a: string, b: string): boolean => {
-  const aBuffer = Buffer.from(a)
-  const bBuffer = Buffer.from(b)
+/**
+ * Detects whether the incoming signature is encoded as a hex SHA-256 digest.
+ */
+const isHexSignature = (value: string): boolean => /^[a-f0-9]{64}$/i.test(value)
 
-  return aBuffer.length === bBuffer.length && timingSafeEqual(aBuffer, bBuffer)
-}
-
+/**
+ * Verifies a Payrexx webhook signature using HMAC-SHA256 and constant-time comparison.
+ * Accepts hex and base64 encoded signatures.
+ */
 export const verifyPayrexxWebhookSignature = (
   rawBody: string | Buffer,
   expectedSignature: string,
   signingKey: string
 ): boolean => {
   const normalizedExpected = normalizeExpectedSignature(expectedSignature)
-  const isHexSignature = /^[a-f0-9]{64}$/i.test(normalizedExpected)
-  const expectedHex = normalizedExpected.toLowerCase()
 
-  return computeSignatureCandidates(rawBody, signingKey).some((candidate) => {
-    if (isHexSignature) {
-      return safeEqual(candidate.toLowerCase(), expectedHex)
-    }
+  const expectedDigest = isHexSignature(normalizedExpected)
+    ? Buffer.from(normalizedExpected, 'hex')
+    : Buffer.from(normalizedExpected, 'base64')
 
-    return safeEqual(candidate, normalizedExpected)
-  })
+  const actualDigest = createHmac('sha256', signingKey).update(rawBody).digest()
+
+  return expectedDigest.length === actualDigest.length
+    && timingSafeEqual(actualDigest, expectedDigest)
 }
