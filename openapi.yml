@@ -24,6 +24,10 @@ tags:
     description: Singleton metric endpoints scoped to one hypothesis
   - name: Measurements
     description: Singleton measurement endpoints scoped to one hypothesis
+  - name: Subscription
+    description: User subscription status and management endpoints
+  - name: Webhooks
+    description: External provider webhook endpoints
 
 security: []
 
@@ -281,6 +285,245 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Idea not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ideas/{id}/versions:
+    get:
+      operationId: listIdeaVersions
+      summary: List all versions of an idea
+      description: |
+        Returns all versions for one idea owned by the current authenticated user.
+        Versions are returned as metadata with creation timestamps and type information.
+      tags:
+        - Idea Versions
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Idea identifier.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Versions listed successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeaVersionsListResponse'
+        '400':
+          description: Invalid path parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Idea not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      operationId: createIdeaVersion
+      summary: Create a new version of an idea
+      description: |
+        Creates a new ITERATION or PIVOT version derived from an existing base version.
+        The new version inherits the canvas from the base version and can be independently modified.
+      tags:
+        - Idea Versions
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Idea identifier.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIdeaVersionRequest'
+      responses:
+        '201':
+          description: Version created successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeaVersionMetadata'
+        '400':
+          description: Invalid path parameter or request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Idea or base version not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ideas/{id}/versions/{versionId}:
+    put:
+      operationId: updateIdeaVersion
+      summary: Update metadata of an idea version
+      description: |
+        Updates title and description metadata for one idea version owned by the current authenticated user.
+      tags:
+        - Idea Versions
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Idea identifier.
+          schema:
+            type: string
+            format: uuid
+        - name: versionId
+          in: path
+          required: true
+          description: Idea version identifier.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateIdeaVersionRequest'
+      responses:
+        '200':
+          description: Version metadata updated successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeaVersionMetadata'
+        '400':
+          description: Invalid path parameters or request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Idea version not found or not accessible
           content:
             application/json:
               schema:
@@ -1591,6 +1834,255 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /subscription/status:
+    get:
+      operationId: getSubscriptionStatus
+      summary: Get the authenticated user's subscription status
+      description: |
+        Returns the current subscription plan, status, period end date, and PRO access flag.
+        Returns nulls for plan/status if no subscription exists (user is transitioning to free tier).
+      tags:
+        - Subscription
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Subscription status retrieved successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionStatusResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /subscription/checkout-url:
+    get:
+      operationId: getSubscriptionCheckoutUrl
+      summary: Get Payrexx checkout URL for PRO subscription
+      description: |
+        Creates a checkout record and returns a Payrexx payment page URL.
+        The checkout ID is embedded as referenceId in the URL and used by the webhook to identify the user.
+      tags:
+        - Subscription
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Checkout URL generated successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionCheckoutUrlResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Payrexx configuration error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /subscription/cancel:
+    post:
+      operationId: cancelSubscription
+      summary: Cancel the authenticated user's PRO subscription
+      description: |
+        Cancels the authenticated user's PRO subscription immediately.
+        Calls the Payrexx API to stop billing and updates the local subscription state to CANCELLED.
+        Idempotent: returns existing cancelled record if already cancelled.
+        Rate limited to 5 requests per 60 seconds per user.
+      tags:
+        - Subscription
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Subscription cancelled successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelSubscriptionResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No subscription found for user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Cannot cancel non-PRO subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Provider subscription ID missing or internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: Failed to cancel subscription at Payrexx
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /webhooks/payrexx/subscription:
+    post:
+      operationId: payrexxSubscriptionWebhook
+      summary: Receive Payrexx subscription webhooks
+      description: |
+        Webhook endpoint for Payrexx subscription lifecycle events.
+        Verifies webhook signature, resolves user from checkout ID, and syncs subscription state.
+        Returns 200 OK for processed or already-handled webhooks (idempotent).
+        Rate limited per IP address.
+      tags:
+        - Webhooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: Payrexx webhook payload
+      responses:
+        '200':
+          description: Webhook processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '400':
+          description: Invalid webhook payload or missing checkout reference
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid webhook signature
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /auth/sign-up/email:
     post:
       operationId: authSignUpEmail
@@ -2689,3 +3181,129 @@ components:
           type: string
           minLength: 1
           maxLength: 512
+
+    IdeaVersionMetadata:
+      type: object
+      required:
+        - id
+        - versionNumber
+        - type
+        - parentVersionId
+        - parentVersionNumber
+        - title
+        - description
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        versionNumber:
+          type: integer
+          minimum: 1
+        type:
+          type: string
+          enum: [INITIAL, ITERATION, PIVOT]
+        parentVersionId:
+          type: string
+          format: uuid
+          nullable: true
+        parentVersionNumber:
+          type: integer
+          minimum: 1
+          nullable: true
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    IdeaVersionsListResponse:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdeaVersionMetadata'
+
+    CreateIdeaVersionRequest:
+      type: object
+      required:
+        - baseVersionId
+        - type
+      properties:
+        baseVersionId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [ITERATION, PIVOT]
+
+    UpdateIdeaVersionRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Version title. Leading/trailing whitespace is trimmed.
+        description:
+          type: string
+          maxLength: 3000
+          description: Optional version description. Blank values are normalized to null.
+
+    SubscriptionStatusResponse:
+      type: object
+      required:
+        - plan
+        - status
+        - currentPeriodEnd
+        - isPro
+      properties:
+        plan:
+          type: string
+          enum: [FREE, PRO]
+          nullable: true
+        status:
+          type: string
+          enum: [ACTIVE, CANCELLED]
+          nullable: true
+        currentPeriodEnd:
+          type: string
+          format: date-time
+          nullable: true
+        isPro:
+          type: boolean
+
+    SubscriptionCheckoutUrlResponse:
+      type: object
+      required:
+        - checkoutUrl
+      properties:
+        checkoutUrl:
+          type: string
+          format: uri
+
+    CancelSubscriptionResponse:
+      type: object
+      required:
+        - status
+        - currentPeriodEnd
+      properties:
+        status:
+          type: string
+          enum: [ACTIVE, CANCELLED]
+        currentPeriodEnd:
+          type: string
+          format: date-time
+          nullable: true

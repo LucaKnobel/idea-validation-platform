@@ -8,7 +8,6 @@ import { cancelSubscription } from '@infrastructure/composition'
 
 /**
  * Cancels the authenticated user's PRO subscription.
- * Rate limited to 5 requests per 60 seconds per user.
  */
 export default defineProtectedHandler(async (event, userId): Promise<CancelSubscriptionResponseDto> => {
   await enforceRateLimit(event, {
