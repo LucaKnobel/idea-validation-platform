@@ -32,7 +32,6 @@ const emit = defineEmits<{
   (event: 'submit', value: UpsertHypothesisBodyDto): void
 }>()
 
-const { t } = useI18n()
 const isSectionsMenuOpen = ref(false)
 const editableState = reactive<UpsertHypothesisBodyDto>({
   statement: '',
