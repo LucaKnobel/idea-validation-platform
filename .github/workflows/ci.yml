@@ -24,6 +24,9 @@ jobs:
       # Explicit CI auth vars so Better Auth never falls back to insecure defaults.
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
       BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
+      # E2E Payrexx config required by webhook + checkout integration tests.
+      NUXT_PUBLIC_PAYREXX_PRO_PAGE_URL: ${{ secrets.NUXT_PUBLIC_PAYREXX_PRO_PAGE_URL }}
+      NUXT_PAYREXX_WEBHOOK_SECRET: ${{ secrets.NUXT_PAYREXX_WEBHOOK_SECRET }}
 
     # Skip for Dependabot: Its PRs are dependency updates, already security-checked
     if: github.actor != 'dependabot[bot]'
