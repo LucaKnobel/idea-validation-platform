@@ -42,8 +42,13 @@ export const useSubscription = (): UseSubscriptionComposable => {
   })
 
   const isProSubscription = computed(() => Boolean(subscriptionStatus.value?.isPro))
+  const isSubscriptionActive = computed(() => subscriptionStatus.value?.status === 'ACTIVE')
   const showSubscribeAction = computed(() => !isSubscriptionStatusPending.value && !isProSubscription.value)
-  const showCancelAction = computed(() => !isSubscriptionStatusPending.value && isProSubscription.value)
+  const showCancelAction = computed(() => {
+    return !isSubscriptionStatusPending.value
+      && isProSubscription.value
+      && isSubscriptionActive.value
+  })
 
   /**
    * Loads current subscription status and normalizes non-rate-limit failures to null state.
