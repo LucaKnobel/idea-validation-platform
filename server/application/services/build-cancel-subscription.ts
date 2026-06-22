@@ -33,7 +33,7 @@ export const buildCancelSubscription = (
       throw new SubscriptionCancellationUnavailableError()
     }
 
-    if (existing.status === 'CANCELLED') {
+    if (existing.status === 'CANCELLED' || existing.status === 'IN_NOTICE') {
       return existing
     }
 
@@ -45,7 +45,7 @@ export const buildCancelSubscription = (
 
     const updated = await subscriptionRepository.update({
       ...existing,
-      status: 'CANCELLED'
+      status: 'IN_NOTICE'
     })
 
     logger.info('Subscription cancellation requested', {
