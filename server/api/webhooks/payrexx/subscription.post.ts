@@ -8,13 +8,13 @@ import { subscriptionCheckoutService, subscriptionWebhookSyncService } from '@in
 import { logger } from '@infrastructure/logging/logger'
 
 /**
- * Handles Payrexx subscription webhooks.
+ * Receives Payrexx subscription webhooks.
  *
- * Flow:
- * 1. Verify and validate webhook signature and payload
- * 2. Ensure checkout reference exists
- * 3. Consume checkout to resolve user ID
- * 4. Sync subscription state with provider update
+ * Pipeline: Verify signature → Validate payload → Resolve user from checkout → Sync subscription state.
+ * Rate limited to 30 requests per 60 seconds by IP.
+ *
+ * Returns 200 OK if webhook processed or null subscription (idempotent).
+ * Throws on invalid signature, missing checkout, or downstream errors.
  */
 export default definePublicHandler(async (event) => {
   await enforceRateLimit(event, {

@@ -11,14 +11,17 @@ const derivePlanFromStatus = (status: SubscriptionStatus): Subscription['plan'] 
 }
 
 /**
- * Builds the service that upserts provider subscription updates into local storage.
- *
- * Assumes userId is already resolved and known before calling.
+ * Final step in webhook pipeline: creates or updates subscription in local storage.
+ * Assumes userId already resolved. One-way sync: provider state → local DB.
  */
 export const buildSubscriptionWebhookSyncService = (
   subscriptionRepository: SubscriptionRepository,
   logger: Logger
 ): SubscriptionWebhookSyncService => {
+  /**
+   * Upsert subscription by userId: CREATE if new, UPDATE if exists.
+   * Plan derived from status (CANCELLED → FREE, else → PRO).
+   */
   const upsert = async (input: SubscriptionUpsertInput): Promise<Subscription> => {
     const nextSubscription: Subscription = {
       userId: input.userId,

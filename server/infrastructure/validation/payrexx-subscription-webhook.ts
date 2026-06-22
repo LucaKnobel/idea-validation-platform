@@ -1,5 +1,8 @@
 import { z } from 'zod'
 
+/**
+ * Valid Payrexx subscription statuses. Exported as array for Zod enum + TS discriminated unions.
+ */
 export const PAYREXX_SUBSCRIPTION_WEBHOOK_STATUSES = [
   'active',
   'overdue',
@@ -8,6 +11,10 @@ export const PAYREXX_SUBSCRIPTION_WEBHOOK_STATUSES = [
   'in_notice'
 ] as const
 
+/**
+ * Validates Payrexx webhook payloads and unwraps the supported envelope variants.
+ * This keeps downstream code working with one stable subscription shape.
+ */
 const PayrexxSubscriptionStatusSchema = z.enum(PAYREXX_SUBSCRIPTION_WEBHOOK_STATUSES)
 const PayrexxIdentifierSchema = z.string().trim().min(1)
 
