@@ -13,7 +13,6 @@ import { logger } from '@infrastructure/logging/logger'
 import { buildSubscriptionAccessService } from '@application/services/build-subscription-access-service'
 import { buildSubscriptionCheckoutService } from '@application/services/build-subscription-checkout-service'
 import { buildSubscriptionWebhookSyncService } from '@application/services/build-subscription-webhook-sync-service'
-import { buildProcessSubscriptionWebhook } from '@application/services/build-process-subscription-webhook'
 import { buildCancelSubscription } from '@application/services/build-cancel-subscription'
 import { buildCreateIdea } from '@application/services/build-create-idea'
 import { buildCreateIdeaVersion } from '@application/services/build-create-idea-version'
@@ -56,12 +55,6 @@ const subscriptionCheckoutService = buildSubscriptionCheckoutService(
 
 const subscriptionWebhookSyncService = buildSubscriptionWebhookSyncService(
   subscriptionRepository,
-  logger
-)
-
-const processSubscriptionWebhook = buildProcessSubscriptionWebhook(
-  subscriptionCheckoutService,
-  subscriptionWebhookSyncService,
   logger
 )
 
@@ -211,7 +204,6 @@ export {
   cancelSubscription,
   subscriptionCheckoutService,
   subscriptionWebhookSyncService,
-  processSubscriptionWebhook,
   createIdea,
   createIdeaVersion,
   updateIdeaVersion,

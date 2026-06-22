@@ -1,5 +1,6 @@
 import type { SubscriptionCheckout } from '@application/models/subscription-checkout'
 import type { SubscriptionCheckoutRepository } from '@application/interfaces/subscription-checkout-repository'
+import type { SubscriptionCheckoutService } from '@application/interfaces/subscription-checkout-service'
 import type { Logger } from '@interfaces/logger'
 import {
   SubscriptionCheckoutNotFoundError,
@@ -9,7 +10,7 @@ import {
 export const buildSubscriptionCheckoutService = (
   checkoutRepository: SubscriptionCheckoutRepository,
   logger: Logger
-) => {
+): SubscriptionCheckoutService => {
   const createCheckout = async (userId: string): Promise<SubscriptionCheckout> => {
     const checkout = await checkoutRepository.create(userId)
 
