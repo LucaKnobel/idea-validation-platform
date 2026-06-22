@@ -11,7 +11,6 @@ import { logger } from '@infrastructure/logging/logger'
  * Receives Payrexx subscription webhooks.
  *
  * Pipeline: Verify signature → Validate payload → Resolve user from checkout → Sync subscription state.
- * Rate limited to 30 requests per 60 seconds by IP.
  *
  * Returns 200 OK if webhook processed or null subscription (idempotent).
  * Throws on invalid signature, missing checkout, or downstream errors.
