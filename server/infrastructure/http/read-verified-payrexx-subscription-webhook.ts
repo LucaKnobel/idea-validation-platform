@@ -11,9 +11,8 @@ type TransactionPayload = {
 }
 
 /**
- * Reads, verifies, and validates a Payrexx subscription webhook request.
- *
- * Returns null when the webhook explicitly reports a null subscription payload.
+ * Verifies webhook signature, validates payload. Returns null if subscription is null (idempotent).
+ * Throws 401 if signature invalid, 400 if invalid payload, 500 if config missing.
  */
 export const readVerifiedPayrexxSubscriptionWebhook = async (
   event: H3Event,

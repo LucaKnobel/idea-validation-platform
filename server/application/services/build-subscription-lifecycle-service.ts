@@ -13,18 +13,18 @@ export type CancelSubscriptionInput = {
 }
 
 /**
- * Builds the subscription lifecycle service.
- *
- * Responsibilities:
- * - Validate whether cancellation is allowed.
- * - Trigger provider-side cancellation.
- * - Transition local status to immediate cancellation state.
+ * Handles subscription state changes.
+ * Cancellation is validated locally, executed at the provider, then mirrored in local state.
  */
 export const buildSubscriptionLifecycleService = (
   subscriptionRepository: SubscriptionRepository,
   subscriptionCancellationGateway: SubscriptionCancellationGateway,
   logger: Logger
 ) => {
+  /**
+   * Cancels only active PRO subscriptions.
+   * Already-cancelled subscriptions are returned unchanged to keep retries safe.
+   */
   return async (input: CancelSubscriptionInput): Promise<Subscription> => {
     const existing = await subscriptionRepository.findByUserId(input.userId)
 

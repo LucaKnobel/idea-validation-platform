@@ -3,7 +3,7 @@ import type { SubscriptionUpsertInput } from '@application/interfaces/subscripti
 import type { PayrexxSubscriptionWebhook } from '@infrastructure/validation/payrexx-subscription-webhook'
 
 /**
- * Maps Payrexx status strings to internal subscription status values.
+ * Maps Payrexx status strings to internal enum. Isolates domain logic from provider changes.
  */
 const mapPayrexxStatus = (
   status: PayrexxSubscriptionWebhook['status']
@@ -25,7 +25,7 @@ const mapPayrexxStatus = (
 }
 
 /**
- * Parses optional Payrexx date strings and normalizes invalid values to null.
+ * Parses Payrexx dates to Date or null. Invalid dates → null (avoid state corruption).
  */
 const parsePayrexxDate = (value: string | null): Date | null => {
   if (!value) {
@@ -38,8 +38,8 @@ const parsePayrexxDate = (value: string | null): Date | null => {
 }
 
 /**
- * Converts the validated Payrexx webhook payload into the upsert input model.
- * userId must be resolved server-side from checkout before calling this.
+ * Maps validated Payrexx data into the local subscription update shape.
+ * userId is resolved separately so webhook data never decides account ownership.
  */
 export const mapPayrexxWebhookToUpsertInput = (
   webhook: PayrexxSubscriptionWebhook,

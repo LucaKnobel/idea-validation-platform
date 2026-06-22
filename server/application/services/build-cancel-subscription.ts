@@ -13,18 +13,28 @@ export type CancelSubscriptionInput = {
 }
 
 /**
- * Builds the cancel subscription use case.
- *
- * Responsibilities:
- * - Validate whether cancellation is allowed.
- * - Trigger provider-side cancellation.
- * - Transition local status to immediate cancellation state.
+ * Factory function that builds the subscription cancellation use case.
+/**
+ * Orchestrates cancellation: validate → provider call → local state update.
+ * Idempotent: returns existing record if already cancelled.
  */
 export const buildCancelSubscription = (
   subscriptionRepository: SubscriptionRepository,
   subscriptionCancellationGateway: SubscriptionCancellationGateway,
   logger: Logger
 ) => {
+  /**
+   * Executes the subscription cancellation workflow.
+   *
+   * Validates subscription exists and is PRO plan, calls provider to cancel,
+   * updates local state to CANCELLED with plan set to FREE.
+   *
+   * Idempotent: Returns existing record if already cancelled.
+   *
+   * @param input - User ID requesting cancellation
+   * @returns Updated subscription record with CANCELLED status
+   * @throws SubscriptionNotFoundError, SubscriptionCancellationUnavailableError, or provider errors
+   */
   return async (input: CancelSubscriptionInput): Promise<Subscription> => {
     const existing = await subscriptionRepository.findByUserId(input.userId)
 

@@ -7,10 +7,17 @@ import {
   SubscriptionCheckoutAlreadyConsumedError
 } from '@application/errors/subscription-errors'
 
+/**
+ * Manages checkout lifecycle: creates before payment, consumes after provider confirms.
+ * Decouples user action from provider callback, prevents double-charging via idempotency.
+ */
 export const buildSubscriptionCheckoutService = (
   checkoutRepository: SubscriptionCheckoutRepository,
   logger: Logger
 ): SubscriptionCheckoutService => {
+  /**
+   * Creates checkout record. ID sent to Payrexx as referenceId, webhook links back to user.
+   */
   const createCheckout = async (userId: string): Promise<SubscriptionCheckout> => {
     const checkout = await checkoutRepository.create(userId)
 
@@ -24,6 +31,9 @@ export const buildSubscriptionCheckoutService = (
     return checkout
   }
 
+  /**
+   * Marks checkout as paid, returns userId. Throws if not found or already consumed.
+   */
   const consumeCheckout = async (id: string): Promise<SubscriptionCheckout> => {
     const checkout = await checkoutRepository.findById(id)
 

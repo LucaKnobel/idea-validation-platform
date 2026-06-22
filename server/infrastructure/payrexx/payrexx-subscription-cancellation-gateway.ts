@@ -1,6 +1,10 @@
 import type { SubscriptionCancellationGateway } from '@application/interfaces/subscription-cancellation-gateway'
 import { logger } from '@infrastructure/logging/logger'
 
+/**
+ * Converts the stored provider ID into the format Payrexx requires.
+ * A non-numeric value means local subscription data is inconsistent.
+ */
 const parseProviderSubscriptionId = (value: string): number => {
   const parsed = Number.parseInt(value, 10)
 
@@ -14,6 +18,10 @@ const parseProviderSubscriptionId = (value: string): number => {
   return parsed
 }
 
+/**
+ * Cancels a subscription at Payrexx.
+ * Keeps provider-specific HTTP details out of the application layer.
+ */
 export const payrexxSubscriptionCancellationGateway: SubscriptionCancellationGateway = {
   async cancelSubscription(providerSubscriptionId: string): Promise<void> {
     const config = useRuntimeConfig()
