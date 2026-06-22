@@ -1,15 +1,11 @@
 import type { Subscription, SubscriptionStatus } from '@application/models/subscription'
 
-export type SubscriptionUpsertByCheckoutInput = {
+/**
+ * Input for upserting subscription state from webhook events.
+ * userId must be resolved server-side from checkout before calling this.
+ */
+export type SubscriptionUpsertInput = {
   userId: string
-  checkoutId: string
-  status: SubscriptionStatus
-  providerCustomerId: string | null
-  providerSubscriptionId: string | null
-  currentPeriodEnd: Date | null
-}
-
-export type SubscriptionUpsertByProviderInput = {
   status: SubscriptionStatus
   providerCustomerId: string | null
   providerSubscriptionId: string | null
@@ -17,6 +13,5 @@ export type SubscriptionUpsertByProviderInput = {
 }
 
 export interface SubscriptionWebhookSyncService {
-  upsertByCheckout(input: SubscriptionUpsertByCheckoutInput): Promise<Subscription>
-  upsertByProvider(input: SubscriptionUpsertByProviderInput): Promise<Subscription | null>
+  upsert(input: SubscriptionUpsertInput): Promise<Subscription>
 }

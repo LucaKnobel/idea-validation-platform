@@ -1,8 +1,5 @@
 import type { SubscriptionStatus } from '@application/models/subscription'
-import type {
-  SubscriptionUpsertByProviderInput,
-  SubscriptionUpsertByCheckoutInput
-} from '@application/interfaces/subscription-webhook-sync-service'
+import type { SubscriptionUpsertInput } from '@application/interfaces/subscription-webhook-sync-service'
 import type { PayrexxSubscriptionWebhook } from '@infrastructure/validation/payrexx-subscription-webhook'
 
 /**
@@ -41,31 +38,15 @@ const parsePayrexxDate = (value: string | null): Date | null => {
 }
 
 /**
- * Converts the validated Payrexx webhook payload into the use-case input model.
- * userId and checkoutId must be resolved server-side before calling this.
+ * Converts the validated Payrexx webhook payload into the upsert input model.
+ * userId must be resolved server-side from checkout before calling this.
  */
-export const mapPayrexxWebhookToCheckoutUpsertInput = (
+export const mapPayrexxWebhookToUpsertInput = (
   webhook: PayrexxSubscriptionWebhook,
-  userId: string,
-  checkoutId: string
-): SubscriptionUpsertByCheckoutInput => {
+  userId: string
+): SubscriptionUpsertInput => {
   return {
     userId,
-    checkoutId,
-    status: mapPayrexxStatus(webhook.status),
-    providerCustomerId: webhook.contact.uuid,
-    providerSubscriptionId: String(webhook.id),
-    currentPeriodEnd: parsePayrexxDate(webhook.end ?? webhook.valid_until)
-  }
-}
-
-/**
- * Converts validated Payrexx webhook payload into provider-identifier based sync input.
- */
-export const mapPayrexxWebhookToProviderUpsertInput = (
-  webhook: PayrexxSubscriptionWebhook
-): SubscriptionUpsertByProviderInput => {
-  return {
     status: mapPayrexxStatus(webhook.status),
     providerCustomerId: webhook.contact.uuid,
     providerSubscriptionId: String(webhook.id),
