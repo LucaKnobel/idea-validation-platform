@@ -38,21 +38,13 @@ export const buildCancelSubscription = (
   return async (input: CancelSubscriptionInput): Promise<Subscription> => {
     const existing = await subscriptionRepository.findByUserId(input.userId)
 
-    if (!existing) {
-      throw new SubscriptionNotFoundError()
-    }
+    if (!existing) throw new SubscriptionNotFoundError()
 
-    if (existing.plan !== 'PRO') {
-      throw new SubscriptionCancellationUnavailableError()
-    }
+    if (existing.plan !== 'PRO') throw new SubscriptionCancellationUnavailableError()
 
-    if (existing.status === 'CANCELLED') {
-      return existing
-    }
+    if (existing.status === 'CANCELLED') return existing
 
-    if (!existing.providerSubscriptionId) {
-      throw new SubscriptionProviderSubscriptionIdMissingError()
-    }
+    if (!existing.providerSubscriptionId) throw new SubscriptionProviderSubscriptionIdMissingError()
 
     await subscriptionCancellationGateway.cancelSubscription(existing.providerSubscriptionId)
 
