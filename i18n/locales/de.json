@@ -303,7 +303,7 @@
       "currentPlan": "Aktueller Plan",
       "currentStatus": "Aktueller Status",
       "loading": "Status wird geladen",
-      "note": "Die Kündigung stoppt die automatische Verlängerung deines laufenden Abonnements.",
+      "note": "Die Kündigung wirkt sofort. Dein Pro-Zugang endet direkt und bereits bezahlte Zeit wird nicht erstattet.",
       "plan": {
         "FREE": "Free",
         "PRO": "Pro",
@@ -331,12 +331,12 @@
         "confirm": {
           "title": "Kündigung bestätigen",
           "description": "Möchtest du dein Pro-Abonnement wirklich kündigen?",
-          "warning": "Die Kündigung stoppt die automatische Verlängerung. Dein Zugang bleibt bis zum Ende des aktuellen Abrechnungszeitraums aktiv.",
+          "warning": "Die Kündigung wirkt sofort. Dein Pro-Zugang endet direkt und bereits bezahlte Zeit wird nicht erstattet.",
           "action": "Kündigung bestätigen"
         },
         "success": {
-          "title": "Kündigung angefragt",
-          "message": "Dein Abonnement wurde zur Kündigung vorgemerkt."
+          "title": "Abonnement gekündigt",
+          "message": "Dein Pro-Abonnement wurde sofort beendet und dein Plan ist jetzt Free."
         },
         "unavailable": {
           "title": "Kündigung nicht möglich",

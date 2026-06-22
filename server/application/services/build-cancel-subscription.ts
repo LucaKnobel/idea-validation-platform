@@ -13,16 +13,19 @@ export type CancelSubscriptionInput = {
 }
 
 /**
- * Cancels the user's PRO subscription in Payrexx and updates local state.
+ * Builds the cancel subscription use case.
+ *
+ * Responsibilities:
+ * - Validate whether cancellation is allowed.
+ * - Trigger provider-side cancellation.
+ * - Transition local status to immediate cancellation state.
  */
 export const buildCancelSubscription = (
   subscriptionRepository: SubscriptionRepository,
   subscriptionCancellationGateway: SubscriptionCancellationGateway,
   logger: Logger
 ) => {
-  return async (
-    input: CancelSubscriptionInput
-  ): Promise<Subscription> => {
+  return async (input: CancelSubscriptionInput): Promise<Subscription> => {
     const existing = await subscriptionRepository.findByUserId(input.userId)
 
     if (!existing) {
@@ -33,7 +36,7 @@ export const buildCancelSubscription = (
       throw new SubscriptionCancellationUnavailableError()
     }
 
-    if (existing.status === 'CANCELLED' || existing.status === 'IN_NOTICE') {
+    if (existing.status === 'CANCELLED') {
       return existing
     }
 
@@ -45,11 +48,13 @@ export const buildCancelSubscription = (
 
     const updated = await subscriptionRepository.update({
       ...existing,
-      status: 'IN_NOTICE'
+      plan: 'FREE',
+      status: 'CANCELLED',
+      currentPeriodEnd: new Date()
     })
 
     logger.info('Subscription cancellation requested', {
-      source: 'cancel-subscription',
+      source: 'subscription-cancel-service',
       event: 'subscription.cancel.requested',
       userId: input.userId,
       providerSubscriptionId: existing.providerSubscriptionId

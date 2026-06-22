@@ -10,9 +10,9 @@ import { subscriptionCheckoutRepository } from '@infrastructure/db/repositories/
 import { payrexxSubscriptionCancellationGateway } from '@infrastructure/payrexx/payrexx-subscription-cancellation-gateway'
 import { logger } from '@infrastructure/logging/logger'
 
-import { buildSubscriptionService } from '@application/services/build-subscription-service'
+import { buildSubscriptionAccessService } from '@application/services/build-subscription-access-service'
 import { buildSubscriptionCheckoutService } from '@application/services/build-subscription-checkout-service'
-import { buildSyncPayrexxSubscriptionWebhook } from '@application/services/build-sync-payrexx-subscription-webhook'
+import { buildSubscriptionWebhookSyncService } from '@application/services/build-subscription-webhook-sync-service'
 import { buildCancelSubscription } from '@application/services/build-cancel-subscription'
 import { buildCreateIdea } from '@application/services/build-create-idea'
 import { buildCreateIdeaVersion } from '@application/services/build-create-idea-version'
@@ -43,7 +43,7 @@ import { buildGetIdeaVersionValidationOverview } from '@application/services/bui
 /**
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
  */
-const subscriptionService = buildSubscriptionService(
+const subscriptionAccessService = buildSubscriptionAccessService(
   subscriptionRepository,
   logger
 )
@@ -53,7 +53,7 @@ const subscriptionCheckoutService = buildSubscriptionCheckoutService(
   logger
 )
 
-const syncPayrexxSubscriptionWebhook = buildSyncPayrexxSubscriptionWebhook(
+const subscriptionWebhookSyncService = buildSubscriptionWebhookSyncService(
   subscriptionRepository,
   logger
 )
@@ -66,7 +66,7 @@ const cancelSubscription = buildCancelSubscription(
 
 const createIdea = buildCreateIdea(
   ideaRepository,
-  subscriptionService,
+  subscriptionAccessService,
   logger
 )
 
@@ -200,10 +200,10 @@ const deleteMeasurement = buildDeleteMeasurement(
 )
 
 export {
-  subscriptionService,
-  subscriptionCheckoutService,
-  syncPayrexxSubscriptionWebhook,
+  subscriptionAccessService,
   cancelSubscription,
+  subscriptionCheckoutService,
+  subscriptionWebhookSyncService,
   createIdea,
   createIdeaVersion,
   updateIdeaVersion,

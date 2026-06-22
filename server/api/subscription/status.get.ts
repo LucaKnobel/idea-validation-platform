@@ -4,7 +4,7 @@ import {
   SubscriptionStatusResponseSchema,
   type SubscriptionStatusResponseDto
 } from '@infrastructure/validation/subscription-schemas'
-import { subscriptionService } from '@infrastructure/composition'
+import { subscriptionAccessService } from '@infrastructure/composition'
 
 /**
  * Returns the authenticated user's current subscription status.
@@ -17,8 +17,8 @@ export default defineProtectedHandler(async (event, userId): Promise<Subscriptio
     scope: 'user'
   })
 
-  const subscription = await subscriptionService.getByUserId(userId)
-  const isPro = await subscriptionService.isPro(userId)
+  const subscription = await subscriptionAccessService.getByUserId(userId)
+  const isPro = await subscriptionAccessService.isPro(userId)
 
   return SubscriptionStatusResponseSchema.parse({
     plan: subscription?.plan ?? null,

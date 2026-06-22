@@ -6,35 +6,30 @@ import { SubscriptionLimitExceededError } from '@application/errors/subscription
 
 const FREE_BUSINESS_IDEA_LIMIT = 1
 
+/**
+ * Evaluates whether a subscription currently grants effective PRO access.
+ *
+ * Rules:
+ * - Non-PRO plans never grant PRO access.
+ * - ACTIVE grants access; CANCELLED does not.
+ */
 const hasEffectiveProAccess = (
-  subscription: Subscription,
-  now: Date
+  subscription: Subscription
 ): boolean => {
   if (subscription.plan !== 'PRO') {
     return false
   }
 
-  switch (subscription.status) {
-    case 'ACTIVE':
-      return true
-
-    case 'IN_NOTICE':
-      return Boolean(
-        subscription.currentPeriodEnd
-        && subscription.currentPeriodEnd > now
-      )
-
-    case 'OVERDUE':
-    case 'FAILED':
-    case 'CANCELLED':
-      return false
-
-    default:
-      return false
-  }
+  return subscription.status === 'ACTIVE'
 }
 
-export const buildSubscriptionService = (
+/**
+ * Builds the access and quota policy service for subscriptions.
+ *
+ * This service is intentionally policy-focused and should not perform
+ * provider-side lifecycle actions such as cancellation or webhook sync.
+ */
+export const buildSubscriptionAccessService = (
   subscriptionRepository: SubscriptionRepository,
   logger: Logger
 ): SubscriptionService => {
@@ -53,7 +48,7 @@ export const buildSubscriptionService = (
       return false
     }
 
-    return hasEffectiveProAccess(subscription, new Date())
+    return hasEffectiveProAccess(subscription)
   }
 
   const getBusinessIdeaLimit = async (
@@ -83,7 +78,7 @@ export const buildSubscriptionService = (
     })
 
     logger.info('Free subscription created', {
-      source: 'subscription-service',
+      source: 'subscription-access-service',
       event: 'subscription.free_created',
       userId
     })
@@ -99,7 +94,7 @@ export const buildSubscriptionService = (
 
     if (currentIdeaCount >= limit) {
       logger.warn('Business idea limit exceeded', {
-        source: 'subscription-service',
+        source: 'subscription-access-service',
         event: 'subscription.limit_exceeded',
         userId,
         currentIdeas: currentIdeaCount,
