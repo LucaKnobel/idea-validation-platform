@@ -303,7 +303,7 @@
       "currentPlan": "Current plan",
       "currentStatus": "Current status",
       "loading": "Loading status",
-      "note": "Cancellation stops auto-renewal for your current subscription period.",
+      "note": "Cancellation takes effect immediately. Pro access ends right away and no refund is issued for already paid time.",
       "plan": {
         "FREE": "Free",
         "PRO": "Pro",
@@ -331,12 +331,12 @@
         "confirm": {
           "title": "Confirm cancellation",
           "description": "Do you really want to cancel your Pro subscription?",
-          "warning": "Cancellation stops auto-renewal. Access remains active until the end of your current billing period.",
+          "warning": "Cancellation takes effect immediately. Your Pro access will end right away and already paid time will not be refunded.",
           "action": "Confirm cancellation"
         },
         "success": {
-          "title": "Cancellation requested",
-          "message": "Your subscription has been marked for cancellation."
+          "title": "Subscription cancelled",
+          "message": "Your Pro subscription has been cancelled immediately and your plan is now Free."
         },
         "unavailable": {
           "title": "Cancellation not available",

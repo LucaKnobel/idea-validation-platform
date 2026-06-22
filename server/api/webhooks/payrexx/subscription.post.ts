@@ -1,9 +1,12 @@
 import { PayrexxSubscriptionWebhookSchema } from '@infrastructure/validation/payrexx-subscription-webhook'
 import { definePublicHandler } from '@infrastructure/handlers/public-handler'
 import { verifyPayrexxWebhookSignature } from '@infrastructure/http/payrexx-webhook-signature'
-import { mapPayrexxWebhookToSyncSubscriptionInput } from '@infrastructure/mappers/payrexx-subscription-webhook-mapper'
+import {
+  mapPayrexxWebhookToProviderSyncInput,
+  mapPayrexxWebhookToSyncSubscriptionInput
+} from '@infrastructure/mappers/payrexx-subscription-webhook-mapper'
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
-import { syncPayrexxSubscriptionWebhook, subscriptionCheckoutService } from '@infrastructure/composition'
+import { subscriptionWebhookSyncService, subscriptionCheckoutService } from '@infrastructure/composition'
 import { SubscriptionCheckoutAlreadyConsumedError, SubscriptionCheckoutNotFoundError } from '@application/errors/subscription-errors'
 import { logger } from '@infrastructure/logging/logger'
 
@@ -76,27 +79,32 @@ export default definePublicHandler(async (event) => {
 
   const webhook = parsedWebhook.data
   const checkoutId = webhook.invoice.referenceId
+  const providerSyncInput = mapPayrexxWebhookToProviderSyncInput(webhook)
 
   let checkout
   try {
     checkout = await subscriptionCheckoutService.consumeCheckout(checkoutId)
   } catch (error) {
     if (error instanceof SubscriptionCheckoutAlreadyConsumedError) {
-      logger.warn('Duplicate subscription webhook ignored', {
+      logger.info('Subscription webhook received for an already consumed checkout', {
         source: 'payrexx-subscription-webhook',
-        event: 'payrexx.subscription_webhook.duplicate',
+        event: 'payrexx.subscription_webhook.consumed_checkout_fallback',
         checkoutId
       })
-      return { ok: true }
+
+      const synced = await subscriptionWebhookSyncService.syncSubscriptionStateByProvider(providerSyncInput)
+      return synced ?? { ok: true }
     }
 
     if (error instanceof SubscriptionCheckoutNotFoundError) {
-      logger.warn('Unknown checkout id in webhook', {
+      logger.warn('Unknown checkout id in webhook; trying provider identifier fallback', {
         source: 'payrexx-subscription-webhook',
-        event: 'payrexx.subscription_webhook.unknown_checkout',
+        event: 'payrexx.subscription_webhook.unknown_checkout_fallback',
         checkoutId
       })
-      throw createError({ statusCode: 400, statusMessage: 'Unknown checkout reference' })
+
+      const synced = await subscriptionWebhookSyncService.syncSubscriptionStateByProvider(providerSyncInput)
+      return synced ?? { ok: true }
     }
 
     throw error
@@ -104,5 +112,5 @@ export default definePublicHandler(async (event) => {
 
   const syncInput = mapPayrexxWebhookToSyncSubscriptionInput(webhook, checkout.userId, checkoutId)
 
-  return syncPayrexxSubscriptionWebhook(syncInput)
+  return subscriptionWebhookSyncService.syncSubscriptionState(syncInput)
 })

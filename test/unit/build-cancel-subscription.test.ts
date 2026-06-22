@@ -39,9 +39,9 @@ describe('buildCancelSubscription', () => {
   it('throws when the user has no subscription record', async () => {
     vi.mocked(repository.findByUserId).mockResolvedValue(null)
 
-    const cancelSubscription = buildCancelSubscription(repository, cancellationGateway, makeLogger())
+    const service = buildCancelSubscription(repository, cancellationGateway, makeLogger())
 
-    await expect(cancelSubscription({ userId: VALID_USER_ID })).rejects.toThrow(SubscriptionNotFoundError)
+    await expect(service({ userId: VALID_USER_ID })).rejects.toThrow(SubscriptionNotFoundError)
     expect(cancellationGateway.cancelSubscription).not.toHaveBeenCalled()
   })
 
@@ -50,9 +50,9 @@ describe('buildCancelSubscription', () => {
       makeSubscription({ plan: 'FREE', providerSubscriptionId: null })
     )
 
-    const cancelSubscription = buildCancelSubscription(repository, cancellationGateway, makeLogger())
+    const service = buildCancelSubscription(repository, cancellationGateway, makeLogger())
 
-    await expect(cancelSubscription({ userId: VALID_USER_ID })).rejects.toThrow(SubscriptionCancellationUnavailableError)
+    await expect(service({ userId: VALID_USER_ID })).rejects.toThrow(SubscriptionCancellationUnavailableError)
     expect(cancellationGateway.cancelSubscription).not.toHaveBeenCalled()
   })
 
@@ -61,9 +61,9 @@ describe('buildCancelSubscription', () => {
       makeSubscription({ providerSubscriptionId: null })
     )
 
-    const cancelSubscription = buildCancelSubscription(repository, cancellationGateway, makeLogger())
+    const service = buildCancelSubscription(repository, cancellationGateway, makeLogger())
 
-    await expect(cancelSubscription({ userId: VALID_USER_ID })).rejects.toThrow(SubscriptionProviderSubscriptionIdMissingError)
+    await expect(service({ userId: VALID_USER_ID })).rejects.toThrow(SubscriptionProviderSubscriptionIdMissingError)
     expect(cancellationGateway.cancelSubscription).not.toHaveBeenCalled()
   })
 
@@ -71,28 +71,35 @@ describe('buildCancelSubscription', () => {
     const existing = makeSubscription({ status: 'CANCELLED' })
     vi.mocked(repository.findByUserId).mockResolvedValue(existing)
 
-    const cancelSubscription = buildCancelSubscription(repository, cancellationGateway, makeLogger())
-    const result = await cancelSubscription({ userId: VALID_USER_ID })
+    const service = buildCancelSubscription(repository, cancellationGateway, makeLogger())
+    const result = await service({ userId: VALID_USER_ID })
 
     expect(result).toEqual(existing)
     expect(repository.update).not.toHaveBeenCalled()
     expect(cancellationGateway.cancelSubscription).not.toHaveBeenCalled()
   })
 
-  it('cancels at provider and updates local status', async () => {
+  it('cancels at provider and updates local state to cancelled free plan', async () => {
     const existing = makeSubscription({ status: 'ACTIVE', providerSubscriptionId: '4321' })
-    const updated = makeSubscription({ status: 'CANCELLED', providerSubscriptionId: '4321' })
+    const updated = makeSubscription({
+      plan: 'FREE',
+      status: 'CANCELLED',
+      providerSubscriptionId: '4321',
+      currentPeriodEnd: new Date('2026-06-22T00:00:00.000Z')
+    })
 
     vi.mocked(repository.findByUserId).mockResolvedValue(existing)
     vi.mocked(repository.update).mockResolvedValue(updated)
 
-    const cancelSubscription = buildCancelSubscription(repository, cancellationGateway, makeLogger())
-    const result = await cancelSubscription({ userId: VALID_USER_ID })
+    const service = buildCancelSubscription(repository, cancellationGateway, makeLogger())
+    const result = await service({ userId: VALID_USER_ID })
 
     expect(cancellationGateway.cancelSubscription).toHaveBeenCalledWith('4321')
     expect(repository.update).toHaveBeenCalledWith({
       ...existing,
-      status: 'CANCELLED'
+      plan: 'FREE',
+      status: 'CANCELLED',
+      currentPeriodEnd: expect.any(Date)
     })
     expect(result).toEqual(updated)
   })

@@ -28,6 +28,28 @@ export const subscriptionRepository: SubscriptionRepository = {
   },
 
   /**
+   * Returns a subscription by provider subscription identifier when available.
+   */
+  async findByProviderSubscriptionId(providerSubscriptionId: string): Promise<Subscription | null> {
+    const row = await prisma.subscription.findFirst({
+      where: { providerSubscriptionId }
+    })
+
+    return row ? toDomainSubscription(row) : null
+  },
+
+  /**
+   * Returns a subscription by provider customer identifier when available.
+   */
+  async findByProviderCustomerId(providerCustomerId: string): Promise<Subscription | null> {
+    const row = await prisma.subscription.findFirst({
+      where: { providerCustomerId }
+    })
+
+    return row ? toDomainSubscription(row) : null
+  },
+
+  /**
    * Creates and returns a persisted subscription.
    */
   async create(subscription: Subscription): Promise<Subscription> {

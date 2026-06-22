@@ -1,11 +1,11 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { buildSyncPayrexxSubscriptionWebhook } from '@application/services/build-sync-payrexx-subscription-webhook'
-import type { SyncSubscriptionInput } from '@application/services/build-sync-payrexx-subscription-webhook'
+import { buildSubscriptionWebhookSyncService } from '@application/services/build-subscription-webhook-sync-service'
+import type { SyncSubscriptionInput } from '@application/services/build-subscription-webhook-sync-service'
 import type { SubscriptionRepository } from '@application/interfaces/subscription-repository'
 import type { Subscription } from '@application/models/subscription'
 import { makeLogger, VALID_USER_ID } from './helpers'
 
-describe('buildSyncPayrexxSubscriptionWebhook', () => {
+describe('buildSubscriptionWebhookSyncService', () => {
   let repository: SubscriptionRepository
 
   const makeSyncInput = (
@@ -32,6 +32,8 @@ describe('buildSyncPayrexxSubscriptionWebhook', () => {
   beforeEach(() => {
     repository = {
       findByUserId: vi.fn(),
+      findByProviderSubscriptionId: vi.fn(),
+      findByProviderCustomerId: vi.fn(),
       create: vi.fn(),
       update: vi.fn()
     }
@@ -50,8 +52,8 @@ describe('buildSyncPayrexxSubscriptionWebhook', () => {
     vi.mocked(repository.findByUserId).mockResolvedValue(null)
     vi.mocked(repository.create).mockResolvedValue(created)
 
-    const syncWebhook = buildSyncPayrexxSubscriptionWebhook(repository, makeLogger())
-    const result = await syncWebhook(syncInput)
+    const service = buildSubscriptionWebhookSyncService(repository, makeLogger())
+    const result = await service.syncSubscriptionState(syncInput)
 
     expect(repository.findByUserId).toHaveBeenCalledWith(VALID_USER_ID)
     expect(repository.create).toHaveBeenCalledWith({
@@ -73,7 +75,7 @@ describe('buildSyncPayrexxSubscriptionWebhook', () => {
     })
     const existing = makeSubscription()
     const updated = makeSubscription({
-      plan: 'PRO',
+      plan: 'FREE',
       status: 'CANCELLED',
       providerCustomerId: 'payrexx-contact-uuid',
       providerSubscriptionId: 'payrexx-subscription-uuid',
@@ -83,18 +85,59 @@ describe('buildSyncPayrexxSubscriptionWebhook', () => {
     vi.mocked(repository.findByUserId).mockResolvedValue(existing)
     vi.mocked(repository.update).mockResolvedValue(updated)
 
-    const syncWebhook = buildSyncPayrexxSubscriptionWebhook(repository, makeLogger())
-    const result = await syncWebhook(syncInput)
+    const service = buildSubscriptionWebhookSyncService(repository, makeLogger())
+    const result = await service.syncSubscriptionState(syncInput)
 
     expect(repository.update).toHaveBeenCalledWith({
       userId: VALID_USER_ID,
-      plan: 'PRO',
+      plan: 'FREE',
       status: 'CANCELLED',
       providerCustomerId: 'payrexx-contact-uuid',
       providerSubscriptionId: 'payrexx-subscription-uuid',
       currentPeriodEnd: new Date('2026-07-01T00:00:00.000Z')
     })
     expect(repository.create).not.toHaveBeenCalled()
+    expect(result).toEqual(updated)
+  })
+
+  it('updates existing subscription via provider identifier fallback', async () => {
+    const existing = makeSubscription({
+      userId: VALID_USER_ID,
+      plan: 'PRO',
+      status: 'ACTIVE',
+      providerCustomerId: 'payrexx-contact-uuid',
+      providerSubscriptionId: 'payrexx-subscription-uuid',
+      currentPeriodEnd: new Date('2026-06-01T00:00:00.000Z')
+    })
+    const updated = makeSubscription({
+      userId: VALID_USER_ID,
+      plan: 'PRO',
+      status: 'ACTIVE',
+      providerCustomerId: 'payrexx-contact-uuid',
+      providerSubscriptionId: 'payrexx-subscription-uuid',
+      currentPeriodEnd: new Date('2026-07-01T00:00:00.000Z')
+    })
+
+    vi.mocked(repository.findByProviderSubscriptionId).mockResolvedValue(existing)
+    vi.mocked(repository.update).mockResolvedValue(updated)
+
+    const service = buildSubscriptionWebhookSyncService(repository, makeLogger())
+    const result = await service.syncSubscriptionStateByProvider({
+      status: 'ACTIVE',
+      providerCustomerId: 'payrexx-contact-uuid',
+      providerSubscriptionId: 'payrexx-subscription-uuid',
+      currentPeriodEnd: new Date('2026-07-01T00:00:00.000Z')
+    })
+
+    expect(repository.findByProviderSubscriptionId).toHaveBeenCalledWith('payrexx-subscription-uuid')
+    expect(repository.update).toHaveBeenCalledWith({
+      userId: VALID_USER_ID,
+      plan: 'PRO',
+      status: 'ACTIVE',
+      providerCustomerId: 'payrexx-contact-uuid',
+      providerSubscriptionId: 'payrexx-subscription-uuid',
+      currentPeriodEnd: new Date('2026-07-01T00:00:00.000Z')
+    })
     expect(result).toEqual(updated)
   })
 })

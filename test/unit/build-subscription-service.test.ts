@@ -1,15 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { buildSubscriptionService } from '@application/services/build-subscription-service'
+import { buildSubscriptionAccessService } from '@application/services/build-subscription-access-service'
 import { SubscriptionLimitExceededError } from '@application/errors/subscription-errors'
 import type { SubscriptionRepository } from '@application/interfaces/subscription-repository'
 import type { Subscription } from '@application/models/subscription'
 import type { Logger } from '@interfaces/logger'
 import { makeLogger, VALID_USER_ID } from './helpers'
 
-describe('buildSubscriptionService', () => {
+describe('buildSubscriptionAccessService', () => {
   let repository: SubscriptionRepository
   let logger: Logger
-  let service: ReturnType<typeof buildSubscriptionService>
+  let service: ReturnType<typeof buildSubscriptionAccessService>
 
   const makeSubscription = (overrides: Partial<Subscription> = {}): Subscription => ({
     userId: VALID_USER_ID,
@@ -31,7 +31,7 @@ describe('buildSubscriptionService', () => {
       update: vi.fn()
     }
     logger = makeLogger()
-    service = buildSubscriptionService(repository, logger)
+    service = buildSubscriptionAccessService(repository, logger)
   })
 
   afterEach(() => {
@@ -60,30 +60,6 @@ describe('buildSubscriptionService', () => {
     )
 
     await expect(service.isPro(VALID_USER_ID)).resolves.toBe(true)
-  })
-
-  it('isPro returns true for in-notice PRO subscriptions still in paid period', async () => {
-    vi.mocked(repository.findByUserId).mockResolvedValue(
-      makeSubscription({
-        plan: 'PRO',
-        status: 'IN_NOTICE',
-        currentPeriodEnd: new Date('2026-07-01T00:00:00.000Z')
-      })
-    )
-
-    await expect(service.isPro(VALID_USER_ID)).resolves.toBe(true)
-  })
-
-  it('isPro returns false for in-notice PRO subscriptions with expired period', async () => {
-    vi.mocked(repository.findByUserId).mockResolvedValue(
-      makeSubscription({
-        plan: 'PRO',
-        status: 'IN_NOTICE',
-        currentPeriodEnd: new Date('2026-06-01T00:00:00.000Z')
-      })
-    )
-
-    await expect(service.isPro(VALID_USER_ID)).resolves.toBe(false)
   })
 
   it('isPro returns false for cancelled PRO subscriptions immediately', async () => {
@@ -149,7 +125,7 @@ describe('buildSubscriptionService', () => {
       currentPeriodEnd: null
     })
     expect(logger.info).toHaveBeenCalledWith('Free subscription created', {
-      source: 'subscription-service',
+      source: 'subscription-access-service',
       event: 'subscription.free_created',
       userId: VALID_USER_ID
     })
@@ -166,7 +142,7 @@ describe('buildSubscriptionService', () => {
     )
 
     expect(logger.warn).toHaveBeenCalledWith('Business idea limit exceeded', {
-      source: 'subscription-service',
+      source: 'subscription-access-service',
       event: 'subscription.limit_exceeded',
       userId: VALID_USER_ID,
       currentIdeas: 1,
