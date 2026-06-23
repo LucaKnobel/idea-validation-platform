@@ -7,6 +7,7 @@ import { metricRepository } from '@infrastructure/db/repositories/prisma-metric-
 import { measurementRepository } from '@infrastructure/db/repositories/prisma-measurement-repository'
 import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
 import { subscriptionCheckoutRepository } from '@infrastructure/db/repositories/prisma-subscription-checkout-repository'
+import { userRepository } from '@infrastructure/db/repositories/prisma-user-repository'
 import { payrexxSubscriptionCancellationGateway } from '@infrastructure/payrexx/payrexx-subscription-cancellation-gateway'
 import { logger } from '@infrastructure/logging/logger'
 
@@ -41,6 +42,7 @@ import { buildUpsertMeasurement } from '@application/services/build-upsert-measu
 import { buildDeleteMeasurement } from '@application/services/build-delete-measurement'
 import { buildSyncHypothesisStatus } from '@application/services/build-sync-hypothesis-status'
 import { buildGetIdeaVersionValidationOverview } from '@application/services/build-get-idea-version-validation-overview'
+import { buildDeleteAccount } from '@application/services/build-delete-account'
 
 /**
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
@@ -213,6 +215,11 @@ const deleteMeasurement = buildDeleteMeasurement(
   logger
 )
 
+const deleteAccount = buildDeleteAccount(
+  userRepository,
+  logger
+)
+
 export {
   subscriptionAccessService,
   subscriptionProvisioningService,
@@ -243,5 +250,6 @@ export {
   deleteExperiment,
   getHypothesisMeasurement,
   upsertMeasurement,
-  deleteMeasurement
+  deleteMeasurement,
+  deleteAccount
 }

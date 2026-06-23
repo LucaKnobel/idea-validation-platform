@@ -14,6 +14,13 @@ const {
   startSubscriptionCheckout,
   cancelProSubscription
 } = useSubscription()
+const {
+  isDeleteModalOpen,
+  isDeletingAccount,
+  openDeleteModal,
+  closeDeleteModal,
+  confirmDeleteAccount
+} = useAccountDelete()
 
 const isCancelConfirmOpen = ref(false)
 
@@ -67,18 +74,6 @@ const confirmCancelSubscription = async (): Promise<void> => {
     </UCard>
 
     <div class="space-y-6">
-      <UCard>
-        <template #header>
-          <h2 class="font-semibold">
-            {{ $t('settings.account.title') }}
-          </h2>
-        </template>
-
-        <p class="text-sm text-muted">
-          {{ $t('settings.account.placeholder') }}
-        </p>
-      </UCard>
-
       <UCard>
         <template #header>
           <h2 class="font-semibold">
@@ -162,9 +157,20 @@ const confirmCancelSubscription = async (): Promise<void> => {
           </h2>
         </template>
 
-        <p class="text-sm text-muted">
-          {{ $t('settings.dangerZone.placeholder') }}
-        </p>
+        <div class="space-y-4">
+          <p class="text-sm text-muted">
+            {{ $t('account.delete.description') }}
+          </p>
+
+          <UButton
+            color="error"
+            variant="soft"
+            icon="i-lucide-user-round-x"
+            @click="openDeleteModal"
+          >
+            {{ $t('account.delete.action') }}
+          </UButton>
+        </div>
       </UCard>
     </div>
 
@@ -197,6 +203,40 @@ const confirmCancelSubscription = async (): Promise<void> => {
             @click="confirmCancelSubscription"
           >
             {{ $t('settings.subscription.cancel.confirm.action') }}
+          </UButton>
+        </div>
+      </template>
+    </UModal>
+
+    <UModal
+      v-model:open="isDeleteModalOpen"
+      :title="$t('account.delete.title')"
+      :description="$t('account.delete.description')"
+    >
+      <template #body>
+        <p class="text-sm text-toned">
+          {{ $t('account.delete.warning') }}
+        </p>
+      </template>
+
+      <template #footer>
+        <div class="flex w-full justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="ghost"
+            :disabled="isDeletingAccount"
+            @click="closeDeleteModal"
+          >
+            {{ $t('actions.cancel') }}
+          </UButton>
+
+          <UButton
+            color="error"
+            :loading="isDeletingAccount"
+            :disabled="isDeletingAccount"
+            @click="confirmDeleteAccount"
+          >
+            {{ $t('account.delete.confirm') }}
           </UButton>
         </div>
       </template>

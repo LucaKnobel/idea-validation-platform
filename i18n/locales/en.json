@@ -260,10 +260,15 @@
       "action": "Delete account",
       "title": "Delete account",
       "description": "This will permanently delete your account and all ideas. This action cannot be undone.",
+      "warning": "Your account will be permanently deleted and cannot be restored.",
       "confirm": "Delete account",
       "success": {
         "title": "Account deleted",
         "message": "Your account has been permanently removed."
+      },
+      "error": {
+        "title": "Account deletion failed",
+        "message": "We could not delete your account. Please try again."
       }
     }
   },

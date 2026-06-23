@@ -260,10 +260,15 @@
       "action": "Konto löschen",
       "title": "Konto löschen",
       "description": "Ihr Konto und alle Ideen werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "warning": "Ihr Konto wird dauerhaft gelöscht und kann nicht wiederhergestellt werden.",
       "confirm": "Konto löschen",
       "success": {
         "title": "Konto gelöscht",
         "message": "Ihr Konto wurde dauerhaft entfernt."
+      },
+      "error": {
+        "title": "Kontolöschung fehlgeschlagen",
+        "message": "Ihr Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
       }
     }
   },

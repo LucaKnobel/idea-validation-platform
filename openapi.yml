@@ -26,6 +26,8 @@ tags:
     description: Singleton measurement endpoints scoped to one hypothesis
   - name: Subscription
     description: User subscription status and management endpoints
+  - name: Account
+    description: Authenticated account management endpoints
   - name: Webhooks
     description: External provider webhook endpoints
 
@@ -1817,6 +1819,62 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Measurement not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/me:
+    delete:
+      operationId: deleteMyAccount
+      summary: Permanently delete the authenticated user's account
+      description: |
+        Permanently deletes the current authenticated user account.
+        This action is irreversible and removes owned data via database cascade rules.
+      tags:
+        - Account
+      security:
+        - cookieAuth: []
+      responses:
+        '204':
+          description: Account deleted successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
           content:
             application/json:
               schema:
