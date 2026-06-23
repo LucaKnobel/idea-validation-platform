@@ -1,4 +1,5 @@
 import {
+  ChangePasswordBodySchema,
   LoginUserBodySchema,
   RegisterUserBodySchema,
   ResetPasswordBodySchema,
@@ -6,6 +7,7 @@ import {
   SendVerificationEmailBodySchema
 } from './auth-schemas'
 import type {
+  ChangePasswordBodyDto,
   LoginUserBodyDto,
   RegisterUserBodyDto,
   ResetPasswordBodyDto,
@@ -18,6 +20,7 @@ type ParsedAuthBody = LoginUserBodyDto
   | SendVerificationEmailBodyDto
   | RequestPasswordResetBodyDto
   | ResetPasswordBodyDto
+  | ChangePasswordBodyDto
 
 /**
  * Reduced validation issue shape that is safe to log and expose internally.
@@ -55,7 +58,8 @@ const SCHEMA_BY_PATH = {
   '/sign-in/email': LoginUserBodySchema,
   '/send-verification-email': SendVerificationEmailBodySchema,
   '/request-password-reset': RequestPasswordResetBodySchema,
-  '/reset-password': ResetPasswordBodySchema
+  '/reset-password': ResetPasswordBodySchema,
+  '/change-password': ChangePasswordBodySchema
 } as const
 
 const NO_BODY_PATHS = new Set<string>([

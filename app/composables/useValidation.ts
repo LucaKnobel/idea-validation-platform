@@ -102,6 +102,20 @@ export const useValidation = () => {
   })
 
   /**
+   * Builds the authenticated password change schema, including current-password input.
+   */
+  const createChangePasswordSchema = () => z.object({
+    currentPassword: z.string({ error: t('validation.password.required') })
+      .min(1, { error: t('validation.password.required') })
+      .max(256, { error: t('validation.password.max') }),
+    newPassword: createStrongPasswordFieldSchema(),
+    passwordConfirm: z.string({ error: t('validation.password.required') })
+  }).refine(data => data.newPassword === data.passwordConfirm, {
+    error: t('validation.password.confirmMismatch'),
+    path: ['passwordConfirm']
+  })
+
+  /**
    * Builds the schema for idea creation in the dashboard modal.
    */
   const createIdeaFormSchema = () => z.object({
@@ -210,6 +224,7 @@ export const useValidation = () => {
   })
 
   return {
+    createChangePasswordSchema,
     createPasswordSchema,
     createRegisterFormSchema,
     createLoginFormSchema,

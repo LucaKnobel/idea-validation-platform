@@ -9,6 +9,7 @@ export interface UseErrorHandlerComposable {
   handleRateLimitError: (error: unknown) => boolean
   handleRegistrationError: (error: unknown) => { titleKey: string, textKey: string }
   handleLoginError: (error: unknown) => { titleKey: string, textKey: string }
+  handleChangePasswordError: (error: unknown) => { titleKey: string, textKey: string }
   handlePasswordResetRequestError: (error: unknown) => { titleKey: string, textKey: string }
   handlePasswordResetError: (error: unknown) => { titleKey: string, textKey: string }
   handleLogoutError: (error: unknown) => { titleKey: string, textKey: string }
@@ -116,6 +117,25 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
   }
 
   /**
+   * Resolves authenticated password-change failures to the best matching translated message keys.
+   */
+  const handleChangePasswordError = (error: unknown): { titleKey: string, textKey: string } => {
+    const statusCode = extractStatusCode(error)
+    const commonError = handleCommonErrors(statusCode)
+    if (commonError) {
+      return commonError
+    }
+
+    const titleKey = 'error.auth.changePassword.title'
+    const textKey = statusCode === 400
+      ? 'error.auth.changePassword.invalidCurrentPassword'
+      : 'error.auth.changePassword.message'
+
+    setError(titleKey, textKey)
+    return { titleKey, textKey }
+  }
+
+  /**
    * Resolves password reset request failures to translated UI message keys.
    */
   const handlePasswordResetRequestError = (error: unknown): { titleKey: string, textKey: string } => {
@@ -186,6 +206,7 @@ export const useErrorHandler = (): UseErrorHandlerComposable => {
     handleRateLimitError,
     handleRegistrationError,
     handleLoginError,
+    handleChangePasswordError,
     handlePasswordResetRequestError,
     handlePasswordResetError,
     handleLogoutError,
