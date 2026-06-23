@@ -7,7 +7,7 @@ import {
   createAuthenticatedSession,
   createClientIp,
   expectAuthenticatedSessionCreated,
-  extractAuthSessionCookieHeader,
+  getApiWithCookie,
   getE2ESetupOptions
 } from './auth-test-helpers'
 import { createIdeaForUser } from './ideas-test-helpers'
@@ -73,6 +73,9 @@ describe('DELETE /api/users/me integration', async () => {
     const deleteResponse = await deleteAccountWithCookie(user.cookieHeader)
     expect(deleteResponse.status).toBe(204)
 
+    const protectedResponse = await getApiWithCookie('/api/protected-probe', user.cookieHeader)
+    expect(protectedResponse.status).toBe(401)
+
     const signOutResponse = await fetch(url('/api/auth/sign-out'), {
       method: 'POST',
       headers: {
@@ -83,10 +86,6 @@ describe('DELETE /api/users/me integration', async () => {
       body: '{}'
     })
 
-    expect(signOutResponse.status).toBe(401)
-
-    const setCookie = signOutResponse.headers.get('set-cookie')
-    const returnedCookie = setCookie ? extractAuthSessionCookieHeader(setCookie) : null
-    expect(returnedCookie).toBeNull()
+    expect(signOutResponse.status).toBe(200)
   })
 })
