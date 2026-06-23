@@ -29,7 +29,8 @@ const authEventByPath = {
   '/send-verification-email': { event: 'auth.send_verification_email', action: 'send verification email' },
   '/verify-email': { event: 'auth.verify_email', action: 'verify email' },
   '/request-password-reset': { event: 'auth.request_password_reset', action: 'request password reset' },
-  '/reset-password': { event: 'auth.reset_password', action: 'reset password' }
+  '/reset-password': { event: 'auth.reset_password', action: 'reset password' },
+  '/change-password': { event: 'auth.change_password', action: 'change password' }
 } as const
 
 const neutralAuthEventPaths = new Set<string>([
@@ -117,6 +118,8 @@ export const auth = betterAuth({
       '/request-password-reset': { window: 300, max: 3 },
       // Password reset confirmation: strict, link is single-use anyway
       '/reset-password': { window: 300, max: 5 },
+      // Password change for authenticated users: still brute-force sensitive
+      '/change-password': { window: 300, max: 5 },
       // Verification email resend: prevent mail bombing
       '/send-verification-email': { window: 300, max: 3 },
       // Email verification click: lenient, user may retry from link

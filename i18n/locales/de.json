@@ -29,6 +29,8 @@
     "password": {
       "label": "Passwort",
       "placeholder": "Geben Sie Ihr Passwort ein",
+      "show": "Passwort anzeigen",
+      "hide": "Passwort ausblenden",
       "hint": "Mind. 15 Zeichen mit Groß- und Kleinbuchstaben, einer Zahl und einem Sonderzeichen.",
       "confirm": {
         "label": "Passwort bestätigen",
@@ -105,6 +107,11 @@
       "resetPassword": {
         "title": "Passwort konnte nicht zurückgesetzt werden",
         "message": "Ihr Passwort konnte nicht zurückgesetzt werden. Der Link ist möglicherweise ungültig oder abgelaufen. Bitte fordern Sie einen neuen Link an und versuchen Sie es erneut."
+      },
+      "changePassword": {
+        "title": "Passwortänderung fehlgeschlagen",
+        "message": "Ihr Passwort konnte derzeit nicht geändert werden. Bitte versuchen Sie es später erneut.",
+        "invalidCurrentPassword": "Das eingegebene aktuelle Passwort ist nicht korrekt."
       },
       "logout": {
         "title": "Abmeldung fehlgeschlagen",
@@ -302,7 +309,29 @@
     },
     "security": {
       "title": "Sicherheit",
-      "placeholder": "Passwortänderung und weitere Sicherheitsaktionen werden hier ergänzt."
+      "description": "Hier kannst du dein Passwort ändern.",
+      "passwordRequirements": "Verwende mindestens 15 Zeichen mit Großbuchstaben, Kleinbuchstaben, Zahl und Sonderzeichen.",
+      "fields": {
+        "currentPassword": {
+          "label": "Aktuelles Passwort",
+          "placeholder": "Aktuelles Passwort eingeben"
+        },
+        "newPassword": {
+          "label": "Neues Passwort",
+          "placeholder": "Neues Passwort eingeben"
+        },
+        "passwordConfirm": {
+          "label": "Neues Passwort bestätigen",
+          "placeholder": "Neues Passwort bestätigen"
+        }
+      },
+      "actions": {
+        "submit": "Passwort ändern"
+      },
+      "success": {
+        "title": "Passwort geändert",
+        "message": "Dein Passwort wurde erfolgreich aktualisiert."
+      }
     },
     "subscription": {
       "title": "Abonnement",

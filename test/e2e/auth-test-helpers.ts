@@ -58,6 +58,12 @@ export type ResetPasswordPayload = {
   token: string
 }
 
+export type ChangePasswordPayload = {
+  currentPassword: string
+  newPassword: string
+  revokeOtherSessions?: boolean
+}
+
 export type AuthenticatedSession = RegisteredAuthUser & {
   cookieHeader: string
 }
@@ -330,6 +336,19 @@ export const postResetPassword = (payload: ResetPasswordPayload, options?: AuthR
   return fetch(createApiUrl('/api/auth/reset-password'), {
     method: 'POST',
     headers: createAuthHeaders(options),
+    body: JSON.stringify(payload)
+  })
+}
+
+export const postChangePassword = (cookieHeader: string, payload: ChangePasswordPayload, options?: AuthRequestOptions) => {
+  const headers: Record<string, string> = {
+    ...createAuthHeaders(options),
+    cookie: cookieHeader
+  }
+
+  return fetch(createApiUrl('/api/auth/change-password'), {
+    method: 'POST',
+    headers,
     body: JSON.stringify(payload)
   })
 }

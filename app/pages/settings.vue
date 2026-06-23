@@ -7,6 +7,15 @@ definePageMeta({
 const localePath = useLocalePath()
 
 const {
+  formState: passwordChangeState,
+  formSchema: passwordChangeSchema,
+  isChangingPassword,
+  hasError: hasPasswordChangeError,
+  errorTitle: passwordChangeErrorTitle,
+  errorText: passwordChangeErrorText,
+  submitPasswordChange
+} = usePasswordChange()
+const {
   isSubscriptionStatusPending,
   isCancellingSubscription,
   currentPlanLabel,
@@ -25,6 +34,7 @@ const {
 } = useAccountDelete()
 
 const isCancelConfirmOpen = ref(false)
+const showPasswords = ref(false)
 
 const openCancelConfirm = (): void => {
   isCancelConfirmOpen.value = true
@@ -96,9 +106,139 @@ const confirmCancelSubscription = async (): Promise<void> => {
           </h2>
         </template>
 
-        <p class="text-sm text-muted">
-          {{ $t('settings.security.placeholder') }}
-        </p>
+        <UForm
+          :schema="passwordChangeSchema"
+          :state="passwordChangeState"
+          class="space-y-5"
+          @submit="submitPasswordChange"
+        >
+          <div class="space-y-2">
+            <p class="text-sm text-muted">
+              {{ $t('settings.security.description') }}
+            </p>
+
+            <UAlert
+              color="neutral"
+              variant="subtle"
+              icon="i-lucide-shield-check"
+              :title="$t('validation.password.requirements')"
+              :description="$t('settings.security.passwordRequirements')"
+            />
+          </div>
+
+          <UAlert
+            v-if="hasPasswordChangeError && passwordChangeErrorTitle"
+            color="error"
+            variant="subtle"
+            icon="i-lucide-circle-alert"
+            :title="passwordChangeErrorTitle"
+            :description="passwordChangeErrorText"
+          />
+
+          <UFormField
+            name="currentPassword"
+            :label="$t('settings.security.fields.currentPassword.label')"
+            required
+          >
+            <UInput
+              id="settings-current-password"
+              v-model="passwordChangeState.currentPassword"
+              :type="showPasswords ? 'text' : 'password'"
+              :placeholder="$t('settings.security.fields.currentPassword.placeholder')"
+              :disabled="isChangingPassword"
+              :ui="{ trailing: 'pe-1' }"
+              class="w-full"
+              autocomplete="current-password"
+            >
+              <template #trailing>
+                <UButton
+                  type="button"
+                  color="neutral"
+                  variant="link"
+                  size="sm"
+                  :icon="showPasswords ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :aria-label="showPasswords ? $t('form.password.hide') : $t('form.password.show')"
+                  :aria-pressed="showPasswords"
+                  aria-controls="settings-current-password"
+                  @click="showPasswords = !showPasswords"
+                />
+              </template>
+            </UInput>
+          </UFormField>
+
+          <UFormField
+            name="newPassword"
+            :label="$t('settings.security.fields.newPassword.label')"
+            required
+          >
+            <UInput
+              id="settings-new-password"
+              v-model="passwordChangeState.newPassword"
+              :type="showPasswords ? 'text' : 'password'"
+              :placeholder="$t('settings.security.fields.newPassword.placeholder')"
+              :disabled="isChangingPassword"
+              :ui="{ trailing: 'pe-1' }"
+              class="w-full"
+              autocomplete="new-password"
+            >
+              <template #trailing>
+                <UButton
+                  type="button"
+                  color="neutral"
+                  variant="link"
+                  size="sm"
+                  :icon="showPasswords ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :aria-label="showPasswords ? $t('form.password.hide') : $t('form.password.show')"
+                  :aria-pressed="showPasswords"
+                  aria-controls="settings-new-password"
+                  @click="showPasswords = !showPasswords"
+                />
+              </template>
+            </UInput>
+          </UFormField>
+
+          <UFormField
+            name="passwordConfirm"
+            :label="$t('settings.security.fields.passwordConfirm.label')"
+            required
+          >
+            <UInput
+              id="settings-password-confirm"
+              v-model="passwordChangeState.passwordConfirm"
+              :type="showPasswords ? 'text' : 'password'"
+              :placeholder="$t('settings.security.fields.passwordConfirm.placeholder')"
+              :disabled="isChangingPassword"
+              :ui="{ trailing: 'pe-1' }"
+              class="w-full"
+              autocomplete="new-password"
+            >
+              <template #trailing>
+                <UButton
+                  type="button"
+                  color="neutral"
+                  variant="link"
+                  size="sm"
+                  :icon="showPasswords ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :aria-label="showPasswords ? $t('form.password.hide') : $t('form.password.show')"
+                  :aria-pressed="showPasswords"
+                  aria-controls="settings-password-confirm"
+                  @click="showPasswords = !showPasswords"
+                />
+              </template>
+            </UInput>
+          </UFormField>
+
+          <div class="flex justify-end">
+            <UButton
+              type="submit"
+              icon="i-lucide-key-round"
+              :loading="isChangingPassword"
+              :disabled="isChangingPassword"
+            >
+              {{ $t('settings.security.actions.submit') }}
+            </UButton>
+          </div>
+        </UForm>
       </UCard>
 
       <UCard>
@@ -158,10 +298,6 @@ const confirmCancelSubscription = async (): Promise<void> => {
               {{ $t('settings.subscription.actions.cancel') }}
             </UButton>
           </div>
-
-          <p class="text-xs text-toned">
-            {{ $t('settings.subscription.note') }}
-          </p>
         </div>
       </UCard>
 
