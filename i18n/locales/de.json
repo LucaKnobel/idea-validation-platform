@@ -288,6 +288,9 @@
   "settings": {
     "title": "Einstellungen",
     "description": "Passen Sie Ihre App-Einstellungen an.",
+    "actions": {
+      "backToDashboard": "Zurück zum Dashboard"
+    },
     "general": "Allgemein",
     "theme": "Theme",
     "themeSystem": "System",

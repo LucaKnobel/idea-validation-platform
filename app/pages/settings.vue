@@ -4,6 +4,8 @@ definePageMeta({
   layout: 'app'
 })
 
+const localePath = useLocalePath()
+
 const {
   isSubscriptionStatusPending,
   isCancellingSubscription,
@@ -40,6 +42,19 @@ const confirmCancelSubscription = async (): Promise<void> => {
 
 <template>
   <div class="mx-auto max-w-3xl space-y-6">
+    <div>
+      <UButton
+        :to="localePath('/dashboard')"
+        color="neutral"
+        variant="ghost"
+        size="xs"
+        icon="i-lucide-arrow-left"
+        :aria-label="$t('settings.actions.backToDashboard')"
+      >
+        {{ $t('settings.actions.backToDashboard') }}
+      </UButton>
+    </div>
+
     <UPageHeader
       :title="$t('settings.title')"
       :description="$t('settings.description')"

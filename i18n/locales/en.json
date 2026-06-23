@@ -288,6 +288,9 @@
   "settings": {
     "title": "Settings",
     "description": "Adjust your app preferences.",
+    "actions": {
+      "backToDashboard": "Back to Dashboard"
+    },
     "general": "General",
     "theme": "Theme",
     "themeSystem": "System",
