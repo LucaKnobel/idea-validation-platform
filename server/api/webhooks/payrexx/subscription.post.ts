@@ -4,16 +4,19 @@ import {
   mapPayrexxWebhookToUpsertInput
 } from '@infrastructure/mappers/payrexx-subscription-webhook-mapper'
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
-import { subscriptionCheckoutService, subscriptionWebhookSyncService } from '@infrastructure/composition'
+import { resolveSubscriptionWebhookUserId, subscriptionWebhookSyncService } from '@infrastructure/composition'
 import { logger } from '@infrastructure/logging/logger'
+import { SubscriptionWebhookActiveCheckoutReferenceMissingError } from '@application/errors/subscription-errors'
 
 /**
  * Receives Payrexx subscription webhooks.
  *
- * Pipeline: Verify signature → Validate payload → Resolve user from checkout → Sync subscription state.
+ * Handles two distinct flows:
+ * 1. Active subscription (status='active'): First webhook after payment → consume checkout
+ * 2. Changed/cancelled subscription (status!='active'): Follow-up state change → resolve by provider ID
  *
- * Returns 200 OK if webhook processed or null subscription (idempotent).
- * Throws on invalid signature, missing checkout, or downstream errors.
+ * Returns 200 OK for all valid webhooks (idempotent).
+ * Throws on invalid signature, missing checkout reference (for active), or downstream errors.
  */
 export default definePublicHandler(async (event) => {
   await enforceRateLimit(event, {
@@ -29,20 +32,32 @@ export default definePublicHandler(async (event) => {
     return { ok: true }
   }
 
-  const checkoutId = webhook.invoice.referenceId
+  const providerSubscriptionId = String(webhook.id)
+  let userId: string | null = null
 
-  if (!checkoutId) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Missing checkout reference in Payrexx webhook'
+  try {
+    userId = await resolveSubscriptionWebhookUserId({
+      webhookStatus: webhook.status,
+      checkoutReferenceId: webhook.invoice.referenceId,
+      providerSubscriptionId
     })
+  } catch (error) {
+    if (error instanceof SubscriptionWebhookActiveCheckoutReferenceMissingError) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Missing checkout reference in active subscription webhook'
+      })
+    }
+
+    throw error
   }
 
-  // Consume checkout to resolve user ID
-  const checkout = await subscriptionCheckoutService.consumeCheckout(checkoutId)
+  if (!userId) {
+    return { ok: true }
+  }
 
   // Map webhook to internal upsert input with resolved user ID
-  const upsertInput = mapPayrexxWebhookToUpsertInput(webhook, checkout.userId)
+  const upsertInput = mapPayrexxWebhookToUpsertInput(webhook, userId)
 
   // Sync subscription state
   await subscriptionWebhookSyncService.upsert(upsertInput)

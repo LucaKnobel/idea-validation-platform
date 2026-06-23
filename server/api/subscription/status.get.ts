@@ -17,8 +17,7 @@ export default defineProtectedHandler(async (event, userId): Promise<Subscriptio
     scope: 'user'
   })
 
-  const subscription = await subscriptionAccessService.getByUserId(userId)
-  const isPro = await subscriptionAccessService.isPro(userId)
+  const { subscription, isPro } = await subscriptionAccessService.getStatusSnapshot(userId)
 
   return SubscriptionStatusResponseSchema.parse({
     plan: subscription?.plan ?? null,

@@ -14,7 +14,6 @@ export type CancelSubscriptionInput = {
 
 /**
  * Factory function that builds the subscription cancellation use case.
-/**
  * Orchestrates cancellation: validate → provider call → local state update.
  * Idempotent: returns existing record if already cancelled.
  */

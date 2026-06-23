@@ -8,8 +8,7 @@ import { sendVerificationMail } from '@infrastructure/mail/send-verification-mai
 import { sendResetPasswordMail } from '@infrastructure/mail/send-reset-password-mail'
 import { resolveLocaleFromRequest } from '@infrastructure/http/locale-resolver'
 import { logger } from '@infrastructure/logging/logger'
-import { buildSubscriptionAccessService } from '@application/services/build-subscription-access-service'
-import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
+import { subscriptionProvisioningService } from '@infrastructure/composition'
 
 //  Helpers
 
@@ -37,8 +36,6 @@ const neutralAuthEventPaths = new Set<string>([
   '/sign-up/email',
   '/send-verification-email'
 ])
-
-const subscriptionAccessService = buildSubscriptionAccessService(subscriptionRepository, logger)
 
 /**
  * Removes account-enumeration details from framework log messages before they reach the app logger.
@@ -169,7 +166,7 @@ export const auth = betterAuth({
     afterEmailVerification: async (user) => {
       try {
         logger.info('Email verified', { userId: user.id })
-        await subscriptionAccessService.createFreeSubscription(user.id)
+        await subscriptionProvisioningService.createFreeSubscription(user.id)
       } catch (error: unknown) {
         logger.error('Failed to create FREE subscription after email verification', { userId: user.id }, error)
       }

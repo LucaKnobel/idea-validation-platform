@@ -27,6 +27,7 @@ describe('buildCancelSubscription', () => {
   beforeEach(() => {
     repository = {
       findByUserId: vi.fn(),
+      findByProviderSubscriptionId: vi.fn(),
       create: vi.fn(),
       update: vi.fn()
     }

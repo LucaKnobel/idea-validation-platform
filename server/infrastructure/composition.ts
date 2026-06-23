@@ -11,8 +11,10 @@ import { payrexxSubscriptionCancellationGateway } from '@infrastructure/payrexx/
 import { logger } from '@infrastructure/logging/logger'
 
 import { buildSubscriptionAccessService } from '@application/services/build-subscription-access-service'
+import { buildSubscriptionProvisioningService } from '@application/services/build-subscription-provisioning-service'
 import { buildSubscriptionCheckoutService } from '@application/services/build-subscription-checkout-service'
 import { buildSubscriptionWebhookSyncService } from '@application/services/build-subscription-webhook-sync-service'
+import { buildResolveSubscriptionWebhookUserId } from '@application/services/build-resolve-subscription-webhook-user-id'
 import { buildCancelSubscription } from '@application/services/build-cancel-subscription'
 import { buildCreateIdea } from '@application/services/build-create-idea'
 import { buildCreateIdeaVersion } from '@application/services/build-create-idea-version'
@@ -48,12 +50,24 @@ const subscriptionAccessService = buildSubscriptionAccessService(
   logger
 )
 
+const subscriptionProvisioningService = buildSubscriptionProvisioningService(
+  subscriptionRepository,
+  subscriptionAccessService,
+  logger
+)
+
 const subscriptionCheckoutService = buildSubscriptionCheckoutService(
   subscriptionCheckoutRepository,
   logger
 )
 
 const subscriptionWebhookSyncService = buildSubscriptionWebhookSyncService(
+  subscriptionRepository,
+  logger
+)
+
+const resolveSubscriptionWebhookUserId = buildResolveSubscriptionWebhookUserId(
+  subscriptionCheckoutService,
   subscriptionRepository,
   logger
 )
@@ -201,9 +215,11 @@ const deleteMeasurement = buildDeleteMeasurement(
 
 export {
   subscriptionAccessService,
+  subscriptionProvisioningService,
   cancelSubscription,
   subscriptionCheckoutService,
   subscriptionWebhookSyncService,
+  resolveSubscriptionWebhookUserId,
   createIdea,
   createIdeaVersion,
   updateIdeaVersion,

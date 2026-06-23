@@ -1,4 +1,4 @@
-import type { SubscriptionService } from '@application/interfaces/subscription-service'
+import type { SubscriptionAccessService } from '@application/interfaces/subscription-access-service'
 import type { SubscriptionRepository } from '@application/interfaces/subscription-repository'
 import type { Subscription } from '@application/models/subscription'
 import type { Logger } from '@interfaces/logger'
@@ -24,15 +24,14 @@ const hasEffectiveProAccess = (
 }
 
 /**
- * Builds the access and quota policy service for subscriptions.
+ * Builds the access and policy service for subscriptions.
  *
- * This service is intentionally policy-focused and should not perform
- * provider-side lifecycle actions such as cancellation or webhook sync.
+ * Evaluates subscription access and enforces policy (isPro, limits, assertions).
  */
 export const buildSubscriptionAccessService = (
   subscriptionRepository: SubscriptionRepository,
   logger: Logger
-): SubscriptionService => {
+): SubscriptionAccessService => {
   const getByUserId = async (
     userId: string
   ): Promise<Subscription | null> => {
@@ -51,39 +50,26 @@ export const buildSubscriptionAccessService = (
     return hasEffectiveProAccess(subscription)
   }
 
+  const getStatusSnapshot = async (
+    userId: string
+  ): Promise<{
+    subscription: Subscription | null
+    isPro: boolean
+  }> => {
+    const subscription = await getByUserId(userId)
+
+    return {
+      subscription,
+      isPro: subscription ? hasEffectiveProAccess(subscription) : false
+    }
+  }
+
   const getBusinessIdeaLimit = async (
     userId: string
   ): Promise<number> => {
     return (await isPro(userId))
       ? Number.POSITIVE_INFINITY
       : FREE_BUSINESS_IDEA_LIMIT
-  }
-
-  const createFreeSubscription = async (
-    userId: string
-  ): Promise<Subscription> => {
-    const existing = await getByUserId(userId)
-
-    if (existing) {
-      return existing
-    }
-
-    const created = await subscriptionRepository.create({
-      userId,
-      plan: 'FREE',
-      status: 'ACTIVE',
-      providerCustomerId: null,
-      providerSubscriptionId: null,
-      currentPeriodEnd: null
-    })
-
-    logger.info('Free subscription created', {
-      source: 'subscription-access-service',
-      event: 'subscription.free_created',
-      userId
-    })
-
-    return created
   }
 
   const assertCanCreateBusinessIdea = async (
@@ -106,9 +92,9 @@ export const buildSubscriptionAccessService = (
 
   return {
     getByUserId,
+    getStatusSnapshot,
     isPro,
     getBusinessIdeaLimit,
-    createFreeSubscription,
     assertCanCreateBusinessIdea
   }
 }

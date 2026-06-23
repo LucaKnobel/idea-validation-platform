@@ -65,3 +65,14 @@ export class SubscriptionCheckoutAlreadyConsumedError
     this.name = 'SubscriptionCheckoutAlreadyConsumedError'
   }
 }
+
+/**
+ * Raised when an active subscription webhook is missing checkout reference id.
+ */
+export class SubscriptionWebhookActiveCheckoutReferenceMissingError
+  extends ApplicationError {
+  constructor() {
+    super('Active subscription webhook requires checkout reference id.')
+    this.name = 'SubscriptionWebhookActiveCheckoutReferenceMissingError'
+  }
+}

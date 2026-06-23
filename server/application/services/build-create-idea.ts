@@ -1,6 +1,6 @@
 import type { IdeaRepository } from '@application/interfaces/idea-repository'
 import type { Idea } from '@application/models/idea'
-import type { SubscriptionService } from '@application/interfaces/subscription-service'
+import type { SubscriptionAccessService } from '@application/interfaces/subscription-access-service'
 import type { Logger } from '@interfaces/logger'
 
 export type CreateIdeaInput = {
@@ -14,7 +14,7 @@ export type CreateIdeaInput = {
  */
 export const buildCreateIdea = (
   ideaRepository: IdeaRepository,
-  subscriptionService: SubscriptionService,
+  subscriptionService: SubscriptionAccessService,
   logger: Logger
 ) => {
   return async (input: CreateIdeaInput): Promise<Idea> => {

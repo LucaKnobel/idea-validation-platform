@@ -2,13 +2,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { buildCreateIdea } from '@application/services/build-create-idea'
 import { SubscriptionLimitExceededError } from '@application/errors/subscription-errors'
 import type { IdeaRepository } from '@application/interfaces/idea-repository'
-import type { SubscriptionService } from '@application/interfaces/subscription-service'
+import type { SubscriptionAccessService } from '@application/interfaces/subscription-access-service'
 import type { Logger } from '@interfaces/logger'
 import { makeIdea, makeIdeaRepository, makeSubscriptionService, makeLogger, VALID_USER_ID } from './helpers'
 
 describe('buildCreateIdea', () => {
   let repository: IdeaRepository
-  let subscriptionService: SubscriptionService
+  let subscriptionService: SubscriptionAccessService
   let logger: Logger
   let createIdea: ReturnType<typeof buildCreateIdea>
 
