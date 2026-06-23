@@ -24,6 +24,12 @@ services:
     working_dir: /workspace
     command: sleep infinity
     userns_mode: keep-id
+    pids_limit: 8192
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 524288
+        hard: 524288
     volumes:
       - .:/workspace:Z
 
