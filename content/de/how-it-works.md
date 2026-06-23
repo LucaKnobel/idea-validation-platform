@@ -8,33 +8,45 @@ version: "1"
 
 # Wie funktioniert es?
 
-<img src="/images/marketing/marketing-process.png" alt="Idea Validation Workflow" width="360" />
+<div class="not-prose my-6 flex justify-center">
+	<img src="/images/marketing/marketing-process.png" alt="Validierungsprozess für Geschäftsideen" class="w-full max-w-xs sm:max-w-sm md:max-w-md" loading="lazy" />
+</div>
 
-Annahmen validieren, bevor Zeit und Geld in die Umsetzung investiert werden.
+> Annahmen validieren, bevor Zeit und Geld in die Umsetzung investiert werden.
 
 Die Plattform orientiert sich an den Prinzipien des Lean Startup und unterstützt Gründer, Startups und Innovatoren dabei, Geschäftsideen systematisch und nachvollziehbar zu validieren.
 
-1. Geschäftsidee mit dem Business Model Canvas beschreiben
-2. Kritische Annahmen identifizieren
-3. Hypothesen, Metriken und Experimente definieren
-4. Erkenntnisse aus realen Validierungsaktivitäten sammeln
-5. Hypothesen anhand messbarer Ergebnisse bewerten
-6. Die Idee weiterentwickeln oder die Ausrichtung anpassen
+## In 6 Schritten von Annahmen zu Evidenz
+
+1. **Geschäftsidee beschreiben** mit dem Business Model Canvas.
+2. **Kritische Annahmen identifizieren**, die über Erfolg oder Misserfolg entscheiden.
+3. **Hypothesen, Metriken und Experimente definieren** für eine überprüfbare Validierung.
+4. **Erkenntnisse aus realen Aktivitäten sammeln** statt auf Vermutungen zu bauen.
+5. **Hypothesen anhand messbarer Ergebnisse bewerten** und transparent dokumentieren.
+6. **Die Idee weiterentwickeln oder die Ausrichtung anpassen** basierend auf Evidenz.
 
 ## Was die Plattform bietet
 
-- Strukturierter Validierungsprozess
-- Verwaltung von Geschäftsmodellen, Hypothesen, Experimenten und Ergebnissen
-- Nachvollziehbare Dokumentation aller Erkenntnisse
-- Versionsbasierte Weiterentwicklung von Ideen
-- Fundierte Entscheidungen auf Basis von Evidenz statt Vermutungen
+<div class="not-prose my-4 rounded-2xl bg-muted/30 p-5">
+	<ul class="list-disc space-y-2 pl-5 text-toned">
+		<li>Strukturierter Validierungsprozess</li>
+		<li>Verwaltung von Geschäftsmodellen, Hypothesen, Experimenten und Ergebnissen</li>
+		<li>Nachvollziehbare Dokumentation aller Erkenntnisse</li>
+		<li>Versionsbasierte Weiterentwicklung von Ideen</li>
+		<li>Fundierte Entscheidungen auf Basis von Evidenz statt Vermutungen</li>
+	</ul>
+</div>
 
 ## Was die Plattform nicht macht
 
-- Experimente automatisch durchführen
-- Kundenfeedback erzeugen
-- Geschäftsideen automatisch bewerten
-- Unternehmerische Entscheidungen treffen
+<div class="not-prose my-4 rounded-2xl bg-muted/30 p-5">
+	<ul class="list-disc space-y-2 pl-5 text-toned">
+		<li>Experimente automatisch durchführen</li>
+		<li>Kundenfeedback erzeugen</li>
+		<li>Geschäftsideen automatisch bewerten</li>
+		<li>Unternehmerische Entscheidungen treffen</li>
+	</ul>
+</div>
 
 Die Plattform ist ein Werkzeug für strukturiertes Lernen und evidenzbasierte Entscheidungen. Sie hilft dabei, Unsicherheiten frühzeitig zu reduzieren und bessere Entscheidungen zu treffen, bevor umfangreiche Ressourcen in die Entwicklung investiert werden.
 
