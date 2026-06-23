@@ -14,24 +14,37 @@ version: "1"
 
 Turn assumptions into evidence before building products.
 
-The platform follows Lean Startup principles and helps entrepreneurs, startups, and innovators validate business ideas through a structured and repeatable process.
+You do not need to build the full product first to learn whether your idea works.
+With Evidara, you document learning step by step and make decisions based on real outcomes, not guesswork.
 
-1. **Describe your idea** using the Business Model Canvas.
-2. **Define the assumptions that matter most** for your business outcome.
-3. **Create hypotheses, metrics, and experiments** that can be tested in practice.
-4. **Collect evidence from real-world validation activities** instead of relying on guesses.
-5. **Evaluate assumptions based on measurable results** and document what you learned.
-6. **Refine your idea or adjust your direction** based on evidence.
+## What this gives you
+
+- You see early which parts of your idea are promising.
+- You reduce risk before investing significant time or budget.
+- You keep all learning in one place instead of scattered notes.
+- You can explain decisions clearly to co-founders, teams, or stakeholders.
+- You improve your idea in a structured way instead of reacting ad hoc.
+
+## How it works in practice
+
+1. **Capture your idea:** Create an idea and start with an initial version.
+2. **Make assumptions visible:** Use the Business Model Canvas (your business model at a glance) to document key assumptions.
+3. **Formulate critical questions:** Create hypotheses (clear, testable assumptions) and prioritize them.
+4. **Plan your tests:** For each hypothesis, define a metric (how success is measured) and an experiment (how you test it).
+5. **Review results:** Add measurements and immediately see whether a hypothesis is not tested, validated, or invalidated.
+6. **Choose your next move:** Continue in the same direction (iteration) or adjust direction (pivot).
+
+With an **iteration**, the current state is carried forward. With a **pivot**, the canvas plus validated and not tested hypotheses are carried forward, while invalidated hypotheses are intentionally excluded.
 
 ## What you can do
 
 <div class="not-prose my-4 rounded-2xl bg-muted/30 p-5">
 	<ul class="list-disc space-y-2 pl-5 text-toned">
-		<li>Structure and document your validation process</li>
-		<li>Manage business models, hypotheses, experiments, and results</li>
-		<li>Track learning across multiple idea versions</li>
-		<li>Build decisions on evidence instead of assumptions</li>
-		<li>Create a transparent validation history</li>
+		<li>A clear process from idea to next decision</li>
+		<li>One central workspace for canvas, hypotheses, experiments, and outcomes</li>
+		<li>A transparent overview of your current validation status</li>
+		<li>Version-based progress with iteration and pivot workflows</li>
+		<li>A trackable history of learning and decisions</li>
 	</ul>
 </div>
 
@@ -41,11 +54,11 @@ The platform follows Lean Startup principles and helps entrepreneurs, startups, 
 	<ul class="list-disc space-y-2 pl-5 text-toned">
 		<li>Run experiments automatically</li>
 		<li>Generate customer feedback</li>
-		<li>Decide whether an idea is good or bad</li>
+		<li>Automatically decide whether an idea is good or bad</li>
 		<li>Make business decisions for you</li>
 	</ul>
 </div>
 
-The platform is designed to support learning, reduce uncertainty, and help you make better decisions before investing significant time, money, or development effort.
+The platform is built to support structured learning. It helps you reduce uncertainty early and make better decisions before committing major time, money, or development effort.
 
 [Start for free](/auth/register)
