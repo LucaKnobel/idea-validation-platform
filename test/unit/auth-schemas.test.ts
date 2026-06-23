@@ -431,6 +431,52 @@ describe('SendVerificationEmailBodySchema', () => {
   })
 })
 
+describe('ChangePasswordBodySchema', () => {
+  it('accepts valid input', async () => {
+    const { ChangePasswordBodySchema } = await import('@infrastructure/auth/auth-schemas')
+
+    const result = ChangePasswordBodySchema.safeParse({
+      currentPassword: 'CurrentPassword1!',
+      newPassword: VALID_PASSWORD,
+      revokeOtherSessions: true
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects missing current password', async () => {
+    const { ChangePasswordBodySchema } = await import('@infrastructure/auth/auth-schemas')
+
+    const result = ChangePasswordBodySchema.safeParse({
+      newPassword: VALID_PASSWORD
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects current password longer than 256 characters', async () => {
+    const { ChangePasswordBodySchema } = await import('@infrastructure/auth/auth-schemas')
+
+    const result = ChangePasswordBodySchema.safeParse({
+      currentPassword: 'A'.repeat(257),
+      newPassword: VALID_PASSWORD
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects weak new password', async () => {
+    const { ChangePasswordBodySchema } = await import('@infrastructure/auth/auth-schemas')
+
+    const result = ChangePasswordBodySchema.safeParse({
+      currentPassword: 'CurrentPassword1!',
+      newPassword: 'weakpassword'
+    })
+
+    expect(result.success).toBe(false)
+  })
+})
+
 describe('RequestPasswordResetBodySchema', () => {
   it('accepts valid input', () => {
     const result = RequestPasswordResetBodySchema.safeParse({

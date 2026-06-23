@@ -94,6 +94,15 @@ export const ResetPasswordBodySchema = z.object({
 })
 
 /**
+ * Request body schema for changing the current user's password while authenticated.
+ */
+export const ChangePasswordBodySchema = z.object({
+  currentPassword: PasswordSchema,
+  newPassword: StrongPasswordSchema,
+  revokeOtherSessions: z.boolean().optional()
+})
+
+/**
  * Parsed DTO for the sign-in request body.
  */
 export type LoginUserBodyDto = z.infer<typeof LoginUserBodySchema>
@@ -113,3 +122,7 @@ export type RequestPasswordResetBodyDto = z.infer<typeof RequestPasswordResetBod
  * Parsed DTO for the password reset confirmation body.
  */
 export type ResetPasswordBodyDto = z.infer<typeof ResetPasswordBodySchema>
+/**
+ * Parsed DTO for the authenticated password change body.
+ */
+export type ChangePasswordBodyDto = z.infer<typeof ChangePasswordBodySchema>

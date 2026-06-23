@@ -7,6 +7,7 @@ export interface UseAuthComposable {
   resendVerificationEmail: (email: string) => Promise<boolean>
   requestPasswordReset: (email: string) => Promise<boolean>
   resetPassword: (newPassword: string, token: string) => Promise<boolean>
+  changePassword: (currentPassword: string, newPassword: string, revokeOtherSessions?: boolean) => Promise<boolean>
   logout: () => Promise<boolean>
   resetError: () => void
   hasError: Ref<boolean>
@@ -29,6 +30,7 @@ export const useAuth = (): UseAuthComposable => {
     handleRateLimitError,
     handleRegistrationError,
     handleLoginError,
+    handleChangePasswordError,
     handlePasswordResetRequestError,
     handlePasswordResetError,
     handleLogoutError
@@ -213,6 +215,43 @@ export const useAuth = (): UseAuthComposable => {
   }
 
   /**
+   * Changes the password for the currently authenticated user.
+   */
+  const changePassword = async (
+    currentPassword: string,
+    newPassword: string,
+    revokeOtherSessions = true
+  ): Promise<boolean> => {
+    resetError()
+
+    try {
+      const { error } = await authClient.changePassword({
+        currentPassword,
+        newPassword,
+        revokeOtherSessions
+      })
+
+      if (error) {
+        if (handleRateLimitError(error)) {
+          return false
+        }
+        handleChangePasswordError(error)
+        return false
+      }
+
+      clearNuxtData()
+
+      return true
+    } catch (error: unknown) {
+      if (handleRateLimitError(error)) {
+        return false
+      }
+      handleChangePasswordError(error)
+      return false
+    }
+  }
+
+  /**
    * Ends the current authenticated session.
    */
   const logout = async (): Promise<boolean> => {
@@ -234,5 +273,5 @@ export const useAuth = (): UseAuthComposable => {
     }
   }
 
-  return { login, register, resendVerificationEmail, requestPasswordReset, resetPassword, logout, resetError, hasError, errorTitle, errorText }
+  return { login, register, resendVerificationEmail, requestPasswordReset, resetPassword, changePassword, logout, resetError, hasError, errorTitle, errorText }
 }

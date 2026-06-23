@@ -45,4 +45,18 @@ describe('validateAuthRequestBody', () => {
       callbackURL: '/dashboard'
     })
   })
+
+  it('returns validated data for change-password payload', () => {
+    const result = validateAuthRequestBody('/change-password', {
+      currentPassword: 'CurrentPassword1!',
+      newPassword: 'VeryStrongPassword1!',
+      revokeOtherSessions: true
+    })
+
+    expect(result).toMatchObject({
+      currentPassword: 'CurrentPassword1!',
+      newPassword: 'VeryStrongPassword1!',
+      revokeOtherSessions: true
+    })
+  })
 })
