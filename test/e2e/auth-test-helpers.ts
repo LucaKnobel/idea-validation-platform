@@ -101,9 +101,14 @@ const internalErrorLeakPattern = /prisma|sql|stack|trace|referenceerror|typeerro
 const sensitiveSessionKeyPattern = /password|hash|token|secret|api[_-]?key|credential|providersecret/i
 const authE2EEmailPrefix = 'e2e-auth'
 const usedClientIps = new Set<string>()
+let clientIpCounter = 0
 
 export const createClientIp = (): string => {
-  const clientIp = `203.0.113.${randomInt(10, 240)}`
+  // Generate deterministic, non-repeating test IPs to avoid rate-limit collisions.
+  const thirdOctet = Math.floor(clientIpCounter / 240) % 250
+  const fourthOctet = (clientIpCounter % 240) + 10
+  const clientIp = `203.0.${thirdOctet}.${fourthOctet}`
+  clientIpCounter += 1
   usedClientIps.add(clientIp)
   return clientIp
 }
@@ -174,9 +179,14 @@ export const createRegisteredAuthUser = async (options?: CreateAuthUserOptions) 
     callbackURL: '/auth/login'
   })
 
-  if (verified) {
+  const createdUser = await prisma.user.findUnique({
+    where: { email },
+    select: { id: true }
+  })
+
+  if (verified && createdUser?.id) {
     await prisma.user.update({
-      where: { email },
+      where: { id: createdUser.id },
       data: { emailVerified: true }
     })
   }
@@ -529,4 +539,5 @@ export const clearAuthTables = async () => {
   }
 
   usedClientIps.clear()
+  clientIpCounter = 0
 }
