@@ -201,6 +201,43 @@
       }
     }
   },
+  "pricingPage": {
+    "title": "Pricing",
+    "intro": "Choose the plan that fits you.",
+    "actions": {
+      "goToDashboard": "Go to dashboard",
+      "startProCheckout": "Start Pro checkout",
+      "createFreeAccount": "Create free account",
+      "createAccountAndUpgrade": "Create account and upgrade to Pro"
+    },
+    "plans": {
+      "free": {
+        "title": "Free",
+        "description": "For your first idea.",
+        "price": "CHF 0",
+        "features": {
+          "account": "Personal account",
+          "ideaLimit": "1 business idea included",
+          "coreValidation": "Canvas, hypotheses, tests, and measurements",
+          "versionHistory": "Iteration and pivot workflows in that idea"
+        },
+        "terms": "Get started for free with an account."
+      },
+      "pro": {
+        "title": "Pro",
+        "description": "For unlimited ideas.",
+        "price": "CHF 9.90",
+        "billingCycle": "/ month",
+        "badge": "Recommended",
+        "features": {
+          "account": "Everything in Free",
+          "unlimitedIdeas": "Unlimited business ideas",
+          "coreValidation": "Canvas, hypotheses, tests, and measurements",
+          "versioning": "Iteration and pivot workflows across ideas"
+        }
+      }
+    }
+  },
   "auth": {
     "logout": {
       "title": "Sign out",

@@ -201,6 +201,43 @@
       }
     }
   },
+  "pricingPage": {
+    "title": "Preise",
+    "intro": "Wähle den passenden Plan.",
+    "actions": {
+      "goToDashboard": "Zum Dashboard",
+      "startProCheckout": "Pro-Checkout starten",
+      "createFreeAccount": "Free-Account erstellen",
+      "createAccountAndUpgrade": "Account erstellen und auf Pro upgraden"
+    },
+    "plans": {
+      "free": {
+        "title": "Free",
+        "description": "Für die erste Idee.",
+        "price": "0 CHF",
+        "features": {
+          "account": "Persönlicher Account",
+          "ideaLimit": "1 Geschäftsidee",
+          "coreValidation": "Canvas, Hypothesen, Tests und Messungen",
+          "versionHistory": "Iteration und Pivot in dieser Idee"
+        },
+        "terms": "Kostenlos starten mit Account."
+      },
+      "pro": {
+        "title": "Pro",
+        "description": "Für unbegrenzt viele Ideen.",
+        "price": "CHF 9.90",
+        "billingCycle": "/ Monat",
+        "badge": "Empfohlen",
+        "features": {
+          "account": "Alles aus Free",
+          "unlimitedIdeas": "Unbegrenzt viele Geschäftsideen",
+          "coreValidation": "Canvas, Hypothesen, Tests und Messungen",
+          "versioning": "Iteration und Pivot über alle Ideen"
+        }
+      }
+    }
+  },
   "auth": {
     "logout": {
       "title": "Abmelden",
