@@ -1,5 +1,12 @@
 import { createError, type H3Event } from 'h3'
-import { SubscriptionLimitExceededError } from '@application/errors/subscription-errors'
+import {
+  SubscriptionCancellationUnavailableError,
+  SubscriptionCheckoutAlreadyConsumedError,
+  SubscriptionCheckoutNotFoundError,
+  SubscriptionLimitExceededError,
+  SubscriptionNotFoundError,
+  SubscriptionProviderSubscriptionIdMissingError
+} from '@application/errors/subscription-errors'
 import { IdeaHasNoVersionsError, IdeaNotFoundError, IdeaVersionNotFoundError } from '@application/errors/idea-errors'
 import { HypothesisNotFoundError } from '@application/errors/hypothesis-errors'
 import { ExperimentNotFoundError } from '@application/errors/experiment-errors'
@@ -19,6 +26,41 @@ export const mapError = (error: unknown, event?: H3Event): Error => {
     return createError({
       statusCode: 403,
       statusText: 'Subscription limit exceeded'
+    })
+  }
+
+  if (error instanceof SubscriptionNotFoundError) {
+    return createError({
+      statusCode: 404,
+      statusText: 'Subscription not found'
+    })
+  }
+
+  if (error instanceof SubscriptionCancellationUnavailableError) {
+    return createError({
+      statusCode: 409,
+      statusText: 'Subscription cancellation unavailable'
+    })
+  }
+
+  if (error instanceof SubscriptionProviderSubscriptionIdMissingError) {
+    return createError({
+      statusCode: 500,
+      statusText: 'Provider subscription id missing'
+    })
+  }
+
+  if (error instanceof SubscriptionCheckoutNotFoundError) {
+    return createError({
+      statusCode: 404,
+      statusText: 'Subscription checkout not found'
+    })
+  }
+
+  if (error instanceof SubscriptionCheckoutAlreadyConsumedError) {
+    return createError({
+      statusCode: 409,
+      statusText: 'Subscription checkout already consumed'
     })
   }
 

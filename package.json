@@ -20,7 +20,11 @@
     "test": "vitest run",
     "test:unit": "vitest run --project unit",
     "test:nuxt": "vitest run --project nuxt",
-    "test:e2e": "nuxt build && vitest run --project e2e"
+    "test:e2e": "nuxt build && vitest run --project e2e",
+    "test:coverage": "nuxt build && vitest run --coverage --coverage.provider=v8 --coverage.all=true --coverage.reporter=text --coverage.reporter=html --coverage.reporter=json-summary --coverage.reporter=lcov",
+    "test:coverage:unit": "vitest run --project unit --coverage --coverage.provider=v8 --coverage.reporter=text --coverage.reporter=html --coverage.reporter=json-summary --coverage.reporter=lcov",
+    "test:coverage:e2e": "nuxt build && vitest run --project e2e --coverage --coverage.provider=v8 --coverage.reporter=text --coverage.reporter=html",
+    "test:coverage:backend": "nuxt build && vitest run --project unit --project e2e --coverage --coverage.provider=v8 --coverage.all=true --coverage.include=server/**/*.ts --coverage.exclude=server/**/*.d.ts --coverage.reporter=text --coverage.reporter=html --coverage.reporter=json-summary --coverage.reporter=lcov"
   },
   "dependencies": {
     "@iconify-json/lucide": "1.2.107",
@@ -47,6 +51,7 @@
     "@nuxt/test-utils": "4.0.3",
     "@types/nodemailer": "8.0.0",
     "@types/pg": "8.20.0",
+    "@vitest/coverage-v8": "4.1.6",
     "@vue/test-utils": "2.4.10",
     "eslint": "10.3.0",
     "happy-dom": "20.9.0",

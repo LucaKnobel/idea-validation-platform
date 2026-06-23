@@ -20,8 +20,9 @@ model User {
   updatedAt     DateTime      @updatedAt
   sessions      Session[]
   accounts      Account[]
-  subscription  Subscription? // not Better Auth standard
-  ideas         Idea[] // not Better Auth standard
+  subscription          Subscription? // not Better Auth standard
+  subscriptionCheckouts SubscriptionCheckout[] // not Better Auth standard
+  ideas                 Idea[] // not Better Auth standard
 
   @@unique([email])
   @@map("user")
@@ -95,21 +96,36 @@ enum SubscriptionPlan {
 
 enum SubscriptionStatus {
   ACTIVE
+  IN_NOTICE
+  OVERDUE
+  FAILED
   CANCELLED
 }
 
 model Subscription {
-  id                String             @id @default(uuid())
-  userId            String             @unique
-  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plan              SubscriptionPlan
-  status            SubscriptionStatus
-  providerReference String?
-  currentPeriodEnd  DateTime?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+  id                     String             @id @default(uuid())
+  userId                 String             @unique
+  user                   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                   SubscriptionPlan
+  status                 SubscriptionStatus
+  providerCustomerId     String?
+  providerSubscriptionId String?
+  currentPeriodEnd       DateTime?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
 
   @@map("subscription")
+}
+
+model SubscriptionCheckout {
+  id         String    @id @default(uuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+  @@map("subscriptionCheckout")
 }
 
 model Idea {
@@ -185,20 +201,24 @@ enum ThresholdOperator {
 }
 
 model IdeaVersion {
-  id             String          @id @default(uuid())
-  ideaId         String
-  idea           Idea            @relation(fields: [ideaId], references: [id], onDelete: Cascade)
-  canvasElements CanvasElement[]
-  hypotheses     Hypothesis[]
-  versionNumber  Int
-  type           IdeaVersionType
-  title          String
-  description    String?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id              String          @id @default(uuid())
+  ideaId          String
+  idea            Idea            @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  parentVersionId String?
+  parentVersion   IdeaVersion?    @relation("IdeaVersionParent", fields: [parentVersionId], references: [id], onDelete: SetNull)
+  childVersions   IdeaVersion[]   @relation("IdeaVersionParent")
+  canvasElements  CanvasElement[]
+  hypotheses      Hypothesis[]
+  versionNumber   Int
+  type            IdeaVersionType
+  title           String
+  description     String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 
   @@unique([ideaId, versionNumber])
   @@index([ideaId])
+  @@index([parentVersionId])
   @@map("ideaVersion")
 }
 

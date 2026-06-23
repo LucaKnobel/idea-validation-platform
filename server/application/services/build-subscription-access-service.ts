@@ -1,4 +1,4 @@
-import type { SubscriptionService } from '@application/interfaces/subscription-service'
+import type { SubscriptionAccessService } from '@application/interfaces/subscription-access-service'
 import type { SubscriptionRepository } from '@application/interfaces/subscription-repository'
 import type { Subscription } from '@application/models/subscription'
 import type { Logger } from '@interfaces/logger'
@@ -6,29 +6,32 @@ import { SubscriptionLimitExceededError } from '@application/errors/subscription
 
 const FREE_BUSINESS_IDEA_LIMIT = 1
 
+/**
+ * Evaluates whether a subscription currently grants effective PRO access.
+ *
+ * Rules:
+ * - Non-PRO plans never grant PRO access.
+ * - ACTIVE grants access; CANCELLED does not.
+ */
 const hasEffectiveProAccess = (
-  subscription: Subscription,
-  now: Date
+  subscription: Subscription
 ): boolean => {
   if (subscription.plan !== 'PRO') {
     return false
   }
 
-  if (subscription.status === 'ACTIVE') {
-    return true
-  }
-
-  return Boolean(
-    subscription.status === 'CANCELLED'
-    && subscription.currentPeriodEnd
-    && subscription.currentPeriodEnd > now
-  )
+  return subscription.status === 'ACTIVE'
 }
 
-export const buildSubscriptionService = (
+/**
+ * Builds the access and policy service for subscriptions.
+ *
+ * Evaluates subscription access and enforces policy (isPro, limits, assertions).
+ */
+export const buildSubscriptionAccessService = (
   subscriptionRepository: SubscriptionRepository,
   logger: Logger
-): SubscriptionService => {
+): SubscriptionAccessService => {
   const getByUserId = async (
     userId: string
   ): Promise<Subscription | null> => {
@@ -44,7 +47,21 @@ export const buildSubscriptionService = (
       return false
     }
 
-    return hasEffectiveProAccess(subscription, new Date())
+    return hasEffectiveProAccess(subscription)
+  }
+
+  const getStatusSnapshot = async (
+    userId: string
+  ): Promise<{
+    subscription: Subscription | null
+    isPro: boolean
+  }> => {
+    const subscription = await getByUserId(userId)
+
+    return {
+      subscription,
+      isPro: subscription ? hasEffectiveProAccess(subscription) : false
+    }
   }
 
   const getBusinessIdeaLimit = async (
@@ -55,32 +72,6 @@ export const buildSubscriptionService = (
       : FREE_BUSINESS_IDEA_LIMIT
   }
 
-  const createFreeSubscription = async (
-    userId: string
-  ): Promise<Subscription> => {
-    const existing = await getByUserId(userId)
-
-    if (existing) {
-      return existing
-    }
-
-    const created = await subscriptionRepository.create({
-      userId,
-      plan: 'FREE',
-      status: 'ACTIVE',
-      providerReference: null,
-      currentPeriodEnd: null
-    })
-
-    logger.info('Free subscription created', {
-      source: 'subscription-service',
-      event: 'subscription.free_created',
-      userId
-    })
-
-    return created
-  }
-
   const assertCanCreateBusinessIdea = async (
     userId: string,
     currentIdeaCount: number
@@ -89,7 +80,7 @@ export const buildSubscriptionService = (
 
     if (currentIdeaCount >= limit) {
       logger.warn('Business idea limit exceeded', {
-        source: 'subscription-service',
+        source: 'subscription-access-service',
         event: 'subscription.limit_exceeded',
         userId,
         currentIdeas: currentIdeaCount,
@@ -101,9 +92,9 @@ export const buildSubscriptionService = (
 
   return {
     getByUserId,
+    getStatusSnapshot,
     isPro,
     getBusinessIdeaLimit,
-    createFreeSubscription,
     assertCanCreateBusinessIdea
   }
 }

@@ -117,6 +117,12 @@ export const useValidation = () => {
   })
 
   /**
+   * Builds the schema for updating idea metadata in workspace overview.
+   * Shares constraints with the create-idea flow.
+   */
+  const createIdeaMetadataFormSchema = () => createIdeaFormSchema()
+
+  /**
    * Builds the schema for one canvas element entry.
    */
   const createCanvasElementSchema = () => z.object({
@@ -209,6 +215,7 @@ export const useValidation = () => {
     createLoginFormSchema,
     createVerifyEmailSchema,
     createIdeaFormSchema,
+    createIdeaMetadataFormSchema,
     createCanvasElementSchema,
     createReplaceCanvasSchema,
     createHypothesisFormSchema,

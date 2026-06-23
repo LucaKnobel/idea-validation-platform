@@ -15,8 +15,6 @@ const emit = defineEmits<{
   (event: 'confirmDelete'): void
 }>()
 
-const { t } = useI18n()
-
 const closeDeleteModal = (): void => {
   if (props.isSubmitting) {
     return
@@ -29,8 +27,8 @@ const closeDeleteModal = (): void => {
 <template>
   <UModal
     :open="open"
-    :title="t('ideaWorkspace.hypotheses.detail.measurements.deleteModal.title')"
-    :description="t('ideaWorkspace.hypotheses.detail.measurements.deleteModal.description')"
+    :title="$t('ideaWorkspace.hypotheses.detail.measurements.deleteModal.title')"
+    :description="$t('ideaWorkspace.hypotheses.detail.measurements.deleteModal.description')"
     :dismissible="!isSubmitting"
     @update:open="emit('update:open', $event)"
   >
@@ -40,7 +38,7 @@ const closeDeleteModal = (): void => {
           color="warning"
           variant="soft"
           icon="i-lucide-triangle-alert"
-          :description="t('ideaWorkspace.hypotheses.detail.measurements.deleteModal.warning')"
+          :description="$t('ideaWorkspace.hypotheses.detail.measurements.deleteModal.warning')"
         />
 
         <div
@@ -62,7 +60,7 @@ const closeDeleteModal = (): void => {
           :disabled="isSubmitting"
           @click="closeDeleteModal"
         >
-          {{ t('actions.cancel') }}
+          {{ $t('actions.cancel') }}
         </UButton>
 
         <UButton
@@ -71,7 +69,7 @@ const closeDeleteModal = (): void => {
           :loading="isSubmitting"
           @click="emit('confirmDelete')"
         >
-          {{ t('ideaWorkspace.hypotheses.detail.measurements.actions.deleteConfirm') }}
+          {{ $t('ideaWorkspace.hypotheses.detail.measurements.actions.deleteConfirm') }}
         </UButton>
       </div>
     </template>

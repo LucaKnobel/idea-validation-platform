@@ -10,7 +10,8 @@ const toDomainSubscription = (row: PrismaSubscription): Subscription => ({
   userId: row.userId,
   plan: row.plan,
   status: row.status,
-  providerReference: row.providerReference,
+  providerCustomerId: row.providerCustomerId,
+  providerSubscriptionId: row.providerSubscriptionId,
   currentPeriodEnd: row.currentPeriodEnd
 })
 
@@ -27,6 +28,28 @@ export const subscriptionRepository: SubscriptionRepository = {
   },
 
   /**
+   * Returns a subscription by provider subscription identifier when available.
+   */
+  async findByProviderSubscriptionId(providerSubscriptionId: string): Promise<Subscription | null> {
+    const row = await prisma.subscription.findFirst({
+      where: { providerSubscriptionId }
+    })
+
+    return row ? toDomainSubscription(row) : null
+  },
+
+  /**
+   * Returns a subscription by provider customer identifier when available.
+   */
+  async findByProviderCustomerId(providerCustomerId: string): Promise<Subscription | null> {
+    const row = await prisma.subscription.findFirst({
+      where: { providerCustomerId }
+    })
+
+    return row ? toDomainSubscription(row) : null
+  },
+
+  /**
    * Creates and returns a persisted subscription.
    */
   async create(subscription: Subscription): Promise<Subscription> {
@@ -35,7 +58,8 @@ export const subscriptionRepository: SubscriptionRepository = {
         userId: subscription.userId,
         plan: subscription.plan,
         status: subscription.status,
-        providerReference: subscription.providerReference,
+        providerCustomerId: subscription.providerCustomerId,
+        providerSubscriptionId: subscription.providerSubscriptionId,
         currentPeriodEnd: subscription.currentPeriodEnd
       }
     })
@@ -52,7 +76,8 @@ export const subscriptionRepository: SubscriptionRepository = {
       data: {
         plan: subscription.plan,
         status: subscription.status,
-        providerReference: subscription.providerReference,
+        providerCustomerId: subscription.providerCustomerId,
+        providerSubscriptionId: subscription.providerSubscriptionId,
         currentPeriodEnd: subscription.currentPeriodEnd
       }
     })

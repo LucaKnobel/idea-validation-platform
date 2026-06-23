@@ -6,10 +6,21 @@ import { experimentRepository } from '@infrastructure/db/repositories/prisma-exp
 import { metricRepository } from '@infrastructure/db/repositories/prisma-metric-repository'
 import { measurementRepository } from '@infrastructure/db/repositories/prisma-measurement-repository'
 import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
+import { subscriptionCheckoutRepository } from '@infrastructure/db/repositories/prisma-subscription-checkout-repository'
+import { payrexxSubscriptionCancellationGateway } from '@infrastructure/payrexx/payrexx-subscription-cancellation-gateway'
 import { logger } from '@infrastructure/logging/logger'
 
-import { buildSubscriptionService } from '@application/services/build-subscription-service'
+import { buildSubscriptionAccessService } from '@application/services/build-subscription-access-service'
+import { buildSubscriptionProvisioningService } from '@application/services/build-subscription-provisioning-service'
+import { buildSubscriptionCheckoutService } from '@application/services/build-subscription-checkout-service'
+import { buildSubscriptionWebhookSyncService } from '@application/services/build-subscription-webhook-sync-service'
+import { buildResolveSubscriptionWebhookUserId } from '@application/services/build-resolve-subscription-webhook-user-id'
+import { buildCancelSubscription } from '@application/services/build-cancel-subscription'
 import { buildCreateIdea } from '@application/services/build-create-idea'
+import { buildCreateIdeaVersion } from '@application/services/build-create-idea-version'
+import { buildUpdateIdeaVersion } from '@application/services/build-update-idea-version'
+import { buildGetIdea } from '@application/services/build-get-idea'
+import { buildGetIdeaVersions } from '@application/services/build-get-idea-versions'
 import { buildGetIdeas } from '@application/services/build-get-ideas'
 import { buildDeleteIdea } from '@application/services/build-delete-idea'
 import { buildGetIdeaVersionCanvas } from '@application/services/build-get-idea-version-canvas'
@@ -28,22 +39,72 @@ import { buildDeleteExperiment } from '@application/services/build-delete-experi
 import { buildGetHypothesisMeasurement } from '@application/services/build-get-hypothesis-measurement'
 import { buildUpsertMeasurement } from '@application/services/build-upsert-measurement'
 import { buildDeleteMeasurement } from '@application/services/build-delete-measurement'
+import { buildSyncHypothesisStatus } from '@application/services/build-sync-hypothesis-status'
+import { buildGetIdeaVersionValidationOverview } from '@application/services/build-get-idea-version-validation-overview'
 
 /**
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
  */
-const subscriptionService = buildSubscriptionService(
+const subscriptionAccessService = buildSubscriptionAccessService(
   subscriptionRepository,
+  logger
+)
+
+const subscriptionProvisioningService = buildSubscriptionProvisioningService(
+  subscriptionRepository,
+  subscriptionAccessService,
+  logger
+)
+
+const subscriptionCheckoutService = buildSubscriptionCheckoutService(
+  subscriptionCheckoutRepository,
+  logger
+)
+
+const subscriptionWebhookSyncService = buildSubscriptionWebhookSyncService(
+  subscriptionRepository,
+  logger
+)
+
+const resolveSubscriptionWebhookUserId = buildResolveSubscriptionWebhookUserId(
+  subscriptionCheckoutService,
+  subscriptionRepository,
+  logger
+)
+
+const cancelSubscription = buildCancelSubscription(
+  subscriptionRepository,
+  payrexxSubscriptionCancellationGateway,
   logger
 )
 
 const createIdea = buildCreateIdea(
   ideaRepository,
-  subscriptionService,
+  subscriptionAccessService,
   logger
 )
 
 const getIdeas = buildGetIdeas(
+  ideaVersionRepository,
+  logger
+)
+
+const createIdeaVersion = buildCreateIdeaVersion(
+  ideaVersionRepository,
+  logger
+)
+
+const updateIdeaVersion = buildUpdateIdeaVersion(
+  ideaVersionRepository,
+  logger
+)
+
+const getIdea = buildGetIdea(
+  ideaVersionRepository,
+  logger
+)
+
+const getIdeaVersions = buildGetIdeaVersions(
   ideaVersionRepository,
   logger
 )
@@ -73,6 +134,11 @@ const getIdeaVersionHypotheses = buildGetIdeaVersionHypotheses(
   logger
 )
 
+const getIdeaVersionValidationOverview = buildGetIdeaVersionValidationOverview(
+  hypothesisRepository,
+  logger
+)
+
 const getHypothesis = buildGetHypothesis(
   hypothesisRepository,
   logger
@@ -88,6 +154,14 @@ const deleteHypothesis = buildDeleteHypothesis(
   logger
 )
 
+const hypothesisStatusSyncService = buildSyncHypothesisStatus(
+  hypothesisRepository,
+  experimentRepository,
+  metricRepository,
+  measurementRepository,
+  logger
+)
+
 const getHypothesisMetric = buildGetHypothesisMetric(
   metricRepository,
   logger
@@ -95,11 +169,13 @@ const getHypothesisMetric = buildGetHypothesisMetric(
 
 const upsertMetric = buildUpsertMetric(
   metricRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
 const deleteMetric = buildDeleteMetric(
   metricRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
@@ -110,11 +186,13 @@ const getHypothesisExperiment = buildGetHypothesisExperiment(
 
 const upsertExperiment = buildUpsertExperiment(
   experimentRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
 const deleteExperiment = buildDeleteExperiment(
   experimentRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
@@ -125,23 +203,35 @@ const getHypothesisMeasurement = buildGetHypothesisMeasurement(
 
 const upsertMeasurement = buildUpsertMeasurement(
   measurementRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
 const deleteMeasurement = buildDeleteMeasurement(
   measurementRepository,
+  hypothesisStatusSyncService,
   logger
 )
 
 export {
-  subscriptionService,
+  subscriptionAccessService,
+  subscriptionProvisioningService,
+  cancelSubscription,
+  subscriptionCheckoutService,
+  subscriptionWebhookSyncService,
+  resolveSubscriptionWebhookUserId,
   createIdea,
+  createIdeaVersion,
+  updateIdeaVersion,
+  getIdea,
+  getIdeaVersions,
   getIdeas,
   deleteIdea,
   getIdeaVersionCanvas,
   replaceIdeaVersionCanvas,
   createHypothesis,
   getIdeaVersionHypotheses,
+  getIdeaVersionValidationOverview,
   getHypothesis,
   updateHypothesis,
   deleteHypothesis,

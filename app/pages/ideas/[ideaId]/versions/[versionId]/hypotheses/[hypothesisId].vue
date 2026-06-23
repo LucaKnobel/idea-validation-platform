@@ -73,7 +73,19 @@ const hypothesisStatement = computed(() => {
   return hypothesis.value?.statement || '-'
 })
 
-const statusLabel = computed(() => getStatusLabel('OPEN'))
+const statusLabel = computed(() => {
+  return getStatusLabel(hypothesis.value?.status ?? 'NOT_TESTED')
+})
+
+const refreshHypothesisStatus = async (): Promise<void> => {
+  if (!hasValidRouteParams.value) {
+    return
+  }
+
+  await loadHypothesis({
+    hypothesisId: hypothesisId.value
+  })
+}
 
 const listRoute = computed(() => {
   return toHypothesesList()
@@ -102,7 +114,8 @@ const {
   confirmDeleteMetric
 } = useHypothesisMetricsDetail({
   hypothesisId,
-  hasValidRouteParams
+  hasValidRouteParams,
+  onStatusChanged: refreshHypothesisStatus
 })
 const {
   experiment,
@@ -144,7 +157,8 @@ const {
   formatMeasurementValue
 } = useHypothesisExperimentsDetail({
   hypothesisId,
-  hasValidRouteParams
+  hasValidRouteParams,
+  onStatusChanged: refreshHypothesisStatus
 })
 
 const openHypothesisEditModal = (): void => {

@@ -4,6 +4,7 @@
     "noData": "Keine Daten verfügbar",
     "loading": "Wird geladen...",
     "backToHome": "Zurück zur Startseite",
+    "redirecting": "Wird zum Checkout weitergeleitet...",
     "copyright": "Copyright"
   },
   "actions": {
@@ -297,7 +298,55 @@
     },
     "subscription": {
       "title": "Abonnement",
-      "placeholder": "Planstatus und Billing-Verwaltung werden hier ergänzt."
+      "placeholder": "Planstatus und Billing-Verwaltung werden hier ergänzt.",
+      "description": "Verwalte dein Pro-Abonnement direkt hier in den Einstellungen.",
+      "currentPlan": "Aktueller Plan",
+      "currentStatus": "Aktueller Status",
+      "loading": "Status wird geladen",
+      "note": "Die Kündigung wirkt sofort. Dein Pro-Zugang endet direkt und bereits bezahlte Zeit wird nicht erstattet.",
+      "plan": {
+        "FREE": "Free",
+        "PRO": "Pro",
+        "UNKNOWN": "Unbekannt"
+      },
+      "status": {
+        "ACTIVE": "Aktiv",
+        "IN_NOTICE": "In Kündigung",
+        "OVERDUE": "Überfällig",
+        "FAILED": "Fehlgeschlagen",
+        "CANCELLED": "Gekündigt",
+        "UNKNOWN": "Unbekannt"
+      },
+      "actions": {
+        "subscribe": "Pro-Abo abschließen",
+        "cancel": "Pro-Abo kündigen"
+      },
+      "checkout": {
+        "error": {
+          "title": "Checkout nicht verfügbar",
+          "message": "Die Checkout-URL ist aktuell nicht konfiguriert. Bitte versuche es später erneut."
+        }
+      },
+      "cancel": {
+        "confirm": {
+          "title": "Kündigung bestätigen",
+          "description": "Möchtest du dein Pro-Abonnement wirklich kündigen?",
+          "warning": "Die Kündigung wirkt sofort. Dein Pro-Zugang endet direkt und bereits bezahlte Zeit wird nicht erstattet.",
+          "action": "Kündigung bestätigen"
+        },
+        "success": {
+          "title": "Abonnement gekündigt",
+          "message": "Dein Pro-Abonnement wurde sofort beendet und dein Plan ist jetzt Free."
+        },
+        "unavailable": {
+          "title": "Kündigung nicht möglich",
+          "message": "Für deinen aktuellen Plan ist keine Kündigung erforderlich."
+        },
+        "error": {
+          "title": "Kündigung fehlgeschlagen",
+          "message": "Dein Abonnement konnte nicht gekündigt werden. Bitte versuche es erneut."
+        }
+      }
     },
     "dangerZone": {
       "title": "Gefährlicher Bereich",
@@ -397,16 +446,34 @@
     "pitch": "Mit Pro können Sie unbegrenzt Geschäftsideen erstellen und Ihre Validierung ohne Einschränkungen skalieren.",
     "cta": "Auf Pro upgraden"
   },
+  "checkoutSuccess": {
+    "title": "Willkommen bei Pro",
+    "subtitle": "Dein Upgrade war erfolgreich!",
+    "message": "Dein Abonnement ist jetzt aktiv. Du kannst jetzt unbegrenzt Geschäftsideen erstellen.",
+    "cta": "Zum Dashboard"
+  },
+  "checkoutError": {
+    "explanation": "Es gab ein Problem bei der Verarbeitung deines Abonnements. Deine Zahlung wurde nicht abgeschlossen.",
+    "retryButton": "Erneut versuchen",
+    "homeButton": "Zum Dashboard"
+  },
+  "checkoutFailed": {
+    "title": "Zahlung fehlgeschlagen",
+    "description": "Deine Zahlung konnte nicht verarbeitet werden."
+  },
+  "checkoutDeclined": {
+    "title": "Zahlung abgelehnt",
+    "description": "Deine Zahlungsmethode wurde abgelehnt. Bitte versuche es mit einer anderen Methode."
+  },
   "ideaWorkspace": {
     "title": "Idea Workspace",
     "description": "Arbeitsbereich für die ausgewählte Geschäftsidee.",
     "wipBadge": "Work in Progress",
     "wipText": "Dieser Bereich wird als nächstes ausgebaut.",
     "navigation": {
-      "overview": "Overview",
+      "overview": "Übersicht",
       "canvas": "Canvas",
       "hypotheses": "Hypothesen",
-      "decision": "Entscheidung",
       "history": "Verlauf",
       "settings": "Einstellungen"
     },
@@ -425,7 +492,152 @@
       "ideaTitle": "Ausgewählte Idee"
     },
     "versionSwitcher": {
+      "label": "Version",
       "comingSoon": "Weitere Versionen folgen"
+    },
+    "historyPage": {
+      "title": "Versionsverlauf",
+      "description": "Alle Versionen dieser Idee im Überblick – wechsle direkt in eine bestimmte Version.",
+      "currentBadge": "Aktuell",
+      "timeline": {
+        "title": "Version {versionNumber} · {typeLabel}",
+        "type": {
+          "initial": "Initial",
+          "iteration": "Iteration",
+          "pivot": "Pivot"
+        },
+        "description": {
+          "noDescription": "Keine Beschreibung vorhanden.",
+          "derivedFromVersion": "Abgeleitet von Version {versionNumber}",
+          "startingPoint": "Ausgangspunkt dieser Idee",
+          "separator": "·"
+        }
+      },
+      "empty": {
+        "title": "Keine Versionen gefunden",
+        "description": "Für diese Idee gibt es noch keinen Versionsverlauf."
+      },
+      "error": {
+        "title": "Versionen konnten nicht geladen werden",
+        "message": "Der Versionsverlauf ist vorübergehend nicht verfügbar. Bitte versuche es später erneut."
+      }
+    },
+    "versionActions": {
+      "newVersion": "Neue Version",
+      "mobileMenuLabel": "Versionsaktionen öffnen",
+      "createIteration": "Iteration erstellen",
+      "createPivot": "Pivot erstellen",
+      "confirm": {
+        "whatHappens": "Das passiert",
+        "iteration": {
+          "title": "Iteration erstellen",
+          "description": "Du erstellst eine neue Version, die auf der aktuellen Version aufbaut.",
+          "body": "Das ist sinnvoll, wenn du deinen aktuellen Ansatz weiterentwickeln willst.",
+          "details": {
+            "copyTitleDescription": "Titel und Beschreibung der aktuellen Version werden übernommen.",
+            "copyCanvas": "Dein Canvas wird vollständig übernommen.",
+            "copyAllHypotheses": "Alle Hypothesen werden übernommen.",
+            "copyEvidence": "Verknüpfte Experimente, Metriken und Messungen zu den Hypothesen werden ebenfalls übernommen."
+          },
+          "confirm": "Iteration erstellen"
+        },
+        "pivot": {
+          "title": "Pivot erstellen",
+          "description": "Du erstellst eine neue Version für eine geänderte Richtung.",
+          "body": "Das ist sinnvoll, wenn sich wichtige Annahmen geändert haben.",
+          "details": {
+            "copyTitleDescription": "Titel und Beschreibung der aktuellen Version werden übernommen.",
+            "copyCanvas": "Dein Canvas wird vollständig übernommen.",
+            "copySelectedHypotheses": "Validierte und nicht getestete Hypothesen werden übernommen.",
+            "excludeInvalidated": "Invalidierte Hypothesen und deren verknüpfte Daten werden nicht übernommen."
+          },
+          "confirm": "Pivot erstellen"
+        }
+      },
+      "success": {
+        "iteration": {
+          "title": "Iteration erstellt",
+          "message": "Die neue Iterations-Version ist bereit."
+        },
+        "pivot": {
+          "title": "Pivot erstellt",
+          "message": "Die neue Pivot-Version ist bereit."
+        }
+      },
+      "error": {
+        "title": "Version konnte nicht erstellt werden",
+        "message": "Bitte versuchen Sie es in einem Moment erneut."
+      }
+    },
+    "overview": {
+      "metadata": {
+        "title": "Ideen-Metadaten",
+        "description": "Prüfen und aktualisieren Sie Titel und Beschreibung dieser Version.",
+        "fields": {
+          "title": {
+            "label": "Titel",
+            "placeholder": "Ideen-Titel eingeben"
+          },
+          "description": {
+            "label": "Beschreibung",
+            "placeholder": "Aktuelle Richtung beschreiben"
+          }
+        },
+        "editModal": {
+          "title": "Ideen-Metadaten bearbeiten",
+          "description": "Aktualisieren Sie Titel und Beschreibung für Idee {ideaId}."
+        },
+        "success": {
+          "title": "Metadaten aktualisiert",
+          "message": "Titel und Beschreibung wurden erfolgreich gespeichert."
+        },
+        "error": {
+          "title": "Metadaten konnten nicht aktualisiert werden",
+          "message": "Bitte versuchen Sie es in einem Moment erneut.",
+          "load": {
+            "title": "Metadaten konnten nicht geladen werden",
+            "message": "Bitte aktualisieren Sie die Seite und versuchen Sie es erneut."
+          }
+        }
+      }
+    },
+    "validationOverview": {
+      "title": "Validierungsübersicht",
+      "description": "Überwachen Sie den aktuellen Validierungsstand dieser Ideen-Version über Status-, Prioritäts- und Evidenzverteilungen.",
+      "cards": {
+        "totalHypotheses": "Hypothesen gesamt",
+        "statusDistribution": "Statusverteilung",
+        "priorityDistribution": "Prioritätsverteilung",
+        "evidenceDistribution": "Evidenzverteilung"
+      },
+      "status": {
+        "validated": "Validiert",
+        "invalidated": "Invalidiert",
+        "notTested": "Nicht getestet"
+      },
+      "priority": {
+        "high": "Hoch",
+        "medium": "Mittel",
+        "low": "Niedrig"
+      },
+      "evidence": {
+        "qualitative": "Qualitativ",
+        "quantitative": "Quantitativ",
+        "behavioral": "Verhaltensbasiert",
+        "monetary": "Monetär"
+      },
+      "dimensionCards": {
+        "title": "Validierung nach Unsicherheitsbereich"
+      },
+      "empty": {
+        "noHypotheses": "Für diese Ideen-Version sind noch keine Hypothesen vorhanden."
+      },
+      "error": {
+        "load": {
+          "title": "Validierungszusammenfassung konnte nicht geladen werden",
+          "message": "Bitte versuchen Sie es in einem Moment erneut."
+        }
+      }
     },
     "canvasPage": {
       "title": "Business Model Canvas",
@@ -467,7 +679,10 @@
         "openDetails": "Details öffnen"
       },
       "status": {
-        "OPEN": "Offen"
+        "OPEN": "Offen",
+        "VALIDATED": "Validiert",
+        "INVALIDATED": "Invalidiert",
+        "NOT_TESTED": "Nicht getestet"
       },
       "dimensions": {
         "PROBLEM": "Problem",

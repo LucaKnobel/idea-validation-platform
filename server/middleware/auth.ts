@@ -4,7 +4,8 @@ import { auth } from '@infrastructure/auth/auth'
 const PUBLIC_API_PREFIXES = [
   '/api/auth',
   '/api/content',
-  '/api/_nuxt_icon'
+  '/api/_nuxt_icon',
+  '/api/webhooks/payrexx'
 ] as const
 
 const startsWithAny = (path: string, prefixes: readonly string[]): boolean =>

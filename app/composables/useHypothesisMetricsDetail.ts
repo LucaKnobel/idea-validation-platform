@@ -6,6 +6,7 @@ import type { MetricFormState } from '~/components/idea-workspace/MetricFormModa
 export interface UseHypothesisMetricsDetailInput {
   hypothesisId: Ref<string>
   hasValidRouteParams: ComputedRef<boolean>
+  onStatusChanged?: () => Promise<void> | void
 }
 
 /**
@@ -236,6 +237,7 @@ export const useHypothesisMetricsDetail = (
 
           showSuccess('ideaWorkspace.hypotheses.detail.metrics.success.create.title', 'ideaWorkspace.hypotheses.detail.metrics.success.create.message')
           isMetricModalOpen.value = false
+          await input.onStatusChanged?.()
           return true
         }
 
@@ -251,6 +253,7 @@ export const useHypothesisMetricsDetail = (
 
         showSuccess('ideaWorkspace.hypotheses.detail.metrics.success.update.title', 'ideaWorkspace.hypotheses.detail.metrics.success.update.message')
         isMetricModalOpen.value = false
+        await input.onStatusChanged?.()
         return true
       })
     } catch (error: unknown) {
@@ -282,6 +285,7 @@ export const useHypothesisMetricsDetail = (
         showSuccess('ideaWorkspace.hypotheses.detail.metrics.success.delete.title', 'ideaWorkspace.hypotheses.detail.metrics.success.delete.message')
         isMetricDeleteModalOpen.value = false
         metricDeleteCandidate.value = null
+        await input.onStatusChanged?.()
         return true
       })
     } catch (error: unknown) {

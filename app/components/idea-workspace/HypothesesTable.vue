@@ -24,6 +24,7 @@ const {
   columns,
   sorting,
   priorityColor,
+  statusColor,
   dimensionLabel,
   priorityLabel,
   statusLabel,
@@ -164,7 +165,7 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
             <UDropdownMenu
               :content="{ align: 'end' }"
               :items="getMobileRowItems(hypothesis)"
-              :aria-label="t('ideaWorkspace.hypotheses.table.columns.actions')"
+              :aria-label="$t('ideaWorkspace.hypotheses.table.columns.actions')"
             >
               <UButton
                 icon="i-lucide-ellipsis-vertical"
@@ -173,7 +174,7 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
                 square
                 size="sm"
                 :loading="props.isDeletingId === hypothesis.id"
-                :aria-label="t('ideaWorkspace.hypotheses.table.columns.actions')"
+                :aria-label="$t('ideaWorkspace.hypotheses.table.columns.actions')"
               />
             </UDropdownMenu>
           </div>
@@ -194,8 +195,8 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
             </UBadge>
 
             <UBadge
-              color="neutral"
-              variant="soft"
+              :color="statusColor(getHypothesisUiStatus(hypothesis))"
+              variant="subtle"
             >
               {{ statusLabel(getHypothesisUiStatus(hypothesis)) }}
             </UBadge>
@@ -222,7 +223,7 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
     >
       <template #statement-header>
         <span class="text-sm font-medium text-highlighted">
-          {{ t('ideaWorkspace.hypotheses.table.columns.statement') }}
+          {{ $t('ideaWorkspace.hypotheses.table.columns.statement') }}
         </span>
       </template>
 
@@ -230,7 +231,7 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
         <UButton
           color="neutral"
           variant="ghost"
-          :label="t('ideaWorkspace.hypotheses.table.columns.dimension')"
+          :label="$t('ideaWorkspace.hypotheses.table.columns.dimension')"
           :icon="getSortHeaderIcon(column.getIsSorted())"
           class="-mx-2.5 hidden md:inline-flex"
           @click="column.toggleSorting(column.getIsSorted() === 'asc')"
@@ -241,7 +242,7 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
         <UButton
           color="neutral"
           variant="ghost"
-          :label="t('ideaWorkspace.hypotheses.table.columns.priority')"
+          :label="$t('ideaWorkspace.hypotheses.table.columns.priority')"
           :icon="getSortHeaderIcon(column.getIsSorted())"
           class="-mx-2.5 hidden md:inline-flex"
           @click="column.toggleSorting(column.getIsSorted() === 'asc')"
@@ -252,7 +253,7 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
         <UButton
           color="neutral"
           variant="ghost"
-          :label="t('ideaWorkspace.hypotheses.table.columns.status')"
+          :label="$t('ideaWorkspace.hypotheses.table.columns.status')"
           :icon="getSortHeaderIcon(column.getIsSorted())"
           class="-mx-2.5 hidden md:inline-flex"
           @click="column.toggleSorting(column.getIsSorted() === 'asc')"
@@ -272,30 +273,36 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
       </template>
 
       <template #dimension-cell="{ row }">
-        <UBadge
-          color="neutral"
-          variant="soft"
-        >
-          {{ dimensionLabel(row.original.dimension) }}
-        </UBadge>
+        <div class="flex min-h-10 items-center">
+          <UBadge
+            color="neutral"
+            variant="soft"
+          >
+            {{ dimensionLabel(row.original.dimension) }}
+          </UBadge>
+        </div>
       </template>
 
       <template #priority-cell="{ row }">
-        <UBadge
-          :color="priorityColor(row.original.priority)"
-          variant="soft"
-        >
-          {{ priorityLabel(row.original.priority) }}
-        </UBadge>
+        <div class="flex min-h-10 items-center">
+          <UBadge
+            :color="priorityColor(row.original.priority)"
+            variant="soft"
+          >
+            {{ priorityLabel(row.original.priority) }}
+          </UBadge>
+        </div>
       </template>
 
       <template #status-cell="{ row }">
-        <UBadge
-          color="neutral"
-          variant="soft"
-        >
-          {{ statusLabel(getHypothesisUiStatus(row.original)) }}
-        </UBadge>
+        <div class="flex min-h-10 items-center">
+          <UBadge
+            :color="statusColor(getHypothesisUiStatus(row.original))"
+            variant="subtle"
+          >
+            {{ statusLabel(getHypothesisUiStatus(row.original)) }}
+          </UBadge>
+        </div>
       </template>
 
       <template #actions-cell="{ row }">
@@ -304,7 +311,7 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
             align: 'end'
           }"
           :items="getDesktopRowItems(row)"
-          :aria-label="t('ideaWorkspace.hypotheses.table.columns.actions')"
+          :aria-label="$t('ideaWorkspace.hypotheses.table.columns.actions')"
         >
           <UButton
             icon="i-lucide-ellipsis-vertical"
@@ -313,7 +320,7 @@ const getSortHeaderIcon = (isSorted: false | 'asc' | 'desc'): string => {
             square
             size="sm"
             :loading="props.isDeletingId === row.original.id"
-            :aria-label="t('ideaWorkspace.hypotheses.table.columns.actions')"
+            :aria-label="$t('ideaWorkspace.hypotheses.table.columns.actions')"
           />
         </UDropdownMenu>
       </template>

@@ -1,4 +1,5 @@
 import type { MeasurementRepository } from '@application/interfaces/measurement-repository'
+import type { HypothesisStatusSyncService } from '@application/interfaces/hypothesis-status-sync'
 import type { Logger } from '@interfaces/logger'
 import { MeasurementNotFoundError } from '@application/errors/measurement-errors'
 
@@ -10,7 +11,11 @@ export type DeleteMeasurementInput = {
 /**
  * Builds the use case that deletes the measurement singleton for one owned hypothesis.
  */
-export const buildDeleteMeasurement = (measurementRepository: MeasurementRepository, logger: Logger) => {
+export const buildDeleteMeasurement = (
+  measurementRepository: MeasurementRepository,
+  hypothesisStatusSyncService: HypothesisStatusSyncService,
+  logger: Logger
+) => {
   return async (input: DeleteMeasurementInput): Promise<void> => {
     const deleted = await measurementRepository.deleteByHypothesis({
       userId: input.userId,
@@ -20,6 +25,11 @@ export const buildDeleteMeasurement = (measurementRepository: MeasurementReposit
     if (!deleted) {
       throw new MeasurementNotFoundError()
     }
+
+    await hypothesisStatusSyncService.sync({
+      userId: input.userId,
+      hypothesisId: input.hypothesisId
+    })
 
     logger.debug('Measurement deleted', {
       userId: input.userId,

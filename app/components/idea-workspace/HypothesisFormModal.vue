@@ -32,7 +32,6 @@ const emit = defineEmits<{
   (event: 'submit', value: UpsertHypothesisBodyDto): void
 }>()
 
-const { t } = useI18n()
 const isSectionsMenuOpen = ref(false)
 const editableState = reactive<UpsertHypothesisBodyDto>({
   statement: '',
@@ -91,7 +90,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
   <UModal
     :open="open"
     :title="title"
-    :description="t('ideaWorkspace.hypotheses.modal.description')"
+    :description="$t('ideaWorkspace.hypotheses.modal.description')"
     :dismissible="!isSubmitting"
     :ui="{
       content: 'w-[92vw] sm:max-w-3xl',
@@ -108,15 +107,15 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
       >
         <UFormField
           name="statement"
-          :label="t('ideaWorkspace.hypotheses.form.statement.label')"
-          :description="t('ideaWorkspace.hypotheses.form.statement.description')"
+          :label="$t('ideaWorkspace.hypotheses.form.statement.label')"
+          :description="$t('ideaWorkspace.hypotheses.form.statement.description')"
           required
         >
           <UTextarea
             v-model="editableState.statement"
             :rows="5"
             class="w-full"
-            :placeholder="t('ideaWorkspace.hypotheses.form.statement.placeholder')"
+            :placeholder="$t('ideaWorkspace.hypotheses.form.statement.placeholder')"
             :disabled="isSubmitting"
           />
         </UFormField>
@@ -124,7 +123,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
         <div class="grid gap-4 md:grid-cols-2">
           <UFormField
             name="dimension"
-            :label="t('ideaWorkspace.hypotheses.form.dimension.label')"
+            :label="$t('ideaWorkspace.hypotheses.form.dimension.label')"
             required
           >
             <USelectMenu
@@ -133,14 +132,14 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
               :items="dimensionOptions"
               :search-input="false"
               class="w-full"
-              :placeholder="t('ideaWorkspace.hypotheses.form.dimension.placeholder')"
+              :placeholder="$t('ideaWorkspace.hypotheses.form.dimension.placeholder')"
               :disabled="isSubmitting"
             />
           </UFormField>
 
           <UFormField
             name="priority"
-            :label="t('ideaWorkspace.hypotheses.form.priority.label')"
+            :label="$t('ideaWorkspace.hypotheses.form.priority.label')"
             required
           >
             <USelectMenu
@@ -149,14 +148,14 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
               :items="priorityOptions"
               :search-input="false"
               class="w-full"
-              :placeholder="t('ideaWorkspace.hypotheses.form.priority.placeholder')"
+              :placeholder="$t('ideaWorkspace.hypotheses.form.priority.placeholder')"
               :disabled="isSubmitting"
             />
           </UFormField>
 
           <UFormField
             name="evidenceType"
-            :label="t('ideaWorkspace.hypotheses.form.evidenceType.label')"
+            :label="$t('ideaWorkspace.hypotheses.form.evidenceType.label')"
             required
           >
             <USelectMenu
@@ -165,7 +164,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
               :items="evidenceTypeOptions"
               :search-input="false"
               class="w-full"
-              :placeholder="t('ideaWorkspace.hypotheses.form.evidenceType.placeholder')"
+              :placeholder="$t('ideaWorkspace.hypotheses.form.evidenceType.placeholder')"
               :disabled="isSubmitting"
             />
           </UFormField>
@@ -173,8 +172,8 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
 
         <UFormField
           name="canvasElementTypes"
-          :label="t('ideaWorkspace.hypotheses.form.sections.label')"
-          :description="t('ideaWorkspace.hypotheses.form.sections.description')"
+          :label="$t('ideaWorkspace.hypotheses.form.sections.label')"
+          :description="$t('ideaWorkspace.hypotheses.form.sections.description')"
           required
         >
           <USelectMenu
@@ -185,11 +184,11 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
             clear
             :items="sectionOptions"
             :search-input="{
-              placeholder: t('ideaWorkspace.hypotheses.form.sections.searchPlaceholder'),
+              placeholder: $t('ideaWorkspace.hypotheses.form.sections.searchPlaceholder'),
               icon: 'i-lucide-search'
             }"
             class="w-full"
-            :placeholder="t('ideaWorkspace.hypotheses.form.sections.placeholder')"
+            :placeholder="$t('ideaWorkspace.hypotheses.form.sections.placeholder')"
             :disabled="isSubmitting"
           >
             <template #content-bottom>
@@ -200,7 +199,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
                   size="sm"
                   @click="confirmSectionSelection"
                 >
-                  {{ t('ideaWorkspace.hypotheses.form.sections.confirm') }}
+                  {{ $t('ideaWorkspace.hypotheses.form.sections.confirm') }}
                 </UButton>
               </div>
             </template>
@@ -214,7 +213,7 @@ const onSubmit = (event: FormSubmitEvent<unknown>): void => {
             :disabled="isSubmitting"
             @click="closeFormModal"
           >
-            {{ t('actions.cancel') }}
+            {{ $t('actions.cancel') }}
           </UButton>
 
           <UButton

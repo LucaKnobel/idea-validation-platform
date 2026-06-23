@@ -96,7 +96,11 @@ const sensitiveSessionKeyPattern = /password|hash|token|secret|api[_-]?key|crede
 const authE2EEmailPrefix = 'e2e-auth'
 const usedClientIps = new Set<string>()
 
-export const createClientIp = (): string => `203.0.113.${randomInt(10, 240)}`
+export const createClientIp = (): string => {
+  const clientIp = `203.0.113.${randomInt(10, 240)}`
+  usedClientIps.add(clientIp)
+  return clientIp
+}
 
 const normalizeEmailPrefix = (prefix: string): string => {
   const normalized = prefix
@@ -125,8 +129,6 @@ const createAuthHeaders = (options?: AuthRequestOptions): Record<string, string>
   const origin = options?.origin ?? createRequestOrigin()
   const includeOriginHeaders = options?.includeOriginHeaders ?? true
   const clientIp = options?.clientIp ?? createClientIp()
-
-  usedClientIps.add(clientIp)
 
   const headers: Record<string, string> = {
     'content-type': 'application/json',

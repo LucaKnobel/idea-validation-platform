@@ -4,6 +4,7 @@
     "noData": "No data available",
     "loading": "Loading...",
     "backToHome": "Back to Home",
+    "redirecting": "Redirecting to checkout...",
     "copyright": "Copyright"
   },
   "actions": {
@@ -297,7 +298,55 @@
     },
     "subscription": {
       "title": "Subscription",
-      "placeholder": "Plan status and billing management will be added here."
+      "placeholder": "Plan status and billing management will be added here.",
+      "description": "Manage your Pro subscription directly from settings.",
+      "currentPlan": "Current plan",
+      "currentStatus": "Current status",
+      "loading": "Loading status",
+      "note": "Cancellation takes effect immediately. Pro access ends right away and no refund is issued for already paid time.",
+      "plan": {
+        "FREE": "Free",
+        "PRO": "Pro",
+        "UNKNOWN": "Unknown"
+      },
+      "status": {
+        "ACTIVE": "Active",
+        "IN_NOTICE": "In notice",
+        "OVERDUE": "Overdue",
+        "FAILED": "Failed",
+        "CANCELLED": "Cancelled",
+        "UNKNOWN": "Unknown"
+      },
+      "actions": {
+        "subscribe": "Start Pro subscription",
+        "cancel": "Cancel Pro subscription"
+      },
+      "checkout": {
+        "error": {
+          "title": "Checkout unavailable",
+          "message": "The checkout URL is not configured right now. Please try again later."
+        }
+      },
+      "cancel": {
+        "confirm": {
+          "title": "Confirm cancellation",
+          "description": "Do you really want to cancel your Pro subscription?",
+          "warning": "Cancellation takes effect immediately. Your Pro access will end right away and already paid time will not be refunded.",
+          "action": "Confirm cancellation"
+        },
+        "success": {
+          "title": "Subscription cancelled",
+          "message": "Your Pro subscription has been cancelled immediately and your plan is now Free."
+        },
+        "unavailable": {
+          "title": "Cancellation not available",
+          "message": "Your current plan does not require cancellation."
+        },
+        "error": {
+          "title": "Cancellation failed",
+          "message": "We could not cancel your subscription. Please try again."
+        }
+      }
     },
     "dangerZone": {
       "title": "Danger zone",
@@ -394,8 +443,27 @@
   "upgradeToProModal": {
     "title": "Upgrade to Pro required",
     "description": "On the Free plan, you can create one business idea.",
-    "pitch": "With Pro, you can create unlimited business ideas and scale your validation process without limits.",
+    "pitch": "With Pro, you can create unlimited business ideas and scale your validation without limits.",
     "cta": "Upgrade to Pro"
+  },
+  "checkoutSuccess": {
+    "title": "Welcome to Pro",
+    "subtitle": "Your upgrade was successful!",
+    "message": "Your subscription is now active. You can start creating unlimited business ideas.",
+    "cta": "Continue to Dashboard"
+  },
+  "checkoutError": {
+    "explanation": "There was a problem processing your subscription. Your payment was not completed.",
+    "retryButton": "Try Again",
+    "homeButton": "Back to Dashboard"
+  },
+  "checkoutFailed": {
+    "title": "Payment failed",
+    "description": "Your payment could not be processed."
+  },
+  "checkoutDeclined": {
+    "title": "Payment declined",
+    "description": "Your payment method was declined. Please try a different method."
   },
   "ideaWorkspace": {
     "title": "Idea Workspace",
@@ -406,7 +474,6 @@
       "overview": "Overview",
       "canvas": "Canvas",
       "hypotheses": "Hypotheses",
-      "decision": "Decision",
       "history": "History",
       "settings": "Settings"
     },
@@ -425,7 +492,152 @@
       "ideaTitle": "Selected idea"
     },
     "versionSwitcher": {
+      "label": "Version",
       "comingSoon": "More versions coming soon"
+    },
+    "historyPage": {
+      "title": "Version history",
+      "description": "Inspect all versions of this idea and navigate between them.",
+      "currentBadge": "Current",
+      "timeline": {
+        "title": "Version {versionNumber} · {typeLabel}",
+        "type": {
+          "initial": "Initial",
+          "iteration": "Iteration",
+          "pivot": "Pivot"
+        },
+        "description": {
+          "noDescription": "No description provided.",
+          "derivedFromVersion": "Derived from Version {versionNumber}",
+          "startingPoint": "Starting point of this idea",
+          "separator": "·"
+        }
+      },
+      "empty": {
+        "title": "No versions found",
+        "description": "This idea does not have any version history yet."
+      },
+      "error": {
+        "title": "Could not load versions",
+        "message": "The version history is temporarily unavailable. Please try again later."
+      }
+    },
+    "versionActions": {
+      "newVersion": "New version",
+      "mobileMenuLabel": "Open version actions",
+      "createIteration": "Create iteration",
+      "createPivot": "Create pivot",
+      "confirm": {
+        "whatHappens": "What will happen",
+        "iteration": {
+          "title": "Create iteration",
+          "description": "You create a new version that builds on the current version.",
+          "body": "Use this when you want to continue and improve your current direction.",
+          "details": {
+            "copyTitleDescription": "The current version title and description are copied.",
+            "copyCanvas": "Your full canvas is copied.",
+            "copyAllHypotheses": "All hypotheses are copied.",
+            "copyEvidence": "Related experiments, metrics and measurements are copied as well."
+          },
+          "confirm": "Create iteration"
+        },
+        "pivot": {
+          "title": "Create pivot",
+          "description": "You create a new version based on a revised direction.",
+          "body": "Use this when key assumptions changed.",
+          "details": {
+            "copyTitleDescription": "The current version title and description are copied.",
+            "copyCanvas": "Your full canvas is copied.",
+            "copySelectedHypotheses": "Validated and not tested hypotheses are copied.",
+            "excludeInvalidated": "Invalidated hypotheses and their related data are not copied."
+          },
+          "confirm": "Create pivot"
+        }
+      },
+      "success": {
+        "iteration": {
+          "title": "Iteration created",
+          "message": "The new iteration version is ready."
+        },
+        "pivot": {
+          "title": "Pivot created",
+          "message": "The new pivot version is ready."
+        }
+      },
+      "error": {
+        "title": "Could not create version",
+        "message": "Please try again in a moment."
+      }
+    },
+    "overview": {
+      "metadata": {
+        "title": "Idea metadata",
+        "description": "Review and update this version's title and description.",
+        "fields": {
+          "title": {
+            "label": "Title",
+            "placeholder": "Enter idea title"
+          },
+          "description": {
+            "label": "Description",
+            "placeholder": "Describe your current direction"
+          }
+        },
+        "editModal": {
+          "title": "Edit idea metadata",
+          "description": "Update title and description for idea {ideaId}."
+        },
+        "success": {
+          "title": "Metadata updated",
+          "message": "Title and description were saved successfully."
+        },
+        "error": {
+          "title": "Could not update metadata",
+          "message": "Please try again in a moment.",
+          "load": {
+            "title": "Could not load metadata",
+            "message": "Please refresh and try again."
+          }
+        }
+      }
+    },
+    "validationOverview": {
+      "title": "Validation Overview",
+      "description": "Monitor the current validation state of this idea version across status, priority and evidence distributions.",
+      "cards": {
+        "totalHypotheses": "Total hypotheses",
+        "statusDistribution": "Status distribution",
+        "priorityDistribution": "Priority distribution",
+        "evidenceDistribution": "Evidence distribution"
+      },
+      "status": {
+        "validated": "Validated",
+        "invalidated": "Invalidated",
+        "notTested": "Not tested"
+      },
+      "priority": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "evidence": {
+        "qualitative": "Qualitative",
+        "quantitative": "Quantitative",
+        "behavioral": "Behavioral",
+        "monetary": "Monetary"
+      },
+      "dimensionCards": {
+        "title": "Validation by uncertainty area"
+      },
+      "empty": {
+        "noHypotheses": "No hypotheses available for this idea version yet."
+      },
+      "error": {
+        "load": {
+          "title": "Could not load validation summary",
+          "message": "Please try again in a moment."
+        }
+      }
     },
     "canvasPage": {
       "title": "Business Model Canvas",
@@ -467,7 +679,10 @@
         "openDetails": "Open details"
       },
       "status": {
-        "OPEN": "Open"
+        "OPEN": "Open",
+        "VALIDATED": "Validated",
+        "INVALIDATED": "Invalidated",
+        "NOT_TESTED": "Not tested"
       },
       "dimensions": {
         "PROBLEM": "Problem",

@@ -1,19 +1,24 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { buildDeleteMeasurement } from '@application/services/build-delete-measurement'
+import type { HypothesisStatusSyncService } from '@application/interfaces/hypothesis-status-sync'
 import { MeasurementNotFoundError } from '@application/errors/measurement-errors'
 import type { MeasurementRepository } from '@application/interfaces/measurement-repository'
 import type { Logger } from '@interfaces/logger'
-import { makeMeasurementRepository, makeLogger, VALID_USER_ID } from './helpers'
+import { makeHypothesis, makeLogger, makeMeasurementRepository, VALID_USER_ID } from './helpers'
 
 describe('buildDeleteMeasurement', () => {
   let measurementRepository: MeasurementRepository
+  let hypothesisStatusSyncService: HypothesisStatusSyncService
   let logger: Logger
   let deleteMeasurement: ReturnType<typeof buildDeleteMeasurement>
 
   beforeEach(() => {
     measurementRepository = makeMeasurementRepository()
+    hypothesisStatusSyncService = {
+      sync: vi.fn().mockResolvedValue(makeHypothesis())
+    }
     logger = makeLogger()
-    deleteMeasurement = buildDeleteMeasurement(measurementRepository, logger)
+    deleteMeasurement = buildDeleteMeasurement(measurementRepository, hypothesisStatusSyncService, logger)
     vi.mocked(measurementRepository.deleteByHypothesis).mockResolvedValue(true)
   })
 
@@ -41,6 +46,15 @@ describe('buildDeleteMeasurement', () => {
     })
   })
 
+  it('syncs hypothesis status after deletion', async () => {
+    await deleteMeasurement({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' })
+
+    expect(hypothesisStatusSyncService.sync).toHaveBeenCalledWith({
+      userId: VALID_USER_ID,
+      hypothesisId: 'hypothesis-001'
+    })
+  })
+
   it('throws MeasurementNotFoundError when no measurement was deleted', async () => {
     vi.mocked(measurementRepository.deleteByHypothesis).mockResolvedValue(false)
 
@@ -48,6 +62,7 @@ describe('buildDeleteMeasurement', () => {
       deleteMeasurement({ userId: VALID_USER_ID, hypothesisId: 'hypothesis-001' })
     ).rejects.toThrow(MeasurementNotFoundError)
 
+    expect(hypothesisStatusSyncService.sync).not.toHaveBeenCalled()
     expect(logger.debug).not.toHaveBeenCalled()
   })
 })

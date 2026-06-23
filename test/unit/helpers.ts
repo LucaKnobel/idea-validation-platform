@@ -15,7 +15,7 @@ import type { ExperimentRepository } from '@application/interfaces/experiment-re
 import type { Experiment } from '@application/models/experiment'
 import type { MeasurementRepository } from '@application/interfaces/measurement-repository'
 import type { Measurement } from '@application/models/measurement'
-import type { SubscriptionService } from '@application/interfaces/subscription-service'
+import type { SubscriptionAccessService } from '@application/interfaces/subscription-access-service'
 import type { Logger } from '@interfaces/logger'
 
 export const VALID_USER_ID = 'user-001'
@@ -36,6 +36,7 @@ export const makeIdea = (overrides: Partial<Idea> = {}): Idea => ({
 export const makeIdeaVersion = (overrides: Partial<IdeaVersion> = {}): IdeaVersion => ({
   id: 'idea-version-001',
   ideaId: 'idea-001',
+  parentVersionId: null,
   versionNumber: 1,
   type: 'INITIAL',
   title: 'Test Idea',
@@ -52,14 +53,19 @@ export const makeIdeaRepository = (): IdeaRepository => ({
 })
 
 export const makeIdeaVersionRepository = (): IdeaVersionRepository => ({
-  listByUser: vi.fn()
+  listByUser: vi.fn(),
+  getByIdea: vi.fn(),
+  listByIdea: vi.fn(),
+  getVersionSource: vi.fn(),
+  createFromSource: vi.fn(),
+  updateMetadata: vi.fn()
 })
 
-export const makeSubscriptionService = (): SubscriptionService => ({
+export const makeSubscriptionService = (): SubscriptionAccessService => ({
   getByUserId: vi.fn(),
+  getStatusSnapshot: vi.fn(),
   isPro: vi.fn(),
   getBusinessIdeaLimit: vi.fn(),
-  createFreeSubscription: vi.fn(),
   assertCanCreateBusinessIdea: vi.fn()
 })
 
@@ -116,6 +122,7 @@ export const makeHypothesisRepository = (): HypothesisRepository => ({
   getById: vi.fn(),
   create: vi.fn(),
   update: vi.fn(),
+  updateStatus: vi.fn(),
   delete: vi.fn()
 })
 

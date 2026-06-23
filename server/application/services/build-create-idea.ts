@@ -1,6 +1,6 @@
 import type { IdeaRepository } from '@application/interfaces/idea-repository'
 import type { Idea } from '@application/models/idea'
-import type { SubscriptionService } from '@application/interfaces/subscription-service'
+import type { SubscriptionAccessService } from '@application/interfaces/subscription-access-service'
 import type { Logger } from '@interfaces/logger'
 
 export type CreateIdeaInput = {
@@ -14,12 +14,13 @@ export type CreateIdeaInput = {
  */
 export const buildCreateIdea = (
   ideaRepository: IdeaRepository,
-  subscriptionService: SubscriptionService,
+  subscriptionService: SubscriptionAccessService,
   logger: Logger
 ) => {
   return async (input: CreateIdeaInput): Promise<Idea> => {
     const currentIdeaCount = await ideaRepository.countByUser(input.userId)
 
+    // Plan gating only applies to creating new ideas; existing ideas remain fully editable.
     await subscriptionService.assertCanCreateBusinessIdea(input.userId, currentIdeaCount)
 
     const createdIdea = await ideaRepository.create({
