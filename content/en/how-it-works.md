@@ -9,7 +9,7 @@ version: "1"
 # How does it work?
 
 <div class="not-prose my-6 flex justify-center">
-	<img src="/images/marketing/marketing-process.png" alt="Idea Validation Workflow" class="w-full max-w-xs sm:max-w-sm md:max-w-md" loading="lazy" />
+	<img src="/images/process.png" alt="Idea Validation Workflow" class="w-full max-w-xs sm:max-w-sm md:max-w-md" loading="lazy" />
 </div>
 
 Turn assumptions into evidence before building products.
