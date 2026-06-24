@@ -17,36 +17,36 @@ Im Gegensatz zu klassischen Produktentwicklungsansätzen steht nicht die möglic
 > Ziel ist nicht, eine Idee möglichst schnell zu beweisen. Ziel ist es, möglichst früh herauszufinden, welche Annahmen tatsächlich stimmen.
 
 <div class="not-prose my-6 flex justify-center">
-	<img src="/images/docs/workflow-overview.png" alt="Validierungsworkflow der Plattform" class="w-full max-w-xs sm:max-w-sm md:max-w-md" loading="lazy" />
+	<img src="/images/process.png" alt="Validierungsworkflow der Plattform" class="w-full max-w-xs sm:max-w-sm md:max-w-md" loading="lazy" />
 </div>
 
 ---
 
 ## Inhaltsverzeichnis
 
-- [Lean Startup Grundlagen](#lean-startup-grundlagen)
-- [Validierungsworkflow der Plattform](#validierungsworkflow-der-plattform)
-- [Business Model Canvas](#business-model-canvas)
-- [Hypothesen](#hypothesen)
-- [Unsicherheitsbereiche](#unsicherheitsbereiche)
-- [Prioritäten](#prioritäten)
-- [Evidenztypen](#evidenztypen)
-- [Canvas-Zuordnung](#canvas-zuordnung)
-- [Metriken und Schwellwerte](#metriken-und-schwellwerte)
-- [Experimente](#experimente)
-- [Messungen und Validierung](#messungen-und-validierung)
-- [Overview Dashboard](#overview-dashboard)
-- [Entscheidungen treffen](#entscheidungen-treffen)
-- [Versionierung](#versionierung)
-- [Best Practices](#best-practices)
-- [Häufige Fragen](#häufige-fragen)
-- [Abschliessender Hinweis](#abschliessender-hinweis)
+1. [1. Lean Startup Grundlagen](#1-lean-startup-grundlagen)
+2. [2. Validierungsworkflow der Plattform](#2-validierungsworkflow-der-plattform)
+3. [3. Business Model Canvas](#3-business-model-canvas)
+4. [4. Hypothesen](#4-hypothesen)
+5. [5. Unsicherheitsbereiche](#5-unsicherheitsbereiche)
+6. [6. Prioritäten](#6-prioritäten)
+7. [7. Evidenztypen](#7-evidenztypen)
+8. [8. Canvas-Zuordnung](#8-canvas-zuordnung)
+9. [9. Metriken und Schwellwerte](#9-metriken-und-schwellwerte)
+10. [10. Experimente](#10-experimente)
+11. [11. Messungen und Validierung](#11-messungen-und-validierung)
+12. [12. Overview Dashboard](#12-overview-dashboard)
+13. [13. Entscheidungen treffen](#13-entscheidungen-treffen)
+14. [14. Versionierung](#14-versionierung)
+15. [15. Best Practices](#15-best-practices)
+16. [16. Häufige Fragen](#16-häufige-fragen)
+17. [17. Abschliessender Hinweis](#17-abschliessender-hinweis)
 
 ---
 
-# Lean Startup Grundlagen
+# 1. Lean Startup Grundlagen
 
-## Warum Geschäftsideen validiert werden sollten
+## 1.1 Warum Geschäftsideen validiert werden sollten
 
 Viele Geschäftsideen scheitern nicht an der technischen Umsetzung, sondern an falschen oder ungeprüften Annahmen. Häufig wird viel Zeit in die Entwicklung eines Produkts investiert, bevor klar ist, ob überhaupt ein echtes Problem besteht, ob die Zielgruppe die Lösung benötigt oder ob eine Zahlungsbereitschaft vorhanden ist.
 
@@ -61,7 +61,7 @@ Typische Risiken sind:
 
 Die Plattform hilft dabei, solche Risiken früh sichtbar zu machen und strukturiert zu überprüfen.
 
-## Der Lean-Startup-Gedanke
+## 1.2 Der Lean-Startup-Gedanke
 
 Lean Startup ist ein Ansatz, bei dem Geschäftsideen nicht nur geplant, sondern möglichst früh anhand realer Erkenntnisse überprüft werden. Statt lange im Voraus ein vollständiges Produkt zu bauen, werden die wichtigsten Annahmen formuliert, getestet und ausgewertet.
 
@@ -81,7 +81,7 @@ Dieser Zyklus wird wiederholt, bis genügend Erkenntnisse vorliegen, um eine fun
 
 Dabei geht es nicht darum, eine Idee schönzureden oder möglichst schnell zu bestätigen. Es geht darum, früh zu lernen, was funktioniert, was nicht funktioniert und welche Richtung sinnvoll weiterverfolgt werden sollte.
 
-## Rolle der Plattform
+## 1.3 Rolle der Plattform
 
 Die Plattform bildet diesen Lernprozess digital ab. Sie unterstützt dabei:
 
@@ -96,7 +96,7 @@ Die Plattform führt keine Experimente automatisch durch und ersetzt kein Kunden
 
 ---
 
-# Validierungsworkflow der Plattform
+# 2. Validierungsworkflow der Plattform
 
 Der typische Workflow der Plattform besteht aus mehreren aufeinander aufbauenden Schritten.
 
@@ -118,25 +118,25 @@ Validierungsstatus
 Iteration oder Pivot
 ```
 
-## 1. Idee erstellen
+## 2.1 Idee erstellen
 
 Eine Idee ist der Ausgangspunkt des gesamten Validierungsprozesses. Sie beschreibt grob, welches Problem gelöst werden soll und welche Lösung angedacht ist.
 
 In der Plattform dient eine Idee als übergeordneter Arbeitsbereich. Darin befinden sich alle Versionen, Canvas-Inhalte, Hypothesen, Experimente, Messungen und Validierungsergebnisse.
 
-## 2. Initiale Version verwenden
+## 2.2 Initiale Version verwenden
 
 Beim Erstellen einer Idee entsteht eine erste Version. Diese Initiale Version bildet den Startpunkt. Alle weiteren Änderungen, Iterationen oder Pivots bauen auf einer bestehenden Version auf.
 
 Versionen helfen dabei, verschiedene Entwicklungsstände einer Idee voneinander zu trennen und den Lernprozess nachvollziehbar zu dokumentieren.
 
-## 3. Business Model Canvas ausfüllen
+## 2.3 Business Model Canvas ausfüllen
 
 Im nächsten Schritt wird das Geschäftsmodell strukturiert beschrieben. Der Business Model Canvas hilft dabei, die wichtigsten Bestandteile einer Idee sichtbar zu machen.
 
 Der Canvas muss am Anfang nicht perfekt oder vollständig sein. Er dient als Arbeitsgrundlage und kann sich mit jeder neuen Erkenntnis weiterentwickeln.
 
-## 4. Hypothesen ableiten
+## 2.4 Hypothesen ableiten
 
 Aus dem Canvas werden konkrete Hypothesen abgeleitet. Eine Hypothese ist eine überprüfbare Annahme.
 
@@ -146,17 +146,17 @@ Beispiel:
 
 Diese Aussage kann getestet werden. Genau darum ist sie als Hypothese geeignet.
 
-## 5. Metriken und Experimente definieren
+## 2.5 Metriken und Experimente definieren
 
 Für jede Hypothese wird festgelegt, wie Erfolg gemessen werden soll. Dazu wird eine Metrik und ein Schwellwert definiert.
 
 Zusätzlich wird ein Experiment geplant, mit dem die Hypothese überprüft werden soll. Das Experiment wird in der Plattform dokumentiert, aber ausserhalb der Plattform durchgeführt.
 
-## 6. Messungen erfassen
+## 2.6 Messungen erfassen
 
 Nach der Durchführung eines Experiments werden die Ergebnisse als Messung erfasst. Diese Messung enthält den gemessenen Wert, der mit dem definierten Schwellwert verglichen wird.
 
-## 7. Validierungsstatus prüfen
+## 2.7 Validierungsstatus prüfen
 
 Die Plattform leitet den Status einer Hypothese automatisch aus Experiment, Metrik, Schwellwert und Messung ab.
 
@@ -166,16 +166,15 @@ Eine Hypothese kann folgende Status besitzen:
 - Validiert
 - Invalidiert
 
-## 8. Overview analysieren
+## 2.8 Overview analysieren
 
 Die Overview-Seite zeigt den aktuellen Validierungsstand einer Version. Dort wird sichtbar, welche Hypothesen bereits validiert, invalidiert oder noch nicht getestet wurden.
 
-<div class="not-prose my-6 rounded-2xl bg-muted/30 p-4 text-center text-sm text-toned">
-	Screenshot-Platzhalter: Overview Dashboard<br />
-	Empfohlener Pfad: <code>/images/docs/overview-dashboard.png</code>
+<div class="not-prose my-6 flex justify-center">
+	<img src="/images/marketing/overview.png" alt="Overview-Seite" class="w-full max-w-xs sm:max-w-sm md:max-w-md" loading="lazy" />
 </div>
 
-## 9. Iteration oder Pivot entscheiden
+## 2.9 Iteration oder Pivot entscheiden
 
 Auf Basis der Ergebnisse entscheidet der Nutzer, wie die Idee weiterentwickelt werden soll.
 
@@ -187,9 +186,9 @@ Die Plattform unterstützt diese Entscheidung durch strukturierte Informationen,
 
 ---
 
-# Business Model Canvas
+# 3. Business Model Canvas
 
-## Was ist ein Business Model Canvas?
+## 3.1 Was ist ein Business Model Canvas?
 
 Der Business Model Canvas ist ein Werkzeug, um ein Geschäftsmodell übersichtlich darzustellen. Er zeigt, aus welchen zentralen Bausteinen eine Geschäftsidee besteht und welche Annahmen dahinterstehen.
 
@@ -197,7 +196,7 @@ Der Canvas hilft dabei, eine Idee nicht nur aus Sicht der Lösung zu betrachten,
 
 In der Plattform bildet der Canvas die Grundlage für die spätere Hypothesenbildung.
 
-## Kundensegmente
+## 3.2 Kundensegmente
 
 Kundensegmente beschreiben, für wen die Lösung gedacht ist.
 
@@ -216,7 +215,7 @@ Beispiele:
 - KMU
 - Produktmanager
 
-## Nutzenversprechen
+## 3.3 Nutzenversprechen
 
 Das Nutzenversprechen beschreibt, welchen konkreten Mehrwert die Lösung bietet.
 
@@ -235,7 +234,7 @@ Beispiele:
 - Kosten senken
 - Umsatz steigern
 
-## Kanäle
+## 3.4 Kanäle
 
 Kanäle beschreiben, wie potenzielle Kunden erreicht werden.
 
@@ -254,7 +253,7 @@ Beispiele:
 - Direktvertrieb
 - Partnernetzwerke
 
-## Kundenbeziehungen
+## 3.5 Kundenbeziehungen
 
 Kundenbeziehungen beschreiben, wie die Beziehung zur Zielgruppe aufgebaut und gepflegt wird.
 
@@ -273,7 +272,7 @@ Beispiele:
 - Community
 - Persönliche Beratung
 
-## Einnahmequellen
+## 3.6 Einnahmequellen
 
 Einnahmequellen beschreiben, wie mit der Lösung Geld verdient wird.
 
@@ -292,7 +291,7 @@ Beispiele:
 - Beratungspakete
 - Nutzungsbasierte Abrechnung
 
-## Schlüsselressourcen
+## 3.7 Schlüsselressourcen
 
 Schlüsselressourcen beschreiben, welche Ressourcen für das Geschäftsmodell notwendig sind.
 
@@ -310,7 +309,7 @@ Beispiele:
 - Kundendaten
 - Marke
 
-## Schlüsselaktivitäten
+## 3.8 Schlüsselaktivitäten
 
 Schlüsselaktivitäten beschreiben, welche Tätigkeiten zentral sind, damit das Geschäftsmodell funktioniert.
 
@@ -328,7 +327,7 @@ Beispiele:
 - Vertrieb
 - Kundensupport
 
-## Schlüsselpartner
+## 3.9 Schlüsselpartner
 
 Schlüsselpartner beschreiben externe Partner, die für das Geschäftsmodell wichtig sind.
 
@@ -346,7 +345,7 @@ Beispiele:
 - Technologiepartner
 - Beratungsunternehmen
 
-## Kostenstruktur
+## 3.10 Kostenstruktur
 
 Die Kostenstruktur beschreibt, welche Kosten durch das Geschäftsmodell entstehen.
 
@@ -367,9 +366,9 @@ Beispiele:
 
 ---
 
-# Hypothesen
+# 4. Hypothesen
 
-## Was ist eine Hypothese?
+## 4.1 Was ist eine Hypothese?
 
 Eine Hypothese ist eine überprüfbare Annahme über eine Geschäftsidee.
 
@@ -387,7 +386,7 @@ Beispiel für eine schlechte Hypothese:
 
 Diese Aussage ist zu unklar. Es ist nicht definiert, wer gemeint ist, was „gut finden“ bedeutet und wie Erfolg gemessen wird.
 
-## Warum Hypothesen wichtig sind
+## 4.2 Warum Hypothesen wichtig sind
 
 Hypothesen helfen dabei, eine Geschäftsidee nicht als Ganzes zu bewerten, sondern in einzelne überprüfbare Annahmen zu zerlegen.
 
@@ -398,7 +397,7 @@ Dadurch wird sichtbar:
 - Wo noch Unsicherheit besteht
 - Welche Experimente als Nächstes sinnvoll sind
 
-## Angaben beim Erstellen einer Hypothese
+## 4.3 Angaben beim Erstellen einer Hypothese
 
 Beim Erstellen einer Hypothese werden mehrere Informationen erfasst.
 
@@ -414,13 +413,12 @@ Typische Angaben sind:
 Diese Struktur hilft dabei, Hypothesen nicht nur zu sammeln, sondern systematisch auszuwerten.
 
 <div class="not-prose my-6 rounded-2xl bg-muted/30 p-4 text-center text-sm text-toned">
-	Screenshot-Platzhalter: Hypothesen-Detailseite<br />
-	Empfohlener Pfad: <code>/images/docs/hypothesis-detail.png</code>
+	Empfohlener Pfad: <code>/images/hypothesis-detail.png</code>
 </div>
 
 ---
 
-# Unsicherheitsbereiche
+# 5. Unsicherheitsbereiche
 
 Jede Hypothese wird einem Unsicherheitsbereich zugeordnet. Dadurch wird sichtbar, welche Art von Risiko überprüft wird.
 
@@ -432,7 +430,7 @@ Die Plattform unterscheidet fünf Bereiche:
 - Monetarisierung
 - Umsetzung
 
-## Problem
+## 5.1 Problem
 
 Der Bereich Problem betrifft die Frage, ob das angenommene Problem überhaupt existiert und für die Zielgruppe relevant genug ist.
 
@@ -449,7 +447,7 @@ Beispiel:
 
 Problem-Hypothesen sollten häufig sehr früh getestet werden. Wenn kein relevantes Problem existiert, ist eine Lösung meist nicht sinnvoll.
 
-## Lösung
+## 5.2 Lösung
 
 Der Bereich Lösung betrifft die Frage, ob die vorgeschlagene Lösung das Problem tatsächlich löst.
 
@@ -464,7 +462,7 @@ Beispiel:
 
 > Ein strukturierter Workspace hilft Gründern, ihre Validierungsaktivitäten besser zu organisieren.
 
-## Markt
+## 5.3 Markt
 
 Der Bereich Markt betrifft die Frage, ob es genügend Nachfrage und eine ausreichend erreichbare Zielgruppe gibt.
 
@@ -479,7 +477,7 @@ Beispiel:
 
 > Mindestens 100 Gründer pro Monat interessieren sich für eine Plattform zur Ideenvalidierung.
 
-## Monetarisierung
+## 5.4 Monetarisierung
 
 Der Bereich Monetarisierung betrifft die Frage, ob Kunden bereit sind, für die Lösung zu bezahlen.
 
@@ -496,7 +494,7 @@ Beispiel:
 
 Monetarisierungs-Hypothesen sind besonders wichtig, wenn aus einer Idee ein wirtschaftlich tragfähiges Produkt entstehen soll.
 
-## Umsetzung
+## 5.5 Umsetzung
 
 Der Bereich Umsetzung betrifft die Frage, ob die Idee technisch, organisatorisch oder wirtschaftlich realisierbar ist.
 
@@ -513,13 +511,13 @@ Beispiel:
 
 ---
 
-# Prioritäten
+# 6. Prioritäten
 
 Prioritäten helfen dabei, die wichtigsten Annahmen zuerst zu überprüfen.
 
 Nicht jede Hypothese ist gleich kritisch. Einige Annahmen entscheiden über den Erfolg der gesamten Idee, andere betreffen eher Detailfragen.
 
-## Hoch
+## 6.1 Hoch
 
 Eine Hypothese mit hoher Priorität betrifft ein zentrales Risiko.
 
@@ -533,7 +531,7 @@ Beispiele:
 
 Hohe Prioritäten sollten früh validiert werden.
 
-## Mittel
+## 6.2 Mittel
 
 Eine Hypothese mit mittlerer Priorität ist wichtig, aber nicht unmittelbar existenzkritisch.
 
@@ -543,7 +541,7 @@ Beispiele:
 - Eine Zielgruppe bevorzugt eine bestimmte Funktion.
 - Ein Preismodell ist attraktiver als ein anderes.
 
-## Niedrig
+## 6.3 Niedrig
 
 Eine Hypothese mit niedriger Priorität betrifft eher Optimierungen oder weniger kritische Annahmen.
 
@@ -557,7 +555,7 @@ Niedrige Prioritäten können später getestet werden.
 
 ---
 
-# Evidenztypen
+# 7. Evidenztypen
 
 Ein Evidenztyp beschreibt, welche Art von Erkenntnis zur Validierung einer Hypothese verwendet wird.
 
@@ -568,7 +566,7 @@ Die Plattform unterscheidet vier Evidenztypen:
 - Verhaltensbasiert
 - Monetär
 
-## Qualitativ
+## 7.1 Qualitativ
 
 Qualitative Evidenz basiert auf Aussagen, Meinungen, Beobachtungen oder offenen Rückmeldungen.
 
@@ -583,7 +581,7 @@ Qualitative Evidenz hilft besonders gut zu verstehen, warum Menschen ein Problem
 
 Sie eignet sich gut für frühe Lernphasen, ist aber oft schwerer objektiv zu vergleichen.
 
-## Quantitativ
+## 7.2 Quantitativ
 
 Quantitative Evidenz basiert auf Zahlen und messbaren Ergebnissen.
 
@@ -598,7 +596,7 @@ Quantitative Evidenz hilft zu erkennen, wie häufig ein Verhalten oder Interesse
 
 Sie ist besonders hilfreich, wenn klare Zielwerte definiert werden können.
 
-## Verhaltensbasiert
+## 7.3 Verhaltensbasiert
 
 Verhaltensbasierte Evidenz zeigt, was Menschen tatsächlich tun, nicht nur was sie sagen.
 
@@ -611,7 +609,7 @@ Beispiele:
 
 Verhaltensbasierte Evidenz ist häufig aussagekräftiger als reine Meinungen, weil tatsächliches Verhalten beobachtet wird.
 
-## Monetär
+## 7.4 Monetär
 
 Monetäre Evidenz zeigt, ob Menschen bereit sind, Geld auszugeben.
 
@@ -626,7 +624,7 @@ Monetäre Evidenz ist besonders stark, wenn es um die Validierung von Zahlungsbe
 
 ---
 
-# Canvas-Zuordnung
+# 8. Canvas-Zuordnung
 
 Eine Hypothese kann einem oder mehreren Canvas-Bereichen zugeordnet werden.
 
@@ -640,7 +638,7 @@ Diese Hypothese könnte folgenden Canvas-Bereichen zugeordnet werden:
 - Schlüsselaktivitäten
 - Einnahmequellen
 
-## Warum ist die Zuordnung hilfreich?
+## 8.1 Warum ist die Zuordnung hilfreich?
 
 Die Zuordnung hilft dabei, Zusammenhänge im Geschäftsmodell sichtbar zu machen.
 
@@ -655,9 +653,9 @@ Dadurch wird der Validierungsprozess übersichtlicher und besser auswertbar.
 
 ---
 
-# Metriken und Schwellwerte
+# 9. Metriken und Schwellwerte
 
-## Was ist eine Metrik?
+## 9.1 Was ist eine Metrik?
 
 Eine Metrik definiert, wie Erfolg gemessen wird.
 
@@ -672,7 +670,7 @@ Beispiele für Metriken:
 - Klickrate
 - Anzahl aktive Nutzer
 
-## Was ist ein Schwellwert?
+## 9.2 Was ist ein Schwellwert?
 
 Ein Schwellwert definiert, ab welchem Ergebnis eine Hypothese als erfüllt gilt.
 
@@ -695,7 +693,7 @@ Die Plattform unterstützt folgende Vergleichsoperatoren:
 <
 ```
 
-## Prozentwerte
+## 9.3 Prozentwerte
 
 Prozentwerte werden über die Einheit der Metrik abgebildet.
 
@@ -711,9 +709,9 @@ Dies bedeutet, dass eine Conversion Rate von mindestens 10 % erreicht werden sol
 
 ---
 
-# Experimente
+# 10. Experimente
 
-## Was ist ein Experiment?
+## 10.1 Was ist ein Experiment?
 
 Ein Experiment ist eine Validierungsaktivität, mit der eine Hypothese überprüft wird.
 
@@ -728,7 +726,7 @@ Typische Experimente sind:
 - Prototypentests
 - Preisexperimente
 
-## Was macht die Plattform mit Experimenten?
+## 10.2 Was macht die Plattform mit Experimenten?
 
 Die Plattform unterstützt die Planung und Dokumentation von Experimenten.
 
@@ -752,9 +750,9 @@ Das bedeutet:
 
 ---
 
-# Messungen und Validierung
+# 11. Messungen und Validierung
 
-## Was ist eine Messung?
+## 11.1 Was ist eine Messung?
 
 Eine Messung ist das dokumentierte Ergebnis eines Experiments.
 
@@ -767,7 +765,7 @@ Beispiele:
 
 Die Messung wird mit der zuvor definierten Metrik und dem Schwellwert verglichen.
 
-## Wie entsteht der Validierungsstatus?
+## 11.2 Wie entsteht der Validierungsstatus?
 
 Die Plattform leitet den Status einer Hypothese automatisch ab.
 
@@ -785,7 +783,7 @@ Validiert oder Invalidiert
 
 Wenn das Experiment noch nicht abgeschlossen ist oder keine ausreichenden Daten vorhanden sind, bleibt die Hypothese im Status Nicht getestet.
 
-## Nicht getestet
+## 11.3 Nicht getestet
 
 Eine Hypothese ist Nicht getestet, wenn noch keine ausreichende Grundlage zur Bewertung vorhanden ist.
 
@@ -796,7 +794,7 @@ Das kann bedeuten:
 - Es wurde noch keine Messung erfasst.
 - Es fehlt ein Schwellwert.
 
-## Validiert
+## 11.4 Validiert
 
 Eine Hypothese ist Validiert, wenn das Experiment abgeschlossen ist und der Messwert das definierte Erfolgskriterium erfüllt.
 
@@ -808,7 +806,7 @@ Messwert: 63 Registrierungen
 Status: Validiert
 ```
 
-## Invalidiert
+## 11.5 Invalidiert
 
 Eine Hypothese ist Invalidiert, wenn das Experiment abgeschlossen ist und der Messwert das definierte Erfolgskriterium nicht erfüllt.
 
@@ -824,7 +822,7 @@ Eine invalidierte Hypothese bedeutet nicht automatisch, dass die gesamte Idee sc
 
 ---
 
-# Overview Dashboard
+# 12. Overview Dashboard
 
 Die Overview-Seite fasst den aktuellen Validierungsstand einer Version zusammen.
 
@@ -835,7 +833,7 @@ Sie ist ein zentraler Bereich der Plattform, weil sie nicht nur einzelne Hypothe
 	Empfohlener Pfad: <code>/images/docs/overview-dashboard.png</code>
 </div>
 
-## Was zeigt die Overview?
+## 12.1 Was zeigt die Overview?
 
 Die Overview zeigt unter anderem:
 
@@ -847,7 +845,7 @@ Die Overview zeigt unter anderem:
 
 Für jeden Unsicherheitsbereich wird sichtbar, wie viele Hypothesen dort validiert, invalidiert oder noch nicht getestet wurden.
 
-## Warum ist das wichtig?
+## 12.2 Warum ist das wichtig?
 
 Einzelne Hypothesen sind wichtig. Noch wichtiger ist jedoch das Gesamtbild.
 
@@ -860,11 +858,11 @@ Die Overview hilft dabei zu erkennen:
 
 ---
 
-# Entscheidungen treffen
+# 13. Entscheidungen treffen
 
 Die Plattform trifft keine unternehmerischen Entscheidungen automatisch. Sie unterstützt jedoch dabei, Entscheidungen besser vorzubereiten.
 
-## Viele validierte Hypothesen mit hoher Priorität
+## 13.1 Viele validierte Hypothesen mit hoher Priorität
 
 Dies ist ein positives Signal.
 
@@ -872,7 +870,7 @@ Es zeigt, dass wichtige Annahmen durch Evidenz gestützt werden.
 
 Trotzdem sollte geprüft werden, ob noch zentrale Bereiche offen sind, insbesondere Monetarisierung und Markt.
 
-## Viele invalidierte Hypothesen mit hoher Priorität
+## 13.2 Viele invalidierte Hypothesen mit hoher Priorität
 
 Dies ist ein kritisches Signal.
 
@@ -886,31 +884,31 @@ Mögliche Konsequenzen:
 - Geschäftsmodell überarbeiten
 - Pivot erstellen
 
-## Viele nicht getestete Hypothesen
+## 13.3 Viele nicht getestete Hypothesen
 
 Dies bedeutet, dass noch zu wenig Evidenz vorhanden ist.
 
 In diesem Fall sollte meist keine grosse Umsetzungsentscheidung getroffen werden. Stattdessen sollten weitere Experimente geplant werden.
 
-## Validierte Problem-Hypothesen
+## 13.4 Validierte Problem-Hypothesen
 
 Validierte Problem-Hypothesen zeigen, dass ein tatsächliches Bedürfnis oder ein relevanter Schmerzpunkt bestehen könnte.
 
 Das ist häufig eine wichtige Grundlage für weitere Validierung.
 
-## Invalidierte Problem-Hypothesen
+## 13.5 Invalidierte Problem-Hypothesen
 
 Wenn Problem-Hypothesen invalidiert werden, sollte besonders vorsichtig weitergearbeitet werden.
 
 Ohne relevantes Problem ist eine Lösung meist schwer zu rechtfertigen.
 
-## Validierte Monetarisierungs-Hypothesen
+## 13.6 Validierte Monetarisierungs-Hypothesen
 
 Validierte Monetarisierungs-Hypothesen liefern Hinweise auf Zahlungsbereitschaft.
 
 Das ist besonders wichtig, wenn aus der Idee ein wirtschaftlich tragfähiges Produkt entstehen soll.
 
-## Invalidierte Monetarisierungs-Hypothesen
+## 13.7 Invalidierte Monetarisierungs-Hypothesen
 
 Wenn Monetarisierungs-Hypothesen invalidiert werden, muss nicht zwingend die gesamte Idee verworfen werden.
 
@@ -923,19 +921,19 @@ Mögliche Anpassungen:
 
 ---
 
-# Versionierung
+# 14. Versionierung
 
 Versionierung hilft dabei, Lernschritte nachvollziehbar zu dokumentieren.
 
 Statt eine Idee laufend zu überschreiben, können neue Versionen erstellt werden. Dadurch bleibt sichtbar, wie sich die Idee entwickelt hat und welche Erkenntnisse zu Veränderungen geführt haben.
 
-## Initiale Version
+## 14.1 Initiale Version
 
 Die Initiale Version ist die erste Version einer Idee.
 
 Sie entsteht automatisch beim Erstellen einer Idee und bildet den Ausgangspunkt des Validierungsprozesses.
 
-## Iteration
+## 14.2 Iteration
 
 Eine Iteration wird verwendet, wenn die Grundidee weiterhin sinnvoll erscheint und weiterentwickelt werden soll.
 
@@ -956,7 +954,7 @@ Beispiel:
 
 > Die Zielgruppe zeigt Interesse, aber das Nutzenversprechen muss klarer formuliert werden.
 
-## Pivot
+## 14.3 Pivot
 
 Ein Pivot wird verwendet, wenn wichtige Annahmen widerlegt wurden und eine neue Richtung untersucht werden soll.
 
@@ -976,7 +974,7 @@ Beispiel:
 
 > Die ursprüngliche Zielgruppe zeigt keine Zahlungsbereitschaft. Eine andere Zielgruppe könnte jedoch relevanter sein.
 
-## Iteration oder Pivot?
+## 14.4 Iteration oder Pivot?
 
 Eine Iteration eignet sich, wenn die Richtung grundsätzlich stimmt.
 
@@ -986,21 +984,21 @@ Die Plattform stellt die notwendigen Informationen bereit. Die Entscheidung blei
 
 ---
 
-# Best Practices
+# 15. Best Practices
 
-## Beginne mit den grössten Risiken
+## 15.1 Beginne mit den grössten Risiken
 
 Teste zuerst die Annahmen, die über Erfolg oder Misserfolg der Idee entscheiden.
 
 Eine schöne Funktion oder ein gutes Design ist weniger wichtig, wenn unklar ist, ob überhaupt ein relevantes Problem existiert.
 
-## Validiere Probleme vor Lösungen
+## 15.2 Validiere Probleme vor Lösungen
 
 Bevor eine Lösung getestet wird, sollte klar sein, dass das Problem tatsächlich existiert.
 
 Eine Lösung für ein nicht relevantes Problem wird selten erfolgreich sein.
 
-## Formuliere Hypothesen konkret
+## 15.3 Formuliere Hypothesen konkret
 
 Eine gute Hypothese sollte messbar sein.
 
@@ -1012,25 +1010,25 @@ Besser:
 
 > Mindestens 30 % der Testnutzer erstellen innerhalb einer Woche mindestens drei Hypothesen.
 
-## Verwende klare Schwellwerte
+## 15.4 Verwende klare Schwellwerte
 
 Definiere vor dem Experiment, welches Ergebnis als Erfolg gilt.
 
 Dadurch wird verhindert, dass Ergebnisse nachträglich passend interpretiert werden.
 
-## Gewichte Verhalten stärker als Meinungen
+## 15.5 Gewichte Verhalten stärker als Meinungen
 
 Menschen sagen oft, dass sie etwas nutzen oder kaufen würden. Aussagekräftiger ist jedoch, was sie tatsächlich tun.
 
 Verhaltensbasierte und monetäre Evidenz sind deshalb häufig besonders wertvoll.
 
-## Dokumentiere auch negative Ergebnisse
+## 15.6 Dokumentiere auch negative Ergebnisse
 
 Invalidierte Hypothesen sind kein Scheitern.
 
 Sie zeigen, was nicht funktioniert, und helfen dabei, bessere Entscheidungen zu treffen.
 
-## Teste möglichst gezielt
+## 15.7 Teste möglichst gezielt
 
 Ein Experiment sollte möglichst eine konkrete Annahme überprüfen.
 
@@ -1038,53 +1036,53 @@ Wenn zu viele Dinge gleichzeitig getestet werden, ist schwer erkennbar, warum ei
 
 ---
 
-# Häufige Fragen
+# 16. Häufige Fragen
 
-## Führt die Plattform Experimente automatisch durch?
+## 16.1 Führt die Plattform Experimente automatisch durch?
 
 Nein. Experimente werden in der Plattform geplant und dokumentiert, aber ausserhalb der Plattform durchgeführt.
 
-## Bewertet die Plattform automatisch, ob eine Geschäftsidee gut ist?
+## 16.2 Bewertet die Plattform automatisch, ob eine Geschäftsidee gut ist?
 
 Nein. Die Plattform bewertet einzelne Hypothesen anhand definierter Messwerte und Schwellwerte. Die geschäftliche Gesamtentscheidung bleibt beim Nutzer.
 
-## Kann eine Idee mehrere Versionen haben?
+## 16.3 Kann eine Idee mehrere Versionen haben?
 
 Ja. Eine Idee kann eine Initiale Version sowie weitere Iterationen oder Pivots besitzen.
 
-## Was ist der Unterschied zwischen Iteration und Pivot?
+## 16.4 Was ist der Unterschied zwischen Iteration und Pivot?
 
 Eine Iteration entwickelt die bestehende Richtung weiter und übernimmt den vollständigen aktuellen Stand.
 
 Ein Pivot passt die Richtung an und übernimmt nur validierte sowie nicht getestete Hypothesen. Invalidierte Hypothesen werden nicht übernommen.
 
-## Muss der Canvas vollständig ausgefüllt sein?
+## 16.5 Muss der Canvas vollständig ausgefüllt sein?
 
 Nein. Der Canvas kann schrittweise ergänzt werden. Wichtig ist, dass zentrale Annahmen sichtbar gemacht werden.
 
-## Muss jede Hypothese eine Metrik haben?
+## 16.6 Muss jede Hypothese eine Metrik haben?
 
 Für eine objektive Validierung sollte jede Hypothese eine Metrik und einen Schwellwert besitzen. Ohne messbares Kriterium kann der Status nicht zuverlässig abgeleitet werden.
 
-## Was bedeutet Nicht getestet?
+## 16.7 Was bedeutet Nicht getestet?
 
 Nicht getestet bedeutet, dass noch keine ausreichende Grundlage zur Bewertung vorhanden ist. Das kann daran liegen, dass noch kein abgeschlossenes Experiment oder keine Messung vorhanden ist.
 
-## Ist eine invalidierte Hypothese schlecht?
+## 16.8 Ist eine invalidierte Hypothese schlecht?
 
 Nein. Eine invalidierte Hypothese ist ein Lernergebnis. Sie zeigt, dass eine Annahme nicht bestätigt werden konnte und überarbeitet oder verworfen werden sollte.
 
-## Ersetzt die Plattform Kundenfeedback?
+## 16.9 Ersetzt die Plattform Kundenfeedback?
 
 Nein. Kundenfeedback entsteht ausserhalb der Plattform. Die Plattform hilft dabei, dieses Feedback strukturiert zu dokumentieren und auszuwerten.
 
-## Für wen ist die Plattform gedacht?
+## 16.10 Für wen ist die Plattform gedacht?
 
 Die Plattform eignet sich besonders für Gründer, Startup-Teams, Innovationsverantwortliche und Personen, die digitale Geschäftsideen strukturiert überprüfen möchten.
 
 ---
 
-# Abschliessender Hinweis
+# 17. Abschliessender Hinweis
 
 Die Plattform ist kein Ideen-Generator und kein automatischer Business-Coach.
 

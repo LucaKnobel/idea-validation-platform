@@ -9,7 +9,7 @@ version: "1"
 # Wie funktioniert es?
 
 <div class="not-prose my-6 flex justify-center">
-	<img src="/images/marketing/marketing-process.png" alt="Validierungsprozess für Geschäftsideen" class="w-full max-w-xs sm:max-w-sm md:max-w-md" loading="lazy" />
+	<img src="/images/process.png" alt="Validierungsprozess für Geschäftsideen" class="w-full max-w-xs sm:max-w-sm md:max-w-md" loading="lazy" />
 </div>
 
 > Annahmen validieren, bevor Zeit und Geld in die Umsetzung investiert werden.
