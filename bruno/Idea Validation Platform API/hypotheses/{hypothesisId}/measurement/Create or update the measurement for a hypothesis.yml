@@ -1,0 +1,213 @@
+info:
+  name: Create or update the measurement for a hypothesis
+  type: http
+  seq: 2
+  tags:
+    - Measurements
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+  headers:
+    - name: better-auth.session_token
+      value: "{{apiKey}}"
+  params:
+    - name: hypothesisId
+      value: ""
+      type: path
+      description: Hypothesis identifier.
+  body:
+    type: json
+    data: |-
+      {
+        "value": 0,
+        "note": ""
+      }
+  auth:
+    type: apikey
+    key: better-auth.session_token
+    value: "{{apiKey}}"
+    placement: header
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 Response
+    description: Measurement upserted successfully
+    request:
+      url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+      method: PUT
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: hypothesisId
+          value: ""
+          type: path
+          description: Hypothesis identifier.
+      body:
+        type: json
+        data: |-
+          {
+            "value": 0,
+            "note": ""
+          }
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "id": "",
+            "value": 0,
+            "note": "",
+            "createdAt": "",
+            "updatedAt": ""
+          }
+  - name: 400 Response
+    description: Invalid path parameter or request body
+    request:
+      url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+      method: PUT
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: hypothesisId
+          value: ""
+          type: path
+          description: Hypothesis identifier.
+      body:
+        type: json
+        data: |-
+          {
+            "value": 0,
+            "note": ""
+          }
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 401 Response
+    description: Missing or invalid session
+    request:
+      url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+      method: PUT
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: hypothesisId
+          value: ""
+          type: path
+          description: Hypothesis identifier.
+      body:
+        type: json
+        data: |-
+          {
+            "value": 0,
+            "note": ""
+          }
+    response:
+      status: 401
+      statusText: Unauthorized
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 404 Response
+    description: Hypothesis not found or not accessible
+    request:
+      url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+      method: PUT
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: hypothesisId
+          value: ""
+          type: path
+          description: Hypothesis identifier.
+      body:
+        type: json
+        data: |-
+          {
+            "value": 0,
+            "note": ""
+          }
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 429 Response
+    description: Too many requests
+    request:
+      url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+      method: PUT
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: hypothesisId
+          value: ""
+          type: path
+          description: Hypothesis identifier.
+      body:
+        type: json
+        data: |-
+          {
+            "value": 0,
+            "note": ""
+          }
+    response:
+      status: 429
+      statusText: Too Many Requests
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+
+docs: |
+  Creates or updates the measurement singleton for a specific hypothesis owned by the current authenticated user.

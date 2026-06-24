@@ -8,23 +8,10 @@ info:
 http:
   method: POST
   url: "{{baseUrl}}/auth/sign-out"
-  headers:
-    - name: Origin
-      value: ""
-      description: Request origin. Must match a trusted origin configured by the server.
-    - name: Referer
-      value: ""
-      description: Request referer. Must belong to a trusted origin.
-    - name: better-auth.session_token
-      value: "{{apiKey}}"
   body:
     type: json
     data: "{}"
-  auth:
-    type: apikey
-    key: better-auth.session_token
-    value: "{{apiKey}}"
-    placement: header
+  auth: inherit
 
 settings:
   encodeUrl: true
@@ -38,15 +25,6 @@ examples:
     request:
       url: "{{baseUrl}}/auth/sign-out"
       method: POST
-      headers:
-        - name: Origin
-          value: ""
-          description: Request origin. Must match a trusted origin configured by the server.
-        - name: Referer
-          value: ""
-          description: Request referer. Must belong to a trusted origin.
-        - name: better-auth.session_token
-          value: "{{apiKey}}"
       body:
         type: json
         data: "{}"
@@ -63,50 +41,11 @@ examples:
             "status": true,
             "message": "Request accepted"
           }
-  - name: 400 Response
-    description: Missing or untrusted origin context
-    request:
-      url: "{{baseUrl}}/auth/sign-out"
-      method: POST
-      headers:
-        - name: Origin
-          value: ""
-          description: Request origin. Must match a trusted origin configured by the server.
-        - name: Referer
-          value: ""
-          description: Request referer. Must belong to a trusted origin.
-        - name: better-auth.session_token
-          value: "{{apiKey}}"
-      body:
-        type: json
-        data: "{}"
-    response:
-      status: 400
-      statusText: Bad Request
-      headers:
-        - name: Content-Type
-          value: application/json
-      body:
-        type: json
-        data: |-
-          {
-            "code": "INVALID_REQUEST_BODY",
-            "message": "Invalid request body"
-          }
   - name: 401 Response
     description: No active session
     request:
       url: "{{baseUrl}}/auth/sign-out"
       method: POST
-      headers:
-        - name: Origin
-          value: ""
-          description: Request origin. Must match a trusted origin configured by the server.
-        - name: Referer
-          value: ""
-          description: Request referer. Must belong to a trusted origin.
-        - name: better-auth.session_token
-          value: "{{apiKey}}"
       body:
         type: json
         data: "{}"
@@ -128,15 +67,6 @@ examples:
     request:
       url: "{{baseUrl}}/auth/sign-out"
       method: POST
-      headers:
-        - name: Origin
-          value: ""
-          description: Request origin. Must match a trusted origin configured by the server.
-        - name: Referer
-          value: ""
-          description: Request referer. Must belong to a trusted origin.
-        - name: better-auth.session_token
-          value: "{{apiKey}}"
       body:
         type: json
         data: "{}"
@@ -153,7 +83,3 @@ examples:
             "code": "INVALID_REQUEST_BODY",
             "message": "Invalid request body"
           }
-
-docs: |
-  Invalidates the current session.
-  This state-changing endpoint requires trusted `Origin` and `Referer` headers.

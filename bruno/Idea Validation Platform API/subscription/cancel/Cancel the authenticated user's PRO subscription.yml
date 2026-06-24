@@ -1,0 +1,185 @@
+info:
+  name: Cancel the authenticated user's PRO subscription
+  type: http
+  seq: 1
+  tags:
+    - Subscription
+
+http:
+  method: POST
+  url: "{{baseUrl}}/subscription/cancel"
+  headers:
+    - name: better-auth.session_token
+      value: "{{apiKey}}"
+  auth:
+    type: apikey
+    key: better-auth.session_token
+    value: "{{apiKey}}"
+    placement: header
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 Response
+    description: Subscription cancelled successfully
+    request:
+      url: "{{baseUrl}}/subscription/cancel"
+      method: POST
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "status": "ACTIVE",
+            "currentPeriodEnd": ""
+          }
+  - name: 401 Response
+    description: Missing or invalid session
+    request:
+      url: "{{baseUrl}}/subscription/cancel"
+      method: POST
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 401
+      statusText: Unauthorized
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 404 Response
+    description: No subscription found for user
+    request:
+      url: "{{baseUrl}}/subscription/cancel"
+      method: POST
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 409 Response
+    description: Cannot cancel non-PRO subscription
+    request:
+      url: "{{baseUrl}}/subscription/cancel"
+      method: POST
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 409
+      statusText: Conflict
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 429 Response
+    description: Too many requests
+    request:
+      url: "{{baseUrl}}/subscription/cancel"
+      method: POST
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 429
+      statusText: Too Many Requests
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 500 Response
+    description: Provider subscription ID missing or internal server error
+    request:
+      url: "{{baseUrl}}/subscription/cancel"
+      method: POST
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 502 Response
+    description: Failed to cancel subscription at Payrexx
+    request:
+      url: "{{baseUrl}}/subscription/cancel"
+      method: POST
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 502
+      statusText: Bad Gateway
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+
+docs: |
+  Cancels the authenticated user's PRO subscription immediately.
+  Calls the Payrexx API to stop billing and updates the local subscription state to CANCELLED.
+  Idempotent: returns existing cancelled record if already cancelled.
+  Rate limited to 5 requests per 60 seconds per user.

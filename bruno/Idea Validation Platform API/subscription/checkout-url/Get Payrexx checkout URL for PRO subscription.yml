@@ -1,0 +1,116 @@
+info:
+  name: Get Payrexx checkout URL for PRO subscription
+  type: http
+  seq: 1
+  tags:
+    - Subscription
+
+http:
+  method: GET
+  url: "{{baseUrl}}/subscription/checkout-url"
+  headers:
+    - name: better-auth.session_token
+      value: "{{apiKey}}"
+  auth:
+    type: apikey
+    key: better-auth.session_token
+    value: "{{apiKey}}"
+    placement: header
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 Response
+    description: Checkout URL generated successfully
+    request:
+      url: "{{baseUrl}}/subscription/checkout-url"
+      method: GET
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "checkoutUrl": ""
+          }
+  - name: 401 Response
+    description: Missing or invalid session
+    request:
+      url: "{{baseUrl}}/subscription/checkout-url"
+      method: GET
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 401
+      statusText: Unauthorized
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 429 Response
+    description: Too many requests
+    request:
+      url: "{{baseUrl}}/subscription/checkout-url"
+      method: GET
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 429
+      statusText: Too Many Requests
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 500 Response
+    description: Payrexx configuration error
+    request:
+      url: "{{baseUrl}}/subscription/checkout-url"
+      method: GET
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 500
+      statusText: Internal Server Error
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+
+docs: |
+  Creates a checkout record and returns a Payrexx payment page URL.
+  The checkout ID is embedded as referenceId in the URL and used by the webhook to identify the user.

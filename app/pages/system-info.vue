@@ -5,6 +5,7 @@ definePageMeta({
 
 const { t } = useI18n()
 const config = useRuntimeConfig()
+const githubRepositoryUrl = 'https://github.com/LucaKnobel/idea-validation-platform'
 
 const systemInfos = computed(() => [{
   label: t('systemInfo.fields.version'),
@@ -38,9 +39,24 @@ const systemInfos = computed(() => [{
 
       <UCard>
         <template #header>
-          <h2 class="font-semibold">
-            {{ $t('systemInfo.currentRelease') }}
-          </h2>
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="font-semibold">
+              {{ $t('systemInfo.currentRelease') }}
+            </h2>
+
+            <ULink
+              :to="githubRepositoryUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub Repository"
+              class="inline-flex items-center justify-center rounded-md p-1 text-muted transition-colors hover:text-highlighted"
+            >
+              <UIcon
+                name="i-lucide-github"
+                class="size-4"
+              />
+            </ULink>
+          </div>
         </template>
 
         <dl class="space-y-3">

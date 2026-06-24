@@ -108,7 +108,7 @@ It helps users document assumptions, run validation activities, and evaluate evi
 
 ### Production
 
-https://app.evidara.ch
+https://evidara.app/
 
 > Available when the production system is active.
 

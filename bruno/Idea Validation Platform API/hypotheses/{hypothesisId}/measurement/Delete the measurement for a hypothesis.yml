@@ -1,0 +1,161 @@
+info:
+  name: Delete the measurement for a hypothesis
+  type: http
+  seq: 3
+  tags:
+    - Measurements
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+  headers:
+    - name: better-auth.session_token
+      value: "{{apiKey}}"
+  params:
+    - name: hypothesisId
+      value: ""
+      type: path
+      description: Hypothesis identifier.
+  auth:
+    type: apikey
+    key: better-auth.session_token
+    value: "{{apiKey}}"
+    placement: header
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 204 Response
+    description: Measurement deleted successfully
+    request:
+      url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: hypothesisId
+          value: ""
+          type: path
+          description: Hypothesis identifier.
+    response:
+      status: 204
+      statusText: No Content
+      body:
+        type: text
+        data: ""
+  - name: 400 Response
+    description: Invalid path parameter
+    request:
+      url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: hypothesisId
+          value: ""
+          type: path
+          description: Hypothesis identifier.
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 401 Response
+    description: Missing or invalid session
+    request:
+      url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: hypothesisId
+          value: ""
+          type: path
+          description: Hypothesis identifier.
+    response:
+      status: 401
+      statusText: Unauthorized
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 404 Response
+    description: Measurement not found or not accessible
+    request:
+      url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: hypothesisId
+          value: ""
+          type: path
+          description: Hypothesis identifier.
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 429 Response
+    description: Too many requests
+    request:
+      url: "{{baseUrl}}/hypotheses/:hypothesisId/measurement"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: hypothesisId
+          value: ""
+          type: path
+          description: Hypothesis identifier.
+    response:
+      status: 429
+      statusText: Too Many Requests
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+
+docs: |
+  Deletes the measurement singleton for a specific hypothesis owned by the current authenticated user.

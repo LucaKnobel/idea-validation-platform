@@ -1,0 +1,200 @@
+info:
+  name: List ideas of the authenticated user
+  type: http
+  seq: 1
+  tags:
+    - Ideas
+
+http:
+  method: GET
+  url: "{{baseUrl}}/ideas"
+  headers:
+    - name: better-auth.session_token
+      value: "{{apiKey}}"
+  params:
+    - name: page
+      value: "1"
+      type: query
+      description: 1-based page number.
+    - name: pageSize
+      value: "10"
+      type: query
+      description: Number of items per page.
+    - name: q
+      value: ""
+      type: query
+      description: Optional search query (trimmed by server).
+      disabled: true
+  auth:
+    type: apikey
+    key: better-auth.session_token
+    value: "{{apiKey}}"
+    placement: header
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 Response
+    description: Ideas loaded successfully
+    request:
+      url: "{{baseUrl}}/ideas"
+      method: GET
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: page
+          value: "1"
+          type: query
+          description: 1-based page number.
+        - name: pageSize
+          value: "10"
+          type: query
+          description: Number of items per page.
+        - name: q
+          value: ""
+          type: query
+          description: Optional search query (trimmed by server).
+          disabled: true
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "items": [
+              {
+                "id": "",
+                "latestVersionId": "",
+                "title": "",
+                "description": "",
+                "createdAt": "",
+                "updatedAt": ""
+              }
+            ],
+            "page": 0,
+            "pageSize": 0,
+            "total": 0,
+            "totalPages": 0,
+            "q": ""
+          }
+  - name: 400 Response
+    description: Invalid query parameters
+    request:
+      url: "{{baseUrl}}/ideas"
+      method: GET
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: page
+          value: "1"
+          type: query
+          description: 1-based page number.
+        - name: pageSize
+          value: "10"
+          type: query
+          description: Number of items per page.
+        - name: q
+          value: ""
+          type: query
+          description: Optional search query (trimmed by server).
+          disabled: true
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 401 Response
+    description: Missing or invalid session
+    request:
+      url: "{{baseUrl}}/ideas"
+      method: GET
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: page
+          value: "1"
+          type: query
+          description: 1-based page number.
+        - name: pageSize
+          value: "10"
+          type: query
+          description: Number of items per page.
+        - name: q
+          value: ""
+          type: query
+          description: Optional search query (trimmed by server).
+          disabled: true
+    response:
+      status: 401
+      statusText: Unauthorized
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 429 Response
+    description: Too many requests
+    request:
+      url: "{{baseUrl}}/ideas"
+      method: GET
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: page
+          value: "1"
+          type: query
+          description: 1-based page number.
+        - name: pageSize
+          value: "10"
+          type: query
+          description: Number of items per page.
+        - name: q
+          value: ""
+          type: query
+          description: Optional search query (trimmed by server).
+          disabled: true
+    response:
+      status: 429
+      statusText: Too Many Requests
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+
+docs: |
+  Returns a paginated list of ideas owned by the current authenticated user.
+  Supports optional full-text query over the latest version title and description.
