@@ -1,0 +1,97 @@
+info:
+  name: Get the authenticated user's subscription status
+  type: http
+  seq: 1
+  tags:
+    - Subscription
+
+http:
+  method: GET
+  url: "{{baseUrl}}/subscription/status"
+  headers:
+    - name: better-auth.session_token
+      value: "{{apiKey}}"
+  auth:
+    type: apikey
+    key: better-auth.session_token
+    value: "{{apiKey}}"
+    placement: header
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 Response
+    description: Subscription status retrieved successfully
+    request:
+      url: "{{baseUrl}}/subscription/status"
+      method: GET
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "plan": "FREE",
+            "status": "ACTIVE",
+            "currentPeriodEnd": "",
+            "isPro": false
+          }
+  - name: 401 Response
+    description: Missing or invalid session
+    request:
+      url: "{{baseUrl}}/subscription/status"
+      method: GET
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 401
+      statusText: Unauthorized
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 429 Response
+    description: Too many requests
+    request:
+      url: "{{baseUrl}}/subscription/status"
+      method: GET
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 429
+      statusText: Too Many Requests
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+
+docs: |
+  Returns the current subscription plan, status, period end date, and PRO access flag.
+  Returns nulls for plan/status if no subscription exists (user is transitioning to free tier).

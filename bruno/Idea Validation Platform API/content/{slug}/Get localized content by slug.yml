@@ -10,7 +10,7 @@ http:
   url: "{{baseUrl}}/content/:slug"
   params:
     - name: slug
-      value: legal/privacy
+      value: ""
       type: path
       description: Content slug path, for example `legal/privacy`.
   auth: inherit

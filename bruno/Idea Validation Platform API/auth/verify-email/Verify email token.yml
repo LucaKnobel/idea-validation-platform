@@ -1,5 +1,5 @@
 info:
-  name: Verify email using token
+  name: Verify email token
   type: http
   seq: 1
   tags:
@@ -15,7 +15,6 @@ http:
     - name: callbackURL
       value: ""
       type: query
-      description: Relative callback path after successful verification.
       disabled: true
   auth: inherit
 
@@ -27,7 +26,7 @@ settings:
 
 examples:
   - name: 200 Response
-    description: Email verification processed
+    description: Verification processed
     request:
       url: "{{baseUrl}}/auth/verify-email"
       method: GET
@@ -38,7 +37,6 @@ examples:
         - name: callbackURL
           value: ""
           type: query
-          description: Relative callback path after successful verification.
           disabled: true
     response:
       status: 200
@@ -54,7 +52,7 @@ examples:
             "message": "Request accepted"
           }
   - name: 400 Response
-    description: Invalid or expired verification token
+    description: Invalid token or request
     request:
       url: "{{baseUrl}}/auth/verify-email"
       method: GET
@@ -65,7 +63,6 @@ examples:
         - name: callbackURL
           value: ""
           type: query
-          description: Relative callback path after successful verification.
           disabled: true
     response:
       status: 400
@@ -92,7 +89,6 @@ examples:
         - name: callbackURL
           value: ""
           type: query
-          description: Relative callback path after successful verification.
           disabled: true
     response:
       status: 429

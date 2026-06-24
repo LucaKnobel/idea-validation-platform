@@ -1,5 +1,5 @@
 info:
-  name: Register a new account
+  name: Send or resend verification email
   type: http
   seq: 1
   tags:
@@ -7,21 +7,12 @@ info:
 
 http:
   method: POST
-  url: "{{baseUrl}}/auth/sign-up/email"
-  headers:
-    - name: Origin
-      value: ""
-      description: Request origin. Must match a trusted origin configured by the server.
-    - name: Referer
-      value: ""
-      description: Request referer. Must belong to a trusted origin.
+  url: "{{baseUrl}}/auth/send-verification-email"
   body:
     type: json
     data: |-
       {
         "email": "",
-        "password": "",
-        "name": "",
         "callbackURL": ""
       }
   auth: inherit
@@ -34,24 +25,15 @@ settings:
 
 examples:
   - name: 200 Response
-    description: Sign-up accepted (neutral success response)
+    description: Request accepted
     request:
-      url: "{{baseUrl}}/auth/sign-up/email"
+      url: "{{baseUrl}}/auth/send-verification-email"
       method: POST
-      headers:
-        - name: Origin
-          value: ""
-          description: Request origin. Must match a trusted origin configured by the server.
-        - name: Referer
-          value: ""
-          description: Request referer. Must belong to a trusted origin.
       body:
         type: json
         data: |-
           {
             "email": "",
-            "password": "",
-            "name": "",
             "callbackURL": ""
           }
     response:
@@ -68,24 +50,15 @@ examples:
             "message": "Request accepted"
           }
   - name: 400 Response
-    description: Invalid request body or missing/untrusted origin context
+    description: Invalid request body
     request:
-      url: "{{baseUrl}}/auth/sign-up/email"
+      url: "{{baseUrl}}/auth/send-verification-email"
       method: POST
-      headers:
-        - name: Origin
-          value: ""
-          description: Request origin. Must match a trusted origin configured by the server.
-        - name: Referer
-          value: ""
-          description: Request referer. Must belong to a trusted origin.
       body:
         type: json
         data: |-
           {
             "email": "",
-            "password": "",
-            "name": "",
             "callbackURL": ""
           }
     response:
@@ -104,22 +77,13 @@ examples:
   - name: 429 Response
     description: Too many requests
     request:
-      url: "{{baseUrl}}/auth/sign-up/email"
+      url: "{{baseUrl}}/auth/send-verification-email"
       method: POST
-      headers:
-        - name: Origin
-          value: ""
-          description: Request origin. Must match a trusted origin configured by the server.
-        - name: Referer
-          value: ""
-          description: Request referer. Must belong to a trusted origin.
       body:
         type: json
         data: |-
           {
             "email": "",
-            "password": "",
-            "name": "",
             "callbackURL": ""
           }
     response:
@@ -135,7 +99,3 @@ examples:
             "code": "INVALID_REQUEST_BODY",
             "message": "Invalid request body"
           }
-
-docs: |
-  Creates a new account and triggers verification flow.
-  This state-changing endpoint requires trusted `Origin` and `Referer` headers.

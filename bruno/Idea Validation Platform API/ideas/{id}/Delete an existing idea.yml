@@ -1,0 +1,162 @@
+info:
+  name: Delete an existing idea
+  type: http
+  seq: 2
+  tags:
+    - Ideas
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/ideas/:id"
+  headers:
+    - name: better-auth.session_token
+      value: "{{apiKey}}"
+  params:
+    - name: id
+      value: ""
+      type: path
+      description: Idea identifier.
+  auth:
+    type: apikey
+    key: better-auth.session_token
+    value: "{{apiKey}}"
+    placement: header
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 204 Response
+    description: Idea deleted successfully
+    request:
+      url: "{{baseUrl}}/ideas/:id"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: id
+          value: ""
+          type: path
+          description: Idea identifier.
+    response:
+      status: 204
+      statusText: No Content
+      body:
+        type: text
+        data: ""
+  - name: 400 Response
+    description: Invalid path parameter
+    request:
+      url: "{{baseUrl}}/ideas/:id"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: id
+          value: ""
+          type: path
+          description: Idea identifier.
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 401 Response
+    description: Missing or invalid session
+    request:
+      url: "{{baseUrl}}/ideas/:id"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: id
+          value: ""
+          type: path
+          description: Idea identifier.
+    response:
+      status: 401
+      statusText: Unauthorized
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 404 Response
+    description: Idea not found
+    request:
+      url: "{{baseUrl}}/ideas/:id"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: id
+          value: ""
+          type: path
+          description: Idea identifier.
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 429 Response
+    description: Too many requests
+    request:
+      url: "{{baseUrl}}/ideas/:id"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+      params:
+        - name: id
+          value: ""
+          type: path
+          description: Idea identifier.
+    response:
+      status: 429
+      statusText: Too Many Requests
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+
+docs: |
+  Deletes one idea owned by the current authenticated user.
+  Returns `404` when the idea does not exist for this user.

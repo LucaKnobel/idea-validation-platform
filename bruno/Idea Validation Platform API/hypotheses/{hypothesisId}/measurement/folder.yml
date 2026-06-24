@@ -1,0 +1,7 @@
+info:
+  name: measurement
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit

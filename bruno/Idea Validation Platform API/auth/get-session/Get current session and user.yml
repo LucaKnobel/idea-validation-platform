@@ -8,14 +8,7 @@ info:
 http:
   method: GET
   url: "{{baseUrl}}/auth/get-session"
-  headers:
-    - name: better-auth.session_token
-      value: "{{apiKey}}"
-  auth:
-    type: apikey
-    key: better-auth.session_token
-    value: "{{apiKey}}"
-    placement: header
+  auth: inherit
 
 settings:
   encodeUrl: true
@@ -25,13 +18,10 @@ settings:
 
 examples:
   - name: 200 Response
-    description: Session payload returned (or null fields when no active session)
+    description: Session payload
     request:
       url: "{{baseUrl}}/auth/get-session"
       method: GET
-      headers:
-        - name: better-auth.session_token
-          value: "{{apiKey}}"
     response:
       status: 200
       statusText: OK
@@ -46,13 +36,10 @@ examples:
             "user": {}
           }
   - name: 401 Response
-    description: Invalid or missing session cookie
+    description: Invalid or missing session
     request:
       url: "{{baseUrl}}/auth/get-session"
       method: GET
-      headers:
-        - name: better-auth.session_token
-          value: "{{apiKey}}"
     response:
       status: 401
       statusText: Unauthorized

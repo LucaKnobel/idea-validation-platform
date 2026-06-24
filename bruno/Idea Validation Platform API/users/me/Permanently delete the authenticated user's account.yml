@@ -1,0 +1,110 @@
+info:
+  name: Permanently delete the authenticated user's account
+  type: http
+  seq: 1
+  tags:
+    - Account
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/users/me"
+  headers:
+    - name: better-auth.session_token
+      value: "{{apiKey}}"
+  auth:
+    type: apikey
+    key: better-auth.session_token
+    value: "{{apiKey}}"
+    placement: header
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 204 Response
+    description: Account deleted successfully
+    request:
+      url: "{{baseUrl}}/users/me"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 204
+      statusText: No Content
+      body:
+        type: text
+        data: ""
+  - name: 401 Response
+    description: Missing or invalid session
+    request:
+      url: "{{baseUrl}}/users/me"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 401
+      statusText: Unauthorized
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 404 Response
+    description: User not found
+    request:
+      url: "{{baseUrl}}/users/me"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 404
+      statusText: Not Found
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+  - name: 429 Response
+    description: Too many requests
+    request:
+      url: "{{baseUrl}}/users/me"
+      method: DELETE
+      headers:
+        - name: better-auth.session_token
+          value: "{{apiKey}}"
+    response:
+      status: 429
+      statusText: Too Many Requests
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 0,
+            "statusMessage": "",
+            "message": ""
+          }
+
+docs: |
+  Permanently deletes the current authenticated user account.
+  This action is irreversible and removes owned data via database cascade rules.

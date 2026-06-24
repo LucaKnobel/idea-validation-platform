@@ -235,6 +235,79 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
   /ideas/{id}:
+    get:
+      operationId: getIdea
+      summary: Get one idea with full version metadata
+      description: |
+        Returns one idea owned by the current authenticated user.
+        The payload includes the latest version pointer and metadata for all idea versions.
+      tags:
+        - Ideas
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Idea identifier.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Idea loaded successfully
+          headers:
+            RateLimit-Policy:
+              schema:
+                type: string
+              description: Current policy in `limit;w=windowSeconds` format.
+            RateLimit-Limit:
+              schema:
+                type: integer
+                minimum: 1
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                minimum: 0
+            RateLimit-Reset:
+              schema:
+                type: integer
+                minimum: 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeaDetailResponse'
+        '400':
+          description: Invalid path parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Idea not found or not accessible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds until the next request is allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
     delete:
       operationId: deleteIdea
       summary: Delete an existing idea
@@ -2524,25 +2597,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
 components:
-  parameters:
-    OriginHeader:
-      name: Origin
-      in: header
-      required: true
-      description: Request origin. Must match a trusted origin configured by the server.
-      schema:
-        type: string
-        format: uri
-
-    RefererHeader:
-      name: Referer
-      in: header
-      required: true
-      description: Request referer. Must belong to a trusted origin.
-      schema:
-        type: string
-        format: uri
-
   securitySchemes:
     cookieAuth:
       type: apiKey
@@ -2660,6 +2714,36 @@ components:
           type: string
           format: date-time
 
+    IdeaDetailResponse:
+      type: object
+      required:
+        - id
+        - latestVersionId
+        - latestVersionNumber
+        - versions
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        latestVersionId:
+          type: string
+          format: uuid
+        latestVersionNumber:
+          type: integer
+          minimum: 1
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdeaVersionMetadata'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
     IdeasListResponse:
       type: object
       required:
@@ -2753,30 +2837,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CanvasElementResponse'
-
-    HypothesisCanvasSectionResponse:
-      type: object
-      required:
-        - id
-        - hypothesisId
-        - canvasElementType
-        - createdAt
-        - updatedAt
-      properties:
-        id:
-          type: string
-          format: uuid
-        hypothesisId:
-          type: string
-          format: uuid
-        canvasElementType:
-          $ref: '#/components/schemas/CanvasElementType'
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
 
     HypothesisResponse:
       type: object
@@ -3070,6 +3130,7 @@ components:
           type: string
           nullable: true
         threshold:
+          type: object
           allOf:
             - $ref: '#/components/schemas/MetricThresholdResponse'
           nullable: true
