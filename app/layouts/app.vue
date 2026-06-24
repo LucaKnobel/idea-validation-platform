@@ -13,6 +13,18 @@ const localePath = useLocalePath()
 
         <div class="flex items-center gap-1">
           <UButton
+            :to="localePath('/documentation')"
+            icon="i-lucide-book-open"
+            color="neutral"
+            variant="ghost"
+            :aria-label="$t('navigation.documentation')"
+          >
+            <span class="hidden md:inline">
+              {{ $t('navigation.documentation') }}
+            </span>
+          </UButton>
+
+          <UButton
             :to="localePath('/settings')"
             icon="i-lucide-settings"
             color="neutral"
