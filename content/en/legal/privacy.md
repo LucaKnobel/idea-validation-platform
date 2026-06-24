@@ -8,8 +8,8 @@ version: "2"
 
 # Privacy Policy
 
-**Version:** 2
-**Last Updated:** 24.06.2026
+**Version:** 2  
+**Last Updated:** 24.06.2026  
 
 ---
 
@@ -17,10 +17,10 @@ version: "2"
 
 The controller responsible for the processing of personal data under the revised Swiss Federal Act on Data Protection (FADP) is:
 
-Luca Knobel
-Mühlerain 14
-3210 Kerzers
-Switzerland
+Luca Knobel  
+Mühlerain 14  
+3210 Kerzers  
+Switzerland  
 
 Email: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)
 
