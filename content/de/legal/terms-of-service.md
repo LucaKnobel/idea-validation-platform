@@ -1,29 +1,27 @@
 ---
 
 title: Nutzungsbedingungen
-description: Nutzungsbedingungen für die SaaS-Applikation zur Validierung digitaler Geschäftsideen.
+description: Nutzungsbedingungen für die Plattform zur Validierung digitaler Geschäftsideen
 locale: de
-updatedAt: 2026-04-26
-version: "1"
+version: "2"
 ------------
 
 # Nutzungsbedingungen
 
-**SaaS-Applikation zur Validierung digitaler Geschäftsideen**  
-Version 1  
-Stand: 26.04.2026  
+**Plattform zur Validierung digitaler Geschäftsideen**
+Version 2  
 
 ---
 
-## 1. Geltungsbereich
+# 1. Geltungsbereich
 
-Diese Nutzungsbedingungen regeln das Vertragsverhältnis zwischen dem Betreiber der webbasierten Software-as-a-Service-Applikation (nachfolgend „Plattform“) und den registrierten Nutzern.
+Diese Nutzungsbedingungen regeln das Vertragsverhältnis zwischen dem Betreiber der Plattform und den registrierten Nutzern.
 
-Mit der Registrierung und Nutzung der Plattform akzeptiert der Nutzer diese Nutzungsbedingungen.
+Mit der Registrierung, dem Abschluss eines Abonnements oder der Nutzung der Plattform akzeptiert der Nutzer diese Nutzungsbedingungen.
 
 ---
 
-## 2. Betreiber
+# 2. Betreiber
 
 Betreiber der Plattform ist:
 
@@ -31,174 +29,352 @@ Luca Knobel
 Mühlerain 14  
 3210 Kerzers  
 Schweiz  
-E-Mail: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)
+
+E-Mail: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)  
 
 ---
 
-## 3. Vertragsgegenstand
+# 3. Vertragsgegenstand
 
-Die Plattform dient der strukturierten Erfassung, Verwaltung und Analyse digitaler Geschäftsideen sowie der Durchführung von Validierungsprozessen (z. B. Hypothesen, Metriken, Bewertungen).
+Die Plattform dient der strukturierten Erfassung, Verwaltung und Analyse digitaler Geschäftsideen.
+
+Insbesondere können Nutzer Informationen zu Geschäftsideen, Business Model Canvas, Hypothesen, Experimenten, Metriken, Schwellwerten, Messungen und weiteren Validierungsaktivitäten erfassen und verwalten.
 
 Die Plattform stellt ausschliesslich ein technisches Werkzeug zur Verfügung.
 
-Sie ersetzt insbesondere keine:
+Die Plattform erbringt insbesondere keine:
 
-* rechtliche Beratung
-* finanzielle Beratung
-* unternehmerische Beratung
-* strategische Entscheidungsgrundlage
+* Rechtsberatung
+* Steuerberatung
+* Finanzberatung
+* Unternehmensberatung
+* Investitionsberatung
+* strategische Beratung
 
-Ein Anspruch auf bestimmte Funktionen, Weiterentwicklungen oder zukünftige Erweiterungen besteht nicht.
+Ein Anspruch auf bestimmte Funktionen, Weiterentwicklungen, Erweiterungen oder zukünftige Versionen besteht nicht.
 
 ---
 
-## 4. Entwicklungsstatus der Plattform (Beta-Phase)
+# 4. Entwicklungs- und Teststatus
 
-Die Plattform befindet sich ganz oder teilweise in einer Entwicklungs- und Testphase.
+Die Plattform befindet sich ganz oder teilweise in einer fortlaufenden Entwicklungs-, Test- und Verbesserungsphase.
 
-Der Nutzer nimmt zur Kenntnis, dass:
+Der Nutzer nimmt ausdrücklich zur Kenntnis, dass:
 
-* Funktionen unvollständig, fehlerhaft oder instabil sein können
-* sich Funktionalitäten jederzeit ändern können
-* Datenverluste nicht ausgeschlossen werden können
-* die Plattform zu Test- und Entwicklungszwecken betrieben wird
+* Funktionen unvollständig sein können
+* Funktionen fehlerhaft sein können
+* Funktionen jederzeit geändert werden können
+* Funktionen jederzeit entfernt werden können
+* Datenverluste auftreten können
+* Fehler, Unterbrüche oder Sicherheitsprobleme auftreten können
 
 Die Nutzung erfolgt ausdrücklich auf eigenes Risiko.
 
 ---
 
-## 5. Registrierung und Benutzerkonto
+# 5. Registrierung und Benutzerkonto
 
-Zur Nutzung der Plattform ist eine Registrierung erforderlich.
+Für die Nutzung der Plattform ist ein Benutzerkonto erforderlich.
 
 Der Nutzer verpflichtet sich:
 
-* wahrheitsgemässe und aktuelle Angaben zu machen
+* wahrheitsgemässe Angaben zu machen
 * Zugangsdaten vertraulich zu behandeln
-* das Benutzerkonto nicht Dritten zugänglich zu machen
+* keine fremden Konten zu verwenden
+* das eigene Konto nicht an Dritte weiterzugeben
 
-Der Nutzer ist für sämtliche Aktivitäten verantwortlich, die unter seinem Konto erfolgen.
-
----
-
-## 6. Pflichten des Nutzers
-
-Dem Nutzer ist insbesondere untersagt:
-
-* rechtswidrige, beleidigende oder sonstige unzulässige Inhalte zu speichern
-* die Plattform missbräuchlich oder zweckfremd zu verwenden
-* Sicherheitsmechanismen zu umgehen oder zu testen
-* automatisierte Zugriffe (Bots, Scraping) ohne Zustimmung vorzunehmen
-* die Plattform technisch zu manipulieren oder zu stören
-
-Der Betreiber ist berechtigt, bei Verstoss gegen diese Pflichten das Benutzerkonto ohne Vorankündigung zu sperren oder dauerhaft zu löschen.
+Der Nutzer ist für sämtliche Aktivitäten verantwortlich, die unter seinem Benutzerkonto erfolgen.
 
 ---
 
-## 7. Verfügbarkeit
+# 6. Zulässige Nutzung
+
+Der Nutzer darf die Plattform ausschliesslich im Rahmen der vorgesehenen Funktionen verwenden.
+
+Insbesondere untersagt sind:
+
+* rechtswidrige Inhalte
+* beleidigende Inhalte
+* betrügerische Inhalte
+* missbräuchliche Nutzung
+* Umgehung technischer Schutzmassnahmen
+* Störung der Plattform
+* automatisierte Massenabfragen
+* Scraping
+* Denial-of-Service-Angriffe
+* Nutzung zur Verbreitung von Schadsoftware
+
+Der Betreiber ist berechtigt, Benutzerkonten jederzeit, ohne Angabe von Gründen und ohne Vorankündigung einzuschränken, zu sperren oder dauerhaft zu löschen.
+
+---
+
+# 7. Nutzerinhalte
+
+Der Nutzer bleibt allein verantwortlich für sämtliche von ihm erfassten oder gespeicherten Inhalte.
+
+Dies umfasst insbesondere:
+
+* Geschäftsideen
+* Businesspläne
+* Canvas-Inhalte
+* Hypothesen
+* Experimente
+* Messungen
+* Kennzahlen
+* Unternehmensinformationen
+
+Der Betreiber überprüft Nutzerinhalte grundsätzlich nicht auf:
+
+* Richtigkeit
+* Vollständigkeit
+* Rechtmässigkeit
+* Aktualität
+* Verletzungen von Rechten Dritter
+
+Der Nutzer sichert zu, über sämtliche erforderlichen Rechte an den von ihm gespeicherten Inhalten zu verfügen.
+
+---
+
+# 8. Vertrauliche Informationen
+
+Die Plattform ist nicht zur Speicherung von Geschäftsgeheimnissen oder besonders schützenswerten Informationen bestimmt.
+
+Der Nutzer entscheidet selbst, welche Informationen gespeichert werden.
+
+Der Betreiber übernimmt keine Haftung für Schäden, die aus der Speicherung vertraulicher oder geschäftskritischer Informationen entstehen.
+
+---
+
+# 9. Verfügbarkeit
 
 Die Plattform wird als Online-Dienst bereitgestellt.
 
-Es besteht keinerlei Anspruch auf:
+Es besteht kein Anspruch auf:
 
 * unterbrechungsfreie Nutzung
 * permanente Verfügbarkeit
 * bestimmte Reaktionszeiten
-* Datenerhalt über einen bestimmten Zeitraum
+* bestimmte Leistungswerte
+* Datenerhalt
+* Wiederherstellung von Daten
 
-Wartung, Weiterentwicklung, Deployments oder technische Störungen können jederzeit zu Einschränkungen führen.
+Der Betreiber kann die Plattform jederzeit:
+
+* ändern
+* einschränken
+* unterbrechen
+* deaktivieren
+* dauerhaft einstellen
+
+Dem Nutzer entstehen daraus keinerlei Ansprüche.
 
 ---
 
-## 8. Datensicherung und Verantwortung des Nutzers
+# 10. Datensicherung und Datenverlust
 
 Der Nutzer ist selbst für die Sicherung seiner Daten verantwortlich.
 
-Es wird ausdrücklich empfohlen, wichtige Daten regelmässig extern zu sichern.
+Der Betreiber führt keine garantierten Datensicherungen für Nutzerdaten durch.
 
-Der Betreiber übernimmt keine Verantwortung für Datenverluste, unabhängig von deren Ursache.
+Es besteht insbesondere kein Anspruch auf:
+
+* Backup-Erstellung
+* Datenwiederherstellung
+* Wiederherstellung gelöschter Konten
+* Wiederherstellung gelöschter Inhalte
+
+Datenverluste können jederzeit auftreten.
 
 ---
 
-## 9. Haftung
+# 11. Abonnemente und Zahlungen
 
-Die Nutzung der Plattform erfolgt auf eigenes Risiko.
+Die Plattform kann kostenpflichtige Abonnemente anbieten.
 
-Die Plattform wird „as is“ und ohne jegliche ausdrückliche oder stillschweigende Gewährleistung bereitgestellt.
+Aktuelle Preise werden auf der Plattform veröffentlicht.
 
-Der Betreiber übernimmt insbesondere keine Gewähr für:
+Abonnemente verlängern sich automatisch um die jeweils gewählte Laufzeit, sofern sie nicht gekündigt werden.
 
-* Fehlerfreiheit oder Verfügbarkeit der Plattform
-* Richtigkeit oder Vollständigkeit von Ergebnissen
-* Eignung für geschäftliche oder strategische Entscheidungen
-* dauerhafte Speicherung von Daten
+Bereits bezahlte Gebühren werden grundsätzlich nicht zurückerstattet.
 
-Die Plattform ist nicht für den Einsatz in geschäftskritischen, finanziellen oder rechtlich relevanten Entscheidungsprozessen bestimmt.
+Nach Kündigung wird das Benutzerkonto unmittelbar auf die kostenlose Version zurückgestuft.
 
-Entscheidungen, die auf Basis der Plattform getroffen werden, erfolgen ausschliesslich in der Verantwortung des Nutzers.
+Ein Anspruch auf Nutzung kostenpflichtiger Funktionen bis zum Ende einer bereits begonnenen Abrechnungsperiode besteht nicht.
 
-Die Haftung des Betreibers ist – soweit gesetzlich zulässig – auf vorsätzlich oder grob fahrlässig verursachte direkte Schäden beschränkt.
+---
 
-Eine Haftung für:
+# 12. Analyseergebnisse und Empfehlungen
+
+Die Plattform kann Auswertungen, Kennzahlen, Visualisierungen, Statistiken oder sonstige Informationen bereitstellen.
+
+Sämtliche Inhalte dienen ausschliesslich Informationszwecken.
+
+Der Betreiber übernimmt keine Gewähr für:
+
+* Richtigkeit
+* Vollständigkeit
+* Aktualität
+* wirtschaftliche Eignung
+* geschäftliche Verwertbarkeit
+
+Die Plattform trifft keine Entscheidungen für den Nutzer.
+
+Sämtliche Entscheidungen erfolgen ausschliesslich in der Verantwortung des Nutzers.
+
+---
+
+# 13. Keine Erfolgsgarantie
+
+Die Nutzung der Plattform begründet keinerlei Garantie oder Zusicherung hinsichtlich des Erfolgs einer Geschäftsidee.
+
+Insbesondere wird nicht garantiert, dass:
+
+* eine Idee erfolgreich wird
+* Kunden gewonnen werden
+* Umsatz erzielt wird
+* Investoren gefunden werden
+* Marktinteresse besteht
+* wirtschaftlicher Erfolg erreicht wird
+
+---
+
+# 14. Sicherheit
+
+Der Betreiber bemüht sich um angemessene technische und organisatorische Sicherheitsmassnahmen.
+
+Ein vollständiger Schutz vor:
+
+* Cyberangriffen
+* Sicherheitsvorfällen
+* Softwarefehlern
+* Datenverlusten
+* unbefugten Zugriffen
+
+kann jedoch nicht gewährleistet werden.
+
+Der Betreiber übernimmt hierfür keine Gewähr.
+
+---
+
+# 15. Drittanbieter
+
+Die Plattform kann Dienste Dritter nutzen.
+
+Hierzu zählen insbesondere:
+
+* Hosting-Anbieter
+* Datenbank-Anbieter
+* Authentifizierungsdienste
+* Zahlungsanbieter
+* Open-Source-Software
+* externe Bibliotheken
+
+Der Betreiber übernimmt keine Haftung für Fehler, Sicherheitslücken, Ausfälle oder Schäden, die durch solche Drittanbieter oder deren Software verursacht werden.
+
+---
+
+# 16. Geistiges Eigentum
+
+Die Plattform, deren Quellcode, Struktur, Design, Inhalte und Funktionen sind urheberrechtlich geschützt.
+
+Soweit nicht ausdrücklich gesetzlich zulässig oder durch entsprechende Open-Source-Lizenzen erlaubt, sind insbesondere untersagt:
+
+* Kopieren wesentlicher Bestandteile der Plattform
+* kommerzielle Weiterverwertung
+* Weiterverkauf
+* Nachbildung der Plattform
+* Entfernung von Urheberrechtsvermerken
+
+---
+
+# 17. Haftung
+
+Die Nutzung der Plattform erfolgt ausschliesslich auf eigenes Risiko.
+
+Die Plattform wird ohne jegliche ausdrückliche oder stillschweigende Gewährleistung bereitgestellt.
+
+Soweit gesetzlich zulässig, haftet der Betreiber ausschliesslich für vorsätzlich verursachte direkte Schäden.
+
+Jegliche Haftung für:
 
 * leichte Fahrlässigkeit
-* indirekte oder mittelbare Schäden
+* indirekte Schäden
 * Folgeschäden
-* entgangenen Gewinn
 * Datenverlust
-* Betriebsunterbruch
+* entgangenen Gewinn
+* Umsatzverluste
+* Betriebsunterbrüche
+* Verlust von Geschäftschancen
+* Investitionsentscheidungen
+* Fehlentscheidungen
 * Drittansprüche
 
 ist ausgeschlossen.
 
-Soweit gesetzlich zulässig, ist die Haftung der Höhe nach auf den Betrag beschränkt, den der Nutzer in den letzten zwölf Monaten vor Eintritt des Ereignisses für die Nutzung der Plattform bezahlt hat.
+Soweit gesetzlich zulässig, ist die Haftung auf die vom Nutzer in den letzten zwölf Monaten bezahlten Gebühren beschränkt.
 
-Bei kostenloser Nutzung (insbesondere in der Beta-Phase) besteht kein Anspruch auf Schadenersatz.
-
----
-
-## 10. Geistiges Eigentum
-
-Die Plattform, einschliesslich ihrer Software, Struktur und Inhalte (mit Ausnahme der vom Nutzer erstellten Daten), ist urheberrechtlich geschützt.
-
-Dem Nutzer wird ein nicht-exklusives, nicht übertragbares Nutzungsrecht zur Verwendung der Plattform im Rahmen dieser Nutzungsbedingungen eingeräumt.
+Bei kostenloser Nutzung ist jegliche Haftung ausgeschlossen.
 
 ---
 
-## 11. Datenschutz
+# 18. Freistellung
 
-Informationen zur Bearbeitung personenbezogener Daten sind in der separaten Datenschutzerklärung geregelt.
+Der Nutzer stellt den Betreiber von sämtlichen Ansprüchen Dritter frei, die aufgrund seiner Nutzung der Plattform entstehen.
+
+Dies umfasst insbesondere Ansprüche aufgrund von:
+
+* Rechtsverletzungen
+* Urheberrechtsverletzungen
+* Datenschutzverletzungen
+* Vertragsverletzungen
+* rechtswidrigen Inhalten
+
+Soweit gesetzlich zulässig umfasst dies auch angemessene Kosten der Rechtsverteidigung.
 
 ---
 
-## 12. Kündigung und Löschung
+# 19. Löschung von Konten
 
 Der Nutzer kann sein Benutzerkonto jederzeit löschen.
 
-Mit der Löschung werden sämtliche zugehörigen Daten dauerhaft entfernt, soweit keine gesetzlichen Aufbewahrungspflichten bestehen.
+Die Löschung erfolgt dauerhaft.
 
-Der Betreiber ist berechtigt, Benutzerkonten bei Missbrauch oder Verstoss gegen diese Nutzungsbedingungen jederzeit zu sperren oder zu löschen.
-
----
-
-## 13. Änderungen der Nutzungsbedingungen
-
-Der Betreiber kann diese Nutzungsbedingungen jederzeit anpassen.
-
-Massgeblich ist die jeweils veröffentlichte Version auf der Plattform.
+Gelöschte Konten und Inhalte können grundsätzlich nicht wiederhergestellt werden.
 
 ---
 
-## 14. Anwendbares Recht und Gerichtsstand
+# 20. Änderungen der Plattform
+
+Der Betreiber kann Funktionen, Preise, Nutzungsbeschränkungen, Abonnemente oder sonstige Bestandteile der Plattform jederzeit ändern.
+
+Ein Anspruch auf Beibehaltung bestimmter Funktionen besteht nicht.
+
+---
+
+# 21. Änderungen der Nutzungsbedingungen
+
+Der Betreiber kann diese Nutzungsbedingungen jederzeit ändern.
+
+Massgeblich ist die jeweils veröffentlichte Version.
+
+---
+
+# 22. Datenschutz
+
+Die Bearbeitung personenbezogener Daten erfolgt gemäss der separaten Datenschutzerklärung.
+
+---
+
+# 23. Anwendbares Recht und Gerichtsstand
 
 Es gilt ausschliesslich Schweizer Recht.
 
-Gerichtsstand ist der Sitz des Betreibers, sofern keine zwingenden gesetzlichen Bestimmungen entgegenstehen.
+Gerichtsstand ist Kerzers FR, Schweiz, soweit keine zwingenden gesetzlichen Bestimmungen entgegenstehen.
 
 ---
 
-## 15. Sprachversion
+# 24. Sprachversion
 
 Diese Nutzungsbedingungen können in mehreren Sprachversionen bereitgestellt werden.
 
-Im Falle von Abweichungen ist die deutsche Version massgeblich.
+Im Falle von Widersprüchen oder Auslegungsfragen ist die deutsche Version massgeblich.

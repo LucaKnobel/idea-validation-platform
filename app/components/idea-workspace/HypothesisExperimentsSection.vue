@@ -191,7 +191,7 @@ const emit = defineEmits<{
               <article
                 class="rounded border border-default bg-default p-2"
               >
-                <p class="text-xs text-muted">
+                <p class="text-lg font-semibold text-highlighted">
                   {{ formatMeasurementValue(measurement) }}
                 </p>
                 <p

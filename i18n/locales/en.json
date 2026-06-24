@@ -155,10 +155,90 @@
     "howItWorks": "How it works",
     "features": "Features",
     "pricing": "Pricing",
+    "documentation": "Documentation",
+    "dashboard": "Dashboard",
     "settings": "Settings",
     "login": "Sign in",
     "logout": "Sign out",
     "register": "Sign up"
+  },
+  "featuresPage": {
+    "title": "Features",
+    "intro": "Everything you need to validate business ideas in a structured and evidence-based way.",
+    "items": {
+      "canvas": {
+        "title": "Business Model Canvas",
+        "description": "Structure and document your business model using the Business Model Canvas."
+      },
+      "hypotheses": {
+        "title": "Hypotheses",
+        "description": "Capture assumptions, priorities, evidence types, and validation status."
+      },
+      "metrics": {
+        "title": "Metrics",
+        "description": "Define measurable success criteria for every hypothesis."
+      },
+      "experimentsMeasurements": {
+        "title": "Experiments and Measurements",
+        "description": "Plan validation activities and record evidence from real-world testing."
+      },
+      "validationDashboard": {
+        "title": "Validation Dashboard",
+        "description": "Track progress and understand which assumptions are validated, invalidated, or still untested."
+      },
+      "ideaVersioning": {
+        "title": "Idea Versioning",
+        "description": "Continue developing ideas through iterations or explore new directions with pivots while preserving previous learnings."
+      }
+    },
+    "lean": {
+      "title": "Built for Lean Startup Validation",
+      "description": "The platform follows Lean Startup principles and helps teams move from assumptions to evidence through a structured and repeatable process.",
+      "items": {
+        "canvas": "Business Model Canvas",
+        "hypothesisValidation": "Hypothesis-driven validation",
+        "evidenceDecisions": "Evidence-based decisions",
+        "versionHistory": "Version history and learning documentation",
+        "structuredExperiments": "Structured experimentation"
+      }
+    }
+  },
+  "pricingPage": {
+    "title": "Pricing",
+    "intro": "Choose the plan that fits you.",
+    "actions": {
+      "goToDashboard": "Go to dashboard",
+      "startProCheckout": "Start Pro checkout",
+      "createFreeAccount": "Create free account",
+      "createAccountAndUpgrade": "Create account and upgrade to Pro"
+    },
+    "plans": {
+      "free": {
+        "title": "Free",
+        "description": "For your first idea.",
+        "price": "CHF 0",
+        "features": {
+          "account": "Personal account",
+          "ideaLimit": "1 business idea included",
+          "coreValidation": "Canvas, hypotheses, tests, and measurements",
+          "versionHistory": "Iteration and pivot workflows in that idea"
+        },
+        "terms": "Get started for free with an account."
+      },
+      "pro": {
+        "title": "Pro",
+        "description": "For unlimited ideas.",
+        "price": "CHF 9.90",
+        "billingCycle": "/ month",
+        "badge": "Recommended",
+        "features": {
+          "account": "Everything in Free",
+          "unlimitedIdeas": "Unlimited business ideas",
+          "coreValidation": "Canvas, hypotheses, tests, and measurements",
+          "versioning": "Iteration and pivot workflows across ideas"
+        }
+      }
+    }
   },
   "auth": {
     "logout": {

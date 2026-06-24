@@ -155,10 +155,90 @@
     "howItWorks": "So funktioniert's",
     "features": "Funktionen",
     "pricing": "Preise",
+    "documentation": "Dokumentation",
+    "dashboard": "Dashboard",
     "settings": "Einstellungen",
     "login": "Anmelden",
     "logout": "Abmelden",
     "register": "Registrieren"
+  },
+  "featuresPage": {
+    "title": "Funktionen",
+    "intro": "Alles, was du brauchst, um Geschäftsideen strukturiert und evidenzbasiert zu validieren.",
+    "items": {
+      "canvas": {
+        "title": "Business Model Canvas",
+        "description": "Strukturiere und dokumentiere dein Geschäftsmodell mit dem Business Model Canvas."
+      },
+      "hypotheses": {
+        "title": "Hypothesen",
+        "description": "Erfasse Annahmen, Prioritäten, Evidenztyp und Validierungsstatus an einem Ort."
+      },
+      "metrics": {
+        "title": "Metriken",
+        "description": "Definiere messbare Erfolgskriterien für jede Hypothese."
+      },
+      "experimentsMeasurements": {
+        "title": "Experimente und Messungen",
+        "description": "Plane Validierungsaktivitäten und dokumentiere Ergebnisse aus realen Tests."
+      },
+      "validationDashboard": {
+        "title": "Validierungsübersicht",
+        "description": "Verfolge den Fortschritt und erkenne, was validiert, invalidiert oder noch ungetestet ist."
+      },
+      "ideaVersioning": {
+        "title": "Ideen-Versionierung",
+        "description": "Entwickle Ideen mit Iterationen weiter oder ändere gezielt die Richtung per Pivot und behalte frühere Lernschritte."
+      }
+    },
+    "lean": {
+      "title": "Für Lean-Startup-Validierung entwickelt",
+      "description": "Die Plattform orientiert sich an Lean-Startup-Prinzipien und hilft Teams, in einem strukturierten, wiederholbaren Prozess von Annahmen zu Evidenz zu gelangen.",
+      "items": {
+        "canvas": "Business Model Canvas",
+        "hypothesisValidation": "Hypothesengetriebene Validierung",
+        "evidenceDecisions": "Evidenzbasierte Entscheidungen",
+        "versionHistory": "Versionshistorie und Lerndokumentation",
+        "structuredExperiments": "Strukturierte Experimente"
+      }
+    }
+  },
+  "pricingPage": {
+    "title": "Preise",
+    "intro": "Wähle den passenden Plan.",
+    "actions": {
+      "goToDashboard": "Zum Dashboard",
+      "startProCheckout": "Pro-Checkout starten",
+      "createFreeAccount": "Free-Account erstellen",
+      "createAccountAndUpgrade": "Account erstellen und auf Pro upgraden"
+    },
+    "plans": {
+      "free": {
+        "title": "Free",
+        "description": "Für die erste Idee.",
+        "price": "0 CHF",
+        "features": {
+          "account": "Persönlicher Account",
+          "ideaLimit": "1 Geschäftsidee",
+          "coreValidation": "Canvas, Hypothesen, Tests und Messungen",
+          "versionHistory": "Iteration und Pivot in dieser Idee"
+        },
+        "terms": "Kostenlos starten mit Account."
+      },
+      "pro": {
+        "title": "Pro",
+        "description": "Für unbegrenzt viele Ideen.",
+        "price": "CHF 9.90",
+        "billingCycle": "/ Monat",
+        "badge": "Empfohlen",
+        "features": {
+          "account": "Alles aus Free",
+          "unlimitedIdeas": "Unbegrenzt viele Geschäftsideen",
+          "coreValidation": "Canvas, Hypothesen, Tests und Messungen",
+          "versioning": "Iteration und Pivot über alle Ideen"
+        }
+      }
+    }
   },
   "auth": {
     "logout": {
