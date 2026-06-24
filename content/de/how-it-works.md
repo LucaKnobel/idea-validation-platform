@@ -61,4 +61,4 @@ Bei einer **Iteration** wird der aktuelle Stand vollständig übernommen. Bei ei
 
 Die Plattform ist ein Werkzeug für strukturiertes Lernen. Sie hilft dir, Unsicherheit früh zu reduzieren und bessere Entscheidungen zu treffen, bevor umfangreiche Ressourcen in die Entwicklung fließen.
 
-[Kostenlos starten](/auth/register)
+[Weitere Dokumenation](/documentation)

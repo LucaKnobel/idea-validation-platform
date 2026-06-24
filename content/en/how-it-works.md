@@ -61,4 +61,4 @@ With an **iteration**, the current state is carried forward. With a **pivot**, t
 
 The platform is built to support structured learning. It helps you reduce uncertainty early and make better decisions before committing major time, money, or development effort.
 
-[Start for free](/auth/register)
+[More documentation](/documentation)
