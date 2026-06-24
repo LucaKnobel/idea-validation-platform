@@ -1,7 +1,12 @@
 /**
  * Exposes authentication workflows and shared auth-related error state for UI consumers.
  */
+type AuthSession = typeof authClient.$Infer.Session
+
 export interface UseAuthComposable {
+  session: ComputedRef<AuthSession | null>
+  isSessionPending: ComputedRef<boolean>
+  isAuthenticated: ComputedRef<boolean>
   login: (email: string, password: string, rememberMe?: boolean) => Promise<boolean>
   register: (email: string, password: string, name: string) => Promise<boolean>
   resendVerificationEmail: (email: string) => Promise<boolean>
@@ -22,6 +27,7 @@ export interface UseAuthComposable {
  */
 export const useAuth = (): UseAuthComposable => {
   const localePath = useLocalePath()
+  const sessionState = authClient.useSession()
   const {
     hasError,
     errorTitle,
@@ -35,6 +41,9 @@ export const useAuth = (): UseAuthComposable => {
     handlePasswordResetError,
     handleLogoutError
   } = useErrorHandler()
+  const session = computed<AuthSession | null>(() => sessionState.value.data ?? null)
+  const isSessionPending = computed(() => sessionState.value.isPending)
+  const isAuthenticated = computed(() => Boolean(session.value))
 
   /**
    * Signs a user in and stores translated error state when the request fails.
@@ -273,5 +282,20 @@ export const useAuth = (): UseAuthComposable => {
     }
   }
 
-  return { login, register, resendVerificationEmail, requestPasswordReset, resetPassword, changePassword, logout, resetError, hasError, errorTitle, errorText }
+  return {
+    session,
+    isSessionPending,
+    isAuthenticated,
+    login,
+    register,
+    resendVerificationEmail,
+    requestPasswordReset,
+    resetPassword,
+    changePassword,
+    logout,
+    resetError,
+    hasError,
+    errorTitle,
+    errorText
+  }
 }

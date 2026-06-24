@@ -3,6 +3,31 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 
 const localePath = useLocalePath()
 const { t } = useI18n()
+const { isAuthenticated } = useAuth()
+
+const authActionTo = computed(() => {
+  return isAuthenticated.value
+    ? localePath('/dashboard')
+    : localePath('/auth/login')
+})
+
+const authActionLabel = computed(() => {
+  return isAuthenticated.value
+    ? t('navigation.dashboard')
+    : t('navigation.login')
+})
+
+const authActionIcon = computed(() => {
+  return isAuthenticated.value
+    ? 'i-lucide-layout-dashboard'
+    : 'i-lucide-log-in'
+})
+
+const authActionTrailingIcon = computed(() => {
+  return isAuthenticated.value
+    ? 'i-lucide-arrow-right'
+    : undefined
+})
 
 const items = computed<NavigationMenuItem[]>(() => [{
   label: t('navigation.howItWorks'),
@@ -31,22 +56,24 @@ const items = computed<NavigationMenuItem[]>(() => [{
       <UColorModeButton />
 
       <UButton
-        icon="i-lucide-log-in"
+        :icon="authActionIcon"
         color="neutral"
         variant="ghost"
-        :to="localePath('/auth/login')"
+        :to="authActionTo"
         class="lg:hidden"
       />
 
       <UButton
-        :label="$t('navigation.login')"
+        :label="authActionLabel"
+        :trailing-icon="authActionTrailingIcon"
         color="neutral"
         variant="outline"
-        :to="localePath('/auth/login')"
+        :to="authActionTo"
         class="hidden lg:inline-flex"
       />
 
       <UButton
+        v-if="!isAuthenticated"
         :label="$t('navigation.register')"
         color="neutral"
         trailing-icon="i-lucide-arrow-right"
@@ -65,14 +92,16 @@ const items = computed<NavigationMenuItem[]>(() => [{
       <USeparator class="my-6" />
 
       <UButton
-        :label="$t('navigation.login')"
+        :label="authActionLabel"
+        :trailing-icon="authActionTrailingIcon"
         color="neutral"
         variant="subtle"
-        :to="localePath('/auth/login')"
+        :to="authActionTo"
         block
         class="mb-3"
       />
       <UButton
+        v-if="!isAuthenticated"
         :label="$t('navigation.register')"
         color="neutral"
         :to="localePath('/auth/register')"
