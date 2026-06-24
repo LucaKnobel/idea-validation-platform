@@ -25,12 +25,12 @@ By registering, subscribing, or using the platform, the user accepts these Terms
 
 The platform is operated by:
 
-Luca Knobel
-Mühlerain 14
-3210 Kerzers
-Switzerland
+Luca Knobel  
+Mühlerain 14  
+3210 Kerzers  
+Switzerland  
 
-Email: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)
+Email: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)  
 
 ---
 

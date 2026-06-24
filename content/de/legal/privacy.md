@@ -9,8 +9,8 @@ version: "2"
 
 # Datenschutzerklärung
 
-**Version:** 2
-**Stand:** 24.06.2026
+**Version:** 2  
+**Stand:** 24.06.2026  
 
 ---
 
@@ -18,12 +18,12 @@ version: "2"
 
 Verantwortlich für die Bearbeitung personenbezogener Daten im Sinne des revidierten Schweizer Datenschutzgesetzes (DSG) ist:
 
-Luca Knobel
-Mühlerain 14
-3210 Kerzers
-Schweiz
+Luca Knobel  
+Mühlerain 14  
+3210 Kerzers  
+Schweiz  
 
-E-Mail: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)
+E-Mail: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)  
 
 ---
 

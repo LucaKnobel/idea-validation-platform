@@ -9,7 +9,7 @@ version: "2"
 # Nutzungsbedingungen
 
 **Plattform zur Validierung digitaler Geschäftsideen**
-Version 2
+Version 2  
 
 ---
 
@@ -25,12 +25,12 @@ Mit der Registrierung, dem Abschluss eines Abonnements oder der Nutzung der Plat
 
 Betreiber der Plattform ist:
 
-Luca Knobel
-Mühlerain 14
-3210 Kerzers
-Schweiz
+Luca Knobel  
+Mühlerain 14  
+3210 Kerzers  
+Schweiz  
 
-E-Mail: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)
+E-Mail: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)  
 
 ---
 
