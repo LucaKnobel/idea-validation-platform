@@ -1,247 +1,293 @@
 ---
 
 title: Privacy Policy
-description: Privacy policy for the SaaS application for validating digital business ideas.
+description: Privacy Policy for the platform for validating digital business ideas.
 locale: en
-updatedAt: 2026-04-26
-version: "1"
----
+version: "2"
+------------
 
 # Privacy Policy
 
-**Version:** 1  
-**Last updated:** April 26, 2026  
+**Version:** 2
+**Last Updated:** 24.06.2026
 
-## 1. Controller
+---
 
-The controller responsible for data processing within the meaning of the revised Swiss Federal Act on Data Protection (FADP) is:
+# 1. Data Controller
 
-Luca Knobel  
-Mühlerain 14  
-3210 Kerzers  
-Switzerland  
+The controller responsible for the processing of personal data under the revised Swiss Federal Act on Data Protection (FADP) is:
+
+Luca Knobel
+Mühlerain 14
+3210 Kerzers
+Switzerland
+
 Email: [knobel.luca@gmail.com](mailto:knobel.luca@gmail.com)
 
 ---
 
-## 2. Scope
+# 2. Scope of this Privacy Policy
 
-This Privacy Policy provides information about the nature, scope, and purpose of the processing of personal data in connection with the use of the web-based Software-as-a-Service (SaaS) application for validating digital business ideas.
+This Privacy Policy provides information about the nature, scope, purposes, and duration of the processing of personal data in connection with the use of the platform for validating digital business ideas.
 
-Data processing is carried out exclusively in accordance with the provisions of the revised Swiss Federal Act on Data Protection (FADP).
+The platform is provided as a web-based Software-as-a-Service (SaaS) solution.
 
----
+Personal data is processed in accordance with the revised Swiss Federal Act on Data Protection (FADP).
 
-## 3. Hosting and Infrastructure
-
-The application is hosted in Switzerland by:
-
-Infomaniak Network SA
-
-All personal data is stored in data centers located in Switzerland.
-
-A data processing agreement in accordance with Art. 9 FADP is in place with the hosting provider.
-
-No systematic transfer of personal data to countries outside Switzerland or the EU takes place.
-
-Additional technical service providers may be used in the operation of the platform, in particular for:
-
-* email delivery (SMTP services)
-* payment processing
-* infrastructure components
-
-These providers are engaged strictly as data processors in accordance with applicable legal requirements.
+Where applicable, the principles of the European Union General Data Protection Regulation (GDPR) are also taken into consideration.
 
 ---
 
-## 4. Categories of Personal Data Processed
+# 3. Hosting and Technical Infrastructure
 
-### 4.1 User Account
+The platform is operated on infrastructure provided by Infomaniak Network SA.
 
-When registering and using a user account, the following data is processed:
+The following services are used to operate the platform:
+
+* hosting infrastructure
+* managed PostgreSQL database
+* network and security services
+* email delivery services
+* payment processing through external payment providers
+
+Personal data is generally stored on infrastructure located within Switzerland.
+
+For certain technical services or system components, processing may be carried out by commissioned service providers.
+
+Such service providers are engaged solely in accordance with applicable legal requirements.
+
+---
+
+# 4. Categories of Personal Data Processed
+
+## 4.1 Account Data
+
+When registering and using a user account, the following data may be processed:
 
 * email address
+* user ID
 * password hash
-* user ID (UUID)
 * registration timestamp
+* subscription status
 
-Passwords are never stored in plain text.
-
----
-
-### 4.2 Application and Content Data
-
-During use of the platform, the following user-related data is processed:
-
-* business ideas (title, description)
-* hypotheses and validation data
-* metrics and thresholds
-* analyses and evaluations
-* timestamps (createdAt, updatedAt)
-
-This data is used exclusively to provide the functionality of the platform.
+Passwords are not stored in plain text.
 
 ---
 
-### 4.3 Authentication and Session Data
+## 4.2 Usage and Content Data
 
-Secure login is implemented using encrypted and signed session cookies:
+As part of the platform's functionality, user-provided content is stored.
 
-* HTTP-only
-* Secure (HTTPS only)
-* cryptographically signed
-* no storage of sensitive plaintext data
+This may include:
 
-These cookies are strictly necessary and do not contain tracking or marketing functions.
+* business ideas
+* descriptions
+* Business Model Canvas content
+* hypotheses
+* experiments
+* measurements
+* metrics
+* thresholds
+* validation data
+* modification timestamps
+
+Such content is processed solely for the purpose of providing the platform's functionality.
 
 ---
 
-### 4.4 Server Log Data
+## 4.3 Authentication and Session Data
 
-When accessing the platform, the following data is automatically processed:
+Technically necessary cookies are used for authentication and session management.
+
+These cookies are used for:
+
+* authentication
+* session management
+* access protection
+* security
+
+The cookies used do not contain marketing or advertising information.
+
+---
+
+## 4.4 Technical Log Data
+
+When accessing the platform, technical information is automatically processed.
+
+This may include:
 
 * IP address
 * date and time of access
 * requested resources
-* browser type and operating system
+* status codes
+* user-agent information
+* technical error and system messages
 
-This processing is necessary to ensure system security, stability, and to prevent abuse.
+This data is processed solely for:
 
----
-
-### 4.5 Cookies
-
-The application uses only technically necessary cookies.
-
-These are used for:
-
-* authentication
-* session management
-* secure operation of the platform
-
-No:
-
-* tracking cookies
-* analytics cookies
-* marketing cookies
-
-are used.
+* system security
+* error analysis
+* abuse detection
+* platform stability and availability
 
 ---
 
-## 5. Purpose of Data Processing
+## 4.5 Payment Data
 
-Personal data is processed for the following purposes:
+For paid subscriptions, payment processing is handled by the external payment provider Payrexx.
 
-* providing the web application
+The operator does not process or store complete credit card information or other payment credentials.
+
+Payment information is processed directly by the respective payment provider.
+
+The operator only receives information required to manage subscriptions and payment status.
+
+---
+
+# 5. Purposes of Data Processing
+
+Personal data is processed for the following purposes in particular:
+
+* providing the platform
+* user account management
 * authentication and access control
-* storing and managing user data
-* performing validation analyses
-* ensuring IT security
-* error analysis and system monitoring
+* storage of user content
+* subscription management
+* payment processing
+* system security
+* error analysis
+* abuse prevention
 * communication with users
 * compliance with legal obligations
 
 ---
 
-## 6. Legal Basis
+# 6. Legal Bases for Processing
 
-Data processing is based on:
+Personal data is processed on the following legal bases in particular:
 
-* performance of a contract (provision of the platform)
-* legitimate interests (security, system operation, abuse prevention)
-* legal obligations
+* performance of a contractual relationship
+* pre-contractual measures
+* legitimate interests in operating a secure platform
+* compliance with legal obligations
+* consent, where required
 
 ---
 
-## 7. Data Security
+# 7. Cookies
 
-Appropriate technical and organizational measures are implemented in accordance with Art. 8 FADP, including:
+The platform uses only technically necessary cookies.
 
-* TLS/HTTPS encryption
-* secure password hashing
-* use of signed session cookies
-* security headers (e.g. Content Security Policy)
-* server-side input validation
-* database access restrictions
+These cookies are required for:
+
+* authentication
+* session management
+* security
+* language preferences
+* technical platform functionality
+
+At present, no cookies are used for:
+
+* advertising
+* marketing
+* profiling
+* user tracking
+
+---
+
+# 8. Data Security
+
+The operator implements appropriate technical and organizational measures to protect personal data.
+
+These measures may include:
+
+* encrypted data transmission via HTTPS/TLS
+* password hashing
+* access controls
+* authentication mechanisms
 * logging of security-relevant events
-* separation of application and database layers
+* regular software updates
+
+Despite appropriate security measures, complete protection against security incidents, cyberattacks, or data loss cannot be guaranteed.
 
 ---
 
-## 8. Data Retention and Deletion
+# 9. Disclosure of Data
 
-Personal data is stored:
+Personal data is generally not sold or disclosed to third parties.
 
-* as long as a user account exists
-* until deletion by the user
-* as long as required by legal retention obligations
+Data may only be disclosed:
 
-The database is relational. When a user account is deleted, all associated data is automatically removed (cascade deletion).
-
-### 8.1 Access by Operator
-
-The operator has technical access to the database. Access is limited strictly to what is necessary for maintenance, troubleshooting, or ensuring system operation.
+* to commissioned technical service providers
+* to hosting and infrastructure providers
+* to payment providers
+* to authorities or courts where legally required
+* where necessary to establish, exercise, or defend legal claims
 
 ---
 
-## 9. Data Sharing
+# 10. Payment Provider
 
-No personal data is sold or shared with third parties.
+Payrexx is used as the external payment provider for paid services.
 
-Data is only shared:
+When using paid features, personal data may be processed directly by Payrexx.
 
-* with the hosting provider (Infomaniak) as part of data processing
-* with email service providers (SMTP) for system-related communication
-* with payment service providers for payment processing
-* if required by law
+The privacy policy of Payrexx applies in addition to this Privacy Policy.
 
----
-
-## 10. Payment Providers
-
-External payment providers may be used for paid services, such as:
-
-* Payrexx
-* Datatrans
-* or comparable providers
-
-Payments are processed exclusively through these providers. Personal data (e.g. payment details) may be processed directly by them.
-
-Their respective privacy policies apply.
+The operator has no control over the data processing activities carried out by the payment provider.
 
 ---
 
-## 11. Rights of Data Subjects
+# 11. Data Retention
 
-Under the FADP, data subjects have the following rights:
+Personal data is retained only for as long as necessary to fulfill the respective purposes.
 
-* right of access
-* right to rectification
-* right to deletion
-* right to restriction of processing
-* right to data portability
+Data is retained in particular:
 
-Where processing is based on consent, it may be withdrawn at any time.
+* while a user account exists
+* while an active contractual relationship exists
+* while legal retention obligations apply
+* while legitimate interests require retention
 
-Data subjects also have the right to lodge a complaint with the Swiss Federal Data Protection and Information Commissioner (FDPIC).
+After a user account has been deleted, the associated data is generally permanently removed unless legal retention obligations require otherwise.
 
-Requests must be submitted in writing to the contact details above.
-
----
-
-## 12. No Automated Decision-Making
-
-No automated decision-making or profiling within the meaning of the FADP takes place.
+Restoration of deleted data is generally not possible.
 
 ---
 
-## 13. Communication and Support
+# 12. Rights of Data Subjects
 
-When contacting us (e.g. via email or platform support features), the transmitted data is processed solely for the purpose of handling the request.
+Subject to applicable data protection laws, individuals have the following rights in particular:
+
+* access to personal data
+* correction of inaccurate data
+* deletion of data
+* restriction of processing
+* data portability or transfer
+* withdrawal of previously granted consent
+
+Requests may be submitted using the contact details provided above.
 
 ---
 
-## 14. Changes
+# 13. No Automated Decision-Making
 
-This Privacy Policy may be updated at any time. The version published on the platform is authoritative.
+The platform does not perform automated decision-making or profiling that produces legal effects or similarly significant effects within the meaning of applicable Swiss data protection law.
+
+---
+
+# 14. External Links and Third-Party Services
+
+The platform may contain links to third-party websites or services.
+
+The operator is not responsible for the privacy practices of such third parties.
+
+The privacy policies of the respective providers apply.
+
+---
+
+# 15. Changes to this Privacy Policy
+
+This Privacy Policy may be amended at any time.
+
+The version published on the platform shall be the authoritative version.
