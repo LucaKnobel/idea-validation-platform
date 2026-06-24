@@ -24,23 +24,23 @@ Im Gegensatz zu klassischen Produktentwicklungsansätzen steht nicht die möglic
 
 ## Inhaltsverzeichnis
 
-1. [1. Lean Startup Grundlagen](#1-lean-startup-grundlagen)
-2. [2. Validierungsworkflow der Plattform](#2-validierungsworkflow-der-plattform)
-3. [3. Business Model Canvas](#3-business-model-canvas)
-4. [4. Hypothesen](#4-hypothesen)
-5. [5. Unsicherheitsbereiche](#5-unsicherheitsbereiche)
-6. [6. Prioritäten](#6-prioritäten)
-7. [7. Evidenztypen](#7-evidenztypen)
-8. [8. Canvas-Zuordnung](#8-canvas-zuordnung)
-9. [9. Metriken und Schwellwerte](#9-metriken-und-schwellwerte)
-10. [10. Experimente](#10-experimente)
-11. [11. Messungen und Validierung](#11-messungen-und-validierung)
-12. [12. Overview Dashboard](#12-overview-dashboard)
-13. [13. Entscheidungen treffen](#13-entscheidungen-treffen)
-14. [14. Versionierung](#14-versionierung)
-15. [15. Best Practices](#15-best-practices)
-16. [16. Häufige Fragen](#16-häufige-fragen)
-17. [17. Abschliessender Hinweis](#17-abschliessender-hinweis)
+1. [Lean Startup Grundlagen](#1-lean-startup-grundlagen)
+2. [Validierungsworkflow der Plattform](#2-validierungsworkflow-der-plattform)
+3. [Business Model Canvas](#3-business-model-canvas)
+4. [Hypothesen](#4-hypothesen)
+5. [Unsicherheitsbereiche](#5-unsicherheitsbereiche)
+6. [Prioritäten](#6-prioritäten)
+7. [Evidenztypen](#7-evidenztypen)
+8. [Canvas-Zuordnung](#8-canvas-zuordnung)
+9. [Metriken und Schwellwerte](#9-metriken-und-schwellwerte)
+10. [Experimente](#10-experimente)
+11. [Messungen und Validierung](#11-messungen-und-validierung)
+12. [Overview Dashboard](#12-overview-dashboard)
+13. [Entscheidungen treffen](#13-entscheidungen-treffen)
+14. [Versionierung](#14-versionierung)
+15. [Best Practices](#15-best-practices)
+16. [Häufige Fragen](#16-häufige-fragen)
+17. [Abschliessender Hinweis](#17-abschliessender-hinweis)
 
 ---
 
@@ -67,15 +67,9 @@ Lean Startup ist ein Ansatz, bei dem Geschäftsideen nicht nur geplant, sondern 
 
 Der grundlegende Lernzyklus lautet:
 
-```text
-Annahmen formulieren
-        ↓
-Testen
-        ↓
-Lernen
-        ↓
-Verbessern
-```
+
+> Annahmen formulieren => Testen => Lernen => Verbessern
+
 
 Dieser Zyklus wird wiederholt, bis genügend Erkenntnisse vorliegen, um eine fundierte Entscheidung zu treffen.
 
@@ -100,24 +94,6 @@ Die Plattform führt keine Experimente automatisch durch und ersetzt kein Kunden
 
 Der typische Workflow der Plattform besteht aus mehreren aufeinander aufbauenden Schritten.
 
-```text
-Idee
-  ↓
-Initiale Version
-  ↓
-Business Model Canvas
-  ↓
-Hypothesen
-  ↓
-Metriken und Experimente
-  ↓
-Messungen
-  ↓
-Validierungsstatus
-  ↓
-Iteration oder Pivot
-```
-
 ## 2.1 Idee erstellen
 
 Eine Idee ist der Ausgangspunkt des gesamten Validierungsprozesses. Sie beschreibt grob, welches Problem gelöst werden soll und welche Lösung angedacht ist.
@@ -132,9 +108,9 @@ Versionen helfen dabei, verschiedene Entwicklungsstände einer Idee voneinander 
 
 ## 2.3 Business Model Canvas ausfüllen
 
-Im nächsten Schritt wird das Geschäftsmodell strukturiert beschrieben. Der Business Model Canvas hilft dabei, die wichtigsten Bestandteile einer Idee sichtbar zu machen.
+Im nächsten Schritt wird das Geschäftsmodell strukturiert beschrieben. Das Business Model Canvas hilft dabei, die wichtigsten Bestandteile einer Idee sichtbar zu machen.
 
-Der Canvas muss am Anfang nicht perfekt oder vollständig sein. Er dient als Arbeitsgrundlage und kann sich mit jeder neuen Erkenntnis weiterentwickeln.
+Das Canvas muss am Anfang nicht perfekt oder vollständig sein. Er dient als Arbeitsgrundlage und kann sich mit jeder neuen Erkenntnis weiterentwickeln.
 
 ## 2.4 Hypothesen ableiten
 
@@ -142,7 +118,7 @@ Aus dem Canvas werden konkrete Hypothesen abgeleitet. Eine Hypothese ist eine ü
 
 Beispiel:
 
-> Kleine Startup-Teams sind bereit, ein monatliches Abonnement für ein strukturiertes Validierungswerkzeug zu bezahlen.
+> Mindestens 10 % der Testnutzer schliessen innerhalb eines Monats ein kostenpflichtiges Abonnement für das Validierungswerkzeug ab.
 
 Diese Aussage kann getestet werden. Genau darum ist sie als Hypothese geeignet.
 
@@ -170,9 +146,6 @@ Eine Hypothese kann folgende Status besitzen:
 
 Die Overview-Seite zeigt den aktuellen Validierungsstand einer Version. Dort wird sichtbar, welche Hypothesen bereits validiert, invalidiert oder noch nicht getestet wurden.
 
-<div class="not-prose my-6 flex justify-center">
-	<img src="/images/marketing/overview.png" alt="Overview-Seite" class="w-full max-w-xs sm:max-w-sm md:max-w-md" loading="lazy" />
-</div>
 
 ## 2.9 Iteration oder Pivot entscheiden
 
@@ -190,11 +163,11 @@ Die Plattform unterstützt diese Entscheidung durch strukturierte Informationen,
 
 ## 3.1 Was ist ein Business Model Canvas?
 
-Der Business Model Canvas ist ein Werkzeug, um ein Geschäftsmodell übersichtlich darzustellen. Er zeigt, aus welchen zentralen Bausteinen eine Geschäftsidee besteht und welche Annahmen dahinterstehen.
+Das Business Model Canvas ist ein Werkzeug, um ein Geschäftsmodell übersichtlich darzustellen. Er zeigt, aus welchen zentralen Bausteinen eine Geschäftsidee besteht und welche Annahmen dahinterstehen.
 
-Der Canvas hilft dabei, eine Idee nicht nur aus Sicht der Lösung zu betrachten, sondern auch aus Sicht von Kunden, Markt, Einnahmen, Aktivitäten, Partnern und Kosten.
+Das Canvas hilft dabei, eine Idee nicht nur aus Sicht der Lösung zu betrachten, sondern auch aus Sicht von Kunden, Markt, Einnahmen, Aktivitäten, Partnern und Kosten.
 
-In der Plattform bildet der Canvas die Grundlage für die spätere Hypothesenbildung.
+In der Plattform bildet das Canvas die Grundlage für die spätere Hypothesenbildung.
 
 ## 3.2 Kundensegmente
 
@@ -212,8 +185,7 @@ Beispiele:
 - Einzelgründer
 - Startup-Teams
 - Studierende
-- KMU
-- Produktmanager
+
 
 ## 3.3 Nutzenversprechen
 
@@ -231,8 +203,6 @@ Beispiele:
 - Zeit sparen
 - Unsicherheit reduzieren
 - Entscheidungen verbessern
-- Kosten senken
-- Umsatz steigern
 
 ## 3.4 Kanäle
 
@@ -249,9 +219,7 @@ Beispiele:
 - Website
 - Suchmaschinen
 - Social Media
-- Newsletter
-- Direktvertrieb
-- Partnernetzwerke
+
 
 ## 3.5 Kundenbeziehungen
 
@@ -269,8 +237,7 @@ Beispiele:
 - Self-Service-Plattform
 - Dokumentation
 - E-Mail-Support
-- Community
-- Persönliche Beratung
+
 
 ## 3.6 Einnahmequellen
 
@@ -288,8 +255,7 @@ Beispiele:
 - Monatliches Abonnement
 - Freemium-Modell
 - Einmalzahlung
-- Beratungspakete
-- Nutzungsbasierte Abrechnung
+
 
 ## 3.7 Schlüsselressourcen
 
@@ -306,8 +272,7 @@ Beispiele:
 - Entwicklungsteam
 - Cloud-Infrastruktur
 - Fachwissen
-- Kundendaten
-- Marke
+
 
 ## 3.8 Schlüsselaktivitäten
 
@@ -324,8 +289,7 @@ Beispiele:
 - Softwareentwicklung
 - Produktvalidierung
 - Marketing
-- Vertrieb
-- Kundensupport
+
 
 ## 3.9 Schlüsselpartner
 
@@ -342,8 +306,7 @@ Beispiele:
 - Zahlungsanbieter
 - Hosting-Anbieter
 - Vertriebspartner
-- Technologiepartner
-- Beratungsunternehmen
+
 
 ## 3.10 Kostenstruktur
 
@@ -361,8 +324,7 @@ Beispiele:
 - Hosting
 - Entwicklung
 - Marketing
-- Support
-- Zahlungsgebühren
+
 
 ---
 
@@ -412,10 +374,9 @@ Typische Angaben sind:
 
 Diese Struktur hilft dabei, Hypothesen nicht nur zu sammeln, sondern systematisch auszuwerten.
 
-<div class="not-prose my-6 rounded-2xl bg-muted/30 p-4 text-center text-sm text-toned">
-	Empfohlener Pfad: <code>/images/hypothesis-detail.png</code>
+<div class="not-prose my-6 flex justify-center">
+	<img src="/images/create-hypothesis.png" alt="Erstellen einer Hypothese" class="w-full max-w-xs sm:max-w-sm md:max-w-md" loading="lazy" />
 </div>
-
 ---
 
 # 5. Unsicherheitsbereiche
@@ -443,7 +404,7 @@ Typische Fragen:
 
 Beispiel:
 
-> Gründer haben Schwierigkeiten, ihre Geschäftsideen strukturiert zu validieren.
+> Mindestens 50 % der befragten Gründer geben innerhalb von vier Wochen an, Schwierigkeiten bei der strukturierten Validierung ihrer Geschäftsideen zu haben.
 
 Problem-Hypothesen sollten häufig sehr früh getestet werden. Wenn kein relevantes Problem existiert, ist eine Lösung meist nicht sinnvoll.
 
@@ -460,7 +421,7 @@ Typische Fragen:
 
 Beispiel:
 
-> Ein strukturierter Workspace hilft Gründern, ihre Validierungsaktivitäten besser zu organisieren.
+> Mindestens 60 % der Gründer bewerten die Aussage «Der Workspace hilft mir, meine Validierungsaktivitäten besser zu organisieren» nach vier Wochen Nutzung mit mindestens 4 von 5 Punkten.
 
 ## 5.3 Markt
 
@@ -475,7 +436,7 @@ Typische Fragen:
 
 Beispiel:
 
-> Mindestens 100 Gründer pro Monat interessieren sich für eine Plattform zur Ideenvalidierung.
+> Mindestens 100 Gründer hinterlassen innerhalb eines Monats ihre E-Mail-Adresse auf der Landingpage der Plattform zur Ideenvalidierung.
 
 ## 5.4 Monetarisierung
 
@@ -490,7 +451,7 @@ Typische Fragen:
 
 Beispiel:
 
-> Mindestens 10 % der Testnutzer würden CHF 9 pro Monat für die Plattform bezahlen.
+> Mindestens 10 % der Testnutzer schliessen innerhalb eines Monats ein Abonnement für CHF 9.90 pro Monat ab.
 
 Monetarisierungs-Hypothesen sind besonders wichtig, wenn aus einer Idee ein wirtschaftlich tragfähiges Produkt entstehen soll.
 
@@ -507,7 +468,7 @@ Typische Fragen:
 
 Beispiel:
 
-> Die erste produktionsnahe Version kann mit einem kleinen Entwicklungsteam umgesetzt und betrieben werden.
+> Die erste produktionsnahe Version der Plattform kann innerhalb von sechs Monaten von einem Team aus maximal drei Entwicklern umgesetzt und auf einer Cloud-Infrastruktur betrieben werden.
 
 ---
 
@@ -630,7 +591,7 @@ Eine Hypothese kann einem oder mehreren Canvas-Bereichen zugeordnet werden.
 
 Beispiel:
 
-> Ein externer Zahlungsanbieter reduziert die technische Komplexität und ermöglicht ein Abonnementmodell.
+> Mindestens 80 % der Testnutzer können innerhalb von fünf Minuten ein Abonnement über einen externen Zahlungsanbieter abschliessen.
 
 Diese Hypothese könnte folgenden Canvas-Bereichen zugeordnet werden:
 
@@ -676,36 +637,53 @@ Ein Schwellwert definiert, ab welchem Ergebnis eine Hypothese als erfüllt gilt.
 
 Beispiel:
 
-```text
-Metrik: Anzahl Registrierungen
-Schwellwert: >= 50
-```
+**Metrik:** Anzahl Registrierungen
+
+**Schwellwert:** `>= 50`
 
 Wenn mindestens 50 Registrierungen erreicht werden, ist das Erfolgskriterium erfüllt.
 
 Die Plattform unterstützt folgende Vergleichsoperatoren:
 
-```text
->
->=
-=
-<=
-<
-```
+- `>`  Grösser als
+- `>=` Grösser oder gleich
+- `=`  Gleich
+- `<=` Kleiner oder gleich
+- `<`  Kleiner als
 
-## 9.3 Prozentwerte
+## 9.3 Einheiten
 
-Prozentwerte werden über die Einheit der Metrik abgebildet.
+Metriken können frei definierte Einheiten verwenden. Die Einheit beschreibt, in welcher Form ein Messwert erfasst und bewertet wird.
+
+Typische Einheiten sind beispielsweise:
+
+* %
+* Registrierungen
+* Klicks
+* Benutzer
+* Besucher
+* CHF
+* Downloads
+* Bewertungen
 
 Beispiel:
 
-```text
-Metrik: Conversion Rate
-Einheit: %
-Schwellwert: >= 10
-```
+**Conversion Rate**
+
+* Einheit: %
+* Schwellwert: ≥ 10
 
 Dies bedeutet, dass eine Conversion Rate von mindestens 10 % erreicht werden soll.
+
+Beispiel:
+
+**Registrierungen**
+
+* Einheit: Registrierungen
+* Schwellwert: ≥ 50
+
+Dies bedeutet, dass mindestens 50 Registrierungen erreicht werden sollen.
+
 
 ---
 
@@ -771,15 +749,11 @@ Die Plattform leitet den Status einer Hypothese automatisch ab.
 
 Die tatsächliche Regel ist:
 
-```text
-Experiment abgeschlossen
-+
-Metrik mit Schwellwert vorhanden
-+
-Messwert vorhanden
-=
-Validiert oder Invalidiert
-```
+- Experiment abgeschlossen
+- Metrik mit Schwellwert vorhanden
+- Messwert vorhanden
+
+**Ergebnis:** Validiert oder Invalidiert
 
 Wenn das Experiment noch nicht abgeschlossen ist oder keine ausreichenden Daten vorhanden sind, bleibt die Hypothese im Status Nicht getestet.
 
@@ -800,11 +774,9 @@ Eine Hypothese ist Validiert, wenn das Experiment abgeschlossen ist und der Mess
 
 Beispiel:
 
-```text
-Schwellwert: Registrierungen >= 50
-Messwert: 63 Registrierungen
-Status: Validiert
-```
+- **Schwellwert:** Registrierungen ≥ 50
+- **Messwert:** 63 Registrierungen
+- **Status:** Validiert
 
 ## 11.5 Invalidiert
 
@@ -812,11 +784,9 @@ Eine Hypothese ist Invalidiert, wenn das Experiment abgeschlossen ist und der Me
 
 Beispiel:
 
-```text
-Schwellwert: Registrierungen >= 50
-Messwert: 18 Registrierungen
-Status: Invalidiert
-```
+- **Schwellwert:** Registrierungen ≥ 50
+- **Messwert:** 18 Registrierungen
+- **Status:** Invalidiert
 
 Eine invalidierte Hypothese bedeutet nicht automatisch, dass die gesamte Idee schlecht ist. Sie zeigt jedoch, dass eine konkrete Annahme nicht bestätigt werden konnte.
 
@@ -828,10 +798,6 @@ Die Overview-Seite fasst den aktuellen Validierungsstand einer Version zusammen.
 
 Sie ist ein zentraler Bereich der Plattform, weil sie nicht nur einzelne Hypothesen zeigt, sondern ein Gesamtbild der aktuellen Idee liefert.
 
-<div class="not-prose my-6 rounded-2xl bg-muted/30 p-4 text-center text-sm text-toned">
-	Screenshot-Platzhalter: Overview Dashboard<br />
-	Empfohlener Pfad: <code>/images/docs/overview-dashboard.png</code>
-</div>
 
 ## 12.1 Was zeigt die Overview?
 
@@ -844,6 +810,11 @@ Die Overview zeigt unter anderem:
 - Auswertungen pro Unsicherheitsbereich
 
 Für jeden Unsicherheitsbereich wird sichtbar, wie viele Hypothesen dort validiert, invalidiert oder noch nicht getestet wurden.
+
+<div class="not-prose my-6 flex justify-center">
+	<img src="/images/overview.png" alt="Overview-Seite" class="w-full max-w-xs sm:max-w-sm md:max-w-md" loading="lazy" />
+</div>
+
 
 ## 12.2 Warum ist das wichtig?
 
@@ -1056,9 +1027,9 @@ Eine Iteration entwickelt die bestehende Richtung weiter und übernimmt den voll
 
 Ein Pivot passt die Richtung an und übernimmt nur validierte sowie nicht getestete Hypothesen. Invalidierte Hypothesen werden nicht übernommen.
 
-## 16.5 Muss der Canvas vollständig ausgefüllt sein?
+## 16.5 Muss das Canvas vollständig ausgefüllt sein?
 
-Nein. Der Canvas kann schrittweise ergänzt werden. Wichtig ist, dass zentrale Annahmen sichtbar gemacht werden.
+Nein. Das Canvas kann schrittweise ergänzt werden. Wichtig ist, dass zentrale Annahmen sichtbar gemacht werden.
 
 ## 16.6 Muss jede Hypothese eine Metrik haben?
 
