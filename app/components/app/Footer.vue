@@ -15,6 +15,10 @@ const footerItems = computed(() => [{
   to: localePath('/legal/terms-of-service')
 },
 {
+  label: t('navigation.documentation'),
+  to: localePath('/documentation')
+},
+{
   label: t('systemInfo.linkLabel'),
   to: localePath('/system-info')
 }])

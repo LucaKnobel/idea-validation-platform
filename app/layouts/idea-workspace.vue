@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const { t } = useI18n()
+const localePath = useLocalePath()
 const { toDashboard, toIdeaVersionSection, toHypothesesList } = useIdeaWorkspaceLinks()
 const workspaceIdeaTitleState = useState<string | null>('workspace-idea-title', () => null)
 
@@ -67,6 +68,13 @@ const footerItems = computed(() => [
     to: toDashboard(),
     icon: 'i-lucide-arrow-left',
     active: route.path === toDashboard(),
+    onSelect: closeSidebarOnMobile
+  },
+  {
+    label: t('navigation.documentation'),
+    to: localePath('/documentation'),
+    icon: 'i-lucide-book-open-text',
+    active: route.path === localePath('/documentation'),
     onSelect: closeSidebarOnMobile
   },
   {
