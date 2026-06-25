@@ -1,11 +1,12 @@
 import { withLeadingSlash } from 'ufo'
-import { getCookie } from 'h3'
-import { GetContentParamsSchema } from '@infrastructure/validation/content-schemas'
+import { toWebRequest } from 'h3'
+import { GetContentParamsSchema, GetContentQuerySchema } from '@infrastructure/validation/content-schemas'
 import { queryCollection } from '@nuxt/content/server'
 import type { AppLocale } from '@shared/types/locale'
 import { normalizeContentSlug } from '@shared/utils/content-slug'
 import { enforceRateLimit } from '@infrastructure/rate-limit/enforce-rate-limit'
 import { definePublicHandler } from '@infrastructure/handlers/public-handler'
+import { resolveLocaleFromRequest } from '@infrastructure/http/locale-resolver'
 
 /**
  * Resolves localized content by slug and falls back to English when a translated page is missing.
@@ -19,8 +20,8 @@ export default definePublicHandler(async (event) => {
   })
 
   const params = await getValidatedRouterParams(event, GetContentParamsSchema.parse)
-  const cookieLocale = getCookie(event, 'i18n_redirected')
-  const locale: AppLocale = cookieLocale === 'de' || cookieLocale === 'en' ? cookieLocale : 'en'
+  const query = await getValidatedQuery(event, GetContentQuerySchema.parse)
+  const locale: AppLocale = query.locale ?? resolveLocaleFromRequest(toWebRequest(event))
   const collection = locale === 'de' ? 'content_de' : 'content_en'
   const normalizedSlug = normalizeContentSlug(params.slug)
 
