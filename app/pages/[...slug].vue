@@ -10,7 +10,9 @@ const { handleRateLimitError } = useErrorHandler()
  * Reconstructs the current content slug from the catch-all route parameter.
  */
 const slug = computed(() => {
-  const value = normalizeContentSlug(route.params.slug)
+  const value = Array.isArray(route.params.slug)
+    ? route.params.slug.join('/')
+    : String(route.params.slug || '')
 
   return withLeadingSlash(String(value))
 })
