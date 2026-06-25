@@ -1,10 +1,10 @@
 ---
-
 title: Terms of Use
 description: Terms of Use for the platform for validating digital business ideas
 locale: en
+updatedAt: 2026-06-24
 version: "2"
-------------
+---
 
 # Terms of Use
 

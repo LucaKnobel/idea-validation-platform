@@ -5,6 +5,7 @@ const route = useRoute()
 const { locale } = useI18n()
 const localePath = useLocalePath()
 const { handleRateLimitError } = useErrorHandler()
+const requestFetch = useRequestFetch()
 
 /**
  * Reconstructs the current content slug from the catch-all route parameter.
@@ -29,12 +30,21 @@ const { data: page } = await useAsyncData(
    */
   async () => {
     try {
-      return await $fetch(contentPath.value)
+      return await requestFetch(contentPath.value, {
+        params: {
+          locale: locale.value
+        }
+      })
     } catch (error: unknown) {
       if (handleRateLimitError(error)) {
         return null
       }
-      return null
+
+      if (extractStatusCode(error) === 404) {
+        return null
+      }
+
+      throw error
     }
   },
   { watch: [locale, slug] }

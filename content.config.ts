@@ -14,16 +14,16 @@ export default defineContentConfig({
     content_en: defineCollection({
       type: 'page',
       source: {
-        include: 'en/**',
-        prefix: ''
+        include: 'en/**/*.md',
+        prefix: '/'
       },
       schema: commonSchema
     }),
     content_de: defineCollection({
       type: 'page',
       source: {
-        include: 'de/**',
-        prefix: ''
+        include: 'de/**/*.md',
+        prefix: '/'
       },
       schema: commonSchema
     })
