@@ -27,11 +27,7 @@ const { data: page } = await useAsyncData(
    */
   async () => {
     try {
-      return await $fetch(contentPath.value, {
-        params: {
-          locale: locale.value
-        }
-      })
+      return await $fetch(contentPath.value)
     } catch (error: unknown) {
       if (handleRateLimitError(error)) {
         return null
