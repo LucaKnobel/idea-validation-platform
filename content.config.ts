@@ -15,7 +15,7 @@ export default defineContentConfig({
       type: 'page',
       source: {
         include: 'en/**/*.md',
-        prefix: ''
+        prefix: '/'
       },
       schema: commonSchema
     }),
@@ -23,7 +23,7 @@ export default defineContentConfig({
       type: 'page',
       source: {
         include: 'de/**/*.md',
-        prefix: ''
+        prefix: '/'
       },
       schema: commonSchema
     })
