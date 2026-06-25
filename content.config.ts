@@ -14,7 +14,7 @@ export default defineContentConfig({
     content_en: defineCollection({
       type: 'page',
       source: {
-        include: 'en/**',
+        include: 'en/**/*.md',
         prefix: ''
       },
       schema: commonSchema
@@ -22,7 +22,7 @@ export default defineContentConfig({
     content_de: defineCollection({
       type: 'page',
       source: {
-        include: 'de/**',
+        include: 'de/**/*.md',
         prefix: ''
       },
       schema: commonSchema

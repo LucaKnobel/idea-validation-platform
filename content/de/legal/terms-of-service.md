@@ -1,10 +1,10 @@
 ---
-
 title: Nutzungsbedingungen
 description: Nutzungsbedingungen für die Plattform zur Validierung digitaler Geschäftsideen
 locale: de
+updatedAt: 2026-06-24
 version: "2"
-------------
+---
 
 # Nutzungsbedingungen
 
