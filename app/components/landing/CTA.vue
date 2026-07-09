@@ -11,7 +11,7 @@ const links: ButtonProps[] = [
   },
   {
     label: t('landing.hero.ctaSecondary'),
-    to: localePath('/demo'),
+    to: localePath('/how-it-works'),
     color: 'neutral',
     variant: 'outline',
     trailingIcon: 'i-lucide-arrow-right'
