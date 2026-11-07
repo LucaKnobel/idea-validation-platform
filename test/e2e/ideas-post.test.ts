@@ -127,28 +127,22 @@ describe('POST /api/ideas integration', async () => {
     expect(response.status).toBe(400)
   })
 
-  it('enforces free-plan idea limit and blocks a second idea with 403', async () => {
+  it('allows creating multiple ideas without a limit', async () => {
     const sessionResult = await createAuthenticatedSession({
-      emailPrefix: 'ideas-create-free-limit',
-      name: 'Ideas Create Free Limit'
+      emailPrefix: 'ideas-create-unlimited',
+      name: 'Ideas Create Unlimited'
     })
     const user = expectAuthenticatedSessionCreated(sessionResult)
 
-    const firstResponse = await postIdea(user.cookieHeader, {
-      title: 'First idea'
-    })
-    expect(firstResponse.status).toBe(201)
-
-    const secondResponse = await postIdea(user.cookieHeader, {
-      title: 'Second idea'
-    })
-
-    expect(secondResponse.status).toBe(403)
+    for (const title of ['First idea', 'Second idea', 'Third idea']) {
+      const response = await postIdea(user.cookieHeader, { title })
+      expect(response.status).toBe(201)
+    }
 
     const count = await prisma.idea.count({
       where: { userId: user.id }
     })
 
-    expect(count).toBe(1)
+    expect(count).toBe(3)
   })
 })

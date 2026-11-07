@@ -47,7 +47,6 @@ export const makeIdeaVersion = (overrides: Partial<IdeaVersion> = {}): IdeaVersi
 })
 
 export const makeIdeaRepository = (): IdeaRepository => ({
-  countByUser: vi.fn(),
   create: vi.fn(),
   delete: vi.fn()
 })

@@ -82,7 +82,6 @@ const cancelSubscription = buildCancelSubscription(
 
 const createIdea = buildCreateIdea(
   ideaRepository,
-  subscriptionAccessService,
   logger
 )
 
