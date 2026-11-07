@@ -37,15 +37,6 @@ const toDomainIdea = (row: PrismaIdeaWithLatestVersion): Idea => {
 
 export const ideaRepository: IdeaRepository = {
   /**
-   * Counts all ideas owned by a user.
-   */
-  async countByUser(userId: string): Promise<number> {
-    return prisma.idea.count({
-      where: { userId }
-    })
-  },
-
-  /**
    * Atomically creates an idea and its initial version.
    */
   async create(input: IdeaCreateInput): Promise<Idea> {

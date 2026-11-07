@@ -2,8 +2,8 @@
 title: Terms of Use
 description: Terms of Use for the platform for validating digital business ideas
 locale: en
-updatedAt: 2026-06-24
-version: "2"
+updatedAt: 2026-11-07
+version: "3"
 ---
 
 # Terms of Use
@@ -17,7 +17,7 @@ Version 2
 
 These Terms of Use govern the contractual relationship between the operator of the platform and registered users.
 
-By registering, subscribing, or using the platform, the user accepts these Terms of Use.
+By registering or using the platform, the user accepts these Terms of Use.
 
 ---
 
@@ -187,23 +187,7 @@ Data loss may occur at any time.
 
 ---
 
-# 11. Subscriptions and Payments
-
-The platform may offer paid subscriptions.
-
-Current pricing is published on the platform.
-
-Subscriptions renew automatically for the selected billing period unless cancelled.
-
-Paid fees are generally non-refundable.
-
-Upon cancellation, the user account is immediately downgraded to the free plan.
-
-There is no entitlement to continue using paid features until the end of a billing period that has already begun.
-
----
-
-# 12. Analysis Results and Recommendations
+# 11. Analysis Results and Recommendations
 
 The platform may provide analyses, metrics, visualizations, statistics, or other information.
 
@@ -223,7 +207,7 @@ All decisions remain solely the responsibility of the user.
 
 ---
 
-# 13. No Guarantee of Success
+# 12. No Guarantee of Success
 
 Use of the platform does not constitute any guarantee or assurance regarding the success of a business idea.
 
@@ -238,7 +222,7 @@ In particular, no guarantee is made that:
 
 ---
 
-# 14. Security
+# 13. Security
 
 The operator strives to implement reasonable technical and organizational security measures.
 
@@ -256,7 +240,7 @@ The operator assumes no warranty or liability in this regard.
 
 ---
 
-# 15. Third-Party Services
+# 14. Third-Party Services
 
 The platform may rely on third-party services.
 
@@ -265,7 +249,6 @@ These may include in particular:
 * hosting providers
 * database providers
 * authentication services
-* payment providers
 * open-source software
 * external libraries
 
@@ -273,7 +256,7 @@ The operator assumes no liability for errors, security vulnerabilities, outages,
 
 ---
 
-# 16. Intellectual Property
+# 15. Intellectual Property
 
 The platform, including its source code, structure, design, content, and functionality, is protected by intellectual property laws.
 
@@ -287,7 +270,7 @@ Unless expressly permitted by law or by applicable open-source licenses, the fol
 
 ---
 
-# 17. Limitation of Liability
+# 16. Limitation of Liability
 
 Use of the platform is entirely at the user's own risk.
 
@@ -311,13 +294,11 @@ Any liability for:
 
 is excluded.
 
-To the extent permitted by law, liability is limited to the fees paid by the user during the twelve months preceding the event giving rise to the claim.
-
-Where the platform is used free of charge, all liability is excluded.
+The platform is provided free of charge. To the extent permitted by law, all liability is excluded.
 
 ---
 
-# 18. Indemnification
+# 17. Indemnification
 
 The user agrees to indemnify and hold harmless the operator from any third-party claims arising from the user's use of the platform.
 
@@ -333,7 +314,7 @@ To the extent permitted by law, this also includes reasonable legal defense cost
 
 ---
 
-# 19. Account Deletion
+# 18. Account Deletion
 
 Users may delete their account at any time.
 
@@ -343,15 +324,15 @@ Deleted accounts and content generally cannot be restored.
 
 ---
 
-# 20. Changes to the Platform
+# 19. Changes to the Platform
 
-The operator may modify features, pricing, usage limits, subscriptions, or other aspects of the platform at any time.
+The operator may modify features, usage limits, or other aspects of the platform at any time.
 
 Users have no entitlement to the continued availability of specific features.
 
 ---
 
-# 21. Changes to the Terms of Use
+# 20. Changes to the Terms of Use
 
 The operator may modify these Terms of Use at any time.
 
@@ -359,13 +340,13 @@ The version published on the platform shall be authoritative.
 
 ---
 
-# 22. Privacy
+# 21. Privacy
 
 The processing of personal data is governed by the separate Privacy Policy.
 
 ---
 
-# 23. Governing Law and Jurisdiction
+# 22. Governing Law and Jurisdiction
 
 These Terms of Use shall be governed exclusively by Swiss law.
 
@@ -373,7 +354,7 @@ The place of jurisdiction shall be Kerzers FR, Switzerland, unless mandatory leg
 
 ---
 
-# 24. Language Versions
+# 23. Language Versions
 
 These Terms of Use may be provided in multiple languages.
 

@@ -121,35 +121,6 @@ examples:
             "statusMessage": "",
             "message": ""
           }
-  - name: 403 Response
-    description: Subscription limit exceeded
-    request:
-      url: "{{baseUrl}}/ideas"
-      method: POST
-      headers:
-        - name: better-auth.session_token
-          value: "{{apiKey}}"
-      body:
-        type: json
-        data: |-
-          {
-            "title": "",
-            "description": ""
-          }
-    response:
-      status: 403
-      statusText: Forbidden
-      headers:
-        - name: Content-Type
-          value: application/json
-      body:
-        type: json
-        data: |-
-          {
-            "statusCode": 0,
-            "statusMessage": "",
-            "message": ""
-          }
   - name: 429 Response
     description: Too many requests
     request:
@@ -182,4 +153,3 @@ examples:
 
 docs: |
   Creates a new idea for the current authenticated user.
-  Free plan users are limited to one idea.

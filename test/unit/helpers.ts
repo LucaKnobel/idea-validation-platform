@@ -15,7 +15,6 @@ import type { ExperimentRepository } from '@application/interfaces/experiment-re
 import type { Experiment } from '@application/models/experiment'
 import type { MeasurementRepository } from '@application/interfaces/measurement-repository'
 import type { Measurement } from '@application/models/measurement'
-import type { SubscriptionAccessService } from '@application/interfaces/subscription-access-service'
 import type { Logger } from '@interfaces/logger'
 
 export const VALID_USER_ID = 'user-001'
@@ -47,7 +46,6 @@ export const makeIdeaVersion = (overrides: Partial<IdeaVersion> = {}): IdeaVersi
 })
 
 export const makeIdeaRepository = (): IdeaRepository => ({
-  countByUser: vi.fn(),
   create: vi.fn(),
   delete: vi.fn()
 })
@@ -59,14 +57,6 @@ export const makeIdeaVersionRepository = (): IdeaVersionRepository => ({
   getVersionSource: vi.fn(),
   createFromSource: vi.fn(),
   updateMetadata: vi.fn()
-})
-
-export const makeSubscriptionService = (): SubscriptionAccessService => ({
-  getByUserId: vi.fn(),
-  getStatusSnapshot: vi.fn(),
-  isPro: vi.fn(),
-  getBusinessIdeaLimit: vi.fn(),
-  assertCanCreateBusinessIdea: vi.fn()
 })
 
 export const makeLogger = (): Logger => ({

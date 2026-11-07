@@ -5,18 +5,9 @@ import { hypothesisRepository } from '@infrastructure/db/repositories/prisma-hyp
 import { experimentRepository } from '@infrastructure/db/repositories/prisma-experiment-repository'
 import { metricRepository } from '@infrastructure/db/repositories/prisma-metric-repository'
 import { measurementRepository } from '@infrastructure/db/repositories/prisma-measurement-repository'
-import { subscriptionRepository } from '@infrastructure/db/repositories/prisma-subscription-repository'
-import { subscriptionCheckoutRepository } from '@infrastructure/db/repositories/prisma-subscription-checkout-repository'
 import { userRepository } from '@infrastructure/db/repositories/prisma-user-repository'
-import { payrexxSubscriptionCancellationGateway } from '@infrastructure/payrexx/payrexx-subscription-cancellation-gateway'
 import { logger } from '@infrastructure/logging/logger'
 
-import { buildSubscriptionAccessService } from '@application/services/build-subscription-access-service'
-import { buildSubscriptionProvisioningService } from '@application/services/build-subscription-provisioning-service'
-import { buildSubscriptionCheckoutService } from '@application/services/build-subscription-checkout-service'
-import { buildSubscriptionWebhookSyncService } from '@application/services/build-subscription-webhook-sync-service'
-import { buildResolveSubscriptionWebhookUserId } from '@application/services/build-resolve-subscription-webhook-user-id'
-import { buildCancelSubscription } from '@application/services/build-cancel-subscription'
 import { buildCreateIdea } from '@application/services/build-create-idea'
 import { buildCreateIdeaVersion } from '@application/services/build-create-idea-version'
 import { buildUpdateIdeaVersion } from '@application/services/build-update-idea-version'
@@ -47,42 +38,8 @@ import { buildDeleteAccount } from '@application/services/build-delete-account'
 /**
  * Central composition root for wiring repositories, infrastructure adapters, and use cases.
  */
-const subscriptionAccessService = buildSubscriptionAccessService(
-  subscriptionRepository,
-  logger
-)
-
-const subscriptionProvisioningService = buildSubscriptionProvisioningService(
-  subscriptionRepository,
-  subscriptionAccessService,
-  logger
-)
-
-const subscriptionCheckoutService = buildSubscriptionCheckoutService(
-  subscriptionCheckoutRepository,
-  logger
-)
-
-const subscriptionWebhookSyncService = buildSubscriptionWebhookSyncService(
-  subscriptionRepository,
-  logger
-)
-
-const resolveSubscriptionWebhookUserId = buildResolveSubscriptionWebhookUserId(
-  subscriptionCheckoutService,
-  subscriptionRepository,
-  logger
-)
-
-const cancelSubscription = buildCancelSubscription(
-  subscriptionRepository,
-  payrexxSubscriptionCancellationGateway,
-  logger
-)
-
 const createIdea = buildCreateIdea(
   ideaRepository,
-  subscriptionAccessService,
   logger
 )
 
@@ -221,12 +178,6 @@ const deleteAccount = buildDeleteAccount(
 )
 
 export {
-  subscriptionAccessService,
-  subscriptionProvisioningService,
-  cancelSubscription,
-  subscriptionCheckoutService,
-  subscriptionWebhookSyncService,
-  resolveSubscriptionWebhookUserId,
   createIdea,
   createIdeaVersion,
   updateIdeaVersion,

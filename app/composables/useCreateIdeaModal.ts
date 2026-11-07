@@ -35,7 +35,6 @@ export const useCreateIdeaModal = (options: UseCreateIdeaModalOptions): UseCreat
   const { showSuccess, showError } = useToastNotification()
   const { handleRateLimitError } = useErrorHandler()
   const { createIdeaFormSchema } = useValidation()
-  const { openUpgradeModal } = useUpgradeToProModal()
 
   const isCreateModalOpen = ref(false)
   const isCreatingIdea = ref(false)
@@ -63,7 +62,7 @@ export const useCreateIdeaModal = (options: UseCreateIdeaModalOptions): UseCreat
   }
 
   /**
-   * Submits a new idea, handles success/error toasts and upgrade gating on 403.
+   * Submits a new idea, handles success/error toasts.
    */
   const submitCreateIdea = async (input: CreateIdeaForm): Promise<void> => {
     if (isCreatingIdea.value) {
@@ -90,12 +89,6 @@ export const useCreateIdeaModal = (options: UseCreateIdeaModalOptions): UseCreat
       await navigateTo(localePath(`/ideas/${created.id}/versions/${created.latestVersionId}/overview`))
     } catch (error: unknown) {
       if (handleRateLimitError(error)) {
-        return
-      }
-
-      if (extractStatusCode(error) === 403) {
-        isCreateModalOpen.value = false
-        openUpgradeModal()
         return
       }
 

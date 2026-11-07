@@ -1,0 +1,15 @@
+# Keep the build context small and free of local secrets and build output.
+.git
+.github
+node_modules
+.output
+.nuxt
+.data
+generated
+coverage
+test
+bruno
+docs
+.env
+.env.*
+*.log
