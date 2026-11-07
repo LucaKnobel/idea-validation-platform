@@ -6,7 +6,7 @@ updatedAt: 2026-11-07
 version: "3"
 ---
 
-# Privacy Policy
+# Privacy Policy  
 
 **Version:** 2  
 **Last Updated:** 24.06.2026  

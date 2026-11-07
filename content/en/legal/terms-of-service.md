@@ -6,10 +6,10 @@ updatedAt: 2026-11-07
 version: "3"
 ---
 
-# Terms of Use
+# Terms of Use  
 
-**Platform for Validating Digital Business Ideas**
-Version 2
+**Platform for Validating Digital Business Ideas**  
+Version 2  
 
 ---
 

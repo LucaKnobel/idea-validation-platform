@@ -7,10 +7,10 @@ updatedAt: 2026-11-07
 version: "3"
 ---
 
-# Datenschutzerklärung
+# Datenschutzerklärung  
 
-**Version:** 2  
-**Stand:** 24.06.2026  
+**Version:** 2    
+**Stand:** 24.06.2026    
 
 ---
 
