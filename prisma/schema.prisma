@@ -11,18 +11,16 @@ datasource db {
 
 // Better Auth standard model
 model User {
-  id            String        @id
+  id            String    @id
   name          String
   email         String
-  emailVerified Boolean       @default(false)
+  emailVerified Boolean   @default(false)
   image         String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
-  subscription          Subscription? // not Better Auth standard
-  subscriptionCheckouts SubscriptionCheckout[] // not Better Auth standard
-  ideas                 Idea[] // not Better Auth standard
+  ideas         Idea[] // not Better Auth standard
 
   @@unique([email])
   @@map("user")
@@ -87,45 +85,6 @@ model RateLimit {
   lastRequest BigInt
 
   @@map("rateLimit")
-}
-
-enum SubscriptionPlan {
-  FREE
-  PRO
-}
-
-enum SubscriptionStatus {
-  ACTIVE
-  IN_NOTICE
-  OVERDUE
-  FAILED
-  CANCELLED
-}
-
-model Subscription {
-  id                     String             @id @default(uuid())
-  userId                 String             @unique
-  user                   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plan                   SubscriptionPlan
-  status                 SubscriptionStatus
-  providerCustomerId     String?
-  providerSubscriptionId String?
-  currentPeriodEnd       DateTime?
-  createdAt              DateTime           @default(now())
-  updatedAt              DateTime           @updatedAt
-
-  @@map("subscription")
-}
-
-model SubscriptionCheckout {
-  id         String    @id @default(uuid())
-  userId     String
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  consumedAt DateTime?
-  createdAt  DateTime  @default(now())
-
-  @@index([userId])
-  @@map("subscriptionCheckout")
 }
 
 model Idea {
