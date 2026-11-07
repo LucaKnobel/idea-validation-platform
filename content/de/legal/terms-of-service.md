@@ -8,7 +8,7 @@ version: "3"
 
 # Nutzungsbedingungen
 
-**Plattform zur Validierung digitaler Geschäftsideen**
+**Plattform zur Validierung digitaler Geschäftsideen**  
 Version 2  
 
 ---
