@@ -33,7 +33,7 @@ export default definePublicHandler(async (event) => {
   }
 
   const providerSubscriptionId = String(webhook.id)
-  let userId: string | null = null
+  let userId: string | null
 
   try {
     userId = await resolveSubscriptionWebhookUserId({
