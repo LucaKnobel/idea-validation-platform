@@ -7,8 +7,6 @@ WORKDIR /app
 
 ARG DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 ARG NODE_OPTIONS="--max-old-space-size=4096"
-ARG BETTER_AUTH_SECRET
-ARG BETTER_AUTH_URL
 ENV DATABASE_URL=${DATABASE_URL}
 
 # Prisma needs openssl
@@ -27,8 +25,9 @@ COPY . .
 # Generate Prisma Client (requires DATABASE_URL)
 RUN npx prisma generate
 
-# Build the Nuxt app
-RUN NODE_OPTIONS=${NODE_OPTIONS} BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET} BETTER_AUTH_URL=${BETTER_AUTH_URL} npm run build
+# Build the Nuxt app. Better Auth is loaded during the build and complains
+# without a secret; the real secret is only provided at runtime.
+RUN NODE_OPTIONS=${NODE_OPTIONS} BETTER_AUTH_SECRET=build-only-placeholder-not-used-at-runtime npm run build
 
 
 # ---------------------------
@@ -57,9 +56,9 @@ ENV NUXT_PUBLIC_APP_IMAGE_TAG=${APP_IMAGE_TAG}
 # Create non-root user for security
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
-# Install openssl for Prisma runtime usage
+# openssl for Prisma, curl for the container healthcheck (GET /health)
 RUN apt-get update -y \
- && apt-get install -y --no-install-recommends openssl \
+ && apt-get install -y --no-install-recommends openssl curl \
  && rm -rf /var/lib/apt/lists/*
 
 # Copy only necessary artifacts from builder
@@ -71,7 +70,7 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/generated ./generated
 
-# Make sure the appuser owns everything<
+# Make sure the appuser owns everything
 RUN chown -R appuser:appuser /app
 USER appuser
 

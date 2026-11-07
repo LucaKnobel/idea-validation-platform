@@ -1,137 +1,167 @@
 name: CD Deploy
 
-# Trigger: Auto-deploy on push to dev (staging) and main (production)
+# Production deployment only. PR CI and branch protection already validated the
+# merge, so a push to main builds, scans and publishes the image, then lets
+# Coolify pull and restart it.
 on:
   push:
     branches:
-      - "main"
-      - "dev"
+      - main
+    paths-ignore:
+      - "docs/**"
+      - "bruno/**"
+      - "README.md"
+      - ".github/workflows/ci.yml"
+  workflow_dispatch:
+
+# Only one production deployment at a time; never cancel a running one.
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
-  deploy:
-    name: Deploy Application
+  image:
+    name: Build, scan and publish image
     runs-on: ubuntu-latest
-
-    # Select environment dynamically based on branch
-    # main  -> production
-    # dev   -> staging
-    environment: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+    timeout-minutes: 25
 
     permissions:
-      contents: read # Read repository source code
-      packages: write # Push Docker image to GitHub Container Registry
+      contents: read
+      packages: write
+
+    outputs:
+      image: ${{ steps.meta.outputs.image }}
 
     steps:
-      # Clone repository at the commit that triggered the workflow
-      - uses: actions/checkout@v6
+      - name: Checkout pushed commit
+        uses: actions/checkout@v7
 
-      # Compute release metadata and tags
-      # - APP_VERSION is used for app and image metadata
-      # - IMAGE_POINTER is environment-specific (latest-staging/latest-prod)
+      # Release metadata shown on /system-info and returned by /health.
       - name: Compute release metadata
+        id: meta
         run: |
           set -euo pipefail
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          {
+            echo "image=${image}"
+            echo "version=$(date -u +%Y.%-m.%-d)-prod.${GITHUB_RUN_NUMBER}"
+            echo "built_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } >> "$GITHUB_OUTPUT"
 
-          DATE_BASE="$(date -u +%Y.%-m.%-d)"
-          DEPLOYED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
 
-          if [ "${GITHUB_REF_NAME}" = "main" ]; then
-            CHANNEL="prod"
-            POINTER_TAG="latest-prod"
-          else
-            CHANNEL="staging"
-            POINTER_TAG="latest-staging"
-          fi
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-          APP_VERSION="${DATE_BASE}-${CHANNEL}.${GITHUB_RUN_NUMBER}"
-          IMAGE_BASE="ghcr.io/${GITHUB_REPOSITORY,,}"
-          IMAGE_IMMUTABLE="${IMAGE_BASE}:${APP_VERSION}"
-          IMAGE_SHA="${IMAGE_BASE}:${GITHUB_SHA}"
-          IMAGE_POINTER="${IMAGE_BASE}:${POINTER_TAG}"
-
-          echo "APP_VERSION=${APP_VERSION}" >> "$GITHUB_ENV"
-          echo "APP_CHANNEL=${CHANNEL}" >> "$GITHUB_ENV"
-          echo "APP_DEPLOYED_AT=${DEPLOYED_AT}" >> "$GITHUB_ENV"
-          echo "APP_COMMIT=${GITHUB_SHA}" >> "$GITHUB_ENV"
-          echo "APP_IMAGE_TAG=${IMAGE_IMMUTABLE}" >> "$GITHUB_ENV"
-          echo "DEPLOY_TAG=${POINTER_TAG}" >> "$GITHUB_ENV"
-          echo "IMAGE_IMMUTABLE=${IMAGE_IMMUTABLE}" >> "$GITHUB_ENV"
-          echo "IMAGE_SHA=${IMAGE_SHA}" >> "$GITHUB_ENV"
-          echo "IMAGE_POINTER=${IMAGE_POINTER}" >> "$GITHUB_ENV"
-
-      # Authenticate with GitHub Container Registry using GITHUB_TOKEN
-      # Recommended approach for GHCR authentication :contentReference[oaicite:0]{index=0}
-      - name: Login to GHCR
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      # Build Docker image with immutable and pointer tags
+      # Build once and load into the local daemon so Trivy scans exactly the
+      # image that gets pushed. No secrets are passed: they are runtime-only.
       - name: Build image
-        run: |
-          docker build \
-            --build-arg NODE_OPTIONS="--max-old-space-size=4096" \
-            --build-arg BETTER_AUTH_SECRET="${{ secrets.BETTER_AUTH_SECRET }}" \
-            --build-arg BETTER_AUTH_URL="${{ secrets.BETTER_AUTH_URL }}" \
-            --build-arg APP_VERSION="${APP_VERSION}" \
-            --build-arg APP_COMMIT="${APP_COMMIT}" \
-            --build-arg APP_CHANNEL="${APP_CHANNEL}" \
-            --build-arg APP_DEPLOYED_AT="${APP_DEPLOYED_AT}" \
-            --build-arg APP_IMAGE_TAG="${APP_IMAGE_TAG}" \
-            -t "${IMAGE_IMMUTABLE}" \
-            -t "${IMAGE_SHA}" \
-            -t "${IMAGE_POINTER}" .
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64
+          pull: true
+          load: true
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            APP_VERSION=${{ steps.meta.outputs.version }}
+            APP_COMMIT=${{ github.sha }}
+            APP_CHANNEL=prod
+            APP_DEPLOYED_AT=${{ steps.meta.outputs.built_at }}
+            APP_IMAGE_TAG=${{ steps.meta.outputs.image }}:${{ github.sha }}
+          tags: |
+            ${{ steps.meta.outputs.image }}:${{ github.sha }}
+            ${{ steps.meta.outputs.image }}:latest
 
-      # Push immutable + SHA + environment pointer tags
-      - name: Push images
-        run: |
-          docker push "${IMAGE_IMMUTABLE}"
-          docker push "${IMAGE_SHA}"
-          docker push "${IMAGE_POINTER}"
+      # Informational scan: findings show up in the summary but never block.
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        timeout-minutes: 10
+        with:
+          scan-type: image
+          image-ref: ${{ steps.meta.outputs.image }}:${{ github.sha }}
+          format: json
+          output: trivy-image.json
+          severity: CRITICAL,HIGH,MEDIUM
+          ignore-unfixed: true
+          vuln-type: os,library
+          exit-code: "0"
 
-      - name: Deployment summary
-        run: |
-          echo "Version: ${APP_VERSION}"
-          echo "Channel: ${APP_CHANNEL}"
-          echo "Commit: ${APP_COMMIT}"
-          echo "Image: ${APP_IMAGE_TAG}"
-          echo "Pointer tag: ${DEPLOY_TAG}"
+      - name: Trivy summary
+        if: always()
+        run: bash .github/scripts/trivy-summary.sh trivy-image.json "${{ steps.meta.outputs.image }}:${{ github.sha }}"
 
-        # Group-based rolling redeploy on Jelastic/Infomaniak
-      - name: Redeploy on Jelastic (group)
+      - name: Upload Trivy report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: trivy-image-${{ github.sha }}
+          path: trivy-image.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Push image
         env:
-          API_HOST: https://${{ secrets.JELASTIC_HOST }}
-          ENV_NAME: ${{ secrets.JELASTIC_ENV }}
-          SESSION: ${{ secrets.JELASTIC_SESSION }}
-          NODE_GROUP: ${{ secrets.JELASTIC_NODE_GROUP }}
-          TAG: ${{ env.DEPLOY_TAG }}
-          IS_SEQUENTIAL: "true"
-          DELAY: "5"
-          USE_EXISTING_VOLUMES: "true"
-          MANAGE_DNS_STATE: "true"
+          IMAGE: ${{ steps.meta.outputs.image }}
         run: |
           set -euo pipefail
+          docker push "${IMAGE}:${GITHUB_SHA}"
+          docker push "${IMAGE}:latest"
 
-          URL="${API_HOST}/1.0/environment/control/rest/redeploycontainersbygroup"
+  deploy:
+    name: Deploy to Coolify (production)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: image
 
-          echo "Deploying ${ENV_NAME} (group: ${NODE_GROUP})..."
+    environment:
+      name: production
+      url: ${{ vars.APP_URL }}
 
-          RESPONSE=$(curl --fail-with-body -sS -X POST "$URL" \
-            --data-urlencode "envName=${ENV_NAME}" \
-            --data-urlencode "session=${SESSION}" \
-            --data-urlencode "nodeGroup=${NODE_GROUP}" \
-            --data-urlencode "tag=${TAG}" \
-            --data-urlencode "isSequential=${IS_SEQUENTIAL}" \
-            --data-urlencode "delay=${DELAY}" \
-            --data-urlencode "useExistingVolumes=${USE_EXISTING_VOLUMES}" \
-            --data-urlencode "manageDNSState=${MANAGE_DNS_STATE}" \
-            -H "Content-Type: application/x-www-form-urlencoded")
+    steps:
+      # Coolify pulls :latest and restarts the container (migrations run on start).
+      - name: Trigger Coolify deploy
+        env:
+          COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK }}
+          COOLIFY_AUTH_TOKEN: ${{ secrets.COOLIFY_AUTH_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error \
+            --header "Authorization: Bearer ${COOLIFY_AUTH_TOKEN}" \
+            "${COOLIFY_WEBHOOK}"
 
-          echo "$RESPONSE" | jq
-
-          RESULT=$(echo "$RESPONSE" | jq -r ".result")
-          if [ "$RESULT" != "0" ]; then
-            echo "Redeploy failed"
-            exit 1
-          fi
-
-          echo "Redeploy successful"
+      # The webhook only queues the deployment. Poll /health until the new
+      # commit is live; fail after ~10 minutes.
+      - name: Verify deployed commit
+        env:
+          HEALTH_URL: ${{ vars.APP_URL }}/health
+        run: |
+          set -euo pipefail
+          live=""
+          for attempt in $(seq 1 40); do
+            live=$(curl --silent --max-time 10 "${HEALTH_URL}" | jq -r '.commit // empty' 2>/dev/null || true)
+            if [[ "${live}" == "${GITHUB_SHA}" ]]; then
+              echo "Commit ${GITHUB_SHA} is live (attempt ${attempt})."
+              {
+                echo "## Production deployment"
+                echo ""
+                echo "- Image: \`${{ needs.image.outputs.image }}:${GITHUB_SHA}\`"
+                echo "- Live after ${attempt} check(s): ${{ vars.APP_URL }}"
+              } >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Attempt ${attempt}: live=${live:-none}, expected=${GITHUB_SHA}"
+            sleep 15
+          done
+          echo "::error::Deployment not verified: expected ${GITHUB_SHA}, last seen ${live:-none}"
+          exit 1
