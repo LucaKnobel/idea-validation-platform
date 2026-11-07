@@ -2,8 +2,8 @@
 title: Nutzungsbedingungen
 description: Nutzungsbedingungen für die Plattform zur Validierung digitaler Geschäftsideen
 locale: de
-updatedAt: 2026-06-24
-version: "2"
+updatedAt: 2026-11-07
+version: "3"
 ---
 
 # Nutzungsbedingungen
@@ -17,7 +17,7 @@ Version 2
 
 Diese Nutzungsbedingungen regeln das Vertragsverhältnis zwischen dem Betreiber der Plattform und den registrierten Nutzern.
 
-Mit der Registrierung, dem Abschluss eines Abonnements oder der Nutzung der Plattform akzeptiert der Nutzer diese Nutzungsbedingungen.
+Mit der Registrierung oder der Nutzung der Plattform akzeptiert der Nutzer diese Nutzungsbedingungen.
 
 ---
 
@@ -187,23 +187,7 @@ Datenverluste können jederzeit auftreten.
 
 ---
 
-# 11. Abonnemente und Zahlungen
-
-Die Plattform kann kostenpflichtige Abonnemente anbieten.
-
-Aktuelle Preise werden auf der Plattform veröffentlicht.
-
-Abonnemente verlängern sich automatisch um die jeweils gewählte Laufzeit, sofern sie nicht gekündigt werden.
-
-Bereits bezahlte Gebühren werden grundsätzlich nicht zurückerstattet.
-
-Nach Kündigung wird das Benutzerkonto unmittelbar auf die kostenlose Version zurückgestuft.
-
-Ein Anspruch auf Nutzung kostenpflichtiger Funktionen bis zum Ende einer bereits begonnenen Abrechnungsperiode besteht nicht.
-
----
-
-# 12. Analyseergebnisse und Empfehlungen
+# 11. Analyseergebnisse und Empfehlungen
 
 Die Plattform kann Auswertungen, Kennzahlen, Visualisierungen, Statistiken oder sonstige Informationen bereitstellen.
 
@@ -223,7 +207,7 @@ Sämtliche Entscheidungen erfolgen ausschliesslich in der Verantwortung des Nutz
 
 ---
 
-# 13. Keine Erfolgsgarantie
+# 12. Keine Erfolgsgarantie
 
 Die Nutzung der Plattform begründet keinerlei Garantie oder Zusicherung hinsichtlich des Erfolgs einer Geschäftsidee.
 
@@ -238,7 +222,7 @@ Insbesondere wird nicht garantiert, dass:
 
 ---
 
-# 14. Sicherheit
+# 13. Sicherheit
 
 Der Betreiber bemüht sich um angemessene technische und organisatorische Sicherheitsmassnahmen.
 
@@ -256,7 +240,7 @@ Der Betreiber übernimmt hierfür keine Gewähr.
 
 ---
 
-# 15. Drittanbieter
+# 14. Drittanbieter
 
 Die Plattform kann Dienste Dritter nutzen.
 
@@ -265,7 +249,6 @@ Hierzu zählen insbesondere:
 * Hosting-Anbieter
 * Datenbank-Anbieter
 * Authentifizierungsdienste
-* Zahlungsanbieter
 * Open-Source-Software
 * externe Bibliotheken
 
@@ -273,7 +256,7 @@ Der Betreiber übernimmt keine Haftung für Fehler, Sicherheitslücken, Ausfäll
 
 ---
 
-# 16. Geistiges Eigentum
+# 15. Geistiges Eigentum
 
 Die Plattform, deren Quellcode, Struktur, Design, Inhalte und Funktionen sind urheberrechtlich geschützt.
 
@@ -287,7 +270,7 @@ Soweit nicht ausdrücklich gesetzlich zulässig oder durch entsprechende Open-So
 
 ---
 
-# 17. Haftung
+# 16. Haftung
 
 Die Nutzung der Plattform erfolgt ausschliesslich auf eigenes Risiko.
 
@@ -311,13 +294,11 @@ Jegliche Haftung für:
 
 ist ausgeschlossen.
 
-Soweit gesetzlich zulässig, ist die Haftung auf die vom Nutzer in den letzten zwölf Monaten bezahlten Gebühren beschränkt.
-
-Bei kostenloser Nutzung ist jegliche Haftung ausgeschlossen.
+Die Nutzung der Plattform ist kostenlos. Soweit gesetzlich zulässig, ist jegliche Haftung ausgeschlossen.
 
 ---
 
-# 18. Freistellung
+# 17. Freistellung
 
 Der Nutzer stellt den Betreiber von sämtlichen Ansprüchen Dritter frei, die aufgrund seiner Nutzung der Plattform entstehen.
 
@@ -333,7 +314,7 @@ Soweit gesetzlich zulässig umfasst dies auch angemessene Kosten der Rechtsverte
 
 ---
 
-# 19. Löschung von Konten
+# 18. Löschung von Konten
 
 Der Nutzer kann sein Benutzerkonto jederzeit löschen.
 
@@ -343,15 +324,15 @@ Gelöschte Konten und Inhalte können grundsätzlich nicht wiederhergestellt wer
 
 ---
 
-# 20. Änderungen der Plattform
+# 19. Änderungen der Plattform
 
-Der Betreiber kann Funktionen, Preise, Nutzungsbeschränkungen, Abonnemente oder sonstige Bestandteile der Plattform jederzeit ändern.
+Der Betreiber kann Funktionen, Nutzungsbeschränkungen oder sonstige Bestandteile der Plattform jederzeit ändern.
 
 Ein Anspruch auf Beibehaltung bestimmter Funktionen besteht nicht.
 
 ---
 
-# 21. Änderungen der Nutzungsbedingungen
+# 20. Änderungen der Nutzungsbedingungen
 
 Der Betreiber kann diese Nutzungsbedingungen jederzeit ändern.
 
@@ -359,13 +340,13 @@ Massgeblich ist die jeweils veröffentlichte Version.
 
 ---
 
-# 22. Datenschutz
+# 21. Datenschutz
 
 Die Bearbeitung personenbezogener Daten erfolgt gemäss der separaten Datenschutzerklärung.
 
 ---
 
-# 23. Anwendbares Recht und Gerichtsstand
+# 22. Anwendbares Recht und Gerichtsstand
 
 Es gilt ausschliesslich Schweizer Recht.
 
@@ -373,7 +354,7 @@ Gerichtsstand ist Kerzers FR, Schweiz, soweit keine zwingenden gesetzlichen Best
 
 ---
 
-# 24. Sprachversion
+# 23. Sprachversion
 
 Diese Nutzungsbedingungen können in mehreren Sprachversionen bereitgestellt werden.
 

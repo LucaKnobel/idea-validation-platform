@@ -2,8 +2,8 @@
 title: Privacy Policy
 description: Privacy Policy for the platform for validating digital business ideas.
 locale: en
-updatedAt: 2026-06-24
-version: "2"
+updatedAt: 2026-11-07
+version: "3"
 ---
 
 # Privacy Policy
@@ -48,7 +48,6 @@ The following services are used to operate the platform:
 * managed PostgreSQL database
 * network and security services
 * email delivery services
-* payment processing through external payment providers
 
 Personal data is generally stored on infrastructure located within Switzerland.
 
@@ -68,7 +67,6 @@ When registering and using a user account, the following data may be processed:
 * user ID
 * password hash
 * registration timestamp
-* subscription status
 
 Passwords are not stored in plain text.
 
@@ -132,18 +130,6 @@ This data is processed solely for:
 
 ---
 
-## 4.5 Payment Data
-
-For paid subscriptions, payment processing is handled by the external payment provider Payrexx.
-
-The operator does not process or store complete credit card information or other payment credentials.
-
-Payment information is processed directly by the respective payment provider.
-
-The operator only receives information required to manage subscriptions and payment status.
-
----
-
 # 5. Purposes of Data Processing
 
 Personal data is processed for the following purposes in particular:
@@ -152,8 +138,6 @@ Personal data is processed for the following purposes in particular:
 * user account management
 * authentication and access control
 * storage of user content
-* subscription management
-* payment processing
 * system security
 * error analysis
 * abuse prevention
@@ -220,25 +204,12 @@ Data may only be disclosed:
 
 * to commissioned technical service providers
 * to hosting and infrastructure providers
-* to payment providers
 * to authorities or courts where legally required
 * where necessary to establish, exercise, or defend legal claims
 
 ---
 
-# 10. Payment Provider
-
-Payrexx is used as the external payment provider for paid services.
-
-When using paid features, personal data may be processed directly by Payrexx.
-
-The privacy policy of Payrexx applies in addition to this Privacy Policy.
-
-The operator has no control over the data processing activities carried out by the payment provider.
-
----
-
-# 11. Data Retention
+# 10. Data Retention
 
 Personal data is retained only for as long as necessary to fulfill the respective purposes.
 
@@ -255,7 +226,7 @@ Restoration of deleted data is generally not possible.
 
 ---
 
-# 12. Rights of Data Subjects
+# 11. Rights of Data Subjects
 
 Subject to applicable data protection laws, individuals have the following rights in particular:
 
@@ -270,13 +241,13 @@ Requests may be submitted using the contact details provided above.
 
 ---
 
-# 13. No Automated Decision-Making
+# 12. No Automated Decision-Making
 
 The platform does not perform automated decision-making or profiling that produces legal effects or similarly significant effects within the meaning of applicable Swiss data protection law.
 
 ---
 
-# 14. External Links and Third-Party Services
+# 13. External Links and Third-Party Services
 
 The platform may contain links to third-party websites or services.
 
@@ -286,7 +257,7 @@ The privacy policies of the respective providers apply.
 
 ---
 
-# 15. Changes to this Privacy Policy
+# 14. Changes to this Privacy Policy
 
 This Privacy Policy may be amended at any time.
 

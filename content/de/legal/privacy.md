@@ -3,8 +3,8 @@
 title: Datenschutzerklärung
 description: Datenschutzerklärung für die Plattform zur Validierung digitaler Geschäftsideen.
 locale: de
-updatedAt: 2026-06-24
-version: "2"
+updatedAt: 2026-11-07
+version: "3"
 ---
 
 # Datenschutzerklärung
@@ -49,7 +49,6 @@ Zum Betrieb der Plattform werden insbesondere folgende Dienstleistungen genutzt:
 * Managed PostgreSQL Datenbank
 * Netzwerk- und Sicherheitsdienste
 * E-Mail-Versanddienste
-* Zahlungsabwicklung über externe Zahlungsdienstleister
 
 Personenbezogene Daten werden grundsätzlich auf Infrastruktur innerhalb der Schweiz gespeichert.
 
@@ -69,7 +68,6 @@ Bei der Registrierung und Nutzung eines Benutzerkontos können insbesondere folg
 * Benutzer-ID
 * Passwort-Hash
 * Registrierungszeitpunkt
-* Abonnementstatus
 
 Passwörter werden nicht im Klartext gespeichert.
 
@@ -133,18 +131,6 @@ Diese Daten dienen ausschliesslich:
 
 ---
 
-## 4.5 Zahlungsdaten
-
-Für kostenpflichtige Abonnemente erfolgt die Zahlungsabwicklung über den externen Zahlungsdienstleister Payrexx.
-
-Der Betreiber verarbeitet selbst keine vollständigen Kreditkarten- oder Zahlungsinformationen.
-
-Zahlungsdaten werden direkt durch den jeweiligen Zahlungsdienstleister verarbeitet.
-
-Der Betreiber erhält lediglich die Informationen, die zur Verwaltung von Abonnements und Zahlungsstatus erforderlich sind.
-
----
-
 # 5. Zwecke der Datenbearbeitung
 
 Die Bearbeitung personenbezogener Daten erfolgt insbesondere zu folgenden Zwecken:
@@ -153,8 +139,6 @@ Die Bearbeitung personenbezogener Daten erfolgt insbesondere zu folgenden Zwecke
 * Benutzerverwaltung
 * Authentifizierung und Zugriffskontrolle
 * Speicherung von Nutzerinhalten
-* Verwaltung von Abonnements
-* Zahlungsabwicklung
 * Systemsicherheit
 * Fehleranalyse
 * Missbrauchserkennung
@@ -223,25 +207,12 @@ Eine Weitergabe erfolgt ausschliesslich:
 
 * an beauftragte technische Dienstleister
 * an Hosting- und Infrastrukturanbieter
-* an Zahlungsdienstleister
 * an Behörden oder Gerichte, sofern eine gesetzliche Verpflichtung besteht
 * soweit dies zur Durchsetzung rechtlicher Ansprüche erforderlich ist
 
 ---
 
-# 10. Zahlungsdienstleister
-
-Für kostenpflichtige Leistungen wird Payrexx als externer Zahlungsdienstleister eingesetzt.
-
-Bei Nutzung kostenpflichtiger Funktionen können personenbezogene Daten direkt durch Payrexx bearbeitet werden.
-
-Für die Bearbeitung durch Payrexx gelten zusätzlich die Datenschutzbestimmungen von Payrexx.
-
-Der Betreiber hat keinen Einfluss auf die Datenbearbeitung durch den Zahlungsdienstleister.
-
----
-
-# 11. Speicherdauer
+# 10. Speicherdauer
 
 Personenbezogene Daten werden nur so lange gespeichert, wie dies für die jeweiligen Zwecke erforderlich ist.
 
@@ -258,7 +229,7 @@ Eine Wiederherstellung gelöschter Daten ist grundsätzlich nicht möglich.
 
 ---
 
-# 12. Rechte betroffener Personen
+# 11. Rechte betroffener Personen
 
 Betroffene Personen haben im Rahmen des anwendbaren Datenschutzrechts insbesondere folgende Rechte:
 
@@ -273,13 +244,13 @@ Anfragen können an die oben genannte Kontaktadresse gerichtet werden.
 
 ---
 
-# 13. Keine automatisierte Entscheidungsfindung
+# 12. Keine automatisierte Entscheidungsfindung
 
 Es erfolgt keine automatisierte Entscheidungsfindung oder Profilbildung mit rechtlicher oder vergleichbar erheblicher Wirkung im Sinne des Schweizer Datenschutzrechts.
 
 ---
 
-# 14. Externe Links und Drittangebote
+# 13. Externe Links und Drittangebote
 
 Die Plattform kann Links zu Webseiten oder Diensten Dritter enthalten.
 
@@ -289,7 +260,7 @@ Es gelten die Datenschutzbestimmungen des jeweiligen Anbieters.
 
 ---
 
-# 15. Änderungen dieser Datenschutzerklärung
+# 14. Änderungen dieser Datenschutzerklärung
 
 Diese Datenschutzerklärung kann jederzeit angepasst werden.
 
