@@ -154,7 +154,6 @@
   "navigation": {
     "howItWorks": "How it works",
     "features": "Features",
-    "pricing": "Pricing",
     "documentation": "Documentation",
     "dashboard": "Dashboard",
     "settings": "Settings",
@@ -200,43 +199,6 @@
         "evidenceDecisions": "Evidence-based decisions",
         "versionHistory": "Version history and learning documentation",
         "structuredExperiments": "Structured experimentation"
-      }
-    }
-  },
-  "pricingPage": {
-    "title": "Pricing",
-    "intro": "Choose the plan that fits you.",
-    "actions": {
-      "goToDashboard": "Go to dashboard",
-      "startProCheckout": "Start Pro checkout",
-      "createFreeAccount": "Create free account",
-      "createAccountAndUpgrade": "Create account and upgrade to Pro"
-    },
-    "plans": {
-      "free": {
-        "title": "Free",
-        "description": "For your first idea.",
-        "price": "CHF 0",
-        "features": {
-          "account": "Personal account",
-          "ideaLimit": "1 business idea included",
-          "coreValidation": "Canvas, hypotheses, tests, and measurements",
-          "versionHistory": "Iteration and pivot workflows in that idea"
-        },
-        "terms": "Get started for free with an account."
-      },
-      "pro": {
-        "title": "Pro",
-        "description": "For unlimited ideas.",
-        "price": "CHF 9.90",
-        "billingCycle": "/ month",
-        "badge": "Recommended",
-        "features": {
-          "account": "Everything in Free",
-          "unlimitedIdeas": "Unlimited business ideas",
-          "coreValidation": "Canvas, hypotheses, tests, and measurements",
-          "versioning": "Iteration and pivot workflows across ideas"
-        }
       }
     }
   },
@@ -413,58 +375,6 @@
         "message": "Your password has been updated successfully."
       }
     },
-    "subscription": {
-      "title": "Subscription",
-      "placeholder": "Plan status and billing management will be added here.",
-      "description": "Manage your Pro subscription directly from settings.",
-      "currentPlan": "Current plan",
-      "currentStatus": "Current status",
-      "loading": "Loading status",
-      "note": "Cancellation takes effect immediately. Pro access ends right away and no refund is issued for already paid time.",
-      "plan": {
-        "FREE": "Free",
-        "PRO": "Pro",
-        "UNKNOWN": "Unknown"
-      },
-      "status": {
-        "ACTIVE": "Active",
-        "IN_NOTICE": "In notice",
-        "OVERDUE": "Overdue",
-        "FAILED": "Failed",
-        "CANCELLED": "Cancelled",
-        "UNKNOWN": "Unknown"
-      },
-      "actions": {
-        "subscribe": "Start Pro subscription",
-        "cancel": "Cancel Pro subscription"
-      },
-      "checkout": {
-        "error": {
-          "title": "Checkout unavailable",
-          "message": "The checkout URL is not configured right now. Please try again later."
-        }
-      },
-      "cancel": {
-        "confirm": {
-          "title": "Confirm cancellation",
-          "description": "Do you really want to cancel your Pro subscription?",
-          "warning": "Cancellation takes effect immediately. Your Pro access will end right away and already paid time will not be refunded.",
-          "action": "Confirm cancellation"
-        },
-        "success": {
-          "title": "Subscription cancelled",
-          "message": "Your Pro subscription has been cancelled immediately and your plan is now Free."
-        },
-        "unavailable": {
-          "title": "Cancellation not available",
-          "message": "Your current plan does not require cancellation."
-        },
-        "error": {
-          "title": "Cancellation failed",
-          "message": "We could not cancel your subscription. Please try again."
-        }
-      }
-    },
     "dangerZone": {
       "title": "Danger zone",
       "placeholder": "Account deletion and destructive actions will be added here."
@@ -550,37 +460,6 @@
       "title": "Could not create idea",
       "message": "Please try again."
     }
-  },
-  "upgradePage": {
-    "title": "Upgrade to Pro",
-    "description": "Soon you will be able to upgrade your plan to Pro here.",
-    "wipBadge": "Work in Progress",
-    "wipText": "This upgrade page is not implemented yet."
-  },
-  "upgradeToProModal": {
-    "title": "Upgrade to Pro required",
-    "description": "On the Free plan, you can create one business idea.",
-    "pitch": "With Pro, you can create unlimited business ideas and scale your validation without limits.",
-    "cta": "Upgrade to Pro"
-  },
-  "checkoutSuccess": {
-    "title": "Welcome to Pro",
-    "subtitle": "Your upgrade was successful!",
-    "message": "Your subscription is now active. You can start creating unlimited business ideas.",
-    "cta": "Continue to Dashboard"
-  },
-  "checkoutError": {
-    "explanation": "There was a problem processing your subscription. Your payment was not completed.",
-    "retryButton": "Try Again",
-    "homeButton": "Back to Dashboard"
-  },
-  "checkoutFailed": {
-    "title": "Payment failed",
-    "description": "Your payment could not be processed."
-  },
-  "checkoutDeclined": {
-    "title": "Payment declined",
-    "description": "Your payment method was declined. Please try a different method."
   },
   "ideaWorkspace": {
     "title": "Idea Workspace",

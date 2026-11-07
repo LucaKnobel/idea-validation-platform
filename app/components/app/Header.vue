@@ -37,10 +37,6 @@ const items = computed<NavigationMenuItem[]>(() => [{
   label: t('navigation.features'),
   to: localePath('/features'),
   icon: 'i-lucide-sparkles'
-}, {
-  label: t('navigation.pricing'),
-  icon: 'i-lucide-dollar-sign',
-  to: localePath('/pricing')
 }])
 </script>
 

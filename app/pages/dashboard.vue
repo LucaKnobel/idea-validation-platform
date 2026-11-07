@@ -9,7 +9,6 @@ definePageMeta({
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
-const { isUpgradeModalOpen } = useUpgradeToProModal()
 const UIcon = resolveComponent('UIcon')
 const workspaceIdeaTitleState = useState<string | null>('workspace-idea-title', () => null)
 const workspaceIdeaDescriptionState = useState<string | null>('workspace-idea-description', () => null)
@@ -376,8 +375,6 @@ const onCreateIdeaSubmit = async (form: CreateIdeaForm): Promise<void> => {
       :schema="createIdeaSchema"
       @submit="onCreateIdeaSubmit"
     />
-
-    <AppUpgradeToProModal v-model:open="isUpgradeModalOpen" />
   </div>
 </template>
 
