@@ -130,13 +130,14 @@ jobs:
 
     steps:
       # Coolify pulls :latest and restarts the container (migrations run on start).
-      - name: Trigger Coolify deploy
+      - name: Trigger Coolify deploy webhook
         env:
           COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK }}
           COOLIFY_AUTH_TOKEN: ${{ secrets.COOLIFY_AUTH_TOKEN }}
         run: |
           set -euo pipefail
           curl --fail-with-body --silent --show-error \
+            --request POST \
             --header "Authorization: Bearer ${COOLIFY_AUTH_TOKEN}" \
             "${COOLIFY_WEBHOOK}"
 
