@@ -77,5 +77,9 @@ USER appuser
 # Expose port
 EXPOSE 3000
 
+# Container health: /health must answer. start-period leaves time for migrations on start.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD curl --fail --silent --max-time 4 "http://127.0.0.1:${PORT}/health" > /dev/null || exit 1
+
 # Run the app
 CMD ["npm", "run", "start:migrate"]
