@@ -104,19 +104,9 @@ It helps users document assumptions, run validation activities, and evaluate evi
 
 ---
 
-## Live Systems
+## Live System
 
-### Production
-
-https://evidara.app/
-
-> Available when the production system is active.
-
-### Test Environment
-
-https://test-idea-validation-platform.jcloud.ik-server.com/
-
-> Available when the test environment is active.
+https://evidara.lucaknobel.ch/
 
 ---
 
