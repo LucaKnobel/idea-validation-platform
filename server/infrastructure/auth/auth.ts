@@ -8,7 +8,6 @@ import { sendVerificationMail } from '@infrastructure/mail/send-verification-mai
 import { sendResetPasswordMail } from '@infrastructure/mail/send-reset-password-mail'
 import { resolveLocaleFromRequest } from '@infrastructure/http/locale-resolver'
 import { logger } from '@infrastructure/logging/logger'
-import { subscriptionProvisioningService } from '@infrastructure/composition'
 
 //  Helpers
 
@@ -167,12 +166,7 @@ export const auth = betterAuth({
         })
     },
     afterEmailVerification: async (user) => {
-      try {
-        logger.info('Email verified', { userId: user.id })
-        await subscriptionProvisioningService.createFreeSubscription(user.id)
-      } catch (error: unknown) {
-        logger.error('Failed to create FREE subscription after email verification', { userId: user.id }, error)
-      }
+      logger.info('Email verified', { userId: user.id })
     }
   },
 

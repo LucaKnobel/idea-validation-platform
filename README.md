@@ -186,7 +186,6 @@ Current maturity level:
 
 * Functional MVP completed
 * Core validation workflow implemented
-* Subscription support implemented
 * Active development continues
 
 Future features may be added, modified, or removed.
